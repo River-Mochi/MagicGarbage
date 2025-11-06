@@ -8,11 +8,11 @@ using Unity.Mathematics;
 namespace MagicGarbage
 {
     /// <summary>
-    /// Semi-magic: scales garbage truck capacity and unload rate for players
-    /// who want fewer trucks but still use the service.
+    /// Semi-Magic: scales garbage truck Capacity and Unload rate for
+    ///   players who want fewer trucks and still have a garbage service.
     /// Does nothing while Total Magic (MagicGarbage) is on.
     ///
-    /// This system is meant to run ONCE whenever the slider changes:
+    /// This system is meant to run ONCE when the slider changes:
     /// - Setting.Apply() sets Enabled = true
     /// - OnUpdate rescales all GarbageTruckData and then disables itself again.
     /// </summary>
@@ -41,7 +41,7 @@ namespace MagicGarbage
                 return;
             }
 
-            // If Total Magic is enabled, truck capacity is irrelevant.
+            // If Total Magic is enabled, truck capacity not needed, bail early.
             if (setting.MagicGarbage)
             {
                 Enabled = false;
@@ -63,8 +63,8 @@ namespace MagicGarbage
             float scale = newFactor / oldFactor;
 
             // Rescale all garbage truck prefabs in-place.
-            // We touch *both* capacity and unload rate so a truck still unloads
-            // in roughly the same number of in-game seconds.
+            // We touch *both* capacity and unload rate so a truck still
+            // unloades in roughly the same number of in-game seconds.
             Entities
                 .ForEach((ref GarbageTruckData data) =>
                 {

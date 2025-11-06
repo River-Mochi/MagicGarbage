@@ -1,5 +1,5 @@
 // Mod.cs
-// Entry point for "Magic Garbage Truck [MGT]".
+// Entry point for MGT
 
 namespace MagicGarbage
 {
@@ -18,7 +18,7 @@ namespace MagicGarbage
         public static readonly ILog Log =
             LogManager.GetLogger("MagicGarbage").SetShowsErrorsInUI(false);
 
-        // Shared settings instance (nullable because we clear it on dispose)
+        // Shared settings instance (nullable because it's cleared on dispose)
         public static Setting? Setting
         {
             get; private set;
@@ -39,7 +39,7 @@ namespace MagicGarbage
             }
             else
             {
-                // Register all supported locales once
+                // First, Register all supported locales once
                 lm.AddSource("en-US", new LocaleEN(setting));
                 lm.AddSource("fr-FR", new LocaleFR(setting));
                 lm.AddSource("es-ES", new LocaleES(setting));
@@ -60,8 +60,9 @@ namespace MagicGarbage
             updateSystem.UpdateAfter<GarbageNotificationRemoverSystem>(SystemUpdatePhase.GameSimulation);
             updateSystem.UpdateAfter<GarbageTruckCapacitySystem>(SystemUpdatePhase.GameSimulation);
 
-            // Optional: keep or remove this line depending on how chatty you want logs
-            // Log.Info("[MGT] Systems scheduled (GameSimulation only).");
+            if DEBUG
+                                        Log.Info("[MGT] Systems scheduled (GameSimulation only).");
+#endif
         }
 
         public void OnDispose()

@@ -1,5 +1,5 @@
 // Settings/Setting.cs
-// Options UI + settings for Magic Garbage Truck [MGT].
+// Options UI + settings
 
 namespace MagicGarbage
 {
@@ -8,7 +8,7 @@ namespace MagicGarbage
     using Game.Settings;
     using Game.UI;
     using Unity.Entities;
-    using UnityEngine; // Application.OpenURL
+    using UnityEngine;      // Application.OpenURL
 
     [FileLocation("ModsSettings/MagicGarbage/MagicGarbage")]
     [SettingsUITabOrder(ActionsTab, AboutTab)] // Actions first, About second
@@ -46,7 +46,7 @@ namespace MagicGarbage
 
         public Setting(IMod mod) : base(mod)
         {
-            // brand new file? set sane defaults
+            // for brand new, set defaults
             if (GarbageTruckCapacityMultiplier == 0)
             {
                 SetDefaults();

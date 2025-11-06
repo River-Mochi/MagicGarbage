@@ -20,7 +20,7 @@ namespace MagicGarbage
         {
             return new Dictionary<string, string>
             {
-                // Options → mod name
+                // Options -> mod name
                 { m_Setting.GetSettingsLocaleID(), "Magic Garbage Truck [MGT]" },
 
                 // Tabs

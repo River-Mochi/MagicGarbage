@@ -1,3 +1,5 @@
+// Locale/LocaleES.cs
+
 namespace MagicGarbage
 {
     using System.Collections.Generic;
@@ -18,7 +20,7 @@ namespace MagicGarbage
         {
             return new Dictionary<string, string>
             {
-                // Root entry in Options → mod name
+                // Options mod name
                 { m_Setting.GetSettingsLocaleID(), "Magic Garbage Truck [MGT]" },
 
                 // Tabs
@@ -71,7 +73,7 @@ namespace MagicGarbage
                 },
 
                 // -----------------------------------------------------------------
-                // About → info
+                // About info
                 // -----------------------------------------------------------------
                 {
                     m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)),
@@ -92,7 +94,7 @@ namespace MagicGarbage
                 },
 
                 // -----------------------------------------------------------------
-                // About → links
+                // About links
                 // -----------------------------------------------------------------
                 {
                     m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenParadoxPage)),

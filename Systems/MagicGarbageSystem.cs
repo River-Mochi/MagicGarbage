@@ -100,13 +100,13 @@ namespace MagicGarbage
                     Entity building = entities[i];
                     GarbageProducer producer = producers[i];
 
-                    // If there is literally no garbage and no flag, we can skip,
+                    // If there is no garbage and no flag, we can skip,
                     // but still safe to just clean everything so behaviour is predictable.
                     if (producer.m_Garbage == 0 &&
                         (producer.m_Flags & GarbageProducerFlags.GarbagePilingUpWarning) == 0 &&
                         producer.m_CollectionRequest == Entity.Null)
                     {
-                        // Still remove any existing icon, just in case.
+                        // Still remove any existing or stale icon, just in case.
                         m_IconCommandBuffer.Remove(
                             building,
                             m_GarbageParameters.m_GarbageNotificationPrefab);
