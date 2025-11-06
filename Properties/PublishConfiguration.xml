@@ -4,35 +4,42 @@
 	<!--Name of the mod to display to players-->
 	<DisplayName Value="Magical Garbage Truck" />
 	<!--Short description of the mod-->
-	<ShortDescription Value="Removes the need for garbage services." />
+	<ShortDescription Value="Total Magic Option = remove all city garbage; Semi-magic Option = Super Powered Trucks" />
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
-	<LongDescription>## Magic Garbage Truck
+	<LongDescription>## Magic Garbage Truck [MGT]
 
 ### Updated for 1.3.6* and Bridges DLC
 
 This mod removes the need to place garbage handling buildings in your city.
 
+---
+
 ### Option 1: Total Magic
-- All garbage is instantly removed from the city as soon as it is generated.
+- Instantly removes all garbage as soon as it appears.
 - Just set it and forget it! (like traditional magic garbage)
 - Trucks and buildings are purely cosmetic.
 
+---
+
 ### Option 2: Semi-Magic
-- Magic Slider to greatly increase capacity of Super Trucks.
-- Choice for players who like to see some garbage trucks driving around.
-- Over-powered garbage services to reduce traffic and garbage buildup.
+- "Magic Slider" to greatly increase garbage truck capacity (100-500%)
+- Over-powered super trucks reduce traffic and service strain.
+- Great for players who still want to see trucks driving around.
+
+---
 
 ### Compatibility
 - This mod works with new and existing saves; safe to remove at any time.
 - Does not use Harmony or Reflection; lightweight, compatible, and less likely to break with game updates.
 
+---
+
 ### Credits
 - RiverMochi - author and maintainer
 - Thanks to Wayz for inspiration on the original Magical Garbage mod
 - Necko1996 - testing
-
-	</LongDescription>
+</LongDescription>
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/Thumbnail.png" />
 	<!--Screenshot, can be set multiple times-->
