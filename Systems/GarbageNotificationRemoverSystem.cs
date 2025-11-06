@@ -1,4 +1,5 @@
 // Systems/GarbageNotificationRemoverSystem.cs
+// Controls visibility of the global "Garbage piling up" notification icon prefab.
 
 using Game;
 using Game.Prefabs;
@@ -7,13 +8,14 @@ using Unity.Entities;
 namespace MagicGarbage
 {
     /// <summary>
-    /// SEMI-MAGIC:
-    /// Controls global visibility of the "Garbage piling up" icon prefab.
-    /// Independent of whether Total Magic is on.
+    /// Icon visibility logic:
+    /// - When Total Magic (MagicGarbage) is ON → garbage icons are always hidden.
+    /// - When Total Magic is OFF:
+    ///     • HideGarbageNotifications = true  → hide icons
+    ///     • HideGarbageNotifications = false → show icons (vanilla)
     ///
-    /// If HideGarbageNotifications is true:
-    ///   - Disables NotificationIconDisplayData on the garbage icon prefab.
-    ///   - This hides the icon everywhere while keeping the simulation intact.
+    /// This only affects the 3D/world icon prefab. It does not change
+    /// the underlying garbage simulation or building UI text.
     /// </summary>
     public partial class GarbageNotificationRemoverSystem : GameSystemBase
     {
@@ -31,17 +33,39 @@ namespace MagicGarbage
 
         protected override void OnUpdate()
         {
-            bool hide = Mod.Setting?.HideGarbageNotifications ?? false;
-            var garbageParams = m_GarbageParamsQuery.GetSingleton<GarbageParameterData>();
+            var setting = Mod.Setting;
+            if (setting == null)
+                return;
 
+            bool totalMagicOn = setting.MagicGarbage;
+            bool hideSemiMagic = setting.HideGarbageNotifications;
+
+            // Decide final visibility of the garbage icon prefab.
+            bool wantVisible;
+
+            if (totalMagicOn)
+            {
+                // Total Magic → there should never be garbage icons.
+                wantVisible = false;
+            }
+            else
+            {
+                // Semi-Magic mode → honour the Hide toggle.
+                wantVisible = !hideSemiMagic;
+            }
+
+            var garbageParams = m_GarbageParamsQuery.GetSingleton<GarbageParameterData>();
             Entity prefab = garbageParams.m_GarbageNotificationPrefab;
 
-            if (EntityManager.HasComponent<NotificationIconDisplayData>(prefab))
+            if (!EntityManager.HasComponent<NotificationIconDisplayData>(prefab))
+                return;
+
+            bool isEnabled = EntityManager.IsComponentEnabled<NotificationIconDisplayData>(prefab);
+            if (isEnabled != wantVisible)
             {
-                // true = component enabled = icon visible
                 EntityManager.SetComponentEnabled<NotificationIconDisplayData>(
                     prefab,
-                    !hide);
+                    wantVisible);
             }
         }
     }

@@ -1,4 +1,5 @@
 // Systems/MagicGarbageSystem.cs
+// Total Magic: instantly clears garbage and cancels requests.
 
 using Game;
 using Game.Buildings;
@@ -15,11 +16,12 @@ namespace MagicGarbage
 {
     /// <summary>
     /// TOTAL MAGIC:
-    /// - Every update, wipes all GarbageProducer.m_Garbage
-    /// - Clears collection requests & dispatch index
-    /// - Removes "garbage piling up" icons when present.
+    /// - Zeros out GarbageProducer.m_Garbage on all buildings
+    /// - Clears collection requests / dispatch index
+    /// - Clears the "garbage piling up" flag
+    /// - Removes the garbage notification icon from buildings
     ///
-    /// This leaves trucks/facilities purely cosmetic.
+    /// Only runs while Setting.MagicGarbage is true.
     /// </summary>
     public partial class MagicGarbageSystem : GameSystemBase
     {
@@ -48,7 +50,6 @@ namespace MagicGarbage
                 }
             });
 
-            // For the notification prefab
             m_GarbageParamsQuery = GetEntityQuery(
                 ComponentType.ReadOnly<GarbageParameterData>());
 
@@ -58,9 +59,8 @@ namespace MagicGarbage
 
         protected override void OnUpdate()
         {
-            // TOTAL MAGIC toggle – if off, we do nothing.
-            bool magicOn = Mod.Setting?.MagicGarbage ?? false;
-            if (!magicOn)
+            var setting = Mod.Setting;
+            if (setting == null || !setting.MagicGarbage)
                 return;
 
             IconCommandBuffer iconBuffer = m_IconCommandSystem.CreateCommandBuffer();
@@ -87,11 +87,10 @@ namespace MagicGarbage
             public IconCommandBuffer m_IconCommandBuffer;
             [ReadOnly] public GarbageParameterData m_GarbageParameters;
 
-            public void Execute(
-                in ArchetypeChunk chunk,
-                int unfilteredChunkIndex,
-                bool useEnabledMask,
-                in v128 chunkEnabledMask)
+            public void Execute(in ArchetypeChunk chunk,
+                                int unfilteredChunkIndex,
+                                bool useEnabledMask,
+                                in v128 chunkEnabledMask)
             {
                 NativeArray<Entity> entities = chunk.GetNativeArray(m_EntityType);
                 NativeArray<GarbageProducer> producers = chunk.GetNativeArray(ref m_GarbageProducerType);
@@ -101,12 +100,18 @@ namespace MagicGarbage
                     Entity building = entities[i];
                     GarbageProducer producer = producers[i];
 
-                    bool hadWarning =
-                        (producer.m_Flags & GarbageProducerFlags.GarbagePilingUpWarning) != 0;
-
-                    // Nothing to do for totally clean buildings with no warning flag.
-                    if (producer.m_Garbage == 0 && !hadWarning)
+                    // If there is literally no garbage and no flag, we can skip,
+                    // but still safe to just clean everything so behaviour is predictable.
+                    if (producer.m_Garbage == 0 &&
+                        (producer.m_Flags & GarbageProducerFlags.GarbagePilingUpWarning) == 0 &&
+                        producer.m_CollectionRequest == Entity.Null)
+                    {
+                        // Still remove any existing icon, just in case.
+                        m_IconCommandBuffer.Remove(
+                            building,
+                            m_GarbageParameters.m_GarbageNotificationPrefab);
                         continue;
+                    }
 
                     // Clean completely
                     producer.m_Garbage = 0;
@@ -116,13 +121,10 @@ namespace MagicGarbage
 
                     producers[i] = producer;
 
-                    // If there used to be a warning, remove its icon.
-                    if (hadWarning)
-                    {
-                        m_IconCommandBuffer.Remove(
-                            building,
-                            m_GarbageParameters.m_GarbageNotificationPrefab);
-                    }
+                    // Always try to remove the world icon – harmless if none exists.
+                    m_IconCommandBuffer.Remove(
+                        building,
+                        m_GarbageParameters.m_GarbageNotificationPrefab);
                 }
             }
         }

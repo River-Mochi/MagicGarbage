@@ -24,34 +24,34 @@ namespace MagicGarbage
                 // Root entry in Options → mod name
                 { m_Setting.GetSettingsLocaleID(), "Magic Garbage Truck [MGT]" },
 
-                // Tab
-                { m_Setting.GetOptionTabLocaleID(Setting.MainTab), "Main" },
+                // Tab caption
+                { m_Setting.GetOptionTabLocaleID(Setting.MainTab), "Actions" },
 
-                // Groups
+                // Groups (row headers)
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Total Magic" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "Semi-magic (Trucks)" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "Semi-Magic" },
 
                 // Checkbox: MagicGarbage (Total Magic)
                 {
                     m_Setting.GetOptionLabelLocaleID(nameof(Setting.MagicGarbage)),
-                    "Magic Garbage (total)"
+                    "Magic Garbage (Total Magic)"
                 },
                 {
                     m_Setting.GetOptionDescLocaleID(nameof(Setting.MagicGarbage)),
-                    "Completely removes garbage gameplay.\n" +
+                    "**Enabled = Removes all garbage.**\n" +
                     "Buildings never pile up garbage, trucks and facilities are for looks only.\n" +
-                    "Turn this OFF if you want the vanilla garbage simulation."
+                    "Turn this OFF if you want vanilla garbage simulation or to use the Semi-magic options."
                 },
 
                 // Checkbox: HideGarbageNotifications (Semi-magic)
                 {
                     m_Setting.GetOptionLabelLocaleID(nameof(Setting.HideGarbageNotifications)),
-                    "Hide garbage problem icons"
+                    "Hide garbage warning icons"
                 },
                 {
                     m_Setting.GetOptionDescLocaleID(nameof(Setting.HideGarbageNotifications)),
-                    "When Magic Garbage is OFF, hide the vanilla garbage warning icons.\n" +
-                    "Turn this OFF to see the standard garbage problem notifications."
+                    "Hides the **Garbage Piling Up** warning icons above buildings.\n" +
+                    "The underlying problem still exists and can be seen in an affected building info panel."
                 },
 
                 // Slider: GarbageTruckCapacityMultiplier (Semi-magic)
@@ -61,9 +61,11 @@ namespace MagicGarbage
                 },
                 {
                     m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "Super-trucks mode. Adjust garbage capacity as a percentage of vanilla.\n" +
-                    "100% = vanilla (~20 tons). 500% ≈ ~100 tons per truck.\n" +
-                    "Unload speed scales with capacity so they don’t clog the depot."
+                    "**Semi-MagicSuper-trucks mode**.\n" +
+                    "Adjust garbage capacity as a percentage of vanilla.\n" +
+                    "100% = 20 tons (vanilla game default)\n" +
+                    "500% = 100 tons per truck.\n" +
+                    "Bonus: unload speed scales with capacity so high capacity trucks don’t take longer to unload at the facility."
                 },
             };
         }

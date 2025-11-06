@@ -1,4 +1,5 @@
 // Settings/Setting.cs
+// Options UI + saved settings for "Magic Garbage Truck [MGT]".
 
 namespace MagicGarbage
 {
@@ -9,9 +10,15 @@ namespace MagicGarbage
     using Unity.Entities;
 
     [FileLocation("ModsSettings/MagicGarbage/MagicGarbage")]
+    [SettingsUITabOrder(MainTab)]
+    [SettingsUIGroupOrder(TotalMagicGrp, SemiMagicGrp)]
+    [SettingsUIShowGroupName(TotalMagicGrp, SemiMagicGrp)]
     public sealed class Setting : ModSetting
     {
+        // Tabs
         public const string MainTab = "Main";
+
+        // Groups (rows) on the Main tab
         public const string TotalMagicGrp = "TotalMagic";
         public const string SemiMagicGrp = "SemiMagic";
 
@@ -24,7 +31,7 @@ namespace MagicGarbage
             }
             else if (GarbageTruckCapacityMultiplier > 0 && GarbageTruckCapacityMultiplier < 10)
             {
-                // 100–500%
+                // old saves from early dev: 1–5 → convert to 100–500 %
                 GarbageTruckCapacityMultiplier *= 100;
             }
         }
