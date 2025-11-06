@@ -1,5 +1,5 @@
 // Settings/Setting.cs
-// Options UI + saved settings for "Magic Garbage Truck [MGT]".
+// Options UI + settings for Magic Garbage Truck [MGT].
 
 namespace MagicGarbage
 {
@@ -8,19 +8,41 @@ namespace MagicGarbage
     using Game.Settings;
     using Game.UI;
     using Unity.Entities;
+    using UnityEngine; // Application.OpenURL
 
     [FileLocation("ModsSettings/MagicGarbage/MagicGarbage")]
-    [SettingsUITabOrder(MainTab)]
-    [SettingsUIGroupOrder(TotalMagicGrp, SemiMagicGrp)]
-    [SettingsUIShowGroupName(TotalMagicGrp, SemiMagicGrp)]
+    [SettingsUITabOrder(ActionsTab, AboutTab)] // Actions first, About second
+    [SettingsUIGroupOrder(
+        TotalMagicGrp,
+        SemiMagicGrp,
+        AboutInfoGrp,
+        AboutLinksGrp,
+        AboutUsageGrp)]
+    [SettingsUIShowGroupName(
+        TotalMagicGrp,
+        SemiMagicGrp,
+        // AboutInfoGrp header intentionally omitted
+        AboutLinksGrp,
+        AboutUsageGrp)]
     public sealed class Setting : ModSetting
     {
-        // Tabs
-        public const string MainTab = "Main";
+        // ---- Tabs ----
+        public const string ActionsTab = "Actions";
+        public const string AboutTab = "About";
 
-        // Groups (rows) on the Main tab
+        // ---- Groups (row headers) ----
         public const string TotalMagicGrp = "TotalMagic";
         public const string SemiMagicGrp = "SemiMagic";
+        public const string AboutInfoGrp = "AboutInfo";
+        public const string AboutLinksGrp = "AboutLinks";
+        public const string AboutUsageGrp = "AboutUsage";
+
+        // ---- External links ----
+        private const string UrlParadox =
+            "https://mods.paradoxplaza.com/authors/kimosabe1?orderBy=desc&sortBy=popularity";
+
+        private const string UrlDiscord =
+            "https://discord.gg/HTav7ARPs2";
 
         public Setting(IMod mod) : base(mod)
         {
@@ -31,7 +53,7 @@ namespace MagicGarbage
             }
             else if (GarbageTruckCapacityMultiplier > 0 && GarbageTruckCapacityMultiplier < 10)
             {
-                // old saves from early dev: 1–5 → convert to 100–500 %
+                // Old saves where slider was 1–5: convert to 100–500%.
                 GarbageTruckCapacityMultiplier *= 100;
             }
         }
@@ -39,25 +61,69 @@ namespace MagicGarbage
         // ---- TOTAL MAGIC ----------------------------------------------------
 
         // Checkbox: full Magic Garbage (no garbage gameplay, just visuals)
-        [SettingsUISection(MainTab, TotalMagicGrp)]
+        [SettingsUISection(ActionsTab, TotalMagicGrp)]
         public bool MagicGarbage { get; set; } = true;
 
-        // ---- SEMI-MAGIC (TRUCKS) --------------------------------------------
-
-        // Checkbox: hide vanilla garbage notifications when *not* in full magic.
-        [SettingsUISection(MainTab, SemiMagicGrp)]
-        public bool HideGarbageNotifications { get; set; } = true;
+        // ---- SEMI-MAGIC (TRUCKS) -------------------------------------------
 
         // Slider: garbage truck capacity (100–500%)
         [SettingsUISlider(min = 100, max = 500, step = 50,
                           scalarMultiplier = 1, unit = Unit.kPercentage)]
-        [SettingsUISection(MainTab, SemiMagicGrp)]
+        [SettingsUISection(ActionsTab, SemiMagicGrp)]
         public int GarbageTruckCapacityMultiplier { get; set; } = 100;
+
+        // ---- ABOUT TAB ------------------------------------------------------
+
+        // Info row: name + version
+        [SettingsUISection(AboutTab, AboutInfoGrp)]
+        public string AboutName => Mod.ModName;
+
+        [SettingsUISection(AboutTab, AboutInfoGrp)]
+        public string AboutVersion => Mod.VersionShort;
+
+        // Links row: Paradox Mods button
+        [SettingsUIButton]
+        [SettingsUIButtonGroup(AboutLinksGrp)]
+        [SettingsUISection(AboutTab, AboutLinksGrp)]
+        public bool OpenParadoxPage
+        {
+            set
+            {
+                if (!value)
+                    return;
+
+                Application.OpenURL(UrlParadox);
+            }
+        }
+
+        // Links row: Discord button
+        [SettingsUIButton]
+        [SettingsUIButtonGroup(AboutLinksGrp)]
+        [SettingsUISection(AboutTab, AboutLinksGrp)]
+        public bool OpenDiscord
+        {
+            set
+            {
+                if (!value)
+                    return;
+
+                Application.OpenURL(UrlDiscord);
+            }
+        }
+
+        // About tab: USAGE NOTES (multiline text block)
+        [SettingsUIMultilineText]
+        [SettingsUISection(AboutTab, AboutUsageGrp)]
+        public string UsageNotes => string.Empty;
+
+        // ---- ModSetting overrides ------------------------------------------
 
         public override void SetDefaults()
         {
+            // Your requested defaults:
+            // - TOTAL Magic Garbage = ON
+            // - Slider = 100% (vanilla)
             MagicGarbage = true;
-            HideGarbageNotifications = true;
             GarbageTruckCapacityMultiplier = 100; // 100% (vanilla)
         }
 
@@ -78,8 +144,9 @@ namespace MagicGarbage
             }
 
             // NOTE:
-            // - MagicGarbageSystem reads Setting.MagicGarbage every frame
-            // - GarbageNotificationRemoverSystem uses MagicGarbage + HideGarbageNotifications
+            // - MagicGarbageSystem reads Setting.MagicGarbage every frame.
+            // - Notification icons now follow vanilla behaviour; we no longer
+            //   toggle the global garbage icon prefab in this mod.
         }
     }
 }

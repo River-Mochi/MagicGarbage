@@ -26,18 +26,12 @@ namespace MagicGarbage
 
         public void OnLoad(UpdateSystem updateSystem)
         {
+            // Lightweight banner: only at load
             Log.Info($"[MGT] {ModName} v{VersionShort} OnLoad");
-
-            if (GameManager.instance?.modManager != null &&
-                GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
-            {
-                Log.Info("[MGT] Current mod asset at " + asset.path);
-            }
 
             var setting = new Setting(this);
             Setting = setting;
 
-            // Localization
             var lm = GameManager.instance?.localizationManager;
             if (lm == null)
             {
@@ -45,7 +39,13 @@ namespace MagicGarbage
             }
             else
             {
+                // Register all supported locales once
                 lm.AddSource("en-US", new LocaleEN(setting));
+                lm.AddSource("fr-FR", new LocaleFR(setting));
+                lm.AddSource("es-ES", new LocaleES(setting));
+                lm.AddSource("de-DE", new LocaleDE(setting));
+                lm.AddSource("it-IT", new LocaleIT(setting));
+                lm.AddSource("zh-HANS", new LocaleZH_CN(setting));
             }
 
             // Load + register in Options UI
@@ -60,7 +60,8 @@ namespace MagicGarbage
             updateSystem.UpdateAfter<GarbageNotificationRemoverSystem>(SystemUpdatePhase.GameSimulation);
             updateSystem.UpdateAfter<GarbageTruckCapacitySystem>(SystemUpdatePhase.GameSimulation);
 
-            Log.Info("[MGT] Systems scheduled (GameSimulation only).");
+            // Optional: keep or remove this line depending on how chatty you want logs
+            // Log.Info("[MGT] Systems scheduled (GameSimulation only).");
         }
 
         public void OnDispose()
