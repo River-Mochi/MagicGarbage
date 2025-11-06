@@ -1,5 +1,5 @@
 // Mod.cs
-// Entry point for MGT
+// Entry point for "Magic Garbage Truck [MGT]".
 
 namespace MagicGarbage
 {
@@ -18,7 +18,7 @@ namespace MagicGarbage
         public static readonly ILog Log =
             LogManager.GetLogger("MagicGarbage").SetShowsErrorsInUI(false);
 
-        // Shared settings instance (nullable because it's cleared on dispose)
+        // Shared settings instance (nullable because we clear it on dispose)
         public static Setting? Setting
         {
             get; private set;
@@ -26,26 +26,34 @@ namespace MagicGarbage
 
         public void OnLoad(UpdateSystem updateSystem)
         {
-            // Lightweight banner: only at load
+#if DEBUG
             Log.Info($"[MGT] {ModName} v{VersionShort} OnLoad");
+
+            if (GameManager.instance?.modManager != null &&
+                GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
+            {
+                Log.Info("[MGT] Current mod asset at " + asset.path);
+            }
+#endif
 
             var setting = new Setting(this);
             Setting = setting;
 
+            // Localization
             var lm = GameManager.instance?.localizationManager;
             if (lm == null)
             {
+#if DEBUG
                 Log.Warn("[MGT] LocalizationManager is null; skipping locale registration.");
+#endif
             }
             else
             {
-                // First, Register all supported locales once
                 lm.AddSource("en-US", new LocaleEN(setting));
-                lm.AddSource("fr-FR", new LocaleFR(setting));
-                lm.AddSource("es-ES", new LocaleES(setting));
-                lm.AddSource("de-DE", new LocaleDE(setting));
-                lm.AddSource("it-IT", new LocaleIT(setting));
-                lm.AddSource("zh-HANS", new LocaleZH_CN(setting));
+                // Add other locales here later if you want:
+                // lm.AddSource("fr-FR", new LocaleFR(setting));
+                // lm.AddSource("de-DE", new LocaleDE(setting));
+                // etc.
             }
 
             // Load + register in Options UI
@@ -53,15 +61,15 @@ namespace MagicGarbage
             setting.RegisterInOptionsUI();
 
             // Systems in the main simulation phase:
-            // - MagicGarbageSystem: wipes garbage + requests when MagicGarbage is ON
-            // - GarbageNotificationRemoverSystem: hides/shows problem icons
-            // - GarbageTruckCapacitySystem: adjusts truck capacity & unload rate
+            // - MagicGarbageSystem: wipes garbage + requests when Magic Garbage is ON
+            // - GarbageNotificationRemoverSystem: hides garbage warning icons while Magic Garbage is ON
+            // - GarbageTruckCapacitySystem: adjusts truck capacity & unload rate for Semi-Magic
             updateSystem.UpdateAfter<MagicGarbageSystem>(SystemUpdatePhase.GameSimulation);
             updateSystem.UpdateAfter<GarbageNotificationRemoverSystem>(SystemUpdatePhase.GameSimulation);
             updateSystem.UpdateAfter<GarbageTruckCapacitySystem>(SystemUpdatePhase.GameSimulation);
 
-            if DEBUG
-                                        Log.Info("[MGT] Systems scheduled (GameSimulation only).");
+#if DEBUG
+            Log.Info("[MGT] Systems scheduled (GameSimulation only).");
 #endif
         }
 

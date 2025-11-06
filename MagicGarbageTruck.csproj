@@ -99,8 +99,11 @@
 
 	<!-- Link CS2 Mod toolchain files into Properties/ for easier viewing -->
 	<ItemGroup>
-		<None Include="$(ModPropsFile)"   Link="Properties\Mod.props" />
+		<None Include="$(ModPropsFile)" Link="Properties\Mod.props" />
 		<None Include="$(ModTargetsFile)" Link="Properties\Mod.targets" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="docs\" />
 	</ItemGroup>
 
 </Project>
