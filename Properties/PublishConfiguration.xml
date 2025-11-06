@@ -1,21 +1,38 @@
 ﻿<Publish>
 	<!--Id must be set in order to update existed mod. it is not required for publishing mod for the first time-->
-	<ModId Value="75587" />
+	<ModId Value="" />
 	<!--Name of the mod to display to players-->
 	<DisplayName Value="Magical Garbage Truck" />
 	<!--Short description of the mod-->
-	<ShortDescription Value="Removes the need for garbage handling in your city" />
+	<ShortDescription Value="Removes the need for garbage services." />
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
-	<LongDescription>
+	<LongDescription>## Magic Garbage Truck
+
+### Updated for 1.3.6* and Bridges DLC
+
 This mod removes the need to place garbage handling buildings in your city.
 
+### Option 1: Total Magic
+- All garbage is instantly removed from the city as soon as it is generated.
+- Just set it and forget it! (like traditional magic garbage)
+- Trucks and buildings are purely cosmetic.
 
-Garbage will now magically disappear when generated.
+### Option 2: Semi-Magic
+- Magic Slider to greatly increase capacity of Super Trucks.
+- Choice for players who like to see some garbage trucks driving around.
+- Over-powered garbage services to reduce traffic and garbage buildup.
 
+### Compatibility
+- This mod works with new and existing saves; safe to remove at any time.
+- Does not use Harmony or Reflection; lightweight, compatible, and less likely to break with game updates.
 
-This mod works with new and existing saves, and should be safe to remove at any time.
-  </LongDescription>
+### Credits
+- RiverMochi - author and maintainer
+- Thanks to Wayz for inspiration on the original Magical Garbage mod
+- Necko1996 - testing
+
+	</LongDescription>
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/Thumbnail.png" />
 	<!--Screenshot, can be set multiple times-->
@@ -23,18 +40,19 @@ This mod works with new and existing saves, and should be safe to remove at any 
 	<!--Tag, can be set multiple times-->
 	<Tag Value="Code Mod" />
 	<!--Link to the forum post where the mod can be discussed-->
-	<ForumLink Value="" />
+	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="0.2.0" />
+	<ModVersion Value="1.0.0" />
 	<!--Recommended version of the base game to use the mod-->
-	<GameVersion Value="1.1.*" />
+	<GameVersion Value="1.3.6*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
-	<ChangeLog Value="Effects now take place before unpausing" />
+	<ChangeLog Value="" />
 	<!--ChangeLog>
 	</ChangeLog-->
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
-  <ExternalLink Type="github" Url="https://github.com/Wayzware" />
-  <ExternalLink Type="paypal" Url="https://www.paypal.com/paypalme/wayzware" />
+<ExternalLink Type="discord" Url="https://discord.gg/HTav7ARPs2" />
+<ExternalLink Type="github" Url="https://github.com/River-Mochi/MagicGarbage" />
+
 </Publish>

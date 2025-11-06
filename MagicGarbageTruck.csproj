@@ -1,0 +1,106 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<!--
+    MagicGarbageTruck.csproj
+    CS2 mod: "Magic Garbage Truck" [MGT]
+  -->
+
+	<PropertyGroup>
+		<!-- Build configurations -->
+		<Configurations>Debug;Release</Configurations>
+
+		<!-- DLL name and default namespace -->
+		<AssemblyName>MagicGarbageTruck</AssemblyName>
+		<RootNamespace>MagicGarbage</RootNamespace>
+
+		<!-- Enable nullable reference types project-wide -->
+		<Nullable>enable</Nullable>
+
+		<!-- PDX Mods publish configuration for this mod -->
+		<PublishConfigurationPath>Properties\PublishConfiguration.xml</PublishConfigurationPath>
+	</PropertyGroup>
+
+	<!-- Optional: simple DEBUG/RELEASE constants -->
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+		<DefineConstants>TRACE;DEBUG</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<DefineConstants>TRACE</DefineConstants>
+	</PropertyGroup>
+
+	<!-- CS2 toolchain -->
+	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.props" />
+	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.targets" />
+
+	<!-- Core game + Colossal / Unity references used by this mod -->
+	<ItemGroup>
+		<Reference Include="Game">
+			<Private>false</Private>
+		</Reference>
+
+		<Reference Include="Colossal.Core">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Colossal.Logging">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Colossal.IO.AssetDatabase">
+			<Private>false</Private>
+		</Reference>
+
+		<!-- For Options Menu Settings UI + locales -->
+		<Reference Include="Colossal.Localization">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Colossal.UI">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Colossal.UI.Binding">
+			<Private>false</Private>
+		</Reference>
+
+		<!-- Unity / DOTS essentials -->
+		<Reference Include="UnityEngine">
+			<HintPath>$(ManagedPath)\UnityEngine.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="UnityEngine.CoreModule">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Unity.Collections">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Unity.Entities">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Unity.Mathematics">
+			<Private>false</Private>
+		</Reference>
+
+		<!-- Needed for [BurstCompile] / Entities.ForEach DC0060 -->
+		<Reference Include="Unity.Burst">
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
+
+	<!-- Base framework assemblies (do not copy to output) -->
+	<ItemGroup>
+		<Reference Update="System">
+			<Private>false</Private>
+		</Reference>
+		<Reference Update="System.Core">
+			<Private>false</Private>
+		</Reference>
+		<Reference Update="System.Data">
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
+
+	<!-- Link CS2 Mod toolchain files into Properties/ for easier viewing -->
+	<ItemGroup>
+		<None Include="$(ModPropsFile)"   Link="Properties\Mod.props" />
+		<None Include="$(ModTargetsFile)" Link="Properties\Mod.targets" />
+	</ItemGroup>
+
+</Project>
