@@ -45,7 +45,7 @@ namespace MagicGarbage
                     "**Aktiviert [x]** entfernt den gesamten Müll der Stadt sofort.\n" +
                     "- Müllverbrennungsanlagen und Deponien werden nicht mehr benötigt, außer du magst sie optisch.\n\n" +
 
-                    "<Nutze entweder diese Option **Vollständige Magie** oder die **Halbmagie** unten – nicht beide gleichzeitig.>\n" +
+                    "Nutze entweder diese Option **Vollständige Magie** oder die **Halbmagie** unten – nicht beide gleichzeitig.\n" +
                     "- Es passiert nichts Schlimmes, aber du bekommst keinen zusätzlichen Effekt."
                 },
 

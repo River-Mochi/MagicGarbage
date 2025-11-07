@@ -1,5 +1,5 @@
 // Settings/Setting.cs
-// Options UI + settings
+// Options UI + settings for Magic Garbage Truck [MGT].
 
 namespace MagicGarbage
 {
@@ -8,7 +8,7 @@ namespace MagicGarbage
     using Game.Settings;
     using Game.UI;
     using Unity.Entities;
-    using UnityEngine;      // Application.OpenURL
+    using UnityEngine; // Application.OpenURL
 
     [FileLocation("ModsSettings/MagicGarbage/MagicGarbage")]
     [SettingsUITabOrder(ActionsTab, AboutTab)] // Actions first, About second
@@ -16,14 +16,12 @@ namespace MagicGarbage
         TotalMagicGrp,
         SemiMagicGrp,
         AboutInfoGrp,
-        AboutLinksGrp,
-        AboutUsageGrp)]
+        AboutLinksGrp)]
     [SettingsUIShowGroupName(
         TotalMagicGrp,
         SemiMagicGrp,
-        // AboutInfoGrp header intentionally omitted
-        AboutLinksGrp,
-        AboutUsageGrp)]
+        //   AboutInfoGrp,  // AboutInfoGrp left out on purpose no header
+        AboutLinksGrp)]
     public sealed class Setting : ModSetting
     {
         // ---- Tabs ----
@@ -35,7 +33,6 @@ namespace MagicGarbage
         public const string SemiMagicGrp = "SemiMagic";
         public const string AboutInfoGrp = "AboutInfo";
         public const string AboutLinksGrp = "AboutLinks";
-        public const string AboutUsageGrp = "AboutUsage";
 
         // ---- External links ----
         private const string UrlParadox =
@@ -46,27 +43,17 @@ namespace MagicGarbage
 
         public Setting(IMod mod) : base(mod)
         {
-            // for brand new, set defaults
-            if (GarbageTruckCapacityMultiplier == 0)
-            {
-                SetDefaults();
-            }
-            else if (GarbageTruckCapacityMultiplier > 0 && GarbageTruckCapacityMultiplier < 10)
-            {
-                // Old saves where slider was 1–5: convert to 100–500%.
-                GarbageTruckCapacityMultiplier *= 100;
-            }
+
+            SetDefaults();
         }
 
         // ---- TOTAL MAGIC ----------------------------------------------------
 
-        // Checkbox: full Magic Garbage (no garbage gameplay, just visuals)
         [SettingsUISection(ActionsTab, TotalMagicGrp)]
         public bool MagicGarbage { get; set; } = true;
 
         // ---- SEMI-MAGIC (TRUCKS) -------------------------------------------
 
-        // Slider: garbage truck capacity (100–500%)
         [SettingsUISlider(min = 100, max = 500, step = 50,
                           scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
@@ -74,14 +61,12 @@ namespace MagicGarbage
 
         // ---- ABOUT TAB ------------------------------------------------------
 
-        // Info row: name + version
         [SettingsUISection(AboutTab, AboutInfoGrp)]
         public string AboutName => Mod.ModName;
 
         [SettingsUISection(AboutTab, AboutInfoGrp)]
         public string AboutVersion => Mod.VersionShort;
 
-        // Links row: Paradox Mods button
         [SettingsUIButton]
         [SettingsUIButtonGroup(AboutLinksGrp)]
         [SettingsUISection(AboutTab, AboutLinksGrp)]
@@ -96,7 +81,6 @@ namespace MagicGarbage
             }
         }
 
-        // Links row: Discord button
         [SettingsUIButton]
         [SettingsUIButtonGroup(AboutLinksGrp)]
         [SettingsUISection(AboutTab, AboutLinksGrp)]
@@ -111,20 +95,10 @@ namespace MagicGarbage
             }
         }
 
-        // About tab: USAGE NOTES (multiline text block)
-        [SettingsUIMultilineText]
-        [SettingsUISection(AboutTab, AboutUsageGrp)]
-        public string UsageNotes => string.Empty;
-
-        // ---- ModSetting overrides ------------------------------------------
-
         public override void SetDefaults()
         {
-            // Your requested defaults:
-            // - TOTAL Magic Garbage = ON
-            // - Slider = 100% (vanilla)
             MagicGarbage = true;
-            GarbageTruckCapacityMultiplier = 100; // 100% (vanilla)
+            GarbageTruckCapacityMultiplier = 100; // 100% = vanilla
         }
 
         public override void Apply()
@@ -135,18 +109,11 @@ namespace MagicGarbage
             if (world == null || !world.IsCreated)
                 return;
 
-            // Re-apply truck capacity once when slider changes
             var capacitySystem = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
             if (capacitySystem != null)
             {
-                // runs once, then sets Enabled = false in its OnUpdate
                 capacitySystem.Enabled = true;
             }
-
-            // NOTE:
-            // - MagicGarbageSystem reads Setting.MagicGarbage every frame.
-            // - Notification icons now follow vanilla behaviour; we no longer
-            //   toggle the global garbage icon prefab in this mod.
         }
     }
 }

@@ -45,8 +45,8 @@ namespace MagicGarbage
                     "**Enabled [X]** removes all city garbage instantly.\n" +
                     "Garbage buildings are no longer needed unless you like seeing them.\n\n" +
 
-                    "<Use either this **Total Magic** or\n" +
-                    "the **Semi-Magic** option below — not both.>\n" +
+                    "Use either this **Total Magic** or\n" +
+                    "the **Semi-Magic** option below — not both.\n" +
                     "- No harm, but nothing extra happens."
                 },
 

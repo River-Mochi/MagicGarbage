@@ -53,7 +53,7 @@ namespace MagicGarbage
 
             // Systems in the main simulation phase:
             // - MagicGarbageSystem: wipes garbage + requests when MagicGarbage is ON
-            // - GarbageNotificationRemoverSystem: hides/shows problem icons
+            // - GarbageNotificationRemoverSystem: hides garbage warning icons while Magic Garbage is ON
             // - GarbageTruckCapacitySystem: adjusts truck capacity & unload rate
             updateSystem.UpdateAfter<MagicGarbageSystem>(SystemUpdatePhase.GameSimulation);
             updateSystem.UpdateAfter<GarbageNotificationRemoverSystem>(SystemUpdatePhase.GameSimulation);

@@ -45,7 +45,7 @@ namespace MagicGarbage
                     "**Abilitato [x]** rimuove istantaneamente tutta la spazzatura della città.\n" +
                     "- Gli edifici di gestione rifiuti non sono più necessari, a meno che ti piaccia averli solo per l’estetica.\n\n" +
 
-                    "<Usa **Magia totale** oppure l’opzione **Semi-magica** qui sotto — non entrambe.>\n" +
+                    "Usa **Magia totale** oppure l’opzione **Semi-magica** qui sotto — non entrambe.\n" +
                     "- Non succede nulla di grave se le attivi entrambe, ma non otterrai alcun effetto aggiuntivo."
                 },
 
