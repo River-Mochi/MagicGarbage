@@ -25,10 +25,10 @@ namespace MagicGarbage
         {
             base.OnCreate();
 
-            // Only bother creating this system in worlds that actually have trucks.
+            // Skip this system entirely unless the world contains garbage truck prefabs
             RequireForUpdate<GarbageTruckData>();
 
-            // We only want to run when Setting.Apply() wakes us up.
+            // System wakes up only when Setting.Apply() toggles Enabled = true.
             Enabled = false;
         }
 

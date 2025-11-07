@@ -35,7 +35,7 @@ namespace MagicGarbage
         public const string SemiMagicGrp = "SemiMagic";
         public const string AboutInfoGrp = "AboutInfo";
         public const string AboutLinksGrp = "AboutLinks";
-        public const string AboutUsageGrp = "AboutUsage";  // NEW: USAGE NOTES group on About tab
+        public const string AboutUsageGrp = "AboutUsage";  // USAGE NOTES group on About tab
 
         // ---- External links ----
         private const string UrlParadox =
@@ -46,17 +46,13 @@ namespace MagicGarbage
 
         public Setting(IMod mod) : base(mod) { }
 
-        // --------------------------------------------------------------------
-        // TOTAL MAGIC
-        // --------------------------------------------------------------------
+        // ---- Total Magic ----
 
         // Checkbox: full Magic Garbage (no garbage gameplay, just visuals)
         [SettingsUISection(ActionsTab, TotalMagicGrp)]
         public bool MagicGarbage { get; set; } = true;
 
-        // --------------------------------------------------------------------
-        // SEMI-MAGIC (TRUCKS)
-        // --------------------------------------------------------------------
+        // ---- Semi-Magic (Trucks) ----
 
         // Slider: garbage truck capacity (100–500%)
         [SettingsUISlider(min = 100, max = 500, step = 50,
@@ -64,22 +60,16 @@ namespace MagicGarbage
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
         public int GarbageTruckCapacityMultiplier { get; set; } = 100;
 
-        // --------------------------------------------------------------------
-        // ABOUT TAB — INFO
-        // --------------------------------------------------------------------
+        // ---- About Tab — Info ----
 
-        // Info row: name + version
         [SettingsUISection(AboutTab, AboutInfoGrp)]
         public string AboutName => Mod.ModName;
 
         [SettingsUISection(AboutTab, AboutInfoGrp)]
         public string AboutVersion => Mod.VersionShort;
 
-        // --------------------------------------------------------------------
-        // ABOUT TAB — LINKS
-        // --------------------------------------------------------------------
+        // ---- About Tab — Links ----
 
-        // Paradox Mods button
         [SettingsUIButton]
         [SettingsUIButtonGroup(AboutLinksGrp)]
         [SettingsUISection(AboutTab, AboutLinksGrp)]
@@ -94,7 +84,6 @@ namespace MagicGarbage
             }
         }
 
-        // Discord button
         [SettingsUIButton]
         [SettingsUIButtonGroup(AboutLinksGrp)]
         [SettingsUISection(AboutTab, AboutLinksGrp)]
@@ -109,25 +98,21 @@ namespace MagicGarbage
             }
         }
 
-        // --------------------------------------------------------------------
-        // ABOUT TAB — USAGE NOTES (multiline block)
-        // --------------------------------------------------------------------
+        // ---- About Tab — Usage Notes ----
 
         // Multiline notes block; actual text comes from Locale files.
         [SettingsUIMultilineText]
         [SettingsUISection(AboutTab, AboutUsageGrp)]
         public string UsageNotes => string.Empty;
 
-        // --------------------------------------------------------------------
-        // ModSetting overrides
-        // --------------------------------------------------------------------
+        // ---- Defaults & Apply ----
 
         public override void SetDefaults()
         {
-            // - TOTAL Magic Garbage = ON
-            // - Slider = 100% (vanilla)
+            // First-time defaults:
+            // - TOTAL Magic Garbage = ON, Slider = 100% (vanilla)
             MagicGarbage = true;
-            GarbageTruckCapacityMultiplier = 100; // 100% = vanilla
+            GarbageTruckCapacityMultiplier = 100; // 100% = vanilla, not relevant when MagicGarbage = ON
         }
 
         public override void Apply()
@@ -142,13 +127,14 @@ namespace MagicGarbage
             var capacitySystem = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
             if (capacitySystem != null)
             {
-                // runs once, then sets Enabled = false in its OnUpdate
+                // Runs once, then sets Enabled = false in its OnUpdate
                 capacitySystem.Enabled = true;
             }
 
             // Note:
             // - MagicGarbageSystem reads Setting.MagicGarbage every frame.
-            // - GarbageNotificationRemoverSystem is a no-op placeholder now.
+            // - GarbageNotificationRemoverSystem hides the garbage icon prefab
+            //   while MagicGarbage is ON so new icons won’t spawn.
         }
     }
 }
