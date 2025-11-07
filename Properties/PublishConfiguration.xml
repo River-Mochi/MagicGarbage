@@ -1,6 +1,6 @@
 ﻿<Publish>
 	<!--Id must be set in order to update existed mod. it is not required for publishing mod for the first time-->
-	<ModId Value="" />
+	<ModId Value="124159" />
 	<!--Name of the mod to display to players-->
 	<DisplayName Value="Magic Garbage Truck" />
 	<!--Short description of the mod-->
@@ -13,7 +13,7 @@
 
 Handle garbage your way:
 - **Total Magic** option removes the need for any garbage buildings or trucks.
-- **Semi-Magic** option greatly increases garbage truck capacity to reduce traffic.
+- **Semi-Magic** option increases garbage truck capacity to improve service and reduce traffic.
 
 ---
 
@@ -54,24 +54,27 @@ Do Option 1 or 2, not both (nothing bad will happen, it just won't do anything e
 - RiverMochi - author and maintainer
 - Thanks to Wayz for inspiration on the original Magical Garbage mod
 - Necko1996 - testing and screenshots
+- gagaxm - Thumbnail screenshot
 
 </LongDescription>
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/Thumbnail.png" />
 	<!--Screenshot, can be set multiple times-->
-	<Screenshot Value="" />
+	<Screenshot Value="Properties/10-image-ActionsTab.jpg" />
+	<Screenshot Value="Properties/20-image-Before.png" />
+	<Screenshot Value="Properties/30-image-After.png" />
 	<!--Tag, can be set multiple times-->
 	<Tag Value="Code Mod" />
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.0.0" />
+	<ModVersion Value="1.0.1" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.3.6*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
-	<ChangeLog Value="" />
+	<ChangeLog Value="* Add screenshots" />
 	<!--ChangeLog>
 	</ChangeLog-->
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
