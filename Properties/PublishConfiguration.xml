@@ -54,13 +54,13 @@ Do Option 1 or 2, not both (nothing bad will happen, it just won't do anything e
 - RiverMochi - author and maintainer
 - Thanks to Wayz for inspiration on the original Magical Garbage mod
 - Necko1996 - testing and screenshots
-- gagaxm - Thumbnail screenshot
+- gagaxm - Thumbnail image
 
 </LongDescription>
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/Thumbnail.png" />
 	<!--Screenshot, can be set multiple times-->
-	<Screenshot Value="Properties/10-image-ActionsTab.jpg" />
+	<Screenshot Value="Properties/40-image-ActionsTab.jpg" />
 	<Screenshot Value="Properties/20-image-Before.png" />
 	<Screenshot Value="Properties/30-image-After.png" />
 	<!--Tag, can be set multiple times-->
