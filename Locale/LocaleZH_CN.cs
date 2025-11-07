@@ -32,6 +32,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "半魔法模式" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "模组信息" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "链接" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "使用说明" },
 
                 // -----------------------------------------------------------------
                 // Total Magic section
@@ -112,6 +113,35 @@ namespace MagicGarbage
                 {
                     m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)),
                     "在浏览器中打开 CS2 Modding Discord 服务器。"
+                },
+
+                // -----------------------------------------------------------------
+                // About -> USAGE NOTES
+                // -----------------------------------------------------------------
+                {
+                    m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
+                    "<默认推荐状态>\n" +
+                    "  * 魔法垃圾 = **[ON 开启]**\n" +
+                    "  * 滑块 = 100%\n" +
+                    "  * 城市中的所有垃圾会被立即清除\n\n" +
+
+                    " <-------------------------------------->\n\n" +
+
+                    "<半魔法超级垃圾车状态>\n" +
+                    "  * 魔法垃圾 = **[OFF 关闭]**\n" +
+                    "  * 将滑块设置在 100–500% 之间以提高容量。\n" +
+                    "  * 维持原版垃圾模拟，但需要更少、更强的垃圾车。\n\n" +
+
+                    " <-------------------------------------->\n\n" +
+
+                    "<完全原版游戏>\n" +
+                    "  * 魔法垃圾 = **[OFF 关闭]**\n" +
+                    "  * 滑块 = 100%（原版卡车容量）\n" +
+                    "  * 行为与标准游戏完全一致。\n"
+                },
+                {
+                    m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)),
+                    string.Empty
                 },
             };
         }

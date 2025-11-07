@@ -1,4 +1,4 @@
-// Locale/LocaleFR.cs
+// Locale/LocaleIT.cs
 
 namespace MagicGarbage
 {
@@ -32,6 +32,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "Modalità semi-magica" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Info mod" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Link" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "NOTE D'USO" },
 
                 // -----------------------------------------------------------------
                 // Total Magic section
@@ -112,6 +113,35 @@ namespace MagicGarbage
                 {
                     m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)),
                     "Apri il Discord di modding di CS2 nel browser."
+                },
+
+                // -----------------------------------------------------------------
+                // About -> USAGE NOTES
+                // -----------------------------------------------------------------
+                {
+                    m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
+                    "<Stato predefinito consigliato>\n" +
+                    "  * Spazzatura magica = **[ON]**\n" +
+                    "  * Cursore = 100%\n" +
+                    "  * Tutta la spazzatura viene rimossa istantaneamente\n\n" +
+
+                    " <-------------------------------------->\n\n" +
+
+                    "<Modalità super-camion (semi-magica)>\n" +
+                    "  * Spazzatura magica = **[OFF]**\n" +
+                    "  * Imposta il cursore tra 100 e 500% per più capacità.\n" +
+                    "  * Simulazione vanilla con meno camion ma più potenti.\n\n" +
+
+                    " <-------------------------------------->\n\n" +
+
+                    "<Gioco completamente vanilla>\n" +
+                    "  * Spazzatura magica = **[OFF]**\n" +
+                    "  * Cursore = 100% (limiti vanilla)\n" +
+                    "  * Comportamento esattamente standard.\n"
+                },
+                {
+                    m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)),
+                    string.Empty
                 },
             };
         }

@@ -60,7 +60,7 @@ namespace MagicGarbage
             updateSystem.UpdateAfter<GarbageTruckCapacitySystem>(SystemUpdatePhase.GameSimulation);
 
 #if DEBUG
-            Log.Info("[MGT] Systems scheduled (GameSimulation only).");
+            Log.Info("[MGT] All systems are now hooked into the main GameSimulation phase.");
 #endif
         }
 

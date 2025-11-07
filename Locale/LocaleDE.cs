@@ -32,6 +32,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "Halbmagischer Modus" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Mod-Info" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Links" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "HINWEISE ZUR NUTZUNG" },
 
                 // -----------------------------------------------------------------
                 // Total Magic section
@@ -112,6 +113,35 @@ namespace MagicGarbage
                 {
                     m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)),
                     "Öffnet den CS2-Modding-Discord im Browser."
+                },
+
+                // -----------------------------------------------------------------
+                // About -> USAGE NOTES
+                // -----------------------------------------------------------------
+                {
+                    m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
+                    "<Empfohlener Standardzustand>\n" +
+                    "  * Total Magic Garbage = **[AN]**\n" +
+                    "  * Regler = 100 %\n" +
+                    "  * Der gesamte Müll wird sofort entfernt\n\n" +
+
+                    " <-------------------------------------->\n\n" +
+
+                    "<Halbmagische Super-Lkw>\n" +
+                    "  * Magischer Müll = **[AUS]**\n" +
+                    "  * Regler auf 100–500 % für extra Kapazität.\n" +
+                    "  * Vanilla-Müllsimulation mit weniger, stärkeren Lkw.\n\n" +
+
+                    " <-------------------------------------->\n\n" +
+
+                    "<Komplett Vanilla>\n" +
+                    "  * Magischer Müll = **[AUS]**\n" +
+                    "  * Regler = 100 % (Standardkapazität)\n" +
+                    "  * Exakt normales Spielverhalten.\n"
+                },
+                {
+                    m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)),
+                    string.Empty
                 },
             };
         }

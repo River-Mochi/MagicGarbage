@@ -32,6 +32,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "Mode semi-magique" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Informations du mod" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Liens" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "NOTES D’UTILISATION" },
 
                 // -----------------------------------------------------------------
                 // Total Magic section
@@ -112,6 +113,35 @@ namespace MagicGarbage
                 {
                     m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)),
                     "Ouvrir le Discord de modding CS2 dans votre navigateur."
+                },
+
+                // -----------------------------------------------------------------
+                // About -> USAGE NOTES
+                // -----------------------------------------------------------------
+                {
+                    m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
+                    "<État recommandé par défaut>\n" +
+                    "  * Ordures magiques = **[ON]**\n" +
+                    "  * Curseur = 100 %\n" +
+                    "  * Tous les déchets sont supprimés instantanément\n\n" +
+
+                    " <-------------------------------------->\n\n" +
+
+                    "<Camions super (mode semi-magique)>\n" +
+                    "  * Ordures magiques = **[OFF]**\n" +
+                    "  * Réglez le curseur entre 100 et 500 % pour plus de capacité.\n" +
+                    "  * Simulation vanilla avec moins de camions, mais plus puissants.\n\n" +
+
+                    " <-------------------------------------->\n\n" +
+
+                    "<Jeu totalement vanilla>\n" +
+                    "  * Ordures magiques = **[OFF]**\n" +
+                    "  * Curseur = 100 % (limites vanilla)\n" +
+                    "  * Comportement exactement standard.\n"
+                },
+                {
+                    m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)),
+                    string.Empty
                 },
             };
         }

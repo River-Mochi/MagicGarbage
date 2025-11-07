@@ -6,6 +6,7 @@ using Game;
 
 namespace MagicGarbage
 {
+
     /// <summary>
     /// This system is intentionally disabled.
     /// It exists only so Mod.OnLoad can reference GarbageNotificationRemoverSystem
