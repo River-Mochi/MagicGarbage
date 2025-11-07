@@ -13,17 +13,17 @@ namespace MagicGarbage
     /// </summary>
     public partial class GarbageTruckCapacitySystem : GameSystemBase
     {
-        // Last applied slider value (percent). 100 = vanilla.
+        // Last applied slider value percent, 100 = vanilla.
         private int m_LastMultiplier = 100;
 
         protected override void OnCreate()
         {
             base.OnCreate();
 
-            // Do not run at all unless garbage truck prefabs exist in this world.
+            // Do not run at all unless garbage truck prefabs exist
             RequireForUpdate<GarbageTruckData>();
 
-            // System is driven explicitly by Setting.Apply().
+            // System is driven by Setting.Apply().
             Enabled = false;
         }
 
@@ -36,14 +36,14 @@ namespace MagicGarbage
                 return;
             }
 
-            // When Total Magic is enabled, capacity scaling is disabled.
+            // When Total Magic is enabled, capacity scaling is disabled (no reason)
             if (setting.MagicGarbage)
             {
                 Enabled = false;
                 return;
             }
 
-            // Slider is stored as 100–500 (%).
+            // Slider stored as 100–500 %
             int newMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500);
 
             // No change since the previous run.
@@ -57,7 +57,7 @@ namespace MagicGarbage
             float newFactor = newMult / 100f;
             float scale = newFactor / oldFactor;
 
-            // Rescale all garbage truck prefabs in-place.
+            // Rescale all garbage truck prefabs
             // Both capacity and unload rate are scaled so unload time stays roughly stable.
             Entities
                 .ForEach((ref GarbageTruckData data) =>
@@ -68,7 +68,7 @@ namespace MagicGarbage
                     data.m_UnloadRate =
                         (int)math.round(data.m_UnloadRate * scale);
                 })
-                .Run(); // Executes once on the main thread; only a small number of prefabs.
+                .Run(); // runs once on the main thread; only a small number of prefabs.
 
             m_LastMultiplier = newMult;
 

@@ -17,7 +17,7 @@ namespace MagicGarbage
         public static readonly ILog Log =
             LogManager.GetLogger("MagicGarbage").SetShowsErrorsInUI(false);
 
-        // Shared settings instance (nullable because it's cleared on dispose)
+        // Shared settings instance (nullable because cleared on dispose)
         public static Setting? Setting
         {
             get; private set;
@@ -51,7 +51,7 @@ namespace MagicGarbage
             AssetDatabase.global.LoadSettings("MagicGarbage", setting, new Setting(this));
             setting.RegisterInOptionsUI();
 
-            // Systems in the main simulation phase:
+            // main simulation phase:
             // - MagicGarbageSystem: clears garbage and requests when MagicGarbage is ON
             // - GarbageTruckCapacitySystem: adjusts truck capacity and unload rate for Semi-Magic
             updateSystem.UpdateAfter<MagicGarbageSystem>(SystemUpdatePhase.GameSimulation);

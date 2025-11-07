@@ -11,7 +11,7 @@ namespace MagicGarbage
     using UnityEngine; // Application.OpenURL
 
     [FileLocation("ModsSettings/MagicGarbage/MagicGarbage")]
-    [SettingsUITabOrder(ActionsTab, AboutTab)] // Actions first, About second
+    [SettingsUITabOrder(ActionsTab, AboutTab)] // Actions then About tab
     [SettingsUIGroupOrder(
         TotalMagicGrp,
         SemiMagicGrp,
@@ -26,18 +26,18 @@ namespace MagicGarbage
         AboutUsageGrp)]
     public sealed class Setting : ModSetting
     {
-        // TABS
+        // ---- TABS ----
         public const string ActionsTab = "Actions";
         public const string AboutTab = "About";
 
-        // GROUPS
+        // ---- GROUPS ----
         public const string TotalMagicGrp = "TotalMagic";
         public const string SemiMagicGrp = "SemiMagic";
         public const string AboutInfoGrp = "AboutInfo";
         public const string AboutLinksGrp = "AboutLinks";
         public const string AboutUsageGrp = "AboutUsage";  // USAGE NOTES group on About tab
 
-        // EXTERNAL LINKS
+        // ---- EXTERNAL LINKS ----
         private const string UrlParadox =
             "https://mods.paradoxplaza.com/authors/kimosabe1?orderBy=desc&sortBy=popularity";
 
@@ -48,13 +48,13 @@ namespace MagicGarbage
         {
         }
 
-        // TOTAL MAGIC
+        // ---- TOTAL MAGIC ----
 
         // Checkbox: full Magic Garbage (no garbage gameplay, just visuals)
         [SettingsUISection(ActionsTab, TotalMagicGrp)]
         public bool MagicGarbage { get; set; } = true;
 
-        // SEMI-MAGIC (TRUCKS)
+        // ---- SEMI-MAGIC (TRUCKS) ----
 
         // Slider: garbage truck capacity (100–500%)
         [SettingsUISlider(min = 100, max = 500, step = 50,
@@ -62,7 +62,7 @@ namespace MagicGarbage
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
         public int GarbageTruckCapacityMultiplier { get; set; } = 100;
 
-        // ABOUT TAB – INFO
+        // ---- ABOUT TAB – INFO ----
 
         [SettingsUISection(AboutTab, AboutInfoGrp)]
         public string AboutName => Mod.ModName;
@@ -70,7 +70,7 @@ namespace MagicGarbage
         [SettingsUISection(AboutTab, AboutInfoGrp)]
         public string AboutVersion => Mod.VersionShort;
 
-        // ABOUT TAB – LINKS
+        // ---- ABOUT TAB – LINKS ----
 
         [SettingsUIButton]
         [SettingsUIButtonGroup(AboutLinksGrp)]
@@ -100,13 +100,13 @@ namespace MagicGarbage
             }
         }
 
-        // ABOUT TAB – USAGE NOTES (multiline block)
+        // ---- ABOUT TAB – USAGE NOTES ----
 
         [SettingsUIMultilineText]
         [SettingsUISection(AboutTab, AboutUsageGrp)]
         public string UsageNotes => string.Empty; // Text comes from Locale files
 
-        // DEFAULTS & APPLY
+        // ---- DEFAULTS & APPLY ----
 
         public override void SetDefaults()
         {
@@ -115,6 +115,7 @@ namespace MagicGarbage
             MagicGarbage = true;
             GarbageTruckCapacityMultiplier = 100; // 100% = vanilla
         }
+
         public override void Apply()
         {
             base.Apply();
@@ -130,6 +131,5 @@ namespace MagicGarbage
                 capacitySystem.Enabled = true;
             }
         }
-
     }
 }

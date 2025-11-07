@@ -1,5 +1,5 @@
 // Systems/MagicGarbageSystem.cs
-// Total Magic: instantly clears garbage and cancels requests.
+// Total Magic: instantly clears garbage and cancels requests
 
 using Game;
 using Game.Buildings;
@@ -30,7 +30,7 @@ namespace MagicGarbage
             // System used to enqueue icon removal commands.
             m_IconCommandSystem = World.GetOrCreateSystemManaged<IconCommandSystem>();
 
-            // Query for all active garbage-producing buildings.
+            // Query for all active garbage-making buildings.
             m_GarbageProducerQuery = GetEntityQuery(new EntityQueryDesc
             {
                 All = new[]
@@ -45,7 +45,7 @@ namespace MagicGarbage
                 }
             });
 
-            // Parameters needed to know which notification prefab to remove.
+            // Parameters needed to know which notification prefab to remove
             m_GarbageParamsQuery = GetEntityQuery(
                 ComponentType.ReadOnly<GarbageParameterData>());
 
@@ -59,10 +59,10 @@ namespace MagicGarbage
             if (setting == null || !setting.MagicGarbage)
                 return;
 
-            // Icon command buffer used by the job to remove icons.
+            // Icon command buffer used by the job to remove icons
             IconCommandBuffer iconBuffer = m_IconCommandSystem.CreateCommandBuffer();
 
-            // Singleton with references to notification prefabs.
+            // Singleton with references to notification prefabs
             GarbageParameterData garbageParams = m_GarbageParamsQuery.GetSingleton<GarbageParameterData>();
 
             var job = new MagicJob
@@ -73,7 +73,7 @@ namespace MagicGarbage
                 m_GarbageParameters = garbageParams
             };
 
-            // Run over all garbage-producing building chunks in parallel.
+            // Run over all garbage-making building chunks in parallel
             Dependency = job.ScheduleParallel(m_GarbageProducerQuery, Dependency);
             m_IconCommandSystem.AddCommandBufferWriter(Dependency);
         }
@@ -112,7 +112,7 @@ namespace MagicGarbage
                         continue;
                     }
 
-                    // Reset garbage state and dispatch data.
+                    // Reset garbage state and dispatch data
                     producer.m_Garbage = 0;
                     producer.m_CollectionRequest = Entity.Null;
                     producer.m_DispatchIndex = 0;
@@ -120,7 +120,7 @@ namespace MagicGarbage
 
                     producers[i] = producer;
 
-                    // Always attempt to remove the world icon; harmless if none exists.
+                    // Always attempt to remove the garbage icon; harmless if none exists.
                     m_IconCommandBuffer.Remove(
                         building,
                         m_GarbageParameters.m_GarbageNotificationPrefab);
