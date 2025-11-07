@@ -15,13 +15,7 @@ using Unity.Entities;
 namespace MagicGarbage
 {
     /// <summary>
-    /// TOTAL MAGIC:
-    /// - Zeros out GarbageProducer.m_Garbage on all buildings
-    /// - Clears collection requests / dispatch index
-    /// - Clears the "garbage piling up" flag
-    /// - Removes the garbage notification icon from buildings
-    ///
-    /// Only runs while Setting.MagicGarbage is true.
+    /// Clears garbage state and garbage icons from all buildings while MagicGarbage is enabled.
     /// </summary>
     public partial class MagicGarbageSystem : GameSystemBase
     {
@@ -33,9 +27,10 @@ namespace MagicGarbage
         {
             base.OnCreate();
 
+            // System used to enqueue icon removal commands.
             m_IconCommandSystem = World.GetOrCreateSystemManaged<IconCommandSystem>();
 
-            // All real garbage-producing buildings
+            // Query for all active garbage-producing buildings.
             m_GarbageProducerQuery = GetEntityQuery(new EntityQueryDesc
             {
                 All = new[]
@@ -50,6 +45,7 @@ namespace MagicGarbage
                 }
             });
 
+            // Parameters needed to know which notification prefab to remove.
             m_GarbageParamsQuery = GetEntityQuery(
                 ComponentType.ReadOnly<GarbageParameterData>());
 
@@ -63,7 +59,10 @@ namespace MagicGarbage
             if (setting == null || !setting.MagicGarbage)
                 return;
 
+            // Icon command buffer used by the job to remove icons.
             IconCommandBuffer iconBuffer = m_IconCommandSystem.CreateCommandBuffer();
+
+            // Singleton with references to notification prefabs.
             GarbageParameterData garbageParams = m_GarbageParamsQuery.GetSingleton<GarbageParameterData>();
 
             var job = new MagicJob
@@ -74,6 +73,7 @@ namespace MagicGarbage
                 m_GarbageParameters = garbageParams
             };
 
+            // Run over all garbage-producing building chunks in parallel.
             Dependency = job.ScheduleParallel(m_GarbageProducerQuery, Dependency);
             m_IconCommandSystem.AddCommandBufferWriter(Dependency);
         }
@@ -100,20 +100,19 @@ namespace MagicGarbage
                     Entity building = entities[i];
                     GarbageProducer producer = producers[i];
 
-                    // If there is no garbage and no flag, we can skip,
-                    // but still safe to just clean everything so behaviour is predictable.
+                    // No garbage, no warning flag, and no collection request:
+                    // only potential stale icons need removal.
                     if (producer.m_Garbage == 0 &&
                         (producer.m_Flags & GarbageProducerFlags.GarbagePilingUpWarning) == 0 &&
                         producer.m_CollectionRequest == Entity.Null)
                     {
-                        // Still remove any existing or stale icon, just in case.
                         m_IconCommandBuffer.Remove(
                             building,
                             m_GarbageParameters.m_GarbageNotificationPrefab);
                         continue;
                     }
 
-                    // Clean completely
+                    // Reset garbage state and dispatch data.
                     producer.m_Garbage = 0;
                     producer.m_CollectionRequest = Entity.Null;
                     producer.m_DispatchIndex = 0;
@@ -121,7 +120,7 @@ namespace MagicGarbage
 
                     producers[i] = producer;
 
-                    // Always try to remove the world icon – harmless if none exists.
+                    // Always attempt to remove the world icon; harmless if none exists.
                     m_IconCommandBuffer.Remove(
                         building,
                         m_GarbageParameters.m_GarbageNotificationPrefab);

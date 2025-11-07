@@ -25,7 +25,7 @@ namespace MagicGarbage
 
         public void OnLoad(UpdateSystem updateSystem)
         {
-            // Lightweight banner: only at load
+            // One-time load banner
             Log.Info($"[MGT] {ModName} v{VersionShort} OnLoad");
 
             var setting = new Setting(this);
@@ -38,7 +38,7 @@ namespace MagicGarbage
             }
             else
             {
-                // First, Register all supported locales once
+                // Register all supported locales once
                 lm.AddSource("en-US", new LocaleEN(setting));
                 lm.AddSource("fr-FR", new LocaleFR(setting));
                 lm.AddSource("es-ES", new LocaleES(setting));
@@ -52,11 +52,9 @@ namespace MagicGarbage
             setting.RegisterInOptionsUI();
 
             // Systems in the main simulation phase:
-            // - MagicGarbageSystem: wipes garbage + requests when MagicGarbage is ON
-            // - GarbageNotificationRemoverSystem: hides garbage warning icons while Magic Garbage is ON
-            // - GarbageTruckCapacitySystem: adjusts truck capacity & unload rate
+            // - MagicGarbageSystem: clears garbage and requests when MagicGarbage is ON
+            // - GarbageTruckCapacitySystem: adjusts truck capacity and unload rate for Semi-Magic
             updateSystem.UpdateAfter<MagicGarbageSystem>(SystemUpdatePhase.GameSimulation);
-            updateSystem.UpdateAfter<GarbageNotificationRemoverSystem>(SystemUpdatePhase.GameSimulation);
             updateSystem.UpdateAfter<GarbageTruckCapacitySystem>(SystemUpdatePhase.GameSimulation);
 
 #if DEBUG
