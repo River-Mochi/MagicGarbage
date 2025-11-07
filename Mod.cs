@@ -12,7 +12,7 @@ namespace MagicGarbage
     public sealed class Mod : IMod
     {
         public const string ModName = "Magic Garbage Truck [MGT]";
-        public const string VersionShort = "1.0.1";
+        public const string VersionShort = "1.0.2";
 
         public static readonly ILog Log =
             LogManager.GetLogger("MagicGarbage").SetShowsErrorsInUI(false);
