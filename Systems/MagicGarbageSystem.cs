@@ -55,7 +55,7 @@ namespace MagicGarbage
 
         protected override void OnUpdate()
         {
-            var setting = Mod.Setting;
+            Setting? setting = Mod.Setting;
             if (setting == null || !setting.MagicGarbage)
                 return;
 

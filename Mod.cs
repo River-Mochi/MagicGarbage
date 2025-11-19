@@ -3,21 +3,33 @@
 
 namespace MagicGarbage
 {
+    using System.Reflection;
     using Colossal.IO.AssetDatabase;
     using Colossal.Logging;
+    using Colossal.Localization;
     using Game;
     using Game.Modding;
     using Game.SceneFlow;
 
     public sealed class Mod : IMod
     {
-        public const string ModName = "Magic Garbage Truck [MGT]";
-        public const string VersionShort = "1.0.2";
+        // ---- PUBLIC CONSTANTS / METADATA ----
+        public const string ModName = "Magic Garbage Truck";
+        public const string ModId = "MagicGarbageTruck";
+        public const string ModTag = "[MGT]";
+
+        /// <summary>
+        /// Read Version from .csproj (3-part).
+        /// </summary>
+        public static readonly string ModVersion =
+            Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.0";
+
+        private static bool s_BannerLogged;
 
         public static readonly ILog Log =
             LogManager.GetLogger("MagicGarbage").SetShowsErrorsInUI(false);
 
-        // Shared settings instance (nullable because cleared on dispose)
+        // Shared setting instance (nullable because cleared on dispose)
         public static Setting? Setting
         {
             get; private set;
@@ -25,13 +37,18 @@ namespace MagicGarbage
 
         public void OnLoad(UpdateSystem updateSystem)
         {
+
             // One-time load banner
-            Log.Info($"[MGT] {ModName} v{VersionShort} OnLoad");
+            if (!s_BannerLogged)
+            {
+                s_BannerLogged = true;
+                Log.Info($"{ModTag} {ModName} v{ModVersion} OnLoad");
+            }
 
             var setting = new Setting(this);
             Setting = setting;
 
-            var lm = GameManager.instance?.localizationManager;
+            LocalizationManager? lm = GameManager.instance?.localizationManager;
             if (lm == null)
             {
                 Log.Warn("[MGT] LocalizationManager is null; skipping locale registration.");
@@ -44,7 +61,11 @@ namespace MagicGarbage
                 lm.AddSource("es-ES", new LocaleES(setting));
                 lm.AddSource("de-DE", new LocaleDE(setting));
                 lm.AddSource("it-IT", new LocaleIT(setting));
-                lm.AddSource("zh-HANS", new LocaleZH_CN(setting));
+                lm.AddSource("ja-JP", new LocaleJA(setting));
+                lm.AddSource("ko-KR", new LocaleKO(setting));
+                lm.AddSource("pt-BR", new LocalePT_BR(setting));
+                lm.AddSource("zh-HANS", new LocaleZH_CN(setting));   // Simplified Chinese
+                lm.AddSource("zh-HANT", new LocaleZH_HANT(setting)); // Traditional Chinese
             }
 
             // Load + register in Options UI

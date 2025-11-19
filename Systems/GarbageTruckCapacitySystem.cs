@@ -29,7 +29,7 @@ namespace MagicGarbage
 
         protected override void OnUpdate()
         {
-            var setting = Mod.Setting;
+            Setting? setting = Mod.Setting;
             if (setting == null)
             {
                 Enabled = false;
@@ -44,7 +44,7 @@ namespace MagicGarbage
             }
 
             // Slider stored as 100–500 %
-            int newMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500);
+            var newMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500);
 
             // No change since the previous run.
             if (newMult == m_LastMultiplier)

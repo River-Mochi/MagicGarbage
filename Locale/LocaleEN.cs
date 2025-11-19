@@ -1,5 +1,5 @@
 // Locale/LocaleEN.cs
-// English (en-US) localization for "Magic Garbage Truck [MGT]".
+// English (en-US)
 
 namespace MagicGarbage
 {
@@ -38,28 +38,24 @@ namespace MagicGarbage
                 // -----------------------------------------------------------------
                 // Total Magic section
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.MagicGarbage)),
-                    "Magic Garbage"
-                },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.MagicGarbage)), "Magic Garbage" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.MagicGarbage)),
                     "**Enabled [X]** removes all city garbage instantly.\n" +
                     "Garbage buildings are no longer needed unless you like seeing them.\n\n" +
 
-                    "Use either this **Total Magic** or\n" +
-                    "the **Semi-Magic** option below — not both.\n" +
+                    "Use either this option 1 **Total Magic** or\n" +
+                    "option 2, the **Semi-Magic** below — not both.\n" +
                     "- No harm, but nothing extra happens."
                 },
 
                 // -----------------------------------------------------------------
                 // Semi-Magic section (slider only)
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "Garbage Truck Capacity"
-                },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "Garbage Truck Capacity" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
                     "**Semi-Magic** super trucks mode.\n" +
                     "If you just want easier garbage but not eliminate it: \n" +
-                    "- Magic Garbage = **[OFF]**\n" +
+                    "- make Magic Garbage **disabled** [ ] \n" +
                     "- Then use this slider **[100 >> 500]** to increase truck holding capacity.\n\n" +
 
                     "**---------------------------------------**\n" +
@@ -74,33 +70,23 @@ namespace MagicGarbage
                 // -----------------------------------------------------------------
                 // About info
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)),
-                    "Mod"
-                },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)),
                     "Display name of this mod."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)),
-                    "Version"
-                },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)),
-                    "Current mod version."
-                },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)), "Version" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)), "Current mod version." },
 
                 // -----------------------------------------------------------------
                 // About links
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenParadoxPage)),
-                    "Paradox Mods page"
-                },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenParadoxPage)), "Paradox Mods" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenParadoxPage)),
-                    "Open the Magic Garbage Truck page on Paradox Mods."
+                    "Open Paradox Mods webpage to the author's mods."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenDiscord)),
-                    "Discord"
-                },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenDiscord)), "Discord" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)),
                     "Open the CS2 modding Discord in your browser."
                 },
@@ -110,21 +96,17 @@ namespace MagicGarbage
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<Default recommended state>\n" +
-                    "  * Total Magic Garbage = **[ON]**\n" +
+                    "  * Total Magic Garbage on = **[X]**\n" +
                     "  * Slider = 100%\n" +
                     "  * All garbage is instantly removed\n" +
-
                     " <-------------------------------------->\n\n" +
-
                     "<Semi-Magic super trucks state>\n" +
-                    "  * Turn Magic Garbage = **[OFF]**\n" +
+                    "  * Turn Magic Garbage Off = **[ ]**\n" +
                     "  * Set slider [100 >> 500] to get super-size capacity.\n" +
                     "  * Vanilla garbage with better trucks, fewer needed.\n" +
-
                     " <-------------------------------------->\n\n" +
-
                     "<Full vanilla game>\n" +
-                    "  * Magic Garbage = **[OFF]**\n" +
+                    "  * Magic Garbage Off = **[ ]**\n" +
                     "  * Slider = 100% (vanilla truck limits)\n" +
                     "  * Exactly standard gameplay.\n"
                 },
@@ -133,7 +115,6 @@ namespace MagicGarbage
                 },
             };
         }
-
         public void Unload()
         {
         }

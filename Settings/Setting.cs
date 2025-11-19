@@ -68,7 +68,7 @@ namespace MagicGarbage
         public string AboutName => Mod.ModName;
 
         [SettingsUISection(AboutTab, AboutInfoGrp)]
-        public string AboutVersion => Mod.VersionShort;
+        public string AboutVersion => Mod.ModVersion;
 
         // ---- ABOUT TAB – LINKS ----
 
@@ -110,8 +110,7 @@ namespace MagicGarbage
 
         public override void SetDefaults()
         {
-            // First-time defaults:
-            // - TOTAL Magic Garbage = ON, Slider = 100% (vanilla)
+            // First-time defaults: MagicGarbage = ON, Slider = 100% (vanilla)
             MagicGarbage = true;
             GarbageTruckCapacityMultiplier = 100; // 100% = vanilla
         }
@@ -120,12 +119,12 @@ namespace MagicGarbage
         {
             base.Apply();
 
-            var world = World.DefaultGameObjectInjectionWorld;
+            World world = World.DefaultGameObjectInjectionWorld;
             if (world == null || !world.IsCreated)
                 return;
 
             // Recalculate truck capacity once when the slider value changes.
-            var capacitySystem = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
+            GarbageTruckCapacitySystem capacitySystem = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
             if (capacitySystem != null)
             {
                 capacitySystem.Enabled = true;

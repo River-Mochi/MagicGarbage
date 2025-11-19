@@ -8,6 +8,13 @@
 	<PropertyGroup>
 		<!-- Build configurations -->
 		<Configurations>Debug;Release</Configurations>
+		<!-- PDX Mods publish configuration for this mod -->
+		<PublishConfigurationPath>Properties\PublishConfiguration.xml</PublishConfigurationPath>
+
+  <!-- Single source of truth for version number -->
+	  <Version>1.0.3</Version>
+	<AssemblyVersion>$(Version).0</AssemblyVersion>
+	<FileVersion>$(Version).0</FileVersion>  <!-- for file properties -->
 
 		<!-- DLL name and default namespace -->
 		<AssemblyName>MagicGarbageTruck</AssemblyName>
@@ -16,8 +23,7 @@
 		<!-- Enable nullable reference types project-wide -->
 		<Nullable>enable</Nullable>
 
-		<!-- PDX Mods publish configuration for this mod -->
-		<PublishConfigurationPath>Properties\PublishConfiguration.xml</PublishConfigurationPath>
+
 	</PropertyGroup>
 
 	<!-- Optional: simple DEBUG/RELEASE constants -->
