@@ -64,6 +64,7 @@ namespace MagicGarbage
                 lm.AddSource("ja-JP", new LocaleJA(setting));
                 lm.AddSource("ko-KR", new LocaleKO(setting));
                 lm.AddSource("pt-BR", new LocalePT_BR(setting));
+                lm.AddSource("tr-TR", new LocaleTR(setting));
                 lm.AddSource("zh-HANS", new LocaleZH_CN(setting));   // Simplified Chinese
                 lm.AddSource("zh-HANT", new LocaleZH_HANT(setting)); // Traditional Chinese
             }
