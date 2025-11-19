@@ -37,9 +37,11 @@ Do Option 1 or 2, not both (nothing bad will happen, it just won't do anything e
 - For cities where you want vanilla gameplay, you don't need to uninstall.
 - Just uncheck the magic box[ ], set slider = 100%. Enjoy a normal game.
 
-### Supports 6 languages
-* English, Français French, Deutsch German, Español Spanish, Italiano Italian
-* 简体中文 Simplified Chinese
+### 10 languages
+- English, Français French, Deutsch German, Español Spanish, Italiano Italian
+- 日本語 (Japanese), 한국어 (Korean)
+- 简体中文 (Simplified Chinese), 繁體中文 (Traditional Chinese)
+- Português (Brasil) (Brazilian Portuguese)
 
 ---
 
@@ -59,17 +61,17 @@ Do Option 1 or 2, not both (nothing bad will happen, it just won't do anything e
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/Thumbnail.png" />
 	<!--Screenshot, can be set multiple times-->
-	<Screenshot Value="Properties/20-image-Before.png" />
-	<Screenshot Value="Properties/30-image-After.png" />
 	<Screenshot Value="Properties/40-image-ActionsEN.jpg" />
 	<Screenshot Value="Properties/50-image-ActionsFR.jpg" />
 	<Screenshot Value="Properties/60-image-ActionsCN.jpg" />
+	<Screenshot Value="Properties/70-image-Before.png" />
+	<Screenshot Value="Properties/80-image-After.png" />
 	<!--Tag, can be set multiple times-->
 	<Tag Value="Code Mod" />
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.0.3" />
+	<ModVersion Value="1.0.4" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.4.2*" />
 	<!--Dependency for the mod, can be set multiple times-->
@@ -77,10 +79,8 @@ Do Option 1 or 2, not both (nothing bad will happen, it just won't do anything e
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<ChangeLog>
 * Updated for 1.4.2* game patch
-* Adds Japanese
-* Adds Korean
-* Adds Traditional Chinese 繁體中文
-* Adds Portuguese (Brazil) (pt-BR)
+* Japanese, Korean, Traditional Chinese 繁體中文, Portuguese (Brazil) (pt-BR)
+* Fix screenshots
 	</ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 <ExternalLink Type="discord" Url="https://discord.gg/HTav7ARPs2" />
