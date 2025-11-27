@@ -1,5 +1,5 @@
-// Locale/LocalePT_BR.cs
-// Portuguese (Brazil) (pt-BR)
+// LocalePT_BR.cs
+// Portuguese (pt-BR)
 
 namespace MagicGarbage
 {
@@ -29,78 +29,142 @@ namespace MagicGarbage
                 { m_Setting.GetOptionTabLocaleID(Setting.AboutTab),   "Sobre" },
 
                 // Groups (row headers)
-                { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Magia Total" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "Semi-Mágico" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Informações do Mod" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Links" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "NOTAS DE USO" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Magia total" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "Semi-mágica" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Informações" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Links"       },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "NOTAS DE USO"},
 
                 // -----------------------------------------------------------------
                 // Total Magic section
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.MagicGarbage)), "Lixo Mágico" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.MagicGarbage)),
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Magia total" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
                     "**Ativado [X]** remove instantaneamente todo o lixo da cidade.\n" +
-                    "Edifícios de gestão de resíduos deixam de ser necessários, salvo por estética.\n\n" +
-                    "Usar apenas uma das opções: **Magia Total** (1) ou **Semi-Mágico** (2).\n" +
-                    "Ativar ambas não gera efeito adicional."
+                    "Os prédios de coleta e caminhões de lixo viram praticamente decoração.\n\n" +
+
+                    "Enquanto **Magia total** estiver ATIVADA:\n" +
+                    "- A opção Semi-mágica é automaticamente desativada.\n" +
+                    "- Todos os controles deslizantes da Semi-mágica são ignorados.\n"
                 },
 
                 // -----------------------------------------------------------------
-                // Semi-Magic section (slider only)
+                // Semi-Magic toggle (master switch for sliders)
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "Capacidade do Caminhão de Lixo" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagic)), "Semi-mágica" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagic)),
+                    "Ativa um serviço de lixo turbinado, mas ainda no estilo normal.\n" +
+                    "- Usa caminhões e instalações mais fortes em vez de magia total.\n" +
+                    "- Quando a Semi-mágica está ATIVADA, a Magia total é desligada automaticamente.\n" +
+                    "- Os sliders abaixo só têm efeito com a Semi-mágica ativada.\n"
+                },
+
+                // -----------------------------------------------------------------
+                // Semi-Magic sliders
+                // -----------------------------------------------------------------
+
+                // Truck load capacity (per vehicle)
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
+                    "Carga por caminhão" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "Modo **Semi-Mágico** com caminhões de alta capacidade.\n" +
-                    "Para facilitar sem eliminar a mecânica:\n" +
-                    "- Definir Lixo Mágico como **desativado** [ ]\n" +
-                    "- Usar o controle **[100 >> 500]** para aumentar a capacidade por caminhão\n\n" +
-                    "**---------------------------------------**\n" +
-                    " O controle ajusta a capacidade em relação ao valor da versão base.\n" +
-                    "**100% = 20 t por caminhão** (padrão)\n" +
-                    "**500% = 100 t por caminhão**\n\n" +
-                    "**---------------------------------------**\n\n" +
-                    "Para retornar ao comportamento vanilla: Lixo Mágico [OFF] e controle em 100%."
+                    "**Quanto lixo cada caminhão consegue transportar.**\n" +
+                    "- 100% = carga padrão.\n" +
+                    "- Valores maiores = menos viagens necessárias.\n"
+                },
+
+                // Facility truck count (how many trucks can be dispatched)
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
+                    "Caminhões por instalação" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
+                    "**Quantos caminhões cada instalação pode enviar.**\n" +
+                    "- 100% = número padrão de caminhões.\n" +
+                    "- Até 400% = até 300% mais caminhões disponíveis.\n"
+                },
+
+                // Facility processing speed
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
+                    "Velocidade de processamento" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
+                    "**Quão rápido as instalações processam o lixo.**\n" +
+                    "- 100% = velocidade padrão.\n" +
+                    "- Valores maiores = o lixo é queimado/reciclado mais rápido.\n"
+                },
+
+                // Facility storage capacity
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
+                    "Capacidade de armazenamento" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
+                    "**Quanto lixo uma instalação consegue armazenar antes de ficar cheia.**\n" +
+                    "- 100% = capacidade padrão.\n" +
+                    "- Valores maiores = a instalação aguenta mais antes de marcar \"cheia\".\n"
+                },
+
+                // -----------------------------------------------------------------
+                // Semi-Magic helper buttons (same row)
+                // -----------------------------------------------------------------
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicDefaults)),
+                    "Padrão do jogo" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicDefaults)),
+                    "Define todos os sliders da Semi-mágica de volta para **100%** (valores vanilla).\n" +
+                    "Use se quiser manter o mod instalado sem mexer nas estatísticas do serviço de lixo."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicRecommended)),
+                    "Recomendado" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicRecommended)),
+                    "Aplica os valores Semi-mágica recomendados:\n" +
+                    "- Carga por caminhão: **200%**\n" +
+                    "- Caminhões por instalação: **150%**\n" +
+                    "- Velocidade de processamento: **200%**\n" +
+                    "- Capacidade de armazenamento: **200%**\n"
                 },
 
                 // -----------------------------------------------------------------
                 // About info
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "Nome exibido deste Mod." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)),
+                    "Nome exibido deste mod."
+                },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)), "Versão" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)), "Versão atual do Mod." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)), "Versão atual do mod." },
 
                 // -----------------------------------------------------------------
                 // About links
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenParadoxPage)), "Paradox Mods" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenParadoxPage)), "Abrir a página do autor no Paradox Mods." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenParadoxPage)),
+                    "Abre a página do Paradox Mods com os mods do autor."
+                },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenDiscord)), "Discord" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)), "Abrir o Discord de modding de CS2 no navegador." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)),
+                    "Abre o Discord de modding de CS2 no navegador."
+                },
 
                 // -----------------------------------------------------------------
-                // About -> USAGE NOTES (multiline)
+                // About -> USAGE NOTES (multiline text block)
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<Estado padrão recomendado>\n" +
-                    "  * Magia Total = **[X]**\n" +
-                    "  * Controle = 100%\n" +
-                    "  * Todo o lixo é removido instantaneamente\n\n" +
+                    "  * Magia total LIGADA = **[X]**\n" +
+                    "  * Todo o lixo é removido instantaneamente\n" +
                     " <-------------------------------------->\n\n" +
-                    "<Semi-Mágico (caminhões de alta capacidade)>\n" +
-                    "  * Lixo Mágico = **[ ]**\n" +
-                    "  * Ajuste entre 100–500% para mais capacidade\n" +
-                    "  * Mantém a simulação vanilla com menos caminhões\n\n" +
+                    "<Estado de caminhões super Semi-mágica>\n" +
+                    "  * Magia total DESLIGADA = **[ ]**\n" +
+                    "  * Semi-mágica LIGADA = **[X]** e ajuste os sliders [100 >> 500] / [100 >> 400] como preferir.\n" +
+                    "  * Jogabilidade estilo vanilla, mas com caminhões e instalações mais fortes.\n" +
                     " <-------------------------------------->\n\n" +
                     "<Jogo totalmente vanilla>\n" +
-                    "  * Lixo Mágico = **[ ]**\n" +
-                    "  * Controle = 100% (limites vanilla)\n" +
-                    "  * Jogabilidade padrão."
+                    "  * Magia total DESLIGADA = **[ ]**\n" +
+                    "  * Semi-mágica = **[X]** (clique em \"Padrão do jogo\")\n" +
+                    "  * Todos os sliders em 100% (limites vanilla)\n" +
+                    "  * Experiência exatamente padrão.\n"
                 },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), string.Empty },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)),
+                    string.Empty
+                },
             };
         }
 

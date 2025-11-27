@@ -37,11 +37,11 @@ Do Option 1 or 2, not both (nothing bad will happen, it just won't do anything e
 - For cities where you want vanilla gameplay, you don't need to uninstall.
 - Just uncheck the magic box[ ], set slider = 100%. Enjoy a normal game.
 
-### 10 languages
+### 11 languages
 - English, Français French, Deutsch German, Español Spanish, Italiano Italian
-- 日本語 (Japanese), 한국어 (Korean)
-- 简体中文 (Simplified Chinese), 繁體中文 (Traditional Chinese)
-- Português (Brasil) (Brazilian Portuguese)
+- 日本語 Japanese, 한국어 Korean
+- 简体中文 Simplified Chinese, 繁體中文 Traditional Chinese
+- Português Brasil, Polski Polish
 
 ---
 
@@ -71,16 +71,15 @@ Do Option 1 or 2, not both (nothing bad will happen, it just won't do anything e
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.0.4" />
+	<ModVersion Value="1.0.5" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.4.2*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<ChangeLog>
-* Updated for 1.4.2* game patch
-* Japanese, Korean, Traditional Chinese 繁體中文, Portuguese (Brazil) (pt-BR)
-* Fix screenshots
+* adds Polish
+* fix paradox link
 	</ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 <ExternalLink Type="discord" Url="https://discord.gg/HTav7ARPs2" />

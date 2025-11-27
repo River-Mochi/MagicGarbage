@@ -1,15 +1,17 @@
 // Mod.cs
-// Entry point for MGT
+// Entry point for "Magic Garbage Truck" [MGT].
 
 namespace MagicGarbage
 {
-    using System.Reflection;
-    using Colossal.IO.AssetDatabase;
-    using Colossal.Logging;
-    using Colossal.Localization;
-    using Game;
-    using Game.Modding;
-    using Game.SceneFlow;
+    using System;                         // Exception
+    using System.Reflection;              // Assembly version number
+    using Colossal;                       // IDictionarySource
+    using Colossal.IO.AssetDatabase;      // AssetDatabase
+    using Colossal.Localization;          // LocalizationManager
+    using Colossal.Logging;               // ILog, LogManager
+    using Game;                           // UpdateSystem, SystemUpdatePhase
+    using Game.Modding;                   // IMod
+    using Game.SceneFlow;                 // GameManager
 
     public sealed class Mod : IMod
     {
@@ -26,57 +28,69 @@ namespace MagicGarbage
 
         private static bool s_BannerLogged;
 
+        // Logger (show errors in UI only in DEBUG)
         public static readonly ILog Log =
-            LogManager.GetLogger("MagicGarbage").SetShowsErrorsInUI(false);
+            LogManager.GetLogger("MagicGarbage").SetShowsErrorsInUI(
+#if DEBUG
+                true
+#else
+                false
+#endif
+            );
 
-        // Shared setting instance (nullable because cleared on dispose)
+        // Shared settings instance
         public static Setting? Setting
         {
-            get; private set;
+            get;
+            private set;
         }
 
         public void OnLoad(UpdateSystem updateSystem)
         {
-
-            // One-time load banner
+            // One-time load banner.
             if (!s_BannerLogged)
             {
                 s_BannerLogged = true;
                 Log.Info($"{ModTag} {ModName} v{ModVersion} OnLoad");
             }
 
+            GameManager? gameManager = GameManager.instance;
+            if (gameManager == null)
+            {
+                Log.Error("GameManager.instance is null in Mod.OnLoad.");
+                return;
+            }
+
+            // Settings first
             var setting = new Setting(this);
             Setting = setting;
 
-            LocalizationManager? lm = GameManager.instance?.localizationManager;
-            if (lm == null)
-            {
-                Log.Warn("[MGT] LocalizationManager is null; skipping locale registration.");
-            }
-            else
-            {
-                // Register all supported locales once
-                lm.AddSource("en-US", new LocaleEN(setting));
-                lm.AddSource("fr-FR", new LocaleFR(setting));
-                lm.AddSource("es-ES", new LocaleES(setting));
-                lm.AddSource("de-DE", new LocaleDE(setting));
-                lm.AddSource("it-IT", new LocaleIT(setting));
-                lm.AddSource("ja-JP", new LocaleJA(setting));
-                lm.AddSource("ko-KR", new LocaleKO(setting));
-                lm.AddSource("pt-BR", new LocalePT_BR(setting));
-                lm.AddSource("zh-HANS", new LocaleZH_CN(setting));   // Simplified Chinese
-                lm.AddSource("zh-HANT", new LocaleZH_HANT(setting)); // Traditional Chinese
-            }
+            // Register locales via helper
+            AddLocaleSource("en-US", new LocaleEN(setting));
+            AddLocaleSource("fr-FR", new LocaleFR(setting));
+            AddLocaleSource("es-ES", new LocaleES(setting));
+            AddLocaleSource("de-DE", new LocaleDE(setting));
+            AddLocaleSource("it-IT", new LocaleIT(setting));
+            AddLocaleSource("ja-JP", new LocaleJA(setting));
+            AddLocaleSource("ko-KR", new LocaleKO(setting));
+            AddLocaleSource("pl-PL", new LocalePL(setting));
+            AddLocaleSource("pt-BR", new LocalePT_BR(setting));
+            AddLocaleSource("zh-HANS", new LocaleZH_CN(setting));   // Simplified Chinese
+            AddLocaleSource("zh-HANT", new LocaleZH_HANT(setting)); // Traditional Chinese
 
-            // Load + register in Options UI
+            // Load saved settings (file name is in Setting.cs [FileLocation])
             AssetDatabase.global.LoadSettings("MagicGarbage", setting, new Setting(this));
+
+            // Show in Options -> Mods
             setting.RegisterInOptionsUI();
 
-            // main simulation phase:
-            // - MagicGarbageSystem: clears garbage and requests when MagicGarbage is ON
-            // - GarbageTruckCapacitySystem: adjusts truck capacity and unload rate for Semi-Magic
+            // Main simulation phase:
+            // - MagicGarbageSystem: when MagicGarbage toggle ON, clears garbage & requests
+            // - GarbageTruckCapacitySystem: adjusts truck capacity & unload rate for Semi-Magic
+            // - GarbageFacilityCapacitySystem: adjusts facility trucks, processing speed, storage
             updateSystem.UpdateAfter<MagicGarbageSystem>(SystemUpdatePhase.GameSimulation);
             updateSystem.UpdateAfter<GarbageTruckCapacitySystem>(SystemUpdatePhase.GameSimulation);
+            updateSystem.UpdateAfter<GarbageFacilityCapacitySystem>(SystemUpdatePhase.GameSimulation);
 
 #if DEBUG
             Log.Info("[MGT] All systems are now hooked into the main GameSimulation phase.");
@@ -94,6 +108,39 @@ namespace MagicGarbage
 #if DEBUG
             Log.Info("[MGT] OnDispose");
 #endif
+        }
+
+        // --------------------------------------------------------------------
+        // Localization helper
+        // --------------------------------------------------------------------
+
+        /// <summary>
+        /// Wrapper for LocalizationManager.AddSource that catches exceptions.
+        /// so localization issues can't break mod loading.
+        /// </summary>
+        private static void AddLocaleSource(string localeId, IDictionarySource source)
+        {
+            if (string.IsNullOrEmpty(localeId))
+            {
+                return;
+            }
+
+            LocalizationManager? lm = GameManager.instance?.localizationManager;
+            if (lm == null)
+            {
+                Log.Warn($"AddLocaleSource: No LocalizationManager; cannot add source for '{localeId}'.");
+                return;
+            }
+
+            try
+            {
+                lm.AddSource(localeId, source);
+            }
+            catch (Exception ex)
+            {
+                Log.Warn(
+                    $"AddLocaleSource: AddSource for '{localeId}' failed: {ex.GetType().Name}: {ex.Message}");
+            }
         }
     }
 }

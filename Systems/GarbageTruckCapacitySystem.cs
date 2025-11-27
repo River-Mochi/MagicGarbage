@@ -1,15 +1,15 @@
 // Systems/GarbageTruckCapacitySystem.cs
 
-using Game;
-using Game.Prefabs;
-using Unity.Entities;
-using Unity.Mathematics;
-
 namespace MagicGarbage
 {
+    using Game;
+    using Game.Prefabs;
+    using Unity.Entities;
+    using Unity.Mathematics;
+
     /// <summary>
     /// Scales garbage truck capacity and unload rate according to the Semi-Magic slider.
-    /// Disabled while Total Magic (MagicGarbage) is enabled.
+    /// Disabled while Total Magic is enabled.
     /// </summary>
     public partial class GarbageTruckCapacitySystem : GameSystemBase
     {
@@ -36,17 +36,24 @@ namespace MagicGarbage
                 return;
             }
 
-            // When Total Magic is enabled, capacity scaling is disabled (no reason)
-            if (setting.MagicGarbage)
+            // Total Magic overrides everything
+            if (setting.TotalMagic)
+            {
+                Enabled = false;
+                return;
+            }
+
+            // Semi-Magic must be enabled for sliders to matter
+            if (!setting.SemiMagic)
             {
                 Enabled = false;
                 return;
             }
 
             // Slider stored as 100–500 %
-            var newMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500);
+            int newMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500);
 
-            // No change since the previous run.
+            // Slider value unchanged since last run: nothing to update.
             if (newMult == m_LastMultiplier)
             {
                 Enabled = false;

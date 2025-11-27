@@ -1,4 +1,5 @@
-// Locale/LocaleFR.cs
+// LocaleFR.cs
+// French (fr-FR)
 
 namespace MagicGarbage
 {
@@ -29,118 +30,139 @@ namespace MagicGarbage
 
                 // Groups (row headers)
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Magie totale" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "Mode semi-magique" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Informations du mod" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Liens" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "NOTES D’UTILISATION" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "Semi-magie"   },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Infos du mod" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Liens"        },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "NOTES D'UTILISATION" },
 
                 // -----------------------------------------------------------------
                 // Total Magic section
                 // -----------------------------------------------------------------
-                {
-                    m_Setting.GetOptionLabelLocaleID(nameof(Setting.MagicGarbage)),
-                    "Ordures magiques"
-                },
-                {
-                    m_Setting.GetOptionDescLocaleID(nameof(Setting.MagicGarbage)),
-                    "**Activé [x]** supprime instantanément toutes les ordures de la ville.\n" +
-                    "- Les bâtiments de gestion des déchets ne sont plus nécessaires, sauf si vous aimez simplement les voir.\n\n" +
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Magie totale" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
+                    "**Activé [X]** supprime instantanément tous les déchets de la ville.\n" +
+                    "Les bâtiments et camions de collecte deviennent presque purement décoratifs.\n\n" +
 
-                    "<Utilisez soit cette option de **Magie totale**, soit l’option **Semi-magique** ci-dessous — pas les deux.>\n" +
-                    "- Rien de grave si les deux sont cochées, mais cela n’apporte rien de plus."
+                    "Tant que **Magie totale** est ACTIVÉE :\n" +
+                    "- La Semi-magie est automatiquement désactivée.\n" +
+                    "- Tous les curseurs de Semi-magie sont ignorés.\n"
                 },
 
                 // -----------------------------------------------------------------
-                // Semi-Magic section (slider only)
+                // Semi-Magic toggle (master switch for sliders)
                 // -----------------------------------------------------------------
-                {
-                    m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "Capacité des camions-poubelles"
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagic)), "Semi-magie" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagic)),
+                    "Active un service des déchets amélioré mais toujours classique.\n" +
+                    "- Utilise des camions et installations plus puissants au lieu de la magie totale.\n" +
+                    "- Quand la Semi-magie est ACTIVÉE, la Magie totale est désactivée automatiquement.\n" +
+                    "- Les curseurs ci-dessous n'ont d'effet que si la Semi-magie est activée.\n"
                 },
-                {
-                    m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "Mode **semi-magique** avec camions surpuissants.\n" +
-                    "- Si vous voulez seulement faciliter la gestion des déchets sans les supprimer :\n" +
-                    "- Ordures magiques = **[OFF]**\n" +
-                    "- Puis utilisez ce curseur **[100 >> 500]** pour augmenter la capacité des camions.\n\n" +
 
-                    "**---------------------------------------**\n" +
-                    " Le curseur ajuste la capacité par rapport à la valeur du jeu de base.\n" +
-                    "**100 % = 20 tonnes par camion** — valeur par défaut\n" +
-                    "**500 % = 100 tonnes par camion**\n\n" +
-                    " Bonus : la vitesse de déchargement est mise à l’échelle avec la capacité, donc les camions ne mettent pas plus de temps à se vider dans les installations de traitement.\n\n" +
-                    "**---------------------------------------**\n\n" +
-                    "Si vous voulez revenir au jeu vanilla complet, mettez Ordures magiques sur [OFF] et le curseur à 100 % pour un comportement normal."
+                // -----------------------------------------------------------------
+                // Semi-Magic sliders
+                // -----------------------------------------------------------------
+
+                // Truck load capacity (per vehicle)
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
+                    "Charge par camion" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
+                    "**Quantité de déchets que chaque camion peut transporter.**\n" +
+                    "- 100 % = charge standard.\n" +
+                    "- Valeurs plus élevées = moins d'allers-retours nécessaires.\n"
+                },
+
+                // Facility truck count (how many trucks can be dispatched)
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
+                    "Nombre de camions par installation" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
+                    "**Nombre de camions que chaque installation peut envoyer.**\n" +
+                    "- 100 % = nombre standard.\n" +
+                    "- Jusqu'à 400 % = jusqu'à 300 % de camions en plus.\n"
+                },
+
+                // Facility processing speed
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
+                    "Vitesse de traitement" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
+                    "**Vitesse à laquelle les installations traitent les déchets.**\n" +
+                    "- 100 % = vitesse standard.\n" +
+                    "- Valeurs plus élevées = les déchets sont brûlés / recyclés plus vite.\n"
+                },
+
+                // Facility storage capacity
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
+                    "Capacité de stockage" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
+                    "**Quantité de déchets qu'une installation peut stocker avant d'être pleine.**\n" +
+                    "- 100 % = stockage standard.\n" +
+                    "- Valeurs plus élevées = l'installation peut stocker davantage avant d'être saturée.\n"
+                },
+
+                // -----------------------------------------------------------------
+                // Semi-Magic helper buttons (same row)
+                // -----------------------------------------------------------------
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicDefaults)),
+                    "Valeurs par défaut" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicDefaults)),
+                    "Réinitialise tous les curseurs de Semi-magie à **100 %** (valeurs vanilla).\n" +
+                    "À utiliser si vous souhaitez garder le mod installé sans modifier les statistiques du service des déchets."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicRecommended)),
+                    "Recommandé" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicRecommended)),
+                    "Applique les valeurs Semi-magie recommandées :\n" +
+                    "- Charge par camion : **200 %**\n" +
+                    "- Camions par installation : **150 %**\n" +
+                    "- Vitesse de traitement : **200 %**\n" +
+                    "- Capacité de stockage : **200 %**\n"
                 },
 
                 // -----------------------------------------------------------------
                 // About info
                 // -----------------------------------------------------------------
-                {
-                    m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)),
-                    "Mod"
-                },
-                {
-                    m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)),
-                    "Nom affiché de ce mod."
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)),
+                    "Nom d'affichage de ce mod."
                 },
 
-                {
-                    m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)),
-                    "Version"
-                },
-                {
-                    m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)),
-                    "Version actuelle du mod."
-                },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)), "Version" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)), "Version actuelle du mod." },
 
                 // -----------------------------------------------------------------
                 // About links
                 // -----------------------------------------------------------------
-                {
-                    m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenParadoxPage)),
-                    "Page Paradox Mods"
-                },
-                {
-                    m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenParadoxPage)),
-                    "Ouvrir la page Paradox Mods de Magic Garbage Truck."
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenParadoxPage)), "Paradox Mods" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenParadoxPage)),
+                    "Ouvre la page Paradox Mods avec les mods de l'auteur."
                 },
 
-                {
-                    m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenDiscord)),
-                    "Discord"
-                },
-                {
-                    m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)),
-                    "Ouvrir le Discord de modding CS2 dans votre navigateur."
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenDiscord)), "Discord" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)),
+                    "Ouvre le Discord de modding CS2 dans votre navigateur."
                 },
 
                 // -----------------------------------------------------------------
-                // About -> USAGE NOTES
+                // About -> USAGE NOTES (multiline text block)
                 // -----------------------------------------------------------------
-                {
-                    m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
-                    "<État recommandé par défaut>\n" +
-                    "  * Ordures magiques = **[ON]**\n" +
-                    "  * Curseur = 100 %\n" +
-                    "  * Tous les déchets sont supprimés instantanément\n\n" +
-
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
+                    "<État par défaut recommandé>\n" +
+                    "  * Magie totale ACTIVÉE = **[X]**\n" +
+                    "  * Tous les déchets sont supprimés instantanément\n" +
                     " <-------------------------------------->\n\n" +
-
-                    "<Camions super (mode semi-magique)>\n" +
-                    "  * Ordures magiques = **[OFF]**\n" +
-                    "  * Réglez le curseur entre 100 et 500 % pour plus de capacité.\n" +
-                    "  * Simulation vanilla avec moins de camions, mais plus puissants.\n\n" +
-
+                    "<État Semi-magie super camions>\n" +
+                    "  * Magie totale DÉSACTIVÉE = **[ ]**\n" +
+                    "  * Semi-magie ACTIVÉE = **[X]** et réglez les curseurs [100 >> 500] / [100 >> 400] à votre goût.\n" +
+                    "  * Gameplay de style vanilla avec camions et installations renforcés.\n" +
                     " <-------------------------------------->\n\n" +
-
                     "<Jeu totalement vanilla>\n" +
-                    "  * Ordures magiques = **[OFF]**\n" +
-                    "  * Curseur = 100 % (limites vanilla)\n" +
-                    "  * Comportement exactement standard.\n"
+                    "  * Magie totale DÉSACTIVÉE = **[ ]**\n" +
+                    "  * Semi-magie = **[X]** (cliquez sur Valeurs par défaut)\n" +
+                    "  * Tous les curseurs à 100 % (limites vanilla)\n" +
+                    "  * Gameplay strictement standard.\n"
                 },
-                {
-                    m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)),
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)),
                     string.Empty
                 },
             };

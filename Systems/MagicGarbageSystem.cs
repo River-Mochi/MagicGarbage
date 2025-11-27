@@ -1,21 +1,21 @@
 // Systems/MagicGarbageSystem.cs
 // Total Magic: instantly clears garbage and cancels requests
 
-using Game;
-using Game.Buildings;
-using Game.Common;
-using Game.Notifications;
-using Game.Prefabs;
-using Game.Tools;
-using Unity.Burst;
-using Unity.Burst.Intrinsics;
-using Unity.Collections;
-using Unity.Entities;
-
 namespace MagicGarbage
 {
+    using Game;
+    using Game.Buildings;
+    using Game.Common;
+    using Game.Notifications;
+    using Game.Prefabs;
+    using Game.Tools;
+    using Unity.Burst;
+    using Unity.Burst.Intrinsics;
+    using Unity.Collections;
+    using Unity.Entities;
+
     /// <summary>
-    /// Clears garbage state and garbage icons from all buildings while MagicGarbage is enabled.
+    /// Clears garbage state and garbage icons from all buildings while TotalMagic is enabled.
     /// </summary>
     public partial class MagicGarbageSystem : GameSystemBase
     {
@@ -56,8 +56,10 @@ namespace MagicGarbage
         protected override void OnUpdate()
         {
             Setting? setting = Mod.Setting;
-            if (setting == null || !setting.MagicGarbage)
+            if (setting == null || !setting.TotalMagic)
+            {
                 return;
+            }
 
             // Icon command buffer used by the job to remove icons
             IconCommandBuffer iconBuffer = m_IconCommandSystem.CreateCommandBuffer();
@@ -87,10 +89,11 @@ namespace MagicGarbage
             public IconCommandBuffer m_IconCommandBuffer;
             [ReadOnly] public GarbageParameterData m_GarbageParameters;
 
-            public void Execute(in ArchetypeChunk chunk,
-                                int unfilteredChunkIndex,
-                                bool useEnabledMask,
-                                in v128 chunkEnabledMask)
+            public void Execute(
+                in ArchetypeChunk chunk,
+                int unfilteredChunkIndex,
+                bool useEnabledMask,
+                in v128 chunkEnabledMask)
             {
                 NativeArray<Entity> entities = chunk.GetNativeArray(m_EntityType);
                 NativeArray<GarbageProducer> producers = chunk.GetNativeArray(ref m_GarbageProducerType);
