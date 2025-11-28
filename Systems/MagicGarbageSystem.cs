@@ -1,6 +1,5 @@
 // Systems/MagicGarbageSystem.cs
 // Total Magic: instantly clears garbage and cancels requests
-
 namespace MagicGarbage
 {
     using Game;
@@ -45,7 +44,7 @@ namespace MagicGarbage
                 }
             });
 
-            // Parameters needed to know which notification prefab to remove
+            // Parameters needed to know which notification prefab to remove.
             m_GarbageParamsQuery = GetEntityQuery(
                 ComponentType.ReadOnly<GarbageParameterData>());
 
@@ -61,11 +60,12 @@ namespace MagicGarbage
                 return;
             }
 
-            // Icon command buffer used by the job to remove icons
+            // Icon command buffer used by the job to remove icons.
             IconCommandBuffer iconBuffer = m_IconCommandSystem.CreateCommandBuffer();
 
-            // Singleton with references to notification prefabs
-            GarbageParameterData garbageParams = m_GarbageParamsQuery.GetSingleton<GarbageParameterData>();
+            // Singleton with references to notification prefabs.
+            GarbageParameterData garbageParams =
+                m_GarbageParamsQuery.GetSingleton<GarbageParameterData>();
 
             var job = new MagicJob
             {
@@ -75,7 +75,7 @@ namespace MagicGarbage
                 m_GarbageParameters = garbageParams
             };
 
-            // Run over all garbage-making building chunks in parallel
+            // Run over all garbage-making building chunks in parallel.
             Dependency = job.ScheduleParallel(m_GarbageProducerQuery, Dependency);
             m_IconCommandSystem.AddCommandBufferWriter(Dependency);
         }
@@ -96,7 +96,8 @@ namespace MagicGarbage
                 in v128 chunkEnabledMask)
             {
                 NativeArray<Entity> entities = chunk.GetNativeArray(m_EntityType);
-                NativeArray<GarbageProducer> producers = chunk.GetNativeArray(ref m_GarbageProducerType);
+                NativeArray<GarbageProducer> producers =
+                    chunk.GetNativeArray(ref m_GarbageProducerType);
 
                 for (int i = 0; i < chunk.Count; i++)
                 {
@@ -115,7 +116,7 @@ namespace MagicGarbage
                         continue;
                     }
 
-                    // Reset garbage state and dispatch data
+                    // Reset garbage state and dispatch data.
                     producer.m_Garbage = 0;
                     producer.m_CollectionRequest = Entity.Null;
                     producer.m_DispatchIndex = 0;

@@ -1,4 +1,5 @@
 // Systems/GarbageTruckCapacitySystem.cs
+// Semi-Magic: scales truck prefab capacity & unload rate.
 
 namespace MagicGarbage
 {
@@ -20,7 +21,7 @@ namespace MagicGarbage
         {
             base.OnCreate();
 
-            // Do not run at all unless garbage truck prefabs exist
+            // Do not run at all unless garbage truck prefabs exist.
             RequireForUpdate<GarbageTruckData>();
 
             // System is driven by Setting.Apply().
@@ -36,22 +37,22 @@ namespace MagicGarbage
                 return;
             }
 
-            // Total Magic overrides everything
+            // Total Magic overrides everything.
             if (setting.TotalMagic)
             {
                 Enabled = false;
                 return;
             }
 
-            // Semi-Magic must be enabled for sliders to matter
-            if (!setting.SemiMagic)
+            // Semi-Magic must be enabled for sliders to matter.
+            if (!setting.SemiMagicEnabled)
             {
                 Enabled = false;
                 return;
             }
 
-            // Slider stored as 100–500 %
-            int newMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500);
+            // Slider stored as 100–500 %.
+            var newMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500);
 
             // Slider value unchanged since last run: nothing to update.
             if (newMult == m_LastMultiplier)
@@ -60,22 +61,22 @@ namespace MagicGarbage
                 return;
             }
 
-            float oldFactor = m_LastMultiplier / 100f;
-            float newFactor = newMult / 100f;
-            float scale = newFactor / oldFactor;
+            var oldFactor = m_LastMultiplier / 100f;
+            var newFactor = newMult / 100f;
+            var scale = newFactor / oldFactor;
 
-            // Rescale all garbage truck prefabs
-            // Both capacity and unload rate are scaled so unload time stays roughly stable.
-            Entities
-                .ForEach((ref GarbageTruckData data) =>
-                {
-                    data.m_GarbageCapacity =
-                        (int)math.round(data.m_GarbageCapacity * scale);
+            // Chunk-friendly iteration via SystemAPI.Query.
+            foreach (RefRW<GarbageTruckData> truck in SystemAPI.Query<RefRW<GarbageTruckData>>())
+            {
+                ref GarbageTruckData data = ref truck.ValueRW;
 
-                    data.m_UnloadRate =
-                        (int)math.round(data.m_UnloadRate * scale);
-                })
-                .Run(); // runs once on the main thread; only a small number of prefabs.
+                // Capacity and unload rate both scaled so unload time stays roughly stable.
+                data.m_GarbageCapacity =
+                    (int)math.round(data.m_GarbageCapacity * scale);
+
+                data.m_UnloadRate =
+                    (int)math.round(data.m_UnloadRate * scale);
+            }
 
             m_LastMultiplier = newMult;
 

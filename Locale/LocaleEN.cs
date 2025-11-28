@@ -51,8 +51,8 @@ namespace MagicGarbage
                 // -----------------------------------------------------------------
                 // Semi-Magic toggle (master switch for sliders)
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagic)), "Semi-Magic" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagic)),
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicEnabled)), "Semi-Magic" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicEnabled)),
                     "Enable tuned-up but still \"normal\" garbage gameplay.\n" +
                     "- Uses stronger trucks and facilities instead of full magic.\n" +
                     "- When Semi-Magic is ON, Total Magic is automatically turned OFF.\n" +
@@ -152,7 +152,7 @@ namespace MagicGarbage
                     "  * All garbage is instantly removed\n" +
                     " <-------------------------------------->\n\n" +
                     "<Semi-Magic super trucks state>\n" +
-                    "  * Turn Total Magic OFF = **[ ]**\n" +
+                    "  * Total Magic OFF = **[ ]**\n" +
                     "  * Enable Semi-Magic = **[X]** and set sliders [100 >> 500] / [100 >> 400] as you like.\n" +
                     "  * Vanilla-style garbage with better trucks and stronger facilities.\n" +
                     " <-------------------------------------->\n\n" +

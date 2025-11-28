@@ -10,7 +10,7 @@ namespace MagicGarbage
 
     /// <summary>
     /// Adjusts GarbageFacilityData (vehicle count, processing speed, storage)
-    /// according to Semi-Magic sliders. Disabled while Total Magic is enabled.
+    /// according to Semi-Magic sliders. Disabled while full TotalMagic is enabled.
     /// </summary>
     public partial class GarbageFacilityCapacitySystem : GameSystemBase
     {
@@ -39,7 +39,7 @@ namespace MagicGarbage
                 return;
             }
 
-            // If Total Magic mode is on, Semi-Magic facility tuning is pointless.
+            // If full TotalMagic mode is on, Semi-Magic facility tuning is pointless.
             if (setting.TotalMagic)
             {
                 Enabled = false;
@@ -47,7 +47,7 @@ namespace MagicGarbage
             }
 
             // Semi-Magic must be enabled for these sliders to matter.
-            if (!setting.SemiMagic)
+            if (!setting.SemiMagicEnabled)
             {
                 Enabled = false;
                 return;
@@ -55,15 +55,15 @@ namespace MagicGarbage
 
             // Clamp sliders to safe ranges.
             // Facility trucks: 100–400% (up to +300% more)
-            int vehicleMult =
+            var vehicleMult =
                 math.clamp(setting.GarbageFacilityVehicleMultiplier, 100, 400);
 
             // Processing speed: 100–500%
-            int processingMult =
+            var processingMult =
                 math.clamp(setting.GarbageFacilityProcessingMultiplier, 100, 500);
 
             // Storage capacity: 100–500%
-            int storageMult =
+            var storageMult =
                 math.clamp(setting.GarbageFacilityStorageMultiplier, 100, 500);
 
             // If nothing changed since last application, bail out.
@@ -76,30 +76,30 @@ namespace MagicGarbage
             }
 
             // Compute scale factors relative to previous state so changes are incremental.
-            float vehicleScale =
+            var vehicleScale =
                 (float)vehicleMult / m_LastVehicleMultiplier;
-            float processingScale =
+            var processingScale =
                 (float)processingMult / m_LastProcessingMultiplier;
-            float storageScale =
+            var storageScale =
                 (float)storageMult / m_LastStorageMultiplier;
 
-            // Scale all garbage facility prefabs in-place.
-            Entities
-                .ForEach((ref GarbageFacilityData data) =>
-                {
-                    // Number of trucks this facility can have.
-                    data.m_VehicleCapacity =
-                        (int)math.round(data.m_VehicleCapacity * vehicleScale);
+            // Chunk-friendly SystemAPI iteration over all garbage facilities.
+            foreach (RefRW<GarbageFacilityData> facility in SystemAPI.Query<RefRW<GarbageFacilityData>>())
+            {
+                ref GarbageFacilityData data = ref facility.ValueRW;
 
-                    // How quickly it processes garbage.
-                    data.m_ProcessingSpeed =
-                        (int)math.round(data.m_ProcessingSpeed * processingScale);
+                // Number of trucks this facility can have.
+                data.m_VehicleCapacity =
+                    (int)math.round(data.m_VehicleCapacity * vehicleScale);
 
-                    // How much garbage it can store.
-                    data.m_GarbageCapacity =
-                        (int)math.round(data.m_GarbageCapacity * storageScale);
-                })
-                .Run(); // Only a handful of prefabs; main thread is fine.
+                // How quickly it processes garbage.
+                data.m_ProcessingSpeed =
+                    (int)math.round(data.m_ProcessingSpeed * processingScale);
+
+                // How much garbage it can store.
+                data.m_GarbageCapacity =
+                    (int)math.round(data.m_GarbageCapacity * storageScale);
+            }
 
             // Remember new multipliers for next time.
             m_LastVehicleMultiplier = vehicleMult;

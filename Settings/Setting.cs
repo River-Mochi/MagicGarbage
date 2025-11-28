@@ -46,7 +46,7 @@ namespace MagicGarbage
 
         // ---- BACKING FIELDS FOR MUTUAL EXCLUSION ----
         private bool m_TotalMagic = true;
-        private bool m_SemiMagic; // default OFF
+        private bool m_SemiMagicEnabled; // default OFF
 
         public Setting(IMod mod)
             : base(mod)
@@ -58,7 +58,8 @@ namespace MagicGarbage
         // --------------------------------------------------------------------
 
         /// <summary>
-        /// Full “magic garbage”: all garbage instantly removed.
+        /// Full Magic Garbage (no garbage gameplay, just visuals).
+        /// UI label: "Total Magic".
         /// </summary>
         [SettingsUISection(ActionsTab, TotalMagicGrp)]
         public bool TotalMagic
@@ -76,7 +77,7 @@ namespace MagicGarbage
                 if (m_TotalMagic)
                 {
                     // Total Magic ON => Semi-Magic OFF.
-                    m_SemiMagic = false;
+                    m_SemiMagicEnabled = false;
                 }
 
                 // Re-apply so systems can react.
@@ -85,22 +86,23 @@ namespace MagicGarbage
         }
 
         /// <summary>
-        /// Semi-Magic mode: keeps normal garbage gameplay but with tuned sliders.
+        /// Semi-Magic tuning (sliders below). Mutually exclusive with TotalMagic.
+        /// UI label: "Semi-Magic".
         /// </summary>
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
-        public bool SemiMagic
+        public bool SemiMagicEnabled
         {
-            get => m_SemiMagic;
+            get => m_SemiMagicEnabled;
             set
             {
-                if (m_SemiMagic == value)
+                if (m_SemiMagicEnabled == value)
                 {
                     return;
                 }
 
-                m_SemiMagic = value;
+                m_SemiMagicEnabled = value;
 
-                if (m_SemiMagic)
+                if (m_SemiMagicEnabled)
                 {
                     // Semi-Magic ON => Total Magic OFF.
                     m_TotalMagic = false;
@@ -120,30 +122,46 @@ namespace MagicGarbage
         [SettingsUISlider(min = 100, max = 500, step = 50,
                           scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagic), true)]
-        public int GarbageTruckCapacityMultiplier { get; set; } = 100;
+        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
+        public int GarbageTruckCapacityMultiplier
+        {
+            get;
+            set;
+        } = 100;
 
         // Slider: number of facility trucks (vehicles) (100–400%)
         // 100% = vanilla number of trucks, 400% = +300% more.
         [SettingsUISlider(min = 100, max = 400, step = 25,
                           scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagic), true)]
-        public int GarbageFacilityVehicleMultiplier { get; set; } = 100;
+        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
+        public int GarbageFacilityVehicleMultiplier
+        {
+            get;
+            set;
+        } = 100;
 
         // Slider: facility garbage processing speed (100–500%)
         [SettingsUISlider(min = 100, max = 500, step = 25,
                           scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagic), true)]
-        public int GarbageFacilityProcessingMultiplier { get; set; } = 100;
+        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
+        public int GarbageFacilityProcessingMultiplier
+        {
+            get;
+            set;
+        } = 100;
 
         // Slider: facility garbage storage capacity (100–500%)
         [SettingsUISlider(min = 100, max = 500, step = 25,
                           scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagic), true)]
-        public int GarbageFacilityStorageMultiplier { get; set; } = 100;
+        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
+        public int GarbageFacilityStorageMultiplier
+        {
+            get;
+            set;
+        } = 100;
 
         // --------------------------------------------------------------------
         // SEMI-MAGIC PRESET BUTTONS (same row)
@@ -155,7 +173,7 @@ namespace MagicGarbage
         [SettingsUIButton]
         [SettingsUIButtonGroup(SemiMagicButtonsRow)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagic), true)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
         public bool SemiMagicDefaults
         {
             set
@@ -179,7 +197,7 @@ namespace MagicGarbage
         [SettingsUIButton]
         [SettingsUIButtonGroup(SemiMagicButtonsRow)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagic), true)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
         public bool SemiMagicRecommended
         {
             set
@@ -266,7 +284,7 @@ namespace MagicGarbage
             // - Semi-Magic OFF
             // - All sliders at 100% (vanilla)
             m_TotalMagic = true;
-            m_SemiMagic = false;
+            m_SemiMagicEnabled = false;
 
             GarbageTruckCapacityMultiplier = 100;
             GarbageFacilityVehicleMultiplier = 100;
@@ -284,25 +302,22 @@ namespace MagicGarbage
                 return;
             }
 
-            // Only wake Semi-Magic systems when Semi-Magic is ON and Total Magic is OFF.
-            if (!TotalMagic && SemiMagic)
+            // Recalculate truck stats when sliders/toggles change.
+            GarbageTruckCapacitySystem truckSystem = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
+            if (truckSystem != null)
             {
-                GarbageTruckCapacitySystem truckSystem =
-                    world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
-                if (truckSystem != null)
-                {
-                    truckSystem.Enabled = true;
-                }
-
-                GarbageFacilityCapacitySystem facilitySystem =
-                    world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
-                if (facilitySystem != null)
-                {
-                    facilitySystem.Enabled = true;
-                }
+                truckSystem.Enabled = true;
             }
 
-            // MagicGarbageSystem runs continuously and checks TotalMagic in OnUpdate.
+            // Recalculate facility stats when sliders/toggles change.
+            GarbageFacilityCapacitySystem facilitySystem = world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
+            if (facilitySystem != null)
+            {
+                facilitySystem.Enabled = true;
+            }
+
+            // MagicGarbageSystem runs every frame but just checks TotalMagic,
+            // so we don't need to poke it here.
         }
     }
 }

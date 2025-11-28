@@ -38,6 +38,18 @@
 	<!-- CS2 toolchain -->
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.props" />
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.targets" />
+	<ItemGroup>
+	  <Compile Remove="Locale\LocaleDE.cs" />
+	  <Compile Remove="Locale\LocaleES.cs" />
+	  <Compile Remove="Locale\LocaleFR.cs" />
+	  <Compile Remove="Locale\LocaleIT.cs" />
+	  <Compile Remove="Locale\LocaleJA.cs" />
+	  <Compile Remove="Locale\LocaleKO.cs" />
+	  <Compile Remove="Locale\LocalePL.cs" />
+	  <Compile Remove="Locale\LocalePT_BR.cs" />
+	  <Compile Remove="Locale\LocaleZH_CN.cs" />
+	  <Compile Remove="Locale\LocaleZH_HANT.cs" />
+	</ItemGroup>
 
 	<!-- Core game + Colossal / Unity references used by this mod -->
 	<ItemGroup>
