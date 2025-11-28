@@ -1,4 +1,4 @@
-// LocalePL.cs
+// Locale/LocalePL.cs
 // Polish (pl-PL)
 
 namespace MagicGarbage
@@ -21,42 +21,42 @@ namespace MagicGarbage
         {
             return new Dictionary<string, string>
             {
-                // Options mod name
-                { m_Setting.GetSettingsLocaleID(), "Magic Garbage Truck [MGT]" },
+                // Options mod name (single source of truth from Mod.cs)
+                { m_Setting.GetSettingsLocaleID(), Mod.ModName + " " + Mod.ModTag },
 
                 // Tabs
-                { m_Setting.GetOptionTabLocaleID(Setting.ActionsTab), "Opcje" },
+                { m_Setting.GetOptionTabLocaleID(Setting.ActionsTab), "Akcje" },
                 { m_Setting.GetOptionTabLocaleID(Setting.AboutTab),   "O modzie" },
 
                 // Groups (row headers)
-                { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Pełna magia" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "Pół-magiczny tryb" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Informacje"        },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Linki"             },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "UWAGI DOT. UŻYCIA" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Automatyczne czyszczenie" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "Ręczne zarządzanie"      },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Informacje o modzie"     },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Linki"                   },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "UWAGI DOT. UŻYCIA"       },
 
                 // -----------------------------------------------------------------
                 // Total Magic section
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Pełna magia" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Magia całkowita" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
-                    "**Włączone [X]** natychmiast usuwa wszystkie śmieci w mieście.\n" +
-                    "Budynki i pojazdy śmieciarki stają się prawie wyłącznie dekoracją.\n\n" +
+                    "**Włączone [ ✓ ]** natychmiast usuwa wszystkie śmieci w mieście.\n" +
+                    "Budynki i pojazdy do wywozu śmieci stają się głównie dekoracją.\n\n" +
 
-                    "Gdy **Pełna magia** jest WŁĄCZONA:\n" +
-                    "- Tryb pół-magiczny jest automatycznie wyłączany.\n" +
-                    "- Wszystkie suwaki trybu pół-magicznego są ignorowane.\n"
+                    "Gdy **Magia całkowita** jest WŁĄCZONA:\n" +
+                    "- Pół-magiczny tryb jest automatycznie wyłączany.\n" +
+                    "- Wszystkie suwaki Pół-magii są ignorowane.\n"
                 },
 
                 // -----------------------------------------------------------------
                 // Semi-Magic toggle (master switch for sliders)
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagic)), "Pół-magiczny tryb" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagic)),
-                    "Aktywuje wzmocnioną, ale wciąż normalną obsługę śmieci.\n" +
-                    "- Zamiast pełnej magii używa mocniejszych ciężarówek i instalacji.\n" +
-                    "- Gdy tryb pół-magiczny jest WŁĄCZONY, pełna magia zostaje wyłączona.\n" +
-                    "- Suwaki poniżej działają tylko wtedy, gdy tryb pół-magiczny jest aktywny.\n"
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicEnabled)), "Pół-magiczny tryb" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicEnabled)),
+                    "Bezpośrednio zarządza systemami śmieci, przy zachowaniu vanilla logiki gry.\n\n" +
+                    "- Gdy **Pół-magiczny tryb jest WŁĄCZONY [ ✓ ]**, Magia całkowita zostaje automatycznie wyłączona.\n" +
+                    "- Możesz dostosować wszystkie śmieciarki i budynki związane ze śmieciami.\n" +
+                    "- Suwaki mają efekt tylko wtedy, gdy Pół-magiczny tryb jest włączony [ ✓ ].\n"
                 },
 
                 // -----------------------------------------------------------------
@@ -65,38 +65,37 @@ namespace MagicGarbage
 
                 // Truck load capacity (per vehicle)
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "Ładowność ciężarówek" },
+                    "Ładowność śmieciarki" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "**Ile śmieci może przewieźć każda ciężarówka.**\n" +
-                    "- 100% = standardowa ładowność.\n" +
-                    "- Wyższe wartości = mniej kursów potrzebnych do sprzątnięcia miasta.\n"
+                    "**Ilość śmieci, jaką może przewieźć pojedyncza śmieciarka.**\n" +
+                    "100% = domyślna wartość gry.\n" +
+                    "<100% = 20 t>\n" +
+                    "<500% = 100 t.>\n"
                 },
 
                 // Facility truck count (how many trucks can be dispatched)
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "Liczba ciężarówek na instalację" },
+                    "Liczba śmieciarek na obiekt" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "**Ile ciężarówek może wysłać każda instalacja.**\n" +
-                    "- 100% = standardowa liczba pojazdów.\n" +
-                    "- Do 400% = nawet o 300% więcej ciężarówek w razie potrzeby.\n"
+                    "**Liczba śmieciarek, które jeden obiekt może wysłać.**\n" +
+                    "100% = standardowa liczba śmieciarek.\n"
                 },
 
                 // Facility processing speed
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
                     "Szybkość przetwarzania" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
-                    "**Jak szybko instalacje przetwarzają napływające śmieci.**\n" +
-                    "- 100% = standardowa szybkość.\n" +
-                    "- Wyższe wartości = śmieci są szybciej spalane / recyklingowane.\n"
+                    "**Szybkość, z jaką obiekty przetwarzają napływające śmieci.**\n" +
+                    "100% = standardowa szybkość przetwarzania.\n"
                 },
 
                 // Facility storage capacity
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
-                    "Pojemność magazynowa instalacji" },
+                    "Pojemność magazynowa obiektu" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
-                    "**Ile śmieci instalacja może przechować, zanim uzna się ją za przepełnioną.**\n" +
-                    "- 100% = standardowa pojemność.\n" +
-                    "- Wyższe wartości = więcej śmieci przed pojawieniem się komunikatu o przepełnieniu.\n"
+                    "**Ilość śmieci, jaką obiekt może przechowywać.**\n" +
+                    "100% = domyślna pojemność.\n" +
+                    "Wyższe wartości = obiekt może przechować więcej śmieci.\n"
                 },
 
                 // -----------------------------------------------------------------
@@ -105,18 +104,18 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicDefaults)),
                     "Wartości domyślne" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicDefaults)),
-                    "Przywraca wszystkie suwaki trybu pół-magicznego do **100%** (wartości vanilla).\n" +
-                    "Użyj, jeśli chcesz mieć moda włączonego, ale bez zmiany statystyk usług śmieciowych."
+                    "Przywraca wszystkie suwaki do **100%** (wartości vanilla).\n" +
+                    "Przywraca normalne zachowanie gry."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicRecommended)),
                     "Zalecane" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicRecommended)),
-                    "Stosuje zalecane wartości trybu pół-magicznego:\n" +
-                    "- Ładowność ciężarówek: **200%**\n" +
-                    "- Liczba ciężarówek na instalację: **150%**\n" +
+                    "Zastosuj zalecane wartości Pół-magii:\n" +
+                    "- Ładowność śmieciarki: **200%**\n" +
+                    "- Liczba śmieciarek na obiekt: **150%**\n" +
                     "- Szybkość przetwarzania: **200%**\n" +
-                    "- Pojemność magazynowa: **200%**\n"
+                    "- Pojemność magazynowa: **150%**\n"
                 },
 
                 // -----------------------------------------------------------------
@@ -124,43 +123,45 @@ namespace MagicGarbage
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)),
-                    "Nazwa wyświetlana tego modu."
+                    "Wyświetlana nazwa tego moda."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)), "Wersja" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)), "Aktualna wersja modu." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)),
+                    "Aktualna wersja moda."
+                },
 
                 // -----------------------------------------------------------------
                 // About links
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenParadoxPage)), "Paradox Mods" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenParadoxPage)),
-                    "Otwiera stronę Paradox Mods z modami autora."
+                    "Otwiera stronę **Paradox Mods** z modami autora."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenDiscord)), "Discord" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)),
-                    "Otwiera nawigator z serwerem Discord poświęconym modowaniu CS2."
+                    "Otwiera **Discord** w przeglądarce (CS2 Modding)."
                 },
 
                 // -----------------------------------------------------------------
                 // About -> USAGE NOTES (multiline text block)
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
-                    "<Zalecany stan domyślny>\n" +
-                    "  * Pełna magia WŁĄCZONA = **[X]**\n" +
+                    "<Tryb automatycznego czyszczenia>\n" +
+                    "  * Magia całkowita WŁĄCZONA = **[ ✓ ]**\n" +
                     "  * Wszystkie śmieci są natychmiast usuwane\n" +
                     " <-------------------------------------->\n\n" +
-                    "<Tryb pół-magiczny – super ciężarówki>\n" +
-                    "  * Pełna magia WYŁĄCZONA = **[ ]**\n" +
-                    "  * Tryb pół-magiczny WŁĄCZONY = **[X]** i ustaw suwaki [100 >> 500] / [100 >> 400] według uznania.\n" +
-                    "  * Rozgrywka w stylu vanilla, ale z mocniejszymi ciężarówkami i instalacjami.\n" +
+                    "<Tryb samodzielnego zarządzania>\n" +
+                    "  * Włącz Pół-magiczny tryb = **[ ✓ ]**\n" +
+                    "  * Ustaw suwaki [100 >> 500] według uznania.\n" +
+                    "  * Styl vanilla z mocniejszymi i regulowanymi pojazdami i obiektami.\n" +
                     " <-------------------------------------->\n\n" +
-                    "<Całkowicie vanilla>\n" +
-                    "  * Pełna magia WYŁĄCZONA = **[ ]**\n" +
-                    "  * Tryb pół-magiczny = **[X]** (kliknij „Wartości domyślne”)\n" +
-                    "  * Wszystkie suwaki na 100% (limity vanilla)\n" +
-                    "  * W pełni standardowa rozgrywka.\n"
+                    "<Normalna gra vanilla>\n" +
+                    "  * Pół-magiczny tryb = **[ ✓ ]**\n" +
+                    "  * Kliknij **[Wartości domyślne]**\n" +
+                    "  * Wszystkie suwaki na 100% (vanilla)\n" +
+                    "  * Standardowa rozgrywka.\n"
                 },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)),
                     string.Empty

@@ -4,38 +4,38 @@
 	<!--Name of the mod to display to players-->
 	<DisplayName Value="Magic Garbage Truck" />
 	<!--Short description of the mod-->
-	<ShortDescription Value="Total Magic Option = remove all city garbage; Semi-magic = super powered garbage trucks" />
+	<ShortDescription Value="Total Magic Option = remove all city garbage; Semi-magic = tune all garbage trucks and buildings" />
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
-	<LongDescription>## Magic Garbage Truck [MGT]
+	<LongDescription>### Magic Garbage Truck [MGT]
 
 
 Handle garbage your way:
-- **Total Magic** option removes the need for any garbage buildings or trucks.
-- **Semi-Magic** option increases garbage truck capacity to improve service and reduce traffic.
+- **Total Magic** option cleans all city garbage.
+- **Semi-Magic** option lets you tune all garbage trucks and facilities.
 
 ---
 
 ### How it works
 
-**OPTION 1 - TOTAL MAGIC**
-- ✅ Magic Garbage on, removes all garbage instantly.
-- Perfect if you want to forget about all garbage buildings.
+**OPTION 1 - AUTO CLEAN**
+- ✅ Total Magic on, removes all garbage instantly.
+- Perfect if you want to forget about all garbage.
 - Set it and forget it! (most like classic old "magical garbage")
-- No garbage issues; trucks and facilities are cosmetic now.
+- No garbage issues; trucks and facilities become mostly cosmetic.
 
-**OPTION 2 - SEMI-MAGIC (Power Trucks)**
-- Magic Garbage = OFF
-- Use the slider to increase garbage truck capacity [100>>500%].
+**OPTION 2 - SELF-MANAGE**
+- ✅ Semi-Magic on; Manage garbage how you like.
+- Sliders to control all garbage trucks/faiclities
 - 🚚 Super powered trucks reduce traffic and service strain.
 - Great if you still want to see trucks driving around, just fewer problems.
-- Bonus: unload speed scales with capacity change. Facilities won't clog with mega truck unloads taking longer.
-
-Do Option 1 or 2, not both (nothing bad will happen, it just won't do anything extra).
+- Helper buttons:
+  - **[Game Defaults]** – reset all sliders to 100% (pure vanilla).  
+  - **[Recommended]** – presets for % load, truck count, process speed, storage max.
 
 **OPTION 3 - NO MAGIC (Vanilla)**
-- For cities where you want vanilla gameplay, you don't need to uninstall.
-- Just uncheck the magic box[ ], set slider = 100%. Enjoy a normal game.
+- Turn Semi-Magic on ✅, Click [Game Defaults]
+- All sliders at 100% = exactly standard gameplay.
 
 ### 11 languages
 - English, Français French, Deutsch German, Español Spanish, Italiano Italian
@@ -46,7 +46,7 @@ Do Option 1 or 2, not both (nothing bad will happen, it just won't do anything e
 ---
 
 ### Compatibility
-- Safe to remove at any time; works with new and existing cities.
+- Works with new and existing cities. Enable/Disable any time, safely remove any time.
 - Does not use Harmony or Reflection; lightweight, compatible, and less likely to break with game updates.
 
 ---
@@ -73,12 +73,14 @@ Do Option 1 or 2, not both (nothing bad will happen, it just won't do anything e
 	<!--Version of the mod-->
 	<ModVersion Value="1.0.5" />
 	<!--Recommended version of the base game to use the mod-->
-	<GameVersion Value="1.4.2*" />
+	<GameVersion Value="1.4.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<ChangeLog>
 * adds Polish
+* New Semi-Magic sliders for trucks + facilities
+* Updated descriptions and locale texts
 * fix paradox link
 	</ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->

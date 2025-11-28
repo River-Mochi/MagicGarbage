@@ -2,35 +2,39 @@
 
 ## Two ways to handle garbage in **Cities: Skylines II**
 
-## Option 1 Total Magic (recommended default)
+## Option 1 – Total Magic (Auto Clean)
 
-- ✅ Magic Garbage on
-- All city garbage is removed instantly.
-- No garbage micromanagement. Just build your city and ignore garbage.
-- Auto disables garbage warning icons because there is no garbage
-- Garbage trucks and buildings are purely cosmetic.
-- Closest to the classic defunct "Magical Garbage Truck" mod.
+- ✅ **Total Magic ON**
+- All city garbage is removed almost instantly.
+- No garbage micromanagement – just build your city.
+- Garbage warning icons are cleared because there is no garbage.
+- Garbage trucks and buildings become mostly cosmetic.
 
-## Option 2 Semi-Magic (🚚 Super Trucks)
-- Turn **Magic Garbage = OFF**.
-- Use the **Garbage Truck Capacity** slider (**100–500%**) to make super-size trucks.
-- Vanilla garbage simulation stays active.
-  - Each truck carries more garbage so fewer trucks are needed.
-  - Unload speed scales with capacity so depots don’t clog.
+## Option 2 – Semi-Magic (Self-Manage)
 
-> 💡 Do Option 1 or 2 – not both.  
-> Nothing breaks if you mix them, but you won’t gain anything extra.
+- ✅ **Semi-Magic ON**, **Total Magic OFF**.
+- Vanilla garbage simulation stays active, but you control all stats:
+  - **Truck load capacity** (100–500%)
+  - **Facility truck count** (100–400%)
+  - **Processing speed** (100–500%)
+  - **Facility storage capacity** (100–500%)
+- Two helper buttons:
+  - **Game Defaults** – puts everything back to **100%** (pure vanilla behaviour).
+  - **Recommended** – 200% truck load, 150% truck count, 200% processing speed, 150% storage.
+
+> 💡 Choose **Total Magic** *or* **Semi-Magic**.  
+> You can swap between them any time; the UI makes it clear what’s active.
 
 ## Compatibility
-- Works with new and existing saves.
-- Safe to remove or disable at any time; 
-- This does not use Harmony or Reflection - lightweight and less likely to break with game updates.
 
+- Works with new and existing saves.
+- Safe to remove or disable at any time.
+- Does **not** use Harmony or reflection – lightweight and resilient to game updates.
 
 ---
 
 ## Credits
 
 - **RiverMochi** – author and maintainer  
-- Thanks to **Wayz** for inspiration on the original Magical Garbage mod  
+- Thanks to **Wayz** for the original “Magical Garbage Truck” idea  
 - **Necko1996** – testing and feedback

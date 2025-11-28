@@ -1,5 +1,5 @@
-// LocaleZH_CN.cs
-// Chinese Simplified (zh-CN)
+// Locale/LocaleZH_CN.cs
+// Simplified Chinese (zh-HANS)
 
 namespace MagicGarbage
 {
@@ -21,42 +21,42 @@ namespace MagicGarbage
         {
             return new Dictionary<string, string>
             {
-                // Options mod name
-                { m_Setting.GetSettingsLocaleID(), "Magic Garbage Truck [MGT]" },
+                // Options mod name (single source of truth from Mod.cs)
+                { m_Setting.GetSettingsLocaleID(), Mod.ModName + " " + Mod.ModTag },
 
                 // Tabs
                 { m_Setting.GetOptionTabLocaleID(Setting.ActionsTab), "操作" },
                 { m_Setting.GetOptionTabLocaleID(Setting.AboutTab),   "关于" },
 
                 // Groups (row headers)
-                { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "完全魔法" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "半魔法模式" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "模组信息"   },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "链接"       },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "使用说明"   },
+                { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "自动清理" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "自行管理" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Mod 信息" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "链接"     },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "使用说明" },
 
                 // -----------------------------------------------------------------
                 // Total Magic section
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "完全魔法" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
-                    "**勾选 [X]** 时，城市里的所有垃圾会立刻被清除。\n" +
-                    "垃圾处理建筑和垃圾车几乎只剩下视觉效果。\n\n" +
+                    "**启用 [ ✓ ]** 后，会立刻清除全城所有垃圾。\n" +
+                    "垃圾设施和垃圾车基本上只剩下观赏用途。\n\n" +
 
                     "当 **完全魔法** 处于开启状态时：\n" +
-                    "- 半魔法模式会被自动关闭。\n" +
+                    "- 半魔法模式会自动关闭。\n" +
                     "- 所有半魔法的滑块设置都会被忽略。\n"
                 },
 
                 // -----------------------------------------------------------------
                 // Semi-Magic toggle (master switch for sliders)
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagic)), "半魔法模式" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagic)),
-                    "保持正常的垃圾系统玩法，但数值有所强化。\n" +
-                    "- 不再是完全魔法，而是更强的垃圾车和处理设施。\n" +
-                    "- 半魔法模式开启时，会自动关闭完全魔法。\n" +
-                    "- 只有在半魔法模式开启时，下方滑块才会生效。\n"
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicEnabled)), "半魔法" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicEnabled)),
+                    "直接控制垃圾系统，同时保留原版（vanilla）垃圾模拟逻辑。\n\n" +
+                    "- 当 **半魔法开启 [ ✓ ]** 时，完全魔法会自动关闭。\n" +
+                    "- 可以调节所有垃圾车和垃圾处理建筑的性能。\n" +
+                    "- 只有在半魔法启用 [ ✓ ] 时，滑块才会生效。\n"
                 },
 
                 // -----------------------------------------------------------------
@@ -65,102 +65,103 @@ namespace MagicGarbage
 
                 // Truck load capacity (per vehicle)
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "单车载量" },
+                    "垃圾车载重容量" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "**每辆垃圾车能运走的垃圾量。**\n" +
-                    "- 100% = 原版载量。\n" +
-                    "- 数值越高，需要的往返次数越少。\n"
+                    "**每辆垃圾车可以运载多少垃圾。**\n" +
+                    "100% = 游戏默认值。\n" +
+                    "<100% = 20 吨>\n" +
+                    "<500% = 100 吨。>\n"
                 },
 
                 // Facility truck count (how many trucks can be dispatched)
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "每座设施的车辆数" },
+                    "每个设施可派出垃圾车数量" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "**每个垃圾设施可以派出的垃圾车数量。**\n" +
-                    "- 100% = 原版车辆数。\n" +
-                    "- 最高 400% = 最多增加 300% 的车辆。\n"
+                    "**每座设施可以派出多少垃圾车。**\n" +
+                    "100% = 原版默认数量。\n"
                 },
 
                 // Facility processing speed
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
                     "处理速度" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
-                    "**垃圾处理设施处理垃圾的速度。**\n" +
-                    "- 100% = 原版速度。\n" +
-                    "- 数值越高，垃圾烧毁/回收得越快。\n"
+                    "**设施处理来垃圾的速度。**\n" +
+                    "100% = 原版处理速度。\n"
                 },
 
                 // Facility storage capacity
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
                     "设施存储容量" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
-                    "**设施在显示“已满”之前能存放的垃圾量。**\n" +
-                    "- 100% = 原版容量。\n" +
-                    "- 数值越高，显示已满之前的缓冲空间越大。\n"
+                    "**设施最多可以存放多少垃圾。**\n" +
+                    "100% = 原版存储容量。\n" +
+                    "更高的数值 = 可以存放更多垃圾。\n"
                 },
 
                 // -----------------------------------------------------------------
                 // Semi-Magic helper buttons (same row)
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicDefaults)),
-                    "恢复原版" },
+                    "恢复默认" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicDefaults)),
-                    "将所有半魔法滑块重置为 **100%**（原版数值）。\n" +
-                    "如果你只想安装模组、但不想改动垃圾服务数值，可以使用此选项。"
+                    "将所有滑块重置为 **100%**（原版数值）。\n" +
+                    "恢复到正常的游戏行为。"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicRecommended)),
                     "推荐设置" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicRecommended)),
                     "应用推荐的半魔法数值：\n" +
-                    "- 单车载量：**200%**\n" +
-                    "- 每设施车辆数：**150%**\n" +
+                    "- 垃圾车载重容量：**200%**\n" +
+                    "- 每设施垃圾车数量：**150%**\n" +
                     "- 处理速度：**200%**\n" +
-                    "- 存储容量：**200%**\n"
+                    "- 存储容量：**150%**\n"
                 },
 
                 // -----------------------------------------------------------------
                 // About info
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "模组" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)),
-                    "此模组在选项中的显示名称。"
+                    "此 Mod 的显示名称。"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)), "版本" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)), "当前模组版本。" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)),
+                    "当前 Mod 版本。"
+                },
 
                 // -----------------------------------------------------------------
                 // About links
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenParadoxPage)), "Paradox Mods" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenParadoxPage)),
-                    "打开作者在 Paradox Mods 上的模组页面。"
+                    "打开作者在 **Paradox Mods** 上的 Mod 页面。"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenDiscord)), "Discord" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)),
-                    "在浏览器中打开 CS2 模组 Discord 服务器。"
+                    "在浏览器中打开 **Discord**（CS2 Modding 服务器）。"
                 },
 
                 // -----------------------------------------------------------------
                 // About -> USAGE NOTES (multiline text block)
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
-                    "<推荐默认状态>\n" +
-                    "  * 完全魔法 开 = **[X]**\n" +
-                    "  * 城市垃圾会立刻全部清理\n" +
+                    "<自动清理模式>\n" +
+                    "  * 完全魔法 开启 = **[ ✓ ]**\n" +
+                    "  * 所有垃圾会立刻被清除\n" +
                     " <-------------------------------------->\n\n" +
-                    "<半魔法超级垃圾车状态>\n" +
-                    "  * 完全魔法 关 = **[ ]**\n" +
-                    "  * 半魔法 开 = **[X]**，然后将滑块调到你喜欢的 [100 >> 500] / [100 >> 400]。\n" +
-                    "  * 保留原版风格的同时，垃圾车和设施更加强力。\n" +
+                    "<自行管理模式>\n" +
+                    "  * 启用 半魔法 = **[ ✓ ]**\n" +
+                    "  * 按喜好调整 [100 >> 500] 的滑块。\n" +
+                    "  * 保留原版风格的垃圾模拟，同时强化并可调节车辆和设施。\n" +
                     " <-------------------------------------->\n\n" +
-                    "<完全原版游戏>\n" +
-                    "  * 完全魔法 关 = **[ ]**\n" +
-                    "  * 半魔法 = **[X]**（点“恢复原版”按钮）\n" +
-                    "  * 所有滑块 100%（原版上限）\n" +
-                    "  * 完全与原版相同的玩法。\n"
+                    "<纯原版玩法>\n" +
+                    "  * 半魔法 = **[ ✓ ]**\n" +
+                    "  * 点击 **[恢复默认]**\n" +
+                    "  * 所有滑块为 100%（原版）\n" +
+                    "  * 完全等同于标准玩法。\n"
                 },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)),
                     string.Empty

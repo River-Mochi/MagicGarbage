@@ -330,7 +330,6 @@ namespace MagicGarbage
                 facilitySystem.Enabled = true;
             }
 
-            // MagicGarbageSystem runs on its own and checks TotalMagic every tick.
         }
     }
 }
