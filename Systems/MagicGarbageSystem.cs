@@ -1,5 +1,6 @@
 // Systems/MagicGarbageSystem.cs
-// Total Magic: instantly clears garbage and cancels requests
+// Total Magic: instantly clears garbage and cancels requests.
+
 namespace MagicGarbage
 {
     using Game;
@@ -21,6 +22,13 @@ namespace MagicGarbage
         private IconCommandSystem m_IconCommandSystem = null!;
         private EntityQuery m_GarbageProducerQuery;
         private EntityQuery m_GarbageParamsQuery;
+
+        public override int GetUpdateInterval(SystemUpdatePhase phase)
+        {
+            // Run every 64 frames while TotalMagic is on:
+            // frequent enough to keep the city clean, light enough to avoid stutter.
+            return 64;
+        }
 
         protected override void OnCreate()
         {

@@ -21,8 +21,8 @@ namespace MagicGarbage
         {
             return new Dictionary<string, string>
             {
-                // Options mod name
-                { m_Setting.GetSettingsLocaleID(), "Magic Garbage Truck [MGT]" },
+                // Options mod name (single source of truth from Mod.cs)
+                { m_Setting.GetSettingsLocaleID(), Mod.ModName + " " + Mod.ModTag },
 
                 // Tabs
                 { m_Setting.GetOptionTabLocaleID(Setting.ActionsTab), "Actions" },
@@ -41,7 +41,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
                     "**Enabled [X]** instantly removes all city garbage.\n" +
-                    "Garbage buildings and trucks become mostly visual decoration.\n\n" +
+                    "Garbage buildings + trucks are visual decoration, not needed.\n\n" +
 
                     "While **Total Magic** is ON:\n" +
                     "- Semi-Magic is forced OFF.\n" +
@@ -53,10 +53,10 @@ namespace MagicGarbage
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicEnabled)), "Semi-Magic" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicEnabled)),
-                    "Enable tuned-up but still \"normal\" garbage gameplay.\n" +
-                    "- Uses stronger trucks and facilities instead of full magic.\n" +
-                    "- When Semi-Magic is ON, Total Magic is automatically turned OFF.\n" +
-                    "- Sliders below only matter when Semi-Magic is enabled.\n"
+                    "Super control of garbage systems; leaves vanilla garbage logic running.\n\n" +
+                    "- Allows stronger trucks and facilities instead of full magic.\n" +
+                    "- When Semi-Magic is ON, Total Magic is auto turned OFF.\n" +
+                    "- Sliders only matter when Semi-Magic is enabled [X].\n"
                 },
 
                 // -----------------------------------------------------------------
@@ -68,8 +68,8 @@ namespace MagicGarbage
                     "Truck load capacity" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
                     "**How much garbage each truck can carry.**\n" +
-                    "- 100% = vanilla load per truck.\n" +
-                    "- Higher values = fewer trips needed.\n"
+                    "- 100% = normal game default.\n" +
+                    "- 100% = 20t, 500% = 100t.\n"
                 },
 
                 // Facility truck count (how many trucks can be dispatched)
@@ -77,8 +77,7 @@ namespace MagicGarbage
                     "Facility truck count" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
                     "**How many trucks each facility can dispatch.**\n" +
-                    "- 100% = vanilla number of trucks.\n" +
-                    "- Up to 400% = +300% more trucks available.\n"
+                    "- 100% = vanilla number of trucks.\n"
                 },
 
                 // Facility processing speed
@@ -103,10 +102,10 @@ namespace MagicGarbage
                 // Semi-Magic helper buttons (same row)
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicDefaults)),
-                    "Game defaults" },
+                    "Game Defaults" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicDefaults)),
                     "Set all Semi-Magic sliders back to **100%** (vanilla values).\n" +
-                    "Use this if you want the mod installed but garbage service stats untouched."
+                    "Garbage system returns to normal vanilla game behavior."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicRecommended)),
@@ -116,7 +115,7 @@ namespace MagicGarbage
                     "- Truck load capacity: **200%**\n" +
                     "- Facility truck count: **150%**\n" +
                     "- Processing speed: **200%**\n" +
-                    "- Storage capacity: **200%**\n"
+                    "- Storage capacity: **150%**\n"
                 },
 
                 // -----------------------------------------------------------------
@@ -128,37 +127,40 @@ namespace MagicGarbage
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)), "Version" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)), "Current mod version." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)),
+                    "Current mod version."
+                },
 
                 // -----------------------------------------------------------------
                 // About links
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenParadoxPage)), "Paradox Mods" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenParadoxPage)),
-                    "Open Paradox Mods webpage to the author's mods."
+                    "Open **Paradox Mods** webpage to the author's mods."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenDiscord)), "Discord" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)),
-                    "Open the CS2 modding Discord in your browser."
+                    "Open **Discord** in your browser to CS2 Modding."
                 },
 
                 // -----------------------------------------------------------------
                 // About -> USAGE NOTES (multiline text block)
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
-                    "<Default recommended state>\n" +
-                    "  * Total Magic ON  = **[X]**\n" +
+                    "<Clean City state>\n" +
+                    "  * Total Magic ON  = **[ ✓ ]**\n" +
                     "  * All garbage is instantly removed\n" +
                     " <-------------------------------------->\n\n" +
-                    "<Semi-Magic super trucks state>\n" +
-                    "  * Total Magic OFF = **[ ]**\n" +
-                    "  * Enable Semi-Magic = **[X]** and set sliders [100 >> 500] / [100 >> 400] as you like.\n" +
-                    "  * Vanilla-style garbage with better trucks and stronger facilities.\n" +
+                    "<Semi-Magic Self-Manage state>\n" +
+                    "  * Enable Semi-Magic = **[ ✓ ]**\n" +
+                    "  * Set sliders [100 >> 500] as you like.\n" +
+                    "  * Vanilla-style garbage with tunable, better trucks and facilities.\n" +
                     " <-------------------------------------->\n\n" +
-                    "<Full vanilla game>\n" +
-                    "  * Total Magic OFF = **[ ]**\n" +
-                    "  * Semi-Magic = **[X]** (click Game defaults)\n" +
+                    "<Normal vanilla game>\n" +
+                    "  * Total Magic OFF = **[  ]**\n" +
+                    "  * Semi-Magic = **[ ✓ ]**\n" +
+                    "  * Click **[Game Defaults]**\n" +
                     "  * All sliders at 100% (vanilla limits)\n" +
                     "  * Exactly standard gameplay.\n"
                 },

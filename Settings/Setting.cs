@@ -8,7 +8,7 @@ namespace MagicGarbage
     using Game.Settings;
     using Game.UI;
     using Unity.Entities;
-    using UnityEngine; // Application.OpenURL
+    using UnityEngine;  // Application.OpenURL
 
     [FileLocation("ModsSettings/MagicGarbage/MagicGarbage")]
     [SettingsUITabOrder(ActionsTab, AboutTab)] // Actions then About tab
@@ -38,10 +38,10 @@ namespace MagicGarbage
         public const string AboutUsageGrp = "AboutUsage";  // USAGE NOTES group on About tab
 
         // ---- EXTERNAL LINKS ----
-        private const string UrlParadox =
+        private const string kUrlParadox =
             "https://mods.paradoxplaza.com/authors/kimosabe1/cities_skylines_2?games=cities_skylines_2&orderBy=desc&sortBy=best&time=alltime";
 
-        private const string UrlDiscord =
+        private const string kUrlDiscord =
             "https://discord.gg/HTav7ARPs2";
 
         // ---- BACKING FIELDS FOR MUTUAL EXCLUSION ----
@@ -72,6 +72,12 @@ namespace MagicGarbage
                     return;
                 }
 
+                // Do not allow both toggles to be OFF.
+                if (!value && !m_SemiMagicEnabled)
+                {
+                    return;
+                }
+
                 m_TotalMagic = value;
 
                 if (m_TotalMagic)
@@ -96,6 +102,12 @@ namespace MagicGarbage
             set
             {
                 if (m_SemiMagicEnabled == value)
+                {
+                    return;
+                }
+
+                // Do not allow both toggles to be OFF.
+                if (!value && !m_TotalMagic)
                 {
                     return;
                 }
@@ -167,11 +179,11 @@ namespace MagicGarbage
         // SEMI-MAGIC PRESET BUTTONS (same row)
         // --------------------------------------------------------------------
 
-        private const string SemiMagicButtonsRow = "SemiMagicButtonsRow";
+        private const string kSemiMagicButtonsRow = "SemiMagicButtonsRow";
 
         // Button: Game defaults (all sliders back to 100%).
         [SettingsUIButton]
-        [SettingsUIButtonGroup(SemiMagicButtonsRow)]
+        [SettingsUIButtonGroup(kSemiMagicButtonsRow)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
         public bool SemiMagicDefaults
@@ -183,7 +195,7 @@ namespace MagicGarbage
                     return;
                 }
 
-                // Vanilla settings
+                // Vanilla settings.
                 GarbageTruckCapacityMultiplier = 100;
                 GarbageFacilityVehicleMultiplier = 100;
                 GarbageFacilityProcessingMultiplier = 100;
@@ -195,7 +207,7 @@ namespace MagicGarbage
 
         // Button: Recommended preset (your preferred values).
         [SettingsUIButton]
-        [SettingsUIButtonGroup(SemiMagicButtonsRow)]
+        [SettingsUIButtonGroup(kSemiMagicButtonsRow)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
         public bool SemiMagicRecommended
@@ -208,12 +220,12 @@ namespace MagicGarbage
                 }
 
                 // Recommended:
-                // 200% process speed, 150% facility trucks,
-                // 200% truck load, 200% facility storage.
+                // 200% truck load, 150% facility trucks,
+                // 200% process speed, 150% facility storage.
                 GarbageTruckCapacityMultiplier = 200;
                 GarbageFacilityVehicleMultiplier = 150;
                 GarbageFacilityProcessingMultiplier = 200;
-                GarbageFacilityStorageMultiplier = 200;
+                GarbageFacilityStorageMultiplier = 150;
 
                 Apply();
             }
@@ -245,7 +257,7 @@ namespace MagicGarbage
                     return;
                 }
 
-                Application.OpenURL(UrlParadox);
+                Application.OpenURL(kUrlParadox);
             }
         }
 
@@ -261,7 +273,7 @@ namespace MagicGarbage
                     return;
                 }
 
-                Application.OpenURL(UrlDiscord);
+                Application.OpenURL(kUrlDiscord);
             }
         }
 
@@ -271,7 +283,7 @@ namespace MagicGarbage
 
         [SettingsUIMultilineText]
         [SettingsUISection(AboutTab, AboutUsageGrp)]
-        public string UsageNotes => string.Empty; // Text comes from Locale files
+        public string UsageNotes => string.Empty; // Text comes from Locale files.
 
         // --------------------------------------------------------------------
         // DEFAULTS & APPLY
@@ -303,21 +315,22 @@ namespace MagicGarbage
             }
 
             // Recalculate truck stats when sliders/toggles change.
-            GarbageTruckCapacitySystem truckSystem = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
+            GarbageTruckCapacitySystem truckSystem =
+                world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
             if (truckSystem != null)
             {
                 truckSystem.Enabled = true;
             }
 
             // Recalculate facility stats when sliders/toggles change.
-            GarbageFacilityCapacitySystem facilitySystem = world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
+            GarbageFacilityCapacitySystem facilitySystem =
+                world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
             if (facilitySystem != null)
             {
                 facilitySystem.Enabled = true;
             }
 
-            // MagicGarbageSystem runs every frame but just checks TotalMagic,
-            // so we don't need to poke it here.
+            // MagicGarbageSystem runs on its own and checks TotalMagic every tick.
         }
     }
 }
