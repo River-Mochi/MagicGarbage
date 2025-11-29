@@ -101,21 +101,20 @@ namespace MagicGarbage
                 // -----------------------------------------------------------------
                 // Semi-Magic helper buttons (same row)
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicDefaults)),
-                    "Game Defaults" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicDefaults)),
-                    "Set all sliders back to **100%** (vanilla values).\n" +
-                    "Resets to normal game behavior."
-                },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicRecommended)),
-                    "Recommended" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicRecommended)), "Recommended" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicRecommended)),
                     "Apply recommended Semi-Magic values:\n" +
                     "- Truck load capacity: **200%**\n" +
                     "- Facility truck count: **150%**\n" +
                     "- Processing speed: **200%**\n" +
                     "- Storage capacity: **150%**\n"
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicDefaults)), "Game Defaults" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicDefaults)),
+                    "Set all sliders back to **100%** (vanilla values).\n" +
+                    "Resets to normal game behavior."
                 },
 
                 // -----------------------------------------------------------------

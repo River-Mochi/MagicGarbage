@@ -181,31 +181,7 @@ namespace MagicGarbage
 
         private const string kSemiMagicButtonsRow = "SemiMagicButtonsRow";
 
-        // Button: Game defaults (all sliders back to 100%).
-        [SettingsUIButton]
-        [SettingsUIButtonGroup(kSemiMagicButtonsRow)]
-        [SettingsUISection(ActionsTab, SemiMagicGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
-        public bool SemiMagicDefaults
-        {
-            set
-            {
-                if (!value)
-                {
-                    return;
-                }
-
-                // Vanilla settings.
-                GarbageTruckCapacityMultiplier = 100;
-                GarbageFacilityVehicleMultiplier = 100;
-                GarbageFacilityProcessingMultiplier = 100;
-                GarbageFacilityStorageMultiplier = 100;
-
-                Apply();
-            }
-        }
-
-        // Button: Recommended preset (your preferred values).
+        // Button: Recommended preset (preferred values).
         [SettingsUIButton]
         [SettingsUIButtonGroup(kSemiMagicButtonsRow)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
@@ -226,6 +202,30 @@ namespace MagicGarbage
                 GarbageFacilityVehicleMultiplier = 150;
                 GarbageFacilityProcessingMultiplier = 200;
                 GarbageFacilityStorageMultiplier = 150;
+
+                Apply();
+            }
+        }
+
+        // Button: Game defaults (all sliders back to 100%).
+        [SettingsUIButton]
+        [SettingsUIButtonGroup(kSemiMagicButtonsRow)]
+        [SettingsUISection(ActionsTab, SemiMagicGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
+        public bool SemiMagicDefaults
+        {
+            set
+            {
+                if (!value)
+                {
+                    return;
+                }
+
+                // Vanilla settings.
+                GarbageTruckCapacityMultiplier = 100;
+                GarbageFacilityVehicleMultiplier = 100;
+                GarbageFacilityProcessingMultiplier = 100;
+                GarbageFacilityStorageMultiplier = 100;
 
                 Apply();
             }
