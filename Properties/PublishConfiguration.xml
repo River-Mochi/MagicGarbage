@@ -62,10 +62,12 @@ Handle garbage your way:
 	<Thumbnail Value="Properties/Thumbnail.png" />
 	<!--Screenshot, can be set multiple times-->
 	<Screenshot Value="Properties/40-image-ActionsEN.jpg" />
-	<Screenshot Value="Properties/50-image-ActionsFR.jpg" />
+	<Screenshot Value="Properties/50-image-ActionsEN.jpg" />
+	<Screenshot Value="Properties/55-image-ActionsFR.jpg" />
 	<Screenshot Value="Properties/60-image-ActionsCN.jpg" />
-	<Screenshot Value="Properties/70-image-Before.png" />
-	<Screenshot Value="Properties/80-image-After.png" />
+	<Screenshot Value="Properties/65-image-UsageEN.jpg" />
+	<Screenshot Value="Properties/70-image-Before.jpg" />
+	<Screenshot Value="Properties/80-image-After.jpg" />
 	<!--Tag, can be set multiple times-->
 	<Tag Value="Code Mod" />
 	<!--Link to the forum post where the mod can be discussed-->
@@ -78,10 +80,10 @@ Handle garbage your way:
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<ChangeLog>
-* adds Polish
-* New Semi-Magic sliders for trucks + facilities
+* New Self-Manage section with sliders for trucks + facilities
+* New Buttons: Game Defaults and Recommended presets
 * Updated descriptions and locale texts
-* fix paradox link
+* fix paradox link, new images, tidy
 	</ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 <ExternalLink Type="discord" Url="https://discord.gg/HTav7ARPs2" />
