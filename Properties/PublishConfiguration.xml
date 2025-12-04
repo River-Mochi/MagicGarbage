@@ -4,10 +4,11 @@
 	<!--Name of the mod to display to players-->
 	<DisplayName Value="Magic Garbage Truck" />
 	<!--Short description of the mod-->
-	<ShortDescription Value="Total Magic Option = remove all city garbage; Semi-magic = tune all garbage trucks and buildings" />
+	<ShortDescription Value="Auto-Clean = remove all city garbage; Self-Manage = tune all garbage trucks and buildings" />
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
-	<LongDescription>### Magic Garbage Truck [MGT]
+	<LongDescription>
+**Magic Garbage Truck [MGT]**
 
 
 Handle garbage your way:
@@ -52,7 +53,7 @@ Handle garbage your way:
 ---
 
 ### Credits
-- RiverMochi - author and maintainer
+- RiverMochi - author
 - Thanks to Wayz for inspiration on the original Magical Garbage mod
 - yenyang - code review, tech advice
 - Necko1996 - testing and screenshots
@@ -74,17 +75,14 @@ Handle garbage your way:
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.0.5" />
+	<ModVersion Value="1.1.1" />
 	<!--Recommended version of the base game to use the mod-->
-	<GameVersion Value="1.4.*" />
+	<GameVersion Value="1.5.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<ChangeLog>
-* New Self-Manage section with sliders for trucks + facilities
-* New Buttons: Game Defaults and Recommended presets
-* Updated descriptions and locale texts
-* fix paradox link, new images, tidy
+* Updated for game patch 1.5.2
 	</ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 <ExternalLink Type="discord" Url="https://discord.gg/HTav7ARPs2" />

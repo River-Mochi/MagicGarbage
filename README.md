@@ -9,6 +9,8 @@
 - No garbage micromanagement – just build your city.
 - Garbage warning icons are cleared because there is no garbage.
 - Garbage trucks and buildings become mostly cosmetic.
+- Under the hood: a **Burst-compiled ECS job** runs roughly every few in-game minutes
+  and sweeps all garbage producers in chunks, so even huge cities stay smooth.
 
 ## Option 2 – Semi-Magic (Self-Manage)
 
@@ -29,12 +31,14 @@
 
 - Works with new and existing saves.
 - Safe to remove or disable at any time.
-- Does **not** use Harmony or reflection – lightweight and resilient to game updates.
+- Uses a **Burst-optimized ECS job** and slider-driven prefab tuning — no Harmony, no reflection.
+- Designed to be lightweight and resilient to game updates.
 
 ---
 
 ## Credits
 
-- **RiverMochi** – author and maintainer  
+- **RiverMochi** – author 
 - Thanks to **Wayz** for the original “Magical Garbage Truck” idea  
 - **Necko1996** – testing and feedback
+- yenyang - code review, tech advice
