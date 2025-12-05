@@ -65,8 +65,8 @@ Handle garbage your way:
 	<!--Screenshot, can be set multiple times-->
 	<Screenshot Value="Properties/40-image-ActionsEN.jpg" />
 	<Screenshot Value="Properties/50-image-ActionsEN.jpg" />
-	<Screenshot Value="Properties/55-image-ActionsFR.jpg" />
-	<Screenshot Value="Properties/60-image-ActionsCN.jpg" />
+	<Screenshot Value="Properties/55-image-ActionsCN.jpg" />
+	<Screenshot Value="Properties/60-image-ActionsFR.jpg" />
 	<Screenshot Value="Properties/65-image-UsageEN.jpg" />
 	<Screenshot Value="Properties/70-image-Before.jpg" />
 	<Screenshot Value="Properties/80-image-After.jpg" />
@@ -75,7 +75,7 @@ Handle garbage your way:
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.1.1" />
+	<ModVersion Value="1.1.2" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.5.*" />
 	<!--Dependency for the mod, can be set multiple times-->
@@ -83,6 +83,7 @@ Handle garbage your way:
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<ChangeLog>
 * Updated for game patch 1.5.2
+* minor sync for skyve + PDX
 	</ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 <ExternalLink Type="discord" Url="https://discord.gg/HTav7ARPs2" />
