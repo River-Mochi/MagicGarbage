@@ -1,6 +1,6 @@
 // Systems/GarbageFacilityCapacitySystem.cs
 // Semi-Magic: scales facility trucks, processing speed, and storage capacity.
-
+#nullable enable
 namespace MagicGarbage
 {
     using Game;
