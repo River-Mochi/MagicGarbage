@@ -14,7 +14,7 @@
 
 ## Option 2 – Semi-Magic (Self-Manage)
 
-- ✅ **Semi-Magic ON**, **Total Magic OFF**.
+- ✅ **Self-Manage ON**, **Total Magic OFF**.
 - Vanilla garbage simulation stays active, but you control all stats:
   - **Truck load capacity** (100–500%)
   - **Facility truck count** (100–400%)
@@ -24,7 +24,7 @@
   - **Game Defaults** – puts everything back to **100%** (pure vanilla behaviour).
   - **Recommended** – 200% truck load, 150% truck count, 200% processing speed, 150% storage.
 
-> 💡 Choose **Total Magic** *or* **Semi-Magic**.  
+> 💡 Choose **Total Magic** *or* **Self-Manage**.  
 > You can swap between them any time; the UI makes it clear what’s active.
 
 ## Compatibility
@@ -38,7 +38,8 @@
 
 ## Credits
 
-- **RiverMochi** – author 
+- RiverMochi: author 
 - Thanks to **Wayz** for the original “Magical Garbage Truck” idea  
-- **Necko1996** – testing and feedback
-- yenyang - code review, tech advice
+- yenyang: code review, tech advice
+- Necko1996: testing and feedback
+

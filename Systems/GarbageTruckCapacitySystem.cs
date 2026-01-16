@@ -1,15 +1,16 @@
-// Systems/GarbageTruckCapacitySystem.cs
+// File: Systems/GarbageTruckCapacitySystem.cs
 // Semi-Magic: scales truck prefab capacity & unload rate.
 
 namespace MagicGarbage
 {
+    using Colossal.Serialization.Entities; // Purpose
     using Game;
     using Game.Prefabs;
     using Unity.Entities;
     using Unity.Mathematics;
 
     /// <summary>
-    /// Scales garbage truck capacity and unload rate according to the Semi-Magic slider.
+    /// Scales garbage truck capacity and unload rate according to the Semi-Magic sliders.
     /// Disabled while Total Magic is enabled.
     /// </summary>
     public partial class GarbageTruckCapacitySystem : GameSystemBase
@@ -24,16 +25,30 @@ namespace MagicGarbage
             // Do not run at all unless garbage truck prefabs exist.
             RequireForUpdate<GarbageTruckData>();
 
-            // System is driven by Setting.Apply().
+            // Stay asleep most of the time; OnGameLoadingComplete and Setting.Apply() for wake up.
             Enabled = false;
+        }
+
+        /// <summary>
+        /// City load completed (new game/load save/switch city). Kick once so saved .coc is applied.
+        /// </summary>
+        protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
+        {
+            base.OnGameLoadingComplete(purpose, mode);
+
+            // No extra GameMode gating: RequireForUpdate prevents useless work.
+            Enabled = true;
+
+#if DEBUG
+            Mod.Log.Info("[MGT] GarbageTruckCapacitySystem: OnGameLoadingComplete -> Enabled");
+#endif
         }
 
         protected override void OnUpdate()
         {
-            Setting? setting = Mod.Setting;
-            if (setting == null)
+            if (!Mod.TryGetSetting(out Setting setting))
             {
-                Enabled = false;
+                // IMPORTANT: do not force-disable if settings aren't ready yet.
                 return;
             }
 
@@ -44,15 +59,14 @@ namespace MagicGarbage
                 return;
             }
 
-            // Semi-Magic must be enabled for sliders to matter.
+            // Sliders don't matter if semi-magic toggle is off.
             if (!setting.SemiMagicEnabled)
             {
                 Enabled = false;
                 return;
             }
 
-            // Slider stored as 100–500 %.
-            var newMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500);
+            var newMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500); // max 500%
 
             // Slider value unchanged since last run: nothing to update.
             if (newMult == m_LastMultiplier)
@@ -80,8 +94,7 @@ namespace MagicGarbage
 
             m_LastMultiplier = newMult;
 
-            // Back to disabled until Setting.Apply() sets Enabled = true again.
-            Enabled = false;
+            Enabled = false;     // Back to sleep until next OptionsUI change or city load.
         }
     }
 }

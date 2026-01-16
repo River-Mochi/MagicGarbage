@@ -3,8 +3,8 @@
 
 namespace MagicGarbage
 {
-    using System.Collections.Generic;
     using Colossal;
+    using System.Collections.Generic;
 
     public sealed class LocaleEN : IDictionarySource
     {
@@ -73,21 +73,21 @@ namespace MagicGarbage
                     "<500% = 100t.>\n"
                 },
 
-                // Facility truck count (how many trucks can be dispatched)
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "Facility truck count" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "**How many trucks each facility can dispatch.**\n" +
-                    "100% = vanilla number of trucks.\n"
-                },
-
-                // Facility processing speed
+                   // Facility processing speed
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
                     "Processing speed" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
                     "**How fast facilities process incoming garbage.**\n" +
                     "100% = vanilla processing speed.\n"
                 },
+
+                // Facility truck count (how many trucks can be dispatched)
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
+                    "Facility truck count" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
+                    "**How many trucks each facility can dispatch.**\n" +
+                    "100% = vanilla number of trucks.\n"
+                },        
 
                 // Facility storage capacity
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),

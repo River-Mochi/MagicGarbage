@@ -1,8 +1,9 @@
-// Systems/GarbageFacilityCapacitySystem.cs
+// File: Systems/GarbageFacilityCapacitySystem.cs
 // Semi-Magic: scales facility trucks, processing speed, and storage capacity.
-#nullable enable
+
 namespace MagicGarbage
 {
+    using Colossal.Serialization.Entities; // Purpose
     using Game;
     using Game.Prefabs;
     using Unity.Entities;
@@ -26,20 +27,30 @@ namespace MagicGarbage
             // Only run if there are any garbage facilities.
             RequireForUpdate<GarbageFacilityData>();
 
-            // System runs only when Setting.Apply() turns it on.
+            // Wake on city load + UI changes only.
             Enabled = false;
+        }
+
+        protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
+        {
+            base.OnGameLoadingComplete(purpose, mode);
+
+            Enabled = true;
+
+#if DEBUG
+            Mod.Log.Info("[MGT] GarbageFacilityCapacitySystem: OnGameLoadingComplete -> Enabled");
+#endif
         }
 
         protected override void OnUpdate()
         {
-            Setting? setting = Mod.Setting;
-            if (setting == null)
+            if (!Mod.TryGetSetting(out Setting setting))
             {
-                Enabled = false;
+                // don't disable if settings aren't ready yet; allow a later tick to catch
                 return;
             }
 
-            // If full TotalMagic mode is on, Semi-Magic facility tuning is pointless.
+            // If full TotalMagic is on, Semi-Magic facility tuning is pointless.
             if (setting.TotalMagic)
             {
                 Enabled = false;
@@ -53,18 +64,13 @@ namespace MagicGarbage
                 return;
             }
 
-            // Clamp sliders to safe ranges.
-            // Facility trucks: 100–400% (up to +300% more)
-            var vehicleMult =
-                math.clamp(setting.GarbageFacilityVehicleMultiplier, 100, 400);
-
-            // Processing speed: 100–500%
+            // Clamp sliders:
             var processingMult =
-                math.clamp(setting.GarbageFacilityProcessingMultiplier, 100, 500);
-
-            // Storage capacity: 100–500%
+                math.clamp(setting.GarbageFacilityProcessingMultiplier, 100, 500);  // processing up to 500%
             var storageMult =
-                math.clamp(setting.GarbageFacilityStorageMultiplier, 100, 500);
+                math.clamp(setting.GarbageFacilityStorageMultiplier, 100, 500);     // storage up to 500%
+            var vehicleMult =
+                math.clamp(setting.GarbageFacilityVehicleMultiplier, 100, 400);     // number of trucks up to 400%
 
             // If nothing changed since last application, bail out.
             if (vehicleMult == m_LastVehicleMultiplier &&
@@ -88,17 +94,15 @@ namespace MagicGarbage
             {
                 ref GarbageFacilityData data = ref facility.ValueRW;
 
-                // Number of trucks this facility can have.
-                data.m_VehicleCapacity =
-                    (int)math.round(data.m_VehicleCapacity * vehicleScale);
-
                 // How quickly it processes garbage.
                 data.m_ProcessingSpeed =
                     (int)math.round(data.m_ProcessingSpeed * processingScale);
-
                 // How much garbage it can store.
                 data.m_GarbageCapacity =
                     (int)math.round(data.m_GarbageCapacity * storageScale);
+                // Number of trucks this facility can have.
+                data.m_VehicleCapacity =
+                    (int)math.round(data.m_VehicleCapacity * vehicleScale);
             }
 
             // Remember new multipliers for next time.
@@ -106,8 +110,7 @@ namespace MagicGarbage
             m_LastProcessingMultiplier = processingMult;
             m_LastStorageMultiplier = storageMult;
 
-            // Go back to sleep until settings change again.
-            Enabled = false;
+            Enabled = false;    // Go back to sleep until settings change again.
         }
     }
 }
