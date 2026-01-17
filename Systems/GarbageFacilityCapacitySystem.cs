@@ -7,6 +7,7 @@ namespace MagicGarbage
     using Colossal.Serialization.Entities; // Purpose
     using Game;
     using Game.Prefabs;
+    using System.Collections.Generic;
     using Unity.Entities;
     using Unity.Mathematics;
 
@@ -14,6 +15,7 @@ namespace MagicGarbage
     /// Adjusts GarbageFacilityData (vehicle count, processing speed, storage)
     /// according to Semi-Magic sliders. When Total Magic is enabled (or Semi-Magic disabled),
     /// it reverts to vanilla (100%) once.
+    /// Uses cached base values to avoid rounding drift.
     /// </summary>
     public partial class GarbageFacilityCapacitySystem : GameSystemBase
     {
@@ -21,6 +23,10 @@ namespace MagicGarbage
         private int m_LastVehicleMultiplier = 100;
         private int m_LastProcessingMultiplier = 100;
         private int m_LastStorageMultiplier = 100;
+
+        // Cache base values per prefab entity so scaling is exact (no drift).
+        private readonly Dictionary<Entity, (int VehicleCap, int ProcessingSpeed, int StorageCap)> m_Base =
+            new Dictionary<Entity, (int VehicleCap, int ProcessingSpeed, int StorageCap)>();
 
         protected override void OnCreate()
         {
@@ -37,6 +43,11 @@ namespace MagicGarbage
         {
             base.OnGameLoadingComplete(purpose, mode);
 
+            m_Base.Clear();
+            m_LastVehicleMultiplier = 100;
+            m_LastProcessingMultiplier = 100;
+            m_LastStorageMultiplier = 100;
+
             Enabled = true;
 
 #if DEBUG
@@ -46,10 +57,9 @@ namespace MagicGarbage
 
         protected override void OnUpdate()
         {
-            var setting = Mod.Setting;
-            if (setting == null)
+            if (!Mod.TryGetSetting(out Setting setting))
             {
-                return; // don't disable if null; allow a later tick to catch
+                return; // allow a later tick to catch
             }
 
             // Effective targets:
@@ -79,18 +89,40 @@ namespace MagicGarbage
                 return;
             }
 
-            // Compute scale factors relative to previous state so changes (and reverts) are incremental.
-            float vehicleScale = (float)targetVehicle / m_LastVehicleMultiplier;
-            float processingScale = (float)targetProcessing / m_LastProcessingMultiplier;
-            float storageScale = (float)targetStorage / m_LastStorageMultiplier;
-
-            foreach (RefRW<GarbageFacilityData> facility in SystemAPI.Query<RefRW<GarbageFacilityData>>())
+            foreach ((RefRW<GarbageFacilityData> facility, Entity entity) in
+                     SystemAPI.Query<RefRW<GarbageFacilityData>>().WithEntityAccess())
             {
                 ref GarbageFacilityData data = ref facility.ValueRW;
 
-                data.m_ProcessingSpeed = (int)math.round(data.m_ProcessingSpeed * processingScale);
-                data.m_GarbageCapacity = (int)math.round(data.m_GarbageCapacity * storageScale);
-                data.m_VehicleCapacity = (int)math.round(data.m_VehicleCapacity * vehicleScale);
+                if (!m_Base.TryGetValue(entity, out var b))
+                {
+                    // Capture base values the first time we touch this prefab entity.
+                    // If we were already scaled in-session, reverse last multipliers once (best-effort).
+                    if (m_LastVehicleMultiplier == 100 &&
+                        m_LastProcessingMultiplier == 100 &&
+                        m_LastStorageMultiplier == 100)
+                    {
+                        b = (data.m_VehicleCapacity, data.m_ProcessingSpeed, data.m_GarbageCapacity);
+                    }
+                    else
+                    {
+                        float v = m_LastVehicleMultiplier / 100f;
+                        float p = m_LastProcessingMultiplier / 100f;
+                        float s = m_LastStorageMultiplier / 100f;
+
+                        b = (
+                            (int)math.round(data.m_VehicleCapacity / v),
+                            (int)math.round(data.m_ProcessingSpeed / p),
+                            (int)math.round(data.m_GarbageCapacity / s)
+                        );
+                    }
+
+                    m_Base[entity] = b;
+                }
+
+                data.m_VehicleCapacity = (int)math.round(b.VehicleCap * (targetVehicle / 100f));
+                data.m_ProcessingSpeed = (int)math.round(b.ProcessingSpeed * (targetProcessing / 100f));
+                data.m_GarbageCapacity = (int)math.round(b.StorageCap * (targetStorage / 100f));
             }
 
 #if DEBUG

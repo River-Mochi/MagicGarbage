@@ -7,17 +7,23 @@ namespace MagicGarbage
     using Colossal.Serialization.Entities; // Purpose
     using Game;
     using Game.Prefabs;
+    using System.Collections.Generic;
     using Unity.Entities;
     using Unity.Mathematics;
 
     /// <summary>
     /// Scales garbage truck capacity and unload rate according to the Semi-Magic slider.
     /// When Total Magic is enabled (or Semi-Magic disabled), it reverts to vanilla (100%) once.
+    /// Uses cached base values to avoid rounding drift.
     /// </summary>
     public partial class GarbageTruckCapacitySystem : GameSystemBase
     {
         // Last applied multiplier percent. 100 = vanilla.
         private int m_LastMultiplier = 100;
+
+        // Cache the "base" (vanilla) values per prefab entity so we can apply exact scaling (no drift).
+        private readonly Dictionary<Entity, (int Capacity, int UnloadRate)> m_Base =
+            new Dictionary<Entity, (int Capacity, int UnloadRate)>();
 
         protected override void OnCreate()
         {
@@ -31,11 +37,15 @@ namespace MagicGarbage
         }
 
         /// <summary>
-        /// City load completed (new game/load save/switch city). Kick once so saved .coc is applied.
+        /// City load completed (new game/load save/switch city).
+        /// Clear base cache so we always capture fresh prefab base values for this session.
         /// </summary>
         protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
         {
             base.OnGameLoadingComplete(purpose, mode);
+
+            m_Base.Clear();
+            m_LastMultiplier = 100;
 
             Enabled = true;
 
@@ -46,10 +56,9 @@ namespace MagicGarbage
 
         protected override void OnUpdate()
         {
-            var setting = Mod.Setting;
-            if (setting == null)
+            if (!Mod.TryGetSetting(out Setting setting))
             {
-                // Don't force-disable if null; allow a later tick to catch.
+                // Don't force-disable if not ready; a later tick can catch.
                 return;
             }
 
@@ -74,18 +83,34 @@ namespace MagicGarbage
                 return;
             }
 
-            // Scale relative to last applied value so it can be reverted cleanly (e.g. 200% -> 100%).
-            float oldFactor = m_LastMultiplier / 100f;
-            float newFactor = targetMult / 100f;
-            float scale = newFactor / oldFactor;
-
-            foreach (RefRW<GarbageTruckData> truck in SystemAPI.Query<RefRW<GarbageTruckData>>())
+            // Apply exact scaling from cached base (no rounding drift).
+            foreach ((RefRW<GarbageTruckData> truck, Entity entity) in
+                     SystemAPI.Query<RefRW<GarbageTruckData>>().WithEntityAccess())
             {
                 ref GarbageTruckData data = ref truck.ValueRW;
 
-                // Capacity and unload rate both scaled so unload time stays roughly stable.
-                data.m_GarbageCapacity = (int)math.round(data.m_GarbageCapacity * scale);
-                data.m_UnloadRate = (int)math.round(data.m_UnloadRate * scale);
+                if (!m_Base.TryGetValue(entity, out var b))
+                {
+                    // Capture base values the first time we touch this prefab entity.
+                    // If we were already scaled in-session, approximate base by reversing last multiplier once.
+                    if (m_LastMultiplier == 100)
+                    {
+                        b = (data.m_GarbageCapacity, data.m_UnloadRate);
+                    }
+                    else
+                    {
+                        float lastFactor = m_LastMultiplier / 100f;
+                        b = (
+                            (int)math.round(data.m_GarbageCapacity / lastFactor),
+                            (int)math.round(data.m_UnloadRate / lastFactor)
+                        );
+                    }
+
+                    m_Base[entity] = b;
+                }
+
+                data.m_GarbageCapacity = (int)math.round(b.Capacity * (targetMult / 100f));
+                data.m_UnloadRate = (int)math.round(b.UnloadRate * (targetMult / 100f));
             }
 
 #if DEBUG

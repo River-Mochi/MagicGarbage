@@ -8,8 +8,7 @@
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
 	<LongDescription>
-**Magic Garbage Truck [MGT]**
-
+**Magic Garbage Truck**
 
 Handle garbage your way:
 - **Total Magic** option cleans all city garbage.
@@ -27,7 +26,7 @@ Handle garbage your way:
 
 **OPTION 2  SELF-MANAGE**
 - ✅ Semi-Magic on; manage how you like.
-- **Sliders** to control all garbage trucks/facilities
+- **Sliders** to control all garbage trucks + facilities
 - 🚚 Super powered trucks reduce traffic and service strain.
 - Great if you still want to see trucks driving around, just fewer problems.
 - **Helper buttons**
@@ -75,15 +74,21 @@ Handle garbage your way:
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.1.4" />
+	<ModVersion Value="1.2.0" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.5.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
-	<ChangeLog>
-* fix: saved settings persist on reboot
-	</ChangeLog>
+<ChangeLog>
+* Fix: saved settings persist on reboot.
+* Fix: switching Total Magic now reverts Semi-Magic tuning to vanilla immediately (values preserved).
+* Tweak: slider steps standardized to 10%.
+* Updated: Recommended preset (200% load, 200% processing, 160% storage, 140% facility trucks).
+* sliders increment in 10% steps now (former was 20-25%)
+* Updated translations and docs.
+</ChangeLog>
+
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 <ExternalLink Type="discord" Url="https://discord.gg/HTav7ARPs2" />
 <ExternalLink Type="github" Url="https://github.com/River-Mochi/MagicGarbage" />

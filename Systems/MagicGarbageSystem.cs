@@ -87,9 +87,7 @@ namespace MagicGarbage
 
         protected override void OnUpdate()
         {
-            // Only active when Total Magic mode is enabled.
-            Setting? setting = Mod.Setting;
-            if (setting == null || !setting.TotalMagic)
+            if (!Mod.TryGetSetting(out Setting setting) || !setting.TotalMagic)
             {
                 return;
             }
