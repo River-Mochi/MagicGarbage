@@ -45,7 +45,7 @@ namespace MagicGarbage
                     "While **Total Magic** is ON:\n" +
                     "- Semi-Magic is forced OFF.\n" +
                     "- Semi-Magic sliders are **not applied** (your values are saved for later).\n" +
-                    "- a few trucks may still drive around due to the game dispatch logic (they are usually empty)."
+                    "- a few trucks may still drive around due to the game dispatch logic (usually empty)."
                 },
 
                 // -----------------------------------------------------------------

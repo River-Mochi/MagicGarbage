@@ -64,8 +64,6 @@ Handle garbage your way:
 	<!--Screenshot, can be set multiple times-->
 	<Screenshot Value="Properties/40-image-ActionsEN.jpg" />
 	<Screenshot Value="Properties/50-image-ActionsEN.jpg" />
-	<Screenshot Value="Properties/55-image-ActionsCN.jpg" />
-	<Screenshot Value="Properties/60-image-ActionsFR.jpg" />
 	<Screenshot Value="Properties/65-image-UsageEN.jpg" />
 	<Screenshot Value="Properties/70-image-Before.jpg" />
 	<Screenshot Value="Properties/80-image-After.jpg" />
