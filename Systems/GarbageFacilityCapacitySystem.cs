@@ -38,7 +38,7 @@ namespace MagicGarbage
             Enabled = true;
 
 #if DEBUG
-            Mod.Log.Info("[MGT] GarbageFacilityCapacitySystem: OnGameLoadingComplete -> Enabled");
+            Mod.Log.Info($"{Mod.ModTag} GarbageFacilityCapacitySystem: OnGameLoadingComplete -> Enabled");
 #endif
         }
 
@@ -88,6 +88,11 @@ namespace MagicGarbage
                 (float)processingMult / m_LastProcessingMultiplier;
             var storageScale =
                 (float)storageMult / m_LastStorageMultiplier;
+#if DEBUG
+Mod.Log.Info(
+    $"{Mod.ModTag} FacilityCapacity apply: veh {m_LastVehicleMultiplier}%->{vehicleMult}%, " +
+    $"proc {m_LastProcessingMultiplier}%->{processingMult}%, stor {m_LastStorageMultiplier}%->{storageMult}%");
+#endif
 
             // Chunk-friendly SystemAPI iteration over all garbage facilities.
             foreach (RefRW<GarbageFacilityData> facility in SystemAPI.Query<RefRW<GarbageFacilityData>>())
@@ -109,7 +114,9 @@ namespace MagicGarbage
             m_LastVehicleMultiplier = vehicleMult;
             m_LastProcessingMultiplier = processingMult;
             m_LastStorageMultiplier = storageMult;
-
+#if DEBUG
+Mod.Log.Info($"{Mod.ModTag} FacilityCapacity sleep");
+#endif
             Enabled = false;    // Go back to sleep until settings change again.
         }
     }

@@ -40,7 +40,7 @@ namespace MagicGarbage
             Enabled = true;
 
 #if DEBUG
-            Mod.Log.Info("[MGT] GarbageTruckCapacitySystem: OnGameLoadingComplete -> Enabled");
+            Mod.Log.Info($"{Mod.ModTag} GarbageTruckCapacitySystem: OnGameLoadingComplete -> Enabled");
 #endif
         }
 
@@ -79,6 +79,9 @@ namespace MagicGarbage
             var newFactor = newMult / 100f;
             var scale = newFactor / oldFactor;
 
+#if DEBUG
+Mod.Log.Info($"{Mod.ModTag} TruckCapacity apply: {m_LastMultiplier}% -> {newMult}%");
+#endif
             // Chunk-friendly iteration via SystemAPI.Query.
             foreach (RefRW<GarbageTruckData> truck in SystemAPI.Query<RefRW<GarbageTruckData>>())
             {
@@ -93,7 +96,9 @@ namespace MagicGarbage
             }
 
             m_LastMultiplier = newMult;
-
+#if DEBUG
+Mod.Log.Info($"{Mod.ModTag} TruckCapacity sleep");
+#endif
             Enabled = false;     // Back to sleep until next OptionsUI change or city load.
         }
     }

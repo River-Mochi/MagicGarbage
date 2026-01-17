@@ -115,7 +115,7 @@ namespace MagicGarbage
             updateSystem.UpdateAfter<GarbageFacilityCapacitySystem>(SystemUpdatePhase.GameSimulation);
 
 #if DEBUG
-            Log.Info("[MGT] All systems are now hooked into the main GameSimulation phase.");
+            Log.Info($"{ModTag} All systems are now hooked into the main GameSimulation phase.");
 #endif
         }
 
@@ -129,7 +129,7 @@ namespace MagicGarbage
             }
 
 #if DEBUG
-            Log.Info("[MGT] OnDispose");
+            Log.Info($"{ModTag} OnDispose");
 #endif
         }
 

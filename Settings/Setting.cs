@@ -196,8 +196,7 @@ namespace MagicGarbage
                 }
 
                 // Recommended:
-                // 200% truck load, 140% facility trucks,
-                // 200% process speed, 160% facility storage.
+                // 200% truck load, 200% process speed, 160% facility storage, 140% facility trucks,
                 GarbageTruckCapacityMultiplier = 200;
                 GarbageFacilityProcessingMultiplier = 200;
                 GarbageFacilityStorageMultiplier = 160;

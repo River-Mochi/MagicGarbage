@@ -27,7 +27,7 @@ namespace MagicGarbage
         /// 512 updates/day ≈ every 2.8 in-game minutes.
         /// Increase for more frequent cleaning, decrease for less.
         /// </summary>
-        public static readonly int UpdatesPerDay = 512;
+        public static readonly int UpdatesPerDay = 256;
 
         // Same value vanilla TimeSystem uses internally.
         private const int TicksPerDay = 262144;
@@ -37,7 +37,7 @@ namespace MagicGarbage
         /// </summary>
         public override int GetUpdateInterval(SystemUpdatePhase phase)
         {
-            return TicksPerDay / UpdatesPerDay; // 262144 / 512 = 512 ticks
+            return TicksPerDay / UpdatesPerDay; // 262144 / 256 = 1024 ticks
         }
 
         // ---- RUNTIME STATE ----
@@ -80,7 +80,7 @@ namespace MagicGarbage
             int intervalTicks   = TicksPerDay / UpdatesPerDay;
             float ticksPerMinute = TicksPerDay / 1440f;
             Mod.Log.Info(
-                $"[MGT] MagicGarbageSystem created. UpdatesPerDay={UpdatesPerDay}, " +
+                $"{Mod.ModTag} MagicGarbageSystem created. UpdatesPerDay={UpdatesPerDay}, " +
                 $"IntervalTicks={intervalTicks}, TicksPerMinute={ticksPerMinute:F2}.");
 #endif
         }
@@ -119,7 +119,7 @@ namespace MagicGarbage
             }
 
             Mod.Log.Debug(
-                $"[MGT] TotalMagic tick: producers={total}, dirty={dirty}, " +
+                $"{Mod.ModTag} TotalMagic tick: producers={total}, dirty={dirty}, " +
                 $"updatesPerDay={UpdatesPerDay}.");
 #endif
 
