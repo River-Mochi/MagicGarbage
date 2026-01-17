@@ -131,7 +131,7 @@ namespace MagicGarbage
         // --------------------------------------------------------------------
 
         // Slider: garbage truck capacity (100–500%)
-        [SettingsUISlider(min = 100, max = 500, step = 20,
+        [SettingsUISlider(min = 100, max = 500, step = 10,
                           scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
@@ -142,7 +142,7 @@ namespace MagicGarbage
         } = 100;
 
         // Slider: facility garbage processing speed (100–500%)
-        [SettingsUISlider(min = 100, max = 500, step = 20,
+        [SettingsUISlider(min = 100, max = 500, step = 10,
                           scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
@@ -153,7 +153,7 @@ namespace MagicGarbage
         } = 100;
 
         // Slider: facility garbage storage capacity (100–500%)
-        [SettingsUISlider(min = 100, max = 500, step = 20,
+        [SettingsUISlider(min = 100, max = 500, step = 10,
                           scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
@@ -165,7 +165,7 @@ namespace MagicGarbage
 
         // Slider: number of facility trucks (vehicles) (100–400%)
         // 100% = vanilla number of trucks, 400% = +300% more.
-        [SettingsUISlider(min = 100, max = 400, step = 20,
+        [SettingsUISlider(min = 100, max = 400, step = 10,
                           scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
