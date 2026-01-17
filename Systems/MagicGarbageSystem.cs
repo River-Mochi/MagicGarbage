@@ -119,6 +119,9 @@ namespace MagicGarbage
             Mod.Log.Debug(
                 $"{Mod.ModTag} TotalMagic tick: producers={total}, dirty={dirty}, " +
                 $"updatesPerDay={UpdatesPerDay}.");
+
+            if (dirty == 0) // DEBUG-only skip: nothing to clean, avoid scheduling job.
+            { return; }
 #endif
 
             // Create icon command buffer for this frame.
