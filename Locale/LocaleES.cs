@@ -1,10 +1,10 @@
-// Locale/LocaleES.cs
+// File: Localization/LocaleES.cs
 // Spanish (es-ES)
 
 namespace MagicGarbage
 {
-    using System.Collections.Generic;
     using Colossal;
+    using System.Collections.Generic;
 
     public sealed class LocaleES : IDictionarySource
     {
@@ -31,7 +31,7 @@ namespace MagicGarbage
                 // Groups (row headers)
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Limpieza automática" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "Gestión manual"       },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Información de la mod"},
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Info de la mod"       },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Enlaces"              },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "NOTAS DE USO"         },
 
@@ -40,12 +40,12 @@ namespace MagicGarbage
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Magia total" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
-                    "**Activado [ ✓ ]** elimina al instante toda la basura de la ciudad.\n" +
-                    "Los edificios y camiones de basura pasan a ser solo decoración.\n\n" +
+                    "**Activado [ ✓ ]** elimina al instante toda la basura de la ciudad.\n\n" +
 
                     "Mientras **Magia total** está ACTIVADA:\n" +
-                    "- La Semi-magia se desactiva automáticamente.\n" +
-                    "- Todos los deslizadores de Semi-magia se ignoran.\n"
+                    "- Semi-magia se fuerza a estar DESACTIVADA.\n" +
+                    "- Los deslizadores de Semi-magia **no se aplican** (tus valores se guardan para más tarde).\n" +
+                    "- Algunos camiones pueden seguir circulando por la lógica de despacho del juego (normalmente vacíos)."
                 },
 
                 // -----------------------------------------------------------------
@@ -55,8 +55,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicEnabled)),
                     "Gestiona directamente los sistemas de basura; la lógica vanilla sigue funcionando.\n\n" +
                     "- Cuando **Semi-magia está ACTIVADA [ ✓ ]**, Magia total se apaga automáticamente.\n" +
-                    "- Ajusta todos los camiones e instalaciones de basura.\n" +
-                    "- Los deslizadores solo tienen efecto si Semi-magia está activada [ ✓ ].\n"
+                    "- Los deslizadores solo se aplican si Semi-magia está activada [ ✓ ].\n"
                 },
 
                 // -----------------------------------------------------------------
@@ -67,18 +66,10 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
                     "Capacidad de carga del camión" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "**Cuánta basura puede transportar cada camión.**\n" +
-                    "100% = valor predeterminado del juego.\n" +
-                    "<100% = 20 t>\n" +
-                    "<500% = 100 t.>\n"
-                },
-
-                // Facility truck count (how many trucks can be dispatched)
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "Número de camiones por instalación" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "**Cuántos camiones puede enviar cada instalación.**\n" +
-                    "100% = número de camiones estándar.\n"
+                    "**Cuánta basura puede llevar cada camión.**\n" +
+                    "100% = valor normal del juego.\n" +
+                    "<100% = 20t>\n" +
+                    "<500% = 100t>\n"
                 },
 
                 // Facility processing speed
@@ -86,7 +77,7 @@ namespace MagicGarbage
                     "Velocidad de procesamiento" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
                     "**Qué tan rápido procesan la basura las instalaciones.**\n" +
-                    "100% = velocidad de procesamiento estándar.\n"
+                    "100% = velocidad vanilla.\n"
                 },
 
                 // Facility storage capacity
@@ -94,28 +85,34 @@ namespace MagicGarbage
                     "Capacidad de almacenamiento de la instalación" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
                     "**Cuánta basura puede almacenar una instalación.**\n" +
-                    "100% = almacenamiento estándar.\n" +
-                    "Valores más altos = la instalación puede almacenar más basura.\n"
+                    "100% = almacenamiento vanilla.\n"
+                },
+
+                // Facility truck count (how many trucks can be dispatched)
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)), "Camiones por instalación"
+                },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
+                    "**Cuántos camiones puede enviar cada instalación.**\n" +
+                    "100% = cantidad vanilla.\n"
                 },
 
                 // -----------------------------------------------------------------
                 // Semi-Magic helper buttons (same row)
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicDefaults)),
-                    "Valores por defecto" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicDefaults)),
-                    "Restablece todos los deslizadores a **100%** (valores vanilla).\n" +
-                    "Devuelve el comportamiento normal del juego."
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicRecommended)), "Recomendado" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicRecommended)),
+                    "Aplica valores recomendados de Semi-magia:\n" +
+                    "- Capacidad de carga del camión: **200%**\n" +
+                    "- Velocidad de procesamiento: **200%**\n" +
+                    "- Capacidad de almacenamiento: **160%**\n" +
+                    "- Camiones por instalación: **140%**"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicRecommended)),
-                    "Recomendado" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicRecommended)),
-                    "Aplica los valores recomendados de Semi-magia:\n" +
-                    "- Capacidad de carga del camión: **200%**\n" +
-                    "- Número de camiones por instalación: **150%**\n" +
-                    "- Velocidad de procesamiento: **200%**\n" +
-                    "- Capacidad de almacenamiento: **150%**\n"
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicDefaults)), "Valores del juego" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicDefaults)),
+                    "Pone todos los deslizadores en **100%** (valores vanilla).\n" +
+                    "Vuelve al comportamiento normal del juego."
                 },
 
                 // -----------------------------------------------------------------
@@ -123,7 +120,7 @@ namespace MagicGarbage
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)),
-                    "Nombre que se muestra para esta mod."
+                    "Nombre visible de esta mod."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)), "Versión" },
@@ -148,20 +145,19 @@ namespace MagicGarbage
                 // About -> USAGE NOTES (multiline text block)
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
-                    "<Modo de limpieza automática>\n" +
+                    "<Estado: Limpieza automática>\n" +
                     "  * Magia total ACTIVADA = **[ ✓ ]**\n" +
                     "  * Toda la basura se elimina al instante\n" +
                     " <-------------------------------------->\n\n" +
-                    "<Modo de gestión manual>\n" +
+                    "<Estado: Gestión manual>\n" +
                     "  * Activar Semi-magia = **[ ✓ ]**\n" +
-                    "  * Ajusta los deslizadores [100 >> 500] como quieras.\n" +
-                    "  * Simulación vanilla con camiones e instalaciones mejorados y configurables.\n" +
+                    "  * Ajusta los deslizadores como quieras.\n" +
+                    "  * Lógica vanilla con camiones/instalaciones mejorados.\n" +
                     " <-------------------------------------->\n\n" +
                     "<Juego vanilla normal>\n" +
-                    "  * Semi-magia = **[ ✓ ]**\n" +
-                    "  * Haz clic en **[Valores por defecto]**\n" +
-                    "  * Todos los deslizadores a 100% (vanilla)\n" +
-                    "  * Comportamiento estándar del juego.\n"
+                    "  * Activar Semi-magia = **[ ✓ ]**\n" +
+                    "  * Haz clic en **[Valores del juego]**\n" +
+                    "  * Todos los deslizadores a 100% (vanilla)\n"
                 },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)),
                     string.Empty

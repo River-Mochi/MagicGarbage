@@ -1,5 +1,6 @@
 // File: Systems/GarbageFacilityCapacitySystem.cs
 // Semi-Magic: scales facility trucks, processing speed, and storage capacity.
+// Total Magic (or Semi-Magic OFF): reverts to vanilla (100%) once, then sleeps.
 
 namespace MagicGarbage
 {
@@ -11,7 +12,8 @@ namespace MagicGarbage
 
     /// <summary>
     /// Adjusts GarbageFacilityData (vehicle count, processing speed, storage)
-    /// according to Semi-Magic sliders. Disabled while full TotalMagic is enabled.
+    /// according to Semi-Magic sliders. When Total Magic is enabled (or Semi-Magic disabled),
+    /// it reverts to vanilla (100%) once.
     /// </summary>
     public partial class GarbageFacilityCapacitySystem : GameSystemBase
     {
@@ -38,86 +40,71 @@ namespace MagicGarbage
             Enabled = true;
 
 #if DEBUG
-            Mod.Log.Info($"{Mod.ModTag} GarbageFacilityCapacitySystem: OnGameLoadingComplete -> Enabled");
+            Mod.Log.Info("[MGT] GarbageFacilityCapacitySystem: OnGameLoadingComplete -> Enabled");
 #endif
         }
 
         protected override void OnUpdate()
         {
-            if (!Mod.TryGetSetting(out Setting setting))
+            var setting = Mod.Setting;
+            if (setting == null)
             {
-                // don't disable if settings aren't ready yet; allow a later tick to catch
-                return;
+                return; // don't disable if null; allow a later tick to catch
             }
 
-            // If full TotalMagic is on, Semi-Magic facility tuning is pointless.
-            if (setting.TotalMagic)
-            {
-                Enabled = false;
-                return;
-            }
+            // Effective targets:
+            // - Total Magic ON => behave like vanilla 100% (but keep user's saved Semi sliders).
+            // - Semi-Magic OFF => also behave like vanilla 100%.
+            // - Semi-Magic ON  => use sliders.
+            int targetVehicle = 100;
+            int targetProcessing = 100;
+            int targetStorage = 100;
 
-            // Semi-Magic must be enabled for these sliders to matter.
-            if (!setting.SemiMagicEnabled)
+            if (!setting.TotalMagic && setting.SemiMagicEnabled)
             {
-                Enabled = false;
-                return;
+                targetProcessing = math.clamp(setting.GarbageFacilityProcessingMultiplier, 100, 500);
+                targetStorage = math.clamp(setting.GarbageFacilityStorageMultiplier, 100, 500);
+                targetVehicle = math.clamp(setting.GarbageFacilityVehicleMultiplier, 100, 400);
             }
-
-            // Clamp sliders:
-            var processingMult =
-                math.clamp(setting.GarbageFacilityProcessingMultiplier, 100, 500);  // processing up to 500%
-            var storageMult =
-                math.clamp(setting.GarbageFacilityStorageMultiplier, 100, 500);     // storage up to 500%
-            var vehicleMult =
-                math.clamp(setting.GarbageFacilityVehicleMultiplier, 100, 400);     // number of trucks up to 400%
 
             // If nothing changed since last application, bail out.
-            if (vehicleMult == m_LastVehicleMultiplier &&
-                processingMult == m_LastProcessingMultiplier &&
-                storageMult == m_LastStorageMultiplier)
+            if (targetVehicle == m_LastVehicleMultiplier &&
+                targetProcessing == m_LastProcessingMultiplier &&
+                targetStorage == m_LastStorageMultiplier)
             {
+#if DEBUG
+                Mod.Log.Info("[MGT] FacilityCapacity sleep");
+#endif
                 Enabled = false;
                 return;
             }
 
-            // Compute scale factors relative to previous state so changes are incremental.
-            var vehicleScale =
-                (float)vehicleMult / m_LastVehicleMultiplier;
-            var processingScale =
-                (float)processingMult / m_LastProcessingMultiplier;
-            var storageScale =
-                (float)storageMult / m_LastStorageMultiplier;
-#if DEBUG
-Mod.Log.Info(
-    $"{Mod.ModTag} FacilityCapacity apply: veh {m_LastVehicleMultiplier}%->{vehicleMult}%, " +
-    $"proc {m_LastProcessingMultiplier}%->{processingMult}%, stor {m_LastStorageMultiplier}%->{storageMult}%");
-#endif
+            // Compute scale factors relative to previous state so changes (and reverts) are incremental.
+            float vehicleScale = (float)targetVehicle / m_LastVehicleMultiplier;
+            float processingScale = (float)targetProcessing / m_LastProcessingMultiplier;
+            float storageScale = (float)targetStorage / m_LastStorageMultiplier;
 
-            // Chunk-friendly SystemAPI iteration over all garbage facilities.
             foreach (RefRW<GarbageFacilityData> facility in SystemAPI.Query<RefRW<GarbageFacilityData>>())
             {
                 ref GarbageFacilityData data = ref facility.ValueRW;
 
-                // How quickly it processes garbage.
-                data.m_ProcessingSpeed =
-                    (int)math.round(data.m_ProcessingSpeed * processingScale);
-                // How much garbage it can store.
-                data.m_GarbageCapacity =
-                    (int)math.round(data.m_GarbageCapacity * storageScale);
-                // Number of trucks this facility can have.
-                data.m_VehicleCapacity =
-                    (int)math.round(data.m_VehicleCapacity * vehicleScale);
+                data.m_ProcessingSpeed = (int)math.round(data.m_ProcessingSpeed * processingScale);
+                data.m_GarbageCapacity = (int)math.round(data.m_GarbageCapacity * storageScale);
+                data.m_VehicleCapacity = (int)math.round(data.m_VehicleCapacity * vehicleScale);
             }
 
-            // Remember new multipliers for next time.
-            m_LastVehicleMultiplier = vehicleMult;
-            m_LastProcessingMultiplier = processingMult;
-            m_LastStorageMultiplier = storageMult;
 #if DEBUG
-Mod.Log.Info($"{Mod.ModTag} FacilityCapacity sleep");
+            Mod.Log.Info(
+                $"[MGT] FacilityCapacity apply: veh {m_LastVehicleMultiplier}%->{targetVehicle}%, " +
+                $"proc {m_LastProcessingMultiplier}%->{targetProcessing}%, " +
+                $"stor {m_LastStorageMultiplier}%->{targetStorage}%");
 #endif
-            Enabled = false;    // Go back to sleep until settings change again.
+
+            m_LastVehicleMultiplier = targetVehicle;
+            m_LastProcessingMultiplier = targetProcessing;
+            m_LastStorageMultiplier = targetStorage;
+
+            Enabled = false; // Go back to sleep until settings change again.
         }
     }
 }

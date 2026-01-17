@@ -1,10 +1,10 @@
-// Locale/LocaleJA.cs
+// File: Localization/LocaleJA.cs
 // Japanese (ja-JP)
 
 namespace MagicGarbage
 {
-    using System.Collections.Generic;
     using Colossal;
+    using System.Collections.Generic;
 
     public sealed class LocaleJA : IDictionarySource
     {
@@ -30,33 +30,32 @@ namespace MagicGarbage
 
                 // Groups (row headers)
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "自動クリーン" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "セルフ管理"   },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Mod 情報"    },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "リンク"      },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "使用ノート"  },
+                { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "手動管理"      },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Mod情報"      },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "リンク"       },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "使い方"       },
 
                 // -----------------------------------------------------------------
                 // Total Magic section
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "トータルマジック" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "トータル・マジック" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
-                    "**有効 [ ✓ ]** にすると、街中のゴミが即座にすべて消えます。\n" +
-                    "ゴミ処理施設やゴミ収集車は、ほぼ見た目用の飾りになります。\n\n" +
+                    "**有効 [ ✓ ]** にすると、都市のゴミを即座に全消去します。\n\n" +
 
-                    "**トータルマジック** が ON の間は:\n" +
-                    "- セミマジックは自動的に OFF になります。\n" +
-                    "- セミマジックのスライダーはすべて無視されます。\n"
+                    "**トータル・マジック** がONの間:\n" +
+                    "- セミ・マジックは強制OFFになります。\n" +
+                    "- セミ・マジックのスライダーは **適用されません**（値は後で使えるよう保存されます）。\n" +
+                    "- ゲーム側の配車ロジックにより、少数のトラックが走ることがあります（たいてい空です）。"
                 },
 
                 // -----------------------------------------------------------------
                 // Semi-Magic toggle (master switch for sliders)
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicEnabled)), "セミマジック" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicEnabled)), "セミ・マジック" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicEnabled)),
-                    "ゴミシステムを直接調整できます。バニラのシミュレーションはそのまま動きます。\n\n" +
-                    "- **セミマジックが ON [ ✓ ]** のとき、トータルマジックは自動で OFF になります。\n" +
-                    "- すべてのゴミ収集車と施設の性能を調整できます。\n" +
-                    "- セミマジックが有効 [ ✓ ] のときだけ、スライダーが効果を持ちます。\n"
+                    "ゴミ処理を直接調整します（バニラのゴミロジックは動いたまま）。\n\n" +
+                    "- **セミ・マジック ON [ ✓ ]** にすると、トータル・マジックは自動でOFFになります。\n" +
+                    "- スライダーはセミ・マジックがONのときだけ適用されます [ ✓ ]。\n"
                 },
 
                 // -----------------------------------------------------------------
@@ -67,18 +66,10 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
                     "トラック積載量" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "**各トラックが運べるゴミの量。**\n" +
-                    "100% = 通常のゲーム標準値。\n" +
+                    "**1台が運べるゴミの量。**\n" +
+                    "100% = 通常（ゲーム標準）。\n" +
                     "<100% = 20t>\n" +
-                    "<500% = 100t.>\n"
-                },
-
-                // Facility truck count (how many trucks can be dispatched)
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "施設からのトラック台数" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "**1つの施設から出せるトラックの台数。**\n" +
-                    "100% = バニラの標準台数。\n"
+                    "<500% = 100t>\n"
                 },
 
                 // Facility processing speed
@@ -94,28 +85,34 @@ namespace MagicGarbage
                     "施設の保管容量" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
                     "**施設が保管できるゴミの量。**\n" +
-                    "100% = バニラの保管容量。\n" +
-                    "値を上げると、より多くのゴミを貯められます。\n"
+                    "100% = バニラの容量。\n"
+                },
+
+                // Facility truck count (how many trucks can be dispatched)
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)), "施設のトラック数"
+                },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
+                    "**施設が出せるトラック台数。**\n" +
+                    "100% = バニラの台数。\n"
                 },
 
                 // -----------------------------------------------------------------
                 // Semi-Magic helper buttons (same row)
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicDefaults)),
-                    "ゲーム標準に戻す" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicDefaults)),
-                    "すべてのスライダーを **100%**（バニラ値）にリセットします。\n" +
-                    "通常のゲーム挙動に戻します。"
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicRecommended)), "おすすめ" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicRecommended)),
+                    "おすすめのセミ・マジック設定を適用:\n" +
+                    "- トラック積載量: **200%**\n" +
+                    "- 処理速度: **200%**\n" +
+                    "- 保管容量: **160%**\n" +
+                    "- 施設のトラック数: **140%**"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicRecommended)),
-                    "おすすめ" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicRecommended)),
-                    "おすすめのセミマジック設定を適用します:\n" +
-                    "- トラック積載量: **200%**\n" +
-                    "- 施設トラック台数: **150%**\n" +
-                    "- 処理速度: **200%**\n" +
-                    "- 保管容量: **150%**\n"
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicDefaults)), "ゲーム標準" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicDefaults)),
+                    "全スライダーを **100%**（バニラ値）に戻します。\n" +
+                    "通常のゲーム挙動に戻します。"
                 },
 
                 // -----------------------------------------------------------------
@@ -123,12 +120,12 @@ namespace MagicGarbage
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)),
-                    "この Mod の表示名。"
+                    "このModの表示名。"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)), "バージョン" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)),
-                    "現在の Mod バージョン。"
+                    "現在のModバージョン。"
                 },
 
                 // -----------------------------------------------------------------
@@ -136,12 +133,12 @@ namespace MagicGarbage
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenParadoxPage)), "Paradox Mods" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenParadoxPage)),
-                    "**Paradox Mods** 上の作者の Mod ページを開きます。"
+                    "作者のMod一覧（**Paradox Mods**）を開きます。"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenDiscord)), "Discord" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)),
-                    "ブラウザで **Discord**（CS2 Modding サーバー）を開きます。"
+                    "CS2 Modding の **Discord** をブラウザで開きます。"
                 },
 
                 // -----------------------------------------------------------------
@@ -149,19 +146,18 @@ namespace MagicGarbage
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<自動クリーン状態>\n" +
-                    "  * トータルマジック ON = **[ ✓ ]**\n" +
-                    "  * すべてのゴミが即座に削除されます\n" +
+                    "  * トータル・マジック ON = **[ ✓ ]**\n" +
+                    "  * ゴミは即座に全消去\n" +
                     " <-------------------------------------->\n\n" +
-                    "<セルフ管理状態>\n" +
-                    "  * セミマジックを有効にする = **[ ✓ ]**\n" +
-                    "  * スライダー [100 >> 500] を好みに合わせて調整。\n" +
-                    "  * バニラ風のゴミシミュレーション + 強化されたトラックと施設をチューニング。\n" +
+                    "<手動管理状態>\n" +
+                    "  * セミ・マジック ON = **[ ✓ ]**\n" +
+                    "  * スライダーは好きに調整。\n" +
+                    "  * バニラのゴミロジック + 調整済みトラック/施設。\n" +
                     " <-------------------------------------->\n\n" +
-                    "<通常のバニラゲーム>\n" +
-                    "  * セミマジック = **[ ✓ ]**\n" +
-                    "  * **[ゲーム標準に戻す]** をクリック\n" +
-                    "  * すべてのスライダーが 100%（バニラ）\n" +
-                    "  * 完全に通常のゲームプレイ。\n"
+                    "<通常のバニラ>\n" +
+                    "  * セミ・マジック ON = **[ ✓ ]**\n" +
+                    "  * **[ゲーム標準]** をクリック\n" +
+                    "  * 全スライダー 100%（バニラ）\n"
                 },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)),
                     string.Empty

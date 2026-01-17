@@ -27,7 +27,7 @@ namespace MagicGarbage
         /// 512 updates/day ≈ every 2.8 in-game minutes.
         /// Increase for more frequent cleaning, decrease for less.
         /// </summary>
-        public static readonly int UpdatesPerDay = 256;
+        public static readonly int UpdatesPerDay = 512;
 
         // Same value vanilla TimeSystem uses internally.
         private const int TicksPerDay = 262144;
@@ -37,7 +37,7 @@ namespace MagicGarbage
         /// </summary>
         public override int GetUpdateInterval(SystemUpdatePhase phase)
         {
-            return TicksPerDay / UpdatesPerDay; // 262144 / 256 = 1024 ticks
+            return TicksPerDay / UpdatesPerDay; // 262144 / 512 = 512 ticks
         }
 
         // ---- RUNTIME STATE ----

@@ -1,5 +1,6 @@
 // File: Systems/GarbageTruckCapacitySystem.cs
 // Semi-Magic: scales truck prefab capacity & unload rate.
+// Total Magic (or Semi-Magic OFF): reverts to vanilla (100%) once, then sleeps.
 
 namespace MagicGarbage
 {
@@ -10,12 +11,12 @@ namespace MagicGarbage
     using Unity.Mathematics;
 
     /// <summary>
-    /// Scales garbage truck capacity and unload rate according to the Semi-Magic sliders.
-    /// Disabled while Total Magic is enabled.
+    /// Scales garbage truck capacity and unload rate according to the Semi-Magic slider.
+    /// When Total Magic is enabled (or Semi-Magic disabled), it reverts to vanilla (100%) once.
     /// </summary>
     public partial class GarbageTruckCapacitySystem : GameSystemBase
     {
-        // Last applied slider value percent, 100 = vanilla.
+        // Last applied multiplier percent. 100 = vanilla.
         private int m_LastMultiplier = 100;
 
         protected override void OnCreate()
@@ -25,7 +26,7 @@ namespace MagicGarbage
             // Do not run at all unless garbage truck prefabs exist.
             RequireForUpdate<GarbageTruckData>();
 
-            // Stay asleep most of the time; OnGameLoadingComplete and Setting.Apply() for wake up.
+            // Stay asleep most of the time; OnGameLoadingComplete and Setting.Apply() wake it.
             Enabled = false;
         }
 
@@ -36,70 +37,63 @@ namespace MagicGarbage
         {
             base.OnGameLoadingComplete(purpose, mode);
 
-            // No extra GameMode gating: RequireForUpdate prevents useless work.
             Enabled = true;
 
 #if DEBUG
-            Mod.Log.Info($"{Mod.ModTag} GarbageTruckCapacitySystem: OnGameLoadingComplete -> Enabled");
+            Mod.Log.Info("[MGT] GarbageTruckCapacitySystem: OnGameLoadingComplete -> Enabled");
 #endif
         }
 
         protected override void OnUpdate()
         {
-            if (!Mod.TryGetSetting(out Setting setting))
+            var setting = Mod.Setting;
+            if (setting == null)
             {
-                // IMPORTANT: do not force-disable if settings aren't ready yet.
+                // Don't force-disable if null; allow a later tick to catch.
                 return;
             }
 
-            // Total Magic overrides everything.
-            if (setting.TotalMagic)
+            // Decide what the effective multiplier should be right now.
+            // - Total Magic ON => behave like vanilla 100% (but keep user's saved Semi sliders).
+            // - Semi-Magic OFF => also behave like vanilla 100%.
+            // - Semi-Magic ON  => use slider.
+            int targetMult = 100;
+
+            if (!setting.TotalMagic && setting.SemiMagicEnabled)
             {
-                Enabled = false;
-                return;
+                targetMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500);
             }
 
-            // Sliders don't matter if semi-magic toggle is off.
-            if (!setting.SemiMagicEnabled)
+            // Nothing to do.
+            if (targetMult == m_LastMultiplier)
             {
-                Enabled = false;
-                return;
-            }
-
-            var newMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500); // max 500%
-
-            // Slider value unchanged since last run: nothing to update.
-            if (newMult == m_LastMultiplier)
-            {
-                Enabled = false;
-                return;
-            }
-
-            var oldFactor = m_LastMultiplier / 100f;
-            var newFactor = newMult / 100f;
-            var scale = newFactor / oldFactor;
-
 #if DEBUG
-Mod.Log.Info($"{Mod.ModTag} TruckCapacity apply: {m_LastMultiplier}% -> {newMult}%");
+                Mod.Log.Info("[MGT] TruckCapacity sleep");
 #endif
-            // Chunk-friendly iteration via SystemAPI.Query.
+                Enabled = false;
+                return;
+            }
+
+            // Scale relative to last applied value so it can be reverted cleanly (e.g. 200% -> 100%).
+            float oldFactor = m_LastMultiplier / 100f;
+            float newFactor = targetMult / 100f;
+            float scale = newFactor / oldFactor;
+
             foreach (RefRW<GarbageTruckData> truck in SystemAPI.Query<RefRW<GarbageTruckData>>())
             {
                 ref GarbageTruckData data = ref truck.ValueRW;
 
                 // Capacity and unload rate both scaled so unload time stays roughly stable.
-                data.m_GarbageCapacity =
-                    (int)math.round(data.m_GarbageCapacity * scale);
-
-                data.m_UnloadRate =
-                    (int)math.round(data.m_UnloadRate * scale);
+                data.m_GarbageCapacity = (int)math.round(data.m_GarbageCapacity * scale);
+                data.m_UnloadRate = (int)math.round(data.m_UnloadRate * scale);
             }
 
-            m_LastMultiplier = newMult;
 #if DEBUG
-Mod.Log.Info($"{Mod.ModTag} TruckCapacity sleep");
+            Mod.Log.Info($"[MGT] TruckCapacity apply: {m_LastMultiplier}% -> {targetMult}%");
 #endif
-            Enabled = false;     // Back to sleep until next OptionsUI change or city load.
+
+            m_LastMultiplier = targetMult;
+            Enabled = false; // Back to sleep until next OptionsUI change or city load.
         }
     }
 }

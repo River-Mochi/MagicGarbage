@@ -21,3 +21,50 @@
 | Settings persistence               | Player choices persist across sessions.                                                          | `AssetDatabase.global.LoadSettings("MagicGarbage", setting, new Setting(this));`.                      |
 | Localization                       | Uses English + translated locale sources; display name uses single source of truth.              | `LocaleEN` (and `LocaleXX`) implement `IDictionarySource` and build text from `Mod.ModName` / `Mod.ModTag`. |
 | Logging                            | Minimal in release; debug builds can show load banner + optional sweep stats.                    | `Mod.Log` logger configured with `SetShowsErrorsInUI` and `#if DEBUG` info/debug messages.             |
+
+
+
+## Useful research
+
+1. Game.Prefabs.GarbagePrefab → writes GarbageParameterData
+
+    - Tells us: there’s a global parameter blob controlling request thresholds (m_RequestGarbageLimit, etc.). Potential lever for Total Magic later.
+
+2. Game.Prefabs.GarbageTruck (authoring ComponentBase)
+
+    - Tells us: authoring values (m_GarbageCapacity, m_UnloadRate) get written into ECS GarbageTruckData at initialize time.
+
+3. Game.Prefabs.GarbageTruckData
+
+    - Tells us: this is the runtime prefab component the sim uses and it’s serializable. When it is scaled, it changes what dispatch/selection sees.
+
+4. Game.Prefabs.GarbageTruckSelectData
+
+    - Tells us: the selection logic reads GarbageTruckData from prefab chunks to choose a suitable truck. Confirms scaling that component is the “right” knob for Semi-Magic.
+
+5. Game.Simulation.GarbageCollectionRequest + GarbageCollectionRequestFlags
+
+    - Tells us: the request entity schema for building pickups and that there’s a retry mechanism via m_DispatchIndex.
+
+6. Game.Simulation.GarbageTransferRequest + GarbageTransferRequestFlags
+
+    - Tells us: a second request schema that could explain facility-driven trips even without building garbage.
+
+7. Game.Simulation.GarbageTransferDispatchSystem
+
+    - Tells us: transfer requests are actively dispatched via pathfinding and can create trips, and it updates facility request pointers (m_GarbageDeliverRequest / m_GarbageReceiveRequest).
+
+8. Game.Simulation.GarbageCollectorDispatchSystem
+
+    - Tells us: building pickup dispatch is gated by GarbageProducer.m_Garbage > RequestGarbageLimit (from GarbageParameterData). Could be why a few trucks still run on Total-magic if garbage occasionally spikes between cleanups.
+
+9. Game.Simulation.GarbagePathfindSetup
+    - Tells us: pathfinding target setup pipeline. It helps the game decide “who should go where” once there are requests or dispatch buffers.
+    - SetupGarbageCollectorsJob: helps facilities/trucks choose targets, respects service districts + industrial waste flags, 
+      and considers trucks already carrying request queues (ServiceDispatch, PathElement, etc.).
+    - SetupGarbageTransferJob: picks facility targets for transfer/import/export behavior (ties directly to GarbageTransferRequest stuff).
+    - GarbageCollectorRequestsJob: links collection requests to eligible services/trucks and feeds the target seeker.
+    - trucks can be “in motion” for reasons beyond “building has garbage right now”
+ 
+ **Collector pipeline**: Building garbage crosses RequestGarbageLimit ⇒ GarbageCollectionRequest dispatches a truck.
+ **Transfer pipeline**: Facilities create GarbageTransferRequest for deliver/receive/export/return behavior ⇒ trips happen even if producers are clean.

@@ -1,10 +1,10 @@
-// Locale/LocaleDE.cs
+// File: Localization/LocaleDE.cs
 // German (de-DE)
 
 namespace MagicGarbage
 {
-    using System.Collections.Generic;
     using Colossal;
+    using System.Collections.Generic;
 
     public sealed class LocaleDE : IDictionarySource
     {
@@ -26,26 +26,26 @@ namespace MagicGarbage
 
                 // Tabs
                 { m_Setting.GetOptionTabLocaleID(Setting.ActionsTab), "Aktionen" },
-                { m_Setting.GetOptionTabLocaleID(Setting.AboutTab),   "Über"     },
+                { m_Setting.GetOptionTabLocaleID(Setting.AboutTab),   "Über"   },
 
                 // Groups (row headers)
-                { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Automatisches Aufräumen" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "Selbst verwalten"        },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Mod-Info"               },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Links"                  },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "HINWEISE"               },
+                { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Auto Clean" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.SemiMagicGrp),  "Selbst verwalten"  },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Mod-Info"    },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Links"       },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "HINWEISE" },
 
                 // -----------------------------------------------------------------
                 // Total Magic section
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Totale Magie" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
-                    "**Aktiviert [ ✓ ]** entfernt sofort allen Müll in der Stadt.\n" +
-                    "Müllgebäude und -fahrzeuge sind nur noch Dekoration, nicht nötig.\n\n" +
+                    "**Aktiviert [ ✓ ]** entfernt sofort allen Müll in der Stadt.\n\n" +
 
-                    "Solange **Totale Magie** AKTIV ist:\n" +
-                    "- Semi-Magie wird automatisch deaktiviert.\n" +
-                    "- Alle Semi-Magie-Schieberegler werden ignoriert.\n"
+                    "Solange **Totale Magie** AN ist:\n" +
+                    "- Semi-Magie wird automatisch AUS geschaltet.\n" +
+                    "- Semi-Magie-Schieberegler werden **nicht angewendet** (deine Werte bleiben für später gespeichert).\n" +
+                    "- Ein paar Trucks können wegen der Spiel-Dispatch-Logik noch herumfahren (meist leer)."
                 },
 
                 // -----------------------------------------------------------------
@@ -53,9 +53,8 @@ namespace MagicGarbage
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicEnabled)), "Semi-Magie" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicEnabled)),
-                    "Verwalte Müllsysteme direkt; die normale Spiel-Logik bleibt aktiv.\n\n" +
-                    "- Wenn **Semi-Magie AKTIV [ ✓ ]** ist, wird Totale Magie automatisch ausgeschaltet.\n" +
-                    "- Passe alle Müllfahrzeuge und -anlagen an.\n" +
+                    "Müllsysteme direkt managen; die Vanilla-Mülllogik läuft weiter.\n\n" +
+                    "- Wenn **Semi-Magie AN [ ✓ ]** ist, wird Totale Magie automatisch AUS geschaltet.\n" +
                     "- Schieberegler wirken nur, wenn Semi-Magie aktiviert ist [ ✓ ].\n"
                 },
 
@@ -65,20 +64,12 @@ namespace MagicGarbage
 
                 // Truck load capacity (per vehicle)
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "Müllwagen-Kapazität" },
+                    "Truck-Ladekapazität" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "**Wie viel Müll jeder Wagen transportieren kann.**\n" +
-                    "100% = normale Spieleinstellung.\n" +
-                    "<100% = 20 t>\n" +
-                    "<500% = 100 t.>\n"
-                },
-
-                // Facility truck count (how many trucks can be dispatched)
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "Anzahl der Fahrzeuge pro Anlage" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "**Wie viele Fahrzeuge jede Anlage aussenden kann.**\n" +
-                    "100% = Standardanzahl der Fahrzeuge.\n"
+                    "**Wie viel Müll jeder Truck tragen kann.**\n" +
+                    "100% = Standard im Spiel.\n" +
+                    "<100%> = 20t\n" +
+                    "<500%> = 100t\n"
                 },
 
                 // Facility processing speed
@@ -86,36 +77,42 @@ namespace MagicGarbage
                     "Verarbeitungsgeschwindigkeit" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
                     "**Wie schnell Anlagen eingehenden Müll verarbeiten.**\n" +
-                    "100% = Standard-Verarbeitungsgeschwindigkeit.\n"
+                    "100% = Vanilla-Verarbeitungsgeschwindigkeit.\n"
                 },
 
                 // Facility storage capacity
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
-                    "Lagervolumen der Anlage" },
+                    "Anlagen-Lagerkapazität" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
-                    "**Wie viel Müll eine Anlage lagern kann.**\n" +
-                    "100% = Standard-Lagerung.\n" +
-                    "Höhere Werte = Anlage kann mehr Müll aufnehmen.\n"
+                    "**Wie viel Müll eine Anlage speichern kann.**\n" +
+                    "100% = Vanilla-Lagerung.\n"
+                },
+
+                // Facility truck count (how many trucks can be dispatched)
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)), "Anlagen-Truckanzahl"
+                },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
+                    "**Wie viele Trucks jede Anlage aussenden kann.**\n" +
+                    "100% = Vanilla-Anzahl der Trucks.\n"
                 },
 
                 // -----------------------------------------------------------------
                 // Semi-Magic helper buttons (same row)
                 // -----------------------------------------------------------------
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicDefaults)),
-                    "Standardwerte" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicDefaults)),
-                    "Setzt alle Schieberegler auf **100%** (Standardwerte) zurück.\n" +
-                    "Stellt das normale Spielverhalten wieder her."
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicRecommended)), "Empfohlen" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicRecommended)),
+                    "Empfohlene Semi-Magie-Werte anwenden:\n" +
+                    "- Truck-Ladekapazität: **200%**\n" +
+                    "- Verarbeitungsgeschwindigkeit: **200%**\n" +
+                    "- Lagerkapazität: **160%**\n" +
+                    "- Anlagen-Truckanzahl: **140%**"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicRecommended)),
-                    "Empfohlen" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicRecommended)),
-                    "Wendet empfohlene Semi-Magie-Werte an:\n" +
-                    "- Müllwagen-Kapazität: **200%**\n" +
-                    "- Fahrzeuge pro Anlage: **150%**\n" +
-                    "- Verarbeitungsgeschwindigkeit: **200%**\n" +
-                    "- Lagervolumen: **150%**\n"
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicDefaults)), "Spiel-Standard" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicDefaults)),
+                    "Setzt alle Schieberegler auf **100%** (Vanilla) zurück.\n" +
+                    "Stellt normales Vanilla-Spielverhalten wieder her."
                 },
 
                 // -----------------------------------------------------------------
@@ -136,32 +133,31 @@ namespace MagicGarbage
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenParadoxPage)), "Paradox Mods" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenParadoxPage)),
-                    "Öffnet die **Paradox Mods**-Seite der Mods des Autors."
+                    "Öffnet die **Paradox Mods**-Seite mit den Mods des Autors."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenDiscord)), "Discord" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)),
-                    "Öffnet **Discord** im Browser mit dem CS2-Modding-Server."
+                    "Öffnet **Discord** im Browser zum CS2 Modding."
                 },
 
                 // -----------------------------------------------------------------
                 // About -> USAGE NOTES (multiline text block)
                 // -----------------------------------------------------------------
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
-                    "<Auto-Clean-Modus>\n" +
-                    "  * Totale Magie AN = **[ ✓ ]**\n" +
-                    "  * Sämtlicher Müll wird sofort entfernt\n" +
+                    "<Auto Clean state>\n" +
+                    "  * Totale Magie AN  = **[ ✓ ]**\n" +
+                    "  * Aller Müll wird sofort entfernt\n" +
                     " <-------------------------------------->\n\n" +
-                    "<Selbstverwaltungs-Modus>\n" +
+                    "<Self-Manage state>\n" +
                     "  * Semi-Magie aktivieren = **[ ✓ ]**\n" +
-                    "  * Schieberegler [100 >> 500] nach Wunsch einstellen.\n" +
-                    "  * Vanilla-Müllsimulation mit anpassbaren, stärkeren Fahrzeugen und Anlagen.\n" +
+                    "  * Schieberegler nach Wunsch einstellen.\n" +
+                    "  * Vanilla-Mülllogik mit besser gemanagten Trucks/Anlagen.\n" +
                     " <-------------------------------------->\n\n" +
-                    "<Normales Vanilla-Spiel>\n" +
-                    "  * Semi-Magie = **[ ✓ ]**\n" +
-                    "  * Auf **[Standardwerte]** klicken\n" +
-                    "  * Alle Schieberegler auf 100% (Standard)\n" +
-                    "  * Genau das normale Spielverhalten.\n"
+                    "<Normal vanilla game>\n" +
+                    "  * Semi-Magie aktivieren = **[ ✓ ]**\n" +
+                    "  * **[Spiel-Standard]** klicken\n" +
+                    "  * Alle Schieberegler auf 100% (Vanilla)\n"
                 },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)),
                     string.Empty
