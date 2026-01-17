@@ -83,9 +83,8 @@ Handle garbage your way:
 <ChangeLog>
 * Fix: saved settings persist on reboot.
 * Fix: switching Total Magic now reverts Semi-Magic tuning to vanilla immediately (values preserved).
-* Tweak: slider steps standardized to 10%.
 * Updated: Recommended preset (200% load, 200% processing, 160% storage, 140% facility trucks).
-* sliders increment in 10% steps now (former was 20-25%)
+* Sliders increment in 10% steps now (former was 20-25%)
 * Updated translations and docs.
 </ChangeLog>
 
