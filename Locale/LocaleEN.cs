@@ -79,15 +79,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
                     "**How fast facilities process incoming garbage.**\n" +
                     "100% = vanilla processing speed.\n"
-                },
-
-                // Facility truck count (how many trucks can be dispatched)
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "Facility truck count" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "**How many trucks each facility can dispatch.**\n" +
-                    "100% = vanilla number of trucks.\n"
-                },        
+                },      
 
                 // Facility storage capacity
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
@@ -98,6 +90,14 @@ namespace MagicGarbage
                     "Higher values = facility can hold more garbage.\n"
                 },
 
+                // Facility truck count (how many trucks can be dispatched)
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
+                    "Facility truck count" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
+                    "**How many trucks each facility can dispatch.**\n" +
+                    "100% = vanilla number of trucks.\n"
+                },  
+
                 // -----------------------------------------------------------------
                 // Semi-Magic helper buttons (same row)
                 // -----------------------------------------------------------------
@@ -106,9 +106,9 @@ namespace MagicGarbage
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.SemiMagicRecommended)),
                     "Apply recommended Semi-Magic values:\n" +
                     "- Truck load capacity: **200%**\n" +
-                    "- Facility truck count: **150%**\n" +
                     "- Processing speed: **200%**\n" +
-                    "- Storage capacity: **150%**\n"
+                    "- Storage capacity: **160%**\n" +
+                    "- Facility truck count: **140%**"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SemiMagicDefaults)), "Game Defaults" },
