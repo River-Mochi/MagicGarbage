@@ -107,10 +107,10 @@ namespace MagicGarbage
             setting.RegisterInOptionsUI();
 
             // Main simulation phase:
-            // - MagicGarbageSystem: when Total Magic toggle ON, clears garbage & requests
+            // - TotalMagicSystem: when Total Magic toggle ON, clears garbage & requests
             // - GarbageTruckCapacitySystem: adjusts truck capacity & unload rate for Semi-Magic
             // - GarbageFacilityCapacitySystem: adjusts facility trucks, processing speed, storage
-            updateSystem.UpdateAfter<MagicGarbageSystem>(SystemUpdatePhase.GameSimulation);
+            updateSystem.UpdateAfter<TotalMagicSystem>(SystemUpdatePhase.GameSimulation);
             updateSystem.UpdateAfter<GarbageTruckCapacitySystem>(SystemUpdatePhase.GameSimulation);
             updateSystem.UpdateAfter<GarbageFacilityCapacitySystem>(SystemUpdatePhase.GameSimulation);
 

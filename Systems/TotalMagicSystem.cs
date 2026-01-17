@@ -1,14 +1,16 @@
-// Systems/MagicGarbageSystem.cs
+// File: Systems/TotalMagicSystem.cs
 // Total Magic: clears garbage periodically and cancels collection requests.
+// When Total Magic is OFF, this system disables itself (no interval updates).
 
 namespace MagicGarbage
 {
-    using Game;                     // GameSystemBase, SystemUpdatePhase
+    using Colossal.Serialization.Entities;  // Purpose
+    using Game;                     // GameSystemBase, SystemUpdatePhase, Purpose, GameMode
     using Game.Buildings;           // GarbageProducer, GarbageProducerFlags
-    using Game.Common;              // Deleted, Destroyed, Temp
+    using Game.Common;              // Deleted, Destroyed
     using Game.Notifications;       // IconCommandBuffer, IconCommandSystem
     using Game.Prefabs;             // GarbageParameterData
-    using Game.Tools;               // IconCommandSystem
+    using Game.Tools;               // Temp
     using Unity.Burst;              // BurstCompile
     using Unity.Burst.Intrinsics;   // v128 for IJobChunk
     using Unity.Collections;        // NativeArray, Allocator
@@ -18,35 +20,27 @@ namespace MagicGarbage
     /// Periodically wipes garbage from producers and cancels collection requests
     /// when Total Magic mode is enabled in the mod settings.
     /// </summary>
-    public partial class MagicGarbageSystem : GameSystemBase
+    public partial class TotalMagicSystem : GameSystemBase
     {
-        // ---- UPDATE SCHEDULING ----
-
         /// <summary>
         /// Times per simulated day this system should run.
         /// 512 updates/day ≈ every 2.8 in-game minutes.
-        /// Increase for more frequent cleaning, decrease for less.
         /// </summary>
         public static readonly int UpdatesPerDay = 512;
 
-        // Same value vanilla TimeSystem uses internally.
-        private const int TicksPerDay = 262144;
-
-        /// <summary>
-        /// Game calls OnUpdate only every N ticks based on this interval.
-        /// </summary>
-        public override int GetUpdateInterval(SystemUpdatePhase phase)
-        {
-            return TicksPerDay / UpdatesPerDay; // 262144 / 512 = 512 ticks
-        }
-
-        // ---- RUNTIME STATE ----
+        private const int TicksPerDay = 262144;     // Game legit TimeSystem value.
 
         private IconCommandSystem m_IconCommandSystem = null!;
         private EntityQuery m_GarbageProducerQuery;
         private EntityQuery m_GarbageParamsQuery;
 
-        // ---- LIFECYCLE ----
+        /// <summary>
+        /// Game calls OnUpdate only every N ticks based on this interval (when Enabled).
+        /// </summary>
+        public override int GetUpdateInterval(SystemUpdatePhase phase)
+        {
+            return TicksPerDay / UpdatesPerDay;
+        }
 
         protected override void OnCreate()
         {
@@ -70,25 +64,55 @@ namespace MagicGarbage
             });
 
             // Singleton with notification prefab + other parameters.
-            m_GarbageParamsQuery =
-                GetEntityQuery(ComponentType.ReadOnly<GarbageParameterData>());
+            m_GarbageParamsQuery = GetEntityQuery(ComponentType.ReadOnly<GarbageParameterData>());
 
             RequireForUpdate(m_GarbageProducerQuery);
             RequireForUpdate(m_GarbageParamsQuery);
 
+            // Start asleep; Setting toggle or OnGameLoadingComplete wakes it if needed.
+            Enabled = false;
+
 #if DEBUG
-            int intervalTicks   = TicksPerDay / UpdatesPerDay;
+            int intervalTicks = TicksPerDay / UpdatesPerDay;
             float ticksPerMinute = TicksPerDay / 1440f;
             Mod.Log.Info(
-                $"{Mod.ModTag} MagicGarbageSystem created. UpdatesPerDay={UpdatesPerDay}, " +
+                $"{Mod.ModTag} TotalMagicSystem created. UpdatesPerDay={UpdatesPerDay}, " +
                 $"IntervalTicks={intervalTicks}, TicksPerMinute={ticksPerMinute:F2}.");
 #endif
         }
 
+        /// <summary>
+        /// After city loads, enable Total Magic only if toggle is ON.
+        /// Ensures Total Magic applies correctly on reboot/load.
+        /// </summary>
+        protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
+        {
+            base.OnGameLoadingComplete(purpose, mode);
+
+            if (Mod.TryGetSetting(out Setting setting) && setting.TotalMagic)
+            {
+                Enabled = true;
+
+#if DEBUG
+                Mod.Log.Info($"{Mod.ModTag} TotalMagicSystem enabled on load (Total Magic ON).");
+#endif
+            }
+            else
+            {
+                Enabled = false;
+
+#if DEBUG
+                Mod.Log.Info($"{Mod.ModTag} TotalMagicSystem disabled on load (Total Magic OFF).");
+#endif
+            }
+        }
+
         protected override void OnUpdate()
         {
+            // Hard-sleep when Total Magic is OFF.
             if (!Mod.TryGetSetting(out Setting setting) || !setting.TotalMagic)
             {
+                Enabled = false;
                 return;
             }
 
@@ -117,11 +141,13 @@ namespace MagicGarbage
             }
 
             Mod.Log.Debug(
-                $"{Mod.ModTag} TotalMagic tick: producers={total}, dirty={dirty}, " +
-                $"updatesPerDay={UpdatesPerDay}.");
+                $"{Mod.ModTag} TotalMagic tick: producers={total}, dirty={dirty}, updatesPerDay={UpdatesPerDay}.");
 
-            if (dirty == 0) // DEBUG-only skip: nothing to clean, avoid scheduling job.
-            { return; }
+            // DEBUG-only skip: nothing to clean, avoid scheduling job + icon commands.
+            if (dirty == 0)
+            {
+                return;
+            }
 #endif
 
             // Create icon command buffer for this frame.
@@ -143,8 +169,6 @@ namespace MagicGarbage
             Dependency = job.ScheduleParallel(m_GarbageProducerQuery, Dependency);
             m_IconCommandSystem.AddCommandBufferWriter(Dependency);
         }
-
-        // ---- BURST JOB ----
 
         /// <summary>
         /// Clears garbage and collection requests from all producers,
@@ -169,18 +193,14 @@ namespace MagicGarbage
                 bool useEnabledMask,
                 in v128 chunkEnabledMask)
             {
-                NativeArray<Entity> entities =
-                    chunk.GetNativeArray(m_EntityType);
-                NativeArray<GarbageProducer> producers =
-                    chunk.GetNativeArray(ref m_GarbageProducerType);
+                NativeArray<Entity> entities = chunk.GetNativeArray(m_EntityType);
+                NativeArray<GarbageProducer> producers = chunk.GetNativeArray(ref m_GarbageProducerType);
 
                 for (int i = 0; i < chunk.Count; i++)
                 {
                     Entity building = entities[i];
                     GarbageProducer producer = producers[i];
 
-                    // If there is nothing to clear and no warning / request,
-                    // just remove any leftover icon and continue.
                     if (producer.m_Garbage == 0 &&
                         (producer.m_Flags & GarbageProducerFlags.GarbagePilingUpWarning) == 0 &&
                         producer.m_CollectionRequest == Entity.Null)
@@ -191,7 +211,6 @@ namespace MagicGarbage
                         continue;
                     }
 
-                    // Total Magic: wipe garbage & requests, reset flags/dispatch index.
                     producer.m_Garbage = 0;
                     producer.m_CollectionRequest = Entity.Null;
                     producer.m_DispatchIndex = 0;
@@ -199,7 +218,6 @@ namespace MagicGarbage
 
                     producers[i] = producer;
 
-                    // Remove the piling-up notification icon.
                     m_IconCommandBuffer.Remove(
                         building,
                         m_GarbageParameters.m_GarbageNotificationPrefab);

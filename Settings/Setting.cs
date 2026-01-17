@@ -1,14 +1,15 @@
-// Settings/Setting.cs
+// File: Settings/Setting.cs
 // Options UI + settings for Magic Garbage Truck [MGT].
+// Uses SettingsUISetter to wake only the relevant tuning system(s) on UI changes.
 
 namespace MagicGarbage
 {
-    using Colossal.IO.AssetDatabase;
-    using Game.Modding;
-    using Game.Settings;
+    using Colossal.IO.AssetDatabase;    // FileLocation
+    using Game.Modding;                 // Imod, ModSetting
+    using Game.Settings;                // SettingsUI
     using Game.UI;
     using Unity.Entities;
-    using UnityEngine;  // Application.OpenURL
+    using UnityEngine;          // Application.OpenURL
 
     [FileLocation("ModsSettings/MagicGarbage/MagicGarbage")]
     [SettingsUITabOrder(ActionsTab, AboutTab)] // Actions then About tab
@@ -35,7 +36,7 @@ namespace MagicGarbage
         public const string SemiMagicGrp = "SemiMagic";
         public const string AboutInfoGrp = "AboutInfo";
         public const string AboutLinksGrp = "AboutLinks";
-        public const string AboutUsageGrp = "AboutUsage";  // USAGE NOTES group on About tab
+        public const string AboutUsageGrp = "AboutUsage"; // USAGE NOTES group on About tab
 
         // ---- EXTERNAL LINKS ----
         private const string kUrlParadox =
@@ -47,6 +48,9 @@ namespace MagicGarbage
         // ---- BACKING FIELDS FOR MUTUAL EXCLUSION ----
         private bool m_TotalMagic = true;
         private bool m_SemiMagicEnabled; // default OFF
+
+        // Preset button row group
+        private const string kSemiMagicButtonsRow = "SemiMagicButtonsRow";
 
         public Setting(IMod mod)
             : base(mod)
@@ -62,6 +66,7 @@ namespace MagicGarbage
         /// UI label: "Total Magic".
         /// </summary>
         [SettingsUISection(ActionsTab, TotalMagicGrp)]
+        [SettingsUISetter(typeof(Setting), nameof(OnModeToggleChanged))]
         public bool TotalMagic
         {
             get => m_TotalMagic;
@@ -86,7 +91,7 @@ namespace MagicGarbage
                     m_SemiMagicEnabled = false;
                 }
 
-                // Re-apply so systems can react.
+                // Keep the normal settings lifecycle (harmless; we no longer override Apply()).
                 Apply();
             }
         }
@@ -96,6 +101,7 @@ namespace MagicGarbage
         /// UI label: "Semi-Magic".
         /// </summary>
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
+        [SettingsUISetter(typeof(Setting), nameof(OnModeToggleChanged))]
         public bool SemiMagicEnabled
         {
             get => m_SemiMagicEnabled;
@@ -120,14 +126,13 @@ namespace MagicGarbage
                     m_TotalMagic = false;
                 }
 
-                // Re-apply so systems can react.
                 Apply();
             }
         }
 
         // --------------------------------------------------------------------
         // SEMI-MAGIC SLIDERS (truck + facility tuning)
-        // All are hidden when Semi-Magic is disabled.
+        // All hidden when Semi-Magic is disabled.
         // --------------------------------------------------------------------
 
         // Slider: garbage truck capacity (100–500%)
@@ -135,6 +140,7 @@ namespace MagicGarbage
                           scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnTruckSliderChanged))]
         public int GarbageTruckCapacityMultiplier
         {
             get;
@@ -146,6 +152,7 @@ namespace MagicGarbage
                           scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
         public int GarbageFacilityProcessingMultiplier
         {
             get;
@@ -157,18 +164,19 @@ namespace MagicGarbage
                           scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
         public int GarbageFacilityStorageMultiplier
         {
             get;
             set;
         } = 100;
 
-        // Slider: number of facility trucks (vehicles) (100–400%)
-        // 100% = vanilla number of trucks, 400% = +300% more.
+        // Slider: number of facility vehicles (100–400%)
         [SettingsUISlider(min = 100, max = 400, step = 10,
                           scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
         public int GarbageFacilityVehicleMultiplier
         {
             get;
@@ -179,9 +187,7 @@ namespace MagicGarbage
         // SEMI-MAGIC PRESET BUTTONS (same row)
         // --------------------------------------------------------------------
 
-        private const string kSemiMagicButtonsRow = "SemiMagicButtonsRow";
-
-        // Button: Recommended preset (preferred values).
+        // Button: Recommended presets.
         [SettingsUIButton]
         [SettingsUIButtonGroup(kSemiMagicButtonsRow)]
         [SettingsUISection(ActionsTab, SemiMagicGrp)]
@@ -195,13 +201,13 @@ namespace MagicGarbage
                     return;
                 }
 
-                // Recommended:
-                // 200% truck load, 200% process speed, 160% facility storage, 140% facility trucks,
+                // Recommended: 200% truck load, 200% process speed, 160% facility storage, 140% facility trucks
                 GarbageTruckCapacityMultiplier = 200;
                 GarbageFacilityProcessingMultiplier = 200;
                 GarbageFacilityStorageMultiplier = 160;
                 GarbageFacilityVehicleMultiplier = 140;
 
+                WakeTuningSystems();    // Buttons change multiple knobs at once, so wake both.
                 Apply();
             }
         }
@@ -220,12 +226,12 @@ namespace MagicGarbage
                     return;
                 }
 
-                // Vanilla settings.
                 GarbageTruckCapacityMultiplier = 100;
                 GarbageFacilityVehicleMultiplier = 100;
                 GarbageFacilityProcessingMultiplier = 100;
                 GarbageFacilityStorageMultiplier = 100;
 
+                WakeTuningSystems();
                 Apply();
             }
         }
@@ -285,7 +291,7 @@ namespace MagicGarbage
         public string UsageNotes => string.Empty; // Text comes from Locale files.
 
         // --------------------------------------------------------------------
-        // DEFAULTS & APPLY
+        // DEFAULTS
         // --------------------------------------------------------------------
 
         public override void SetDefaults()
@@ -303,32 +309,85 @@ namespace MagicGarbage
             GarbageFacilityStorageMultiplier = 100;
         }
 
-        public override void Apply()
-        {
-            base.Apply();
+        // --------------------------------------------------------------------
+        // SettingsUISetter callbacks (GROUPED)
+        // These are called when the user changes values in Options UI.
+        // --------------------------------------------------------------------
 
-            World world = World.DefaultGameObjectInjectionWorld;
-            if (world == null || !world.IsCreated)
+        private void OnModeToggleChanged(bool _)
+        {
+            SetTotalMagicSystemEnabled(m_TotalMagic);
+            WakeTuningSystems();    // Mode changes require reverting or applying both tuning systems.
+        }
+
+        private void OnTruckSliderChanged(int _)
+        {
+            WakeTruckSystem();
+        }
+
+        private void OnFacilitySliderChanged(int _)
+        {
+            WakeFacilitySystem();
+        }
+
+        private static void SetTotalMagicSystemEnabled(bool enabled)
+        {
+            if (!TryGetWorld(out World world))
             {
                 return;
             }
 
-            // Recalculate truck stats when sliders/toggles change.
-            GarbageTruckCapacitySystem truckSystem =
-                world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
-            if (truckSystem != null)
+            TotalMagicSystem sys = world.GetExistingSystemManaged<TotalMagicSystem>();
+            if (sys != null)
             {
-                truckSystem.Enabled = true;
+                sys.Enabled = enabled;
             }
-
-            // Recalculate facility stats when sliders/toggles change.
-            GarbageFacilityCapacitySystem facilitySystem =
-                world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
-            if (facilitySystem != null)
-            {
-                facilitySystem.Enabled = true;
-            }
-
         }
+
+        // --------------------------------------------------------------------
+        // Wake helpers
+        // --------------------------------------------------------------------
+
+        private static bool TryGetWorld(out World world)
+        {
+            world = World.DefaultGameObjectInjectionWorld;
+            return world != null && world.IsCreated;
+        }
+
+        private static void WakeTruckSystem()
+        {
+            if (!TryGetWorld(out World world))
+            {
+                return;
+            }
+
+            GarbageTruckCapacitySystem sys = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
+            if (sys != null)
+            {
+                sys.Enabled = true;
+            }
+        }
+
+        private static void WakeFacilitySystem()
+        {
+            if (!TryGetWorld(out World world))
+            {
+                return;
+            }
+
+            GarbageFacilityCapacitySystem sys = world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
+            if (sys != null)
+            {
+                sys.Enabled = true;
+            }
+        }
+
+        private static void WakeTuningSystems()
+        {
+            WakeTruckSystem();
+            WakeFacilitySystem();
+        }
+
+
     }
 }
