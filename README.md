@@ -1,4 +1,4 @@
-﻿# Magic Garbage Truck [MGT]
+# Magic Garbage [MG]
 
 Two ways to handle garbage in **Cities: Skylines II**.
 
@@ -12,9 +12,9 @@ Two ways to handle garbage in **Cities: Skylines II**.
 
 Under the hood: a **Burst-compiled ECS job** runs periodically and clears garbage in chunks, so even huge cities stay smooth.
 
-## Option 2 – Semi-Magic (Self-Manage)
+## Option 2 – Trash Boss (Self Manage)
 
-- ✅ **Semi-Magic ON**, **Total Magic OFF**
+- ✅ **Trash Boss ON**, **Total Magic OFF**
 - Vanilla garbage simulation stays active, but you control these stats:
   - **Truck load capacity** (100–500%)
   - **Facility truck count** (100–400%)
@@ -29,14 +29,14 @@ Under the hood: a **Burst-compiled ECS job** runs periodically and clears garbag
   - Storage capacity: **160%**
   - Facility truck count: **140%**
 
-> 💡 Total Magic and Semi-Magic are mutually exclusive.  
-> Your Semi-Magic slider values are saved even while Total Magic is ON.
+> 💡 Total Magic and Trash Boss are mutually exclusive.  
+> Your Trash Boss slider values are saved even while Total Magic is ON.
 
 ## Compatibility
 
 - Works with new and existing saves.
 - Safe to disable or remove.
-- Uses ECS + Burst and slider-driven tuning — **no Harmony**, **no reflection**.
+- Uses ECS + Burst and slider-driven tuning — **no Harmony**
 - Designed to be lightweight and resilient to game updates.
 
 ## Credits

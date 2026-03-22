@@ -1,6 +1,6 @@
 // File: Systems/GarbageTruckCapacitySystem.cs
-// Semi-Magic: scales truck prefab capacity & unload rate.
-// Total Magic (or Semi-Magic OFF): reverts to vanilla (100%) once, then sleeps.
+// Trash Boss: scales truck prefab capacity & unload rate.
+// Total Magic (or Trash Boss OFF): reverts to vanilla (100%) once, then sleeps.
 
 namespace MagicGarbage
 {
@@ -12,8 +12,8 @@ namespace MagicGarbage
     using Unity.Mathematics;
 
     /// <summary>
-    /// Scales garbage truck capacity and unload rate according to the Semi-Magic slider.
-    /// When Total Magic is enabled (or Semi-Magic disabled), it reverts to vanilla (100%) once.
+    /// Scales garbage truck capacity and unload rate according to the Trash Boss slider.
+    /// When Total Magic is enabled (or Trash Boss disabled), it reverts to vanilla (100%) once.
     /// Uses cached base values to avoid rounding drift.
     /// </summary>
     public partial class GarbageTruckCapacitySystem : GameSystemBase
@@ -22,8 +22,7 @@ namespace MagicGarbage
         private int m_LastMultiplier = 100;
 
         // Cache the "base" (vanilla) values per prefab entity so we can apply exact scaling (no drift).
-        private readonly Dictionary<Entity, (int Capacity, int UnloadRate)> m_Base =
-            new Dictionary<Entity, (int Capacity, int UnloadRate)>();
+        private readonly Dictionary<Entity, (int Capacity, int UnloadRate)> m_Base = new();
 
         protected override void OnCreate()
         {
@@ -50,7 +49,7 @@ namespace MagicGarbage
             Enabled = true;
 
 #if DEBUG
-            Mod.Log.Info("[MGT] GarbageTruckCapacitySystem: OnGameLoadingComplete -> Enabled");
+            Mod.Log.Info("[MG] [Trash Boss] GarbageTruckCapacitySystem: OnGameLoadingComplete -> Enabled");
 #endif
         }
 
@@ -63,12 +62,12 @@ namespace MagicGarbage
             }
 
             // Decide what the effective multiplier should be right now.
-            // - Total Magic ON => behave like vanilla 100% (but keep user's saved Semi sliders).
-            // - Semi-Magic OFF => also behave like vanilla 100%.
-            // - Semi-Magic ON  => use slider.
+            // - Total Magic ON => behave like vanilla 100% (but keep user's saved Self-manage sliders).
+            // - Trash Boss OFF => also behave like vanilla 100%.
+            // - Trash Boss ON  => use slider.
             int targetMult = 100;
 
-            if (!setting.TotalMagic && setting.SemiMagicEnabled)
+            if (!setting.TotalMagic && setting.TrashBossEnabled)
             {
                 targetMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500);
             }
@@ -77,7 +76,7 @@ namespace MagicGarbage
             if (targetMult == m_LastMultiplier)
             {
 #if DEBUG
-                Mod.Log.Info("[MGT] TruckCapacity sleep");
+                Mod.Log.Info("[MG] [Trash Boss] TruckCapacity sleep");
 #endif
                 Enabled = false;
                 return;
@@ -89,7 +88,7 @@ namespace MagicGarbage
             {
                 ref GarbageTruckData data = ref truck.ValueRW;
 
-                if (!m_Base.TryGetValue(entity, out var b))
+                if (!m_Base.TryGetValue(entity, out (int Capacity, int UnloadRate) b))
                 {
                     // Capture base values the first time we touch this prefab entity.
                     // If we were already scaled in-session, approximate base by reversing last multiplier once.
@@ -114,7 +113,7 @@ namespace MagicGarbage
             }
 
 #if DEBUG
-            Mod.Log.Info($"[MGT] TruckCapacity apply: {m_LastMultiplier}% -> {targetMult}%");
+            Mod.Log.Info($"[MG] TruckCapacity apply: {m_LastMultiplier}% -> {targetMult}%");
 #endif
 
             m_LastMultiplier = targetMult;
