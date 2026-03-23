@@ -1,4 +1,4 @@
-// File: Localization/LocaleEN.cs
+// File: Locale/LocaleEN.cs
 // English (en-US)
 
 namespace MagicGarbage
@@ -19,7 +19,6 @@ namespace MagicGarbage
             IList<IDictionaryEntryError> errors,
             Dictionary<string, int> indexCounts)
         {
-            // Title (keep exact logic)
             string title = Mod.ModName;
             if (!string.IsNullOrEmpty(Mod.ModVersion))
             {
@@ -33,13 +32,13 @@ namespace MagicGarbage
 
                 // Tabs
                 { m_Setting.GetOptionTabLocaleID(Setting.ActionsTab), "Actions" },
-                { m_Setting.GetOptionTabLocaleID(Setting.AboutTab),   "About"   },
+                { m_Setting.GetOptionTabLocaleID(Setting.AboutTab), "About" },
 
                 // Groups
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Auto Clean" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp),  "Self Manage" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp),     "Status" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp),  "Mod info" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "Self Manage" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "Status" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "Mod info" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Links" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "USAGE NOTES" },
 
@@ -79,7 +78,7 @@ namespace MagicGarbage
                     "100% = vanilla storage.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)), "Facility truck count" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)), "Facility Fleet" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
                     "**How many trucks each facility can dispatch.**\n" +
                     "100% = vanilla number of trucks.\n"
@@ -100,49 +99,6 @@ namespace MagicGarbage
                     "Set all sliders back to **100%** (vanilla values)."
                 },
 
-                // Status
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.RefreshGarbageStatus)), "Refresh status now" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.RefreshGarbageStatus)),
-                    "Refreshes the Status lines below.\n\n" +
-                    "Also writes the full detailed report into **MagicGarbage.log**.\n"
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRates)), "Rates" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRates)), string.Empty },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusProducers)), "Producers" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusProducers)), string.Empty },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Requests" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)), string.Empty },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "Trucks" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusTrucks)), string.Empty },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacility1)), "Facility #1" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacility1)), string.Empty },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacility2)), "Facility #2" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacility2)), string.Empty },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacility3)), "Facility #3" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacility3)), string.Empty },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacility4)), "Facility #4" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacility4)), string.Empty },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacility5)), "Facility #5" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacility5)), string.Empty },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacility6)), "Facility #6" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacility6)), string.Empty },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacility7)), "Facility #7" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacility7)), string.Empty },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacility8)), "Facility #8" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacility8)), string.Empty },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacility9)), "Facility #9" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacility9)), string.Empty },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacility10)), "Facility #10" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacility10)), string.Empty },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusLastUpdate)), "Snapshot" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusLastUpdate)), string.Empty },
-
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "Display name of this mod." },
@@ -156,49 +112,77 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenDiscord)), "Discord" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)), "Open Discord invite in your browser." },
 
-                // Usage block (label-as-text pattern)
+                // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<Auto Clean state>\n" +
                     "  * Total Magic ON  = **[ ✓ ]**\n" +
                     "  * All garbage is instantly removed\n" +
                     " <-------------------------------------->\n\n" +
                     "<Self-Manage state>\n" +
-                    "  * Enable Trash Boss = **[ ✓ ]**\n" +
+                    "  * Trash Boss = **[ ✓ ]**\n" +
                     "  * Set sliders as desired.\n" +
                     "  * Vanilla garbage logic with better managed trucks/facilities.\n" +
                     " <-------------------------------------->\n\n" +
                     "<Normal vanilla game>\n" +
-                    "  * Enable Trash Boss = **[ ✓ ]**\n" +
+                    "  * Trash Boss = **[ ✓ ]**\n" +
                     "  * Click **[Game Defaults]**\n" +
                     "  * All sliders at 100% (vanilla)\n"
                 },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), string.Empty },
 
-                // -----------------------------------------------------------------
-                // Status runtime strings (used by GarbageStatusSystem)
-                // Prefix changed: MGT.Status.* -> MG.Status.*
-                // -----------------------------------------------------------------
-                { "MG.Status.Running", "Running…" },
+                // Status
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)), string.Empty },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusProducers)), "Producers" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusProducers)), string.Empty },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Collect Requests" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
+                    "Request = garbage amount where a building starts qualifying for collection\n" +
+                    "Collect = collection-side threshold used by the simulation\n" +
+                    "Warning = garbage level for the warning state/icon.\n" +
+                    "Max = hard cap on garbage accumulation."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "Trucks" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusTrucks)), string.Empty },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "Facilities" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacilities)), string.Empty },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Send Status to Log" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageStatusLog)),
+                    "Write a detailed garbage report into **Logs/MagicGarbage.log**."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Open Log" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)),
+                    "Open the Log folder."
+                },
+
+                // Runtime status strings
                 { "MG.Status.NoCity", "No city loaded yet." },
 
-                { "MG.Status.Title", "Garbage Status ({0})" },
+                { "MG.Status.Row.GarbageProcessing", "Garbage: {0:N0} t/mo | Processing: {1:N0} t/mo | updated {2}" },
+                { "MG.Status.Row.Producers", "Buildings with garbage: {0:N0} / {1:N0} | Already requested: {2:N0}" },
+                { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total " },
+                { "MG.Status.Row.Trucks", "{1:N0} moving | {2:N0} parked | {3:N0} returning | {0:N0} total" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} facilities: {1:N0} moving trucks | {2:N0} total trucks" },
+                { "MG.Status.Row.FacilitiesNone", "No facility truck data yet." },
 
-                { "MG.Status.Mode", "Mode" },
-                { "MG.Status.Mode.TotalMagic", "Total Magic" },
-                { "MG.Status.Mode.TrashBoss", "Trash Boss" },
-
-                { "MG.Status.Params", "Limits: Request={0}, Collect={1}, Warning={2}, Max={3}" },
-                { "MG.Status.Params.Missing", "Limits: <GarbageParameterData not available>" },
-
-                { "MG.Status.Rates", "Garbage: {0} t/mo | Processing: {1} t/mo" },
-
-                { "MG.Status.Line.Producers", "Producers: {0:N0} (garbage>0: {1:N0}, >Req: {2:N0}, >Warn: {3:N0}, hasPtr: {4:N0})" },
-                { "MG.Status.Line.Requests", "Collect requests: total={0:N0}, pending={1:N0}, dispatched={2:N0}" },
-                { "MG.Status.Line.Trucks", "Garbage trucks: total={0:N0}, parked={1:N0}, moving={2:N0}, returning={3:N0}, disabled={4:N0}" },
-
-                { "MG.Status.TopFacilities.Line", "Facility {0}: total={1:N0}, moving={2:N0}, parked={3:N0}" },
-
-                { "MG.Status.LastUpdate", "Last update: {0}" },
+                // Log strings
+                { "MG.Status.Log.Title", "Garbage Status ({0})" },
+                { "MG.Status.Log.City", "City: {0}" },
+                { "MG.Status.Log.Mode", "Mode: Total Magic={0}, Trash Boss={1}" },
+                { "MG.Status.Log.Thresholds", "Thresholds: request starts at {0:N0}, dispatch target {1:N0}, warning icon at {2:N0}, hard cap {3:N0}" },
+                { "MG.Status.Log.ThresholdsMissing", "Thresholds: <GarbageParameterData not available>" },
+                { "MG.Status.Log.GarbageProcessing", "Garbage: {0:N0} t/mo | Processing: {1:N0} t/mo" },
+                { "MG.Status.Log.Producers", "Buildings: total={0:N0}, with garbage={1:N0}, above request threshold={2:N0}, warning-level={3:N0}, already linked to a request={4:N0}" },
+                { "MG.Status.Log.Requests", "Collect Requests: pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
+                { "MG.Status.Log.Trucks", "Garbage trucks: parked={1:N0}, moving={2:N0}, returning={3:N0}, disabled={4:N0}, total={0:N0}" },
+                { "MG.Status.Log.FacilitiesHeader", "Facility Summary" },
+                { "MG.Status.Log.FacilityLine", "- Facility {0}: , moving={2:N0}, parked={3:N0}, total={1:N0}" },
             };
         }
 

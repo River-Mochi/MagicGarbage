@@ -1,16 +1,15 @@
 // File: Settings/Setting.cs
-// Options UI + settings for Magic Garbage Truck [MG].
-// Status auto-refreshes once per Options-open and can be forced by button.
+// Options UI + settings for Magic Garbage.
+// Status is pull-based and only refreshes while Options UI is open.
 
 namespace MagicGarbage
 {
     using Colossal.IO.AssetDatabase;
-    using Game;
     using Game.Modding;
-    using Game.SceneFlow;
     using Game.Settings;
     using Game.UI;
     using System;
+    using System.IO;
     using Unity.Entities;
     using UnityEngine;
 
@@ -38,19 +37,23 @@ namespace MagicGarbage
 
         // ---- ROW GROUPS (button rows) ----
         private const string TrashBossButtonsRow = "TrashBossButtonsRow";
+        private const string StatusButtonsRow = "StatusButtonsRow";
         private const string AboutLinksRow = "AboutLinksRow";
 
+        // ---- EXTERNAL LINKS ----
         private const string UrlParadox =
             "https://mods.paradoxplaza.com/authors/River-mochi/cities_skylines_2?games=cities_skylines_2&orderBy=desc&sortBy=best&time=alltime";
 
         private const string UrlDiscord =
             "https://discord.gg/HTav7ARPs2";
 
+        // ---- BACKING FIELDS ----
         private bool m_TotalMagic = true;
         private bool m_TrashBossEnabled;
 
         public Setting(IMod mod) : base(mod)
         {
+            SetDefaults();
         }
 
         // --------------------------------------------------------------------
@@ -65,15 +68,21 @@ namespace MagicGarbage
             set
             {
                 if (m_TotalMagic == value)
+                {
                     return;
+                }
 
                 if (!value && !m_TrashBossEnabled)
+                {
                     return;
+                }
 
                 m_TotalMagic = value;
 
                 if (m_TotalMagic)
+                {
                     m_TrashBossEnabled = false;
+                }
 
                 Apply();
             }
@@ -87,22 +96,28 @@ namespace MagicGarbage
             set
             {
                 if (m_TrashBossEnabled == value)
+                {
                     return;
+                }
 
                 if (!value && !m_TotalMagic)
+                {
                     return;
+                }
 
                 m_TrashBossEnabled = value;
 
                 if (m_TrashBossEnabled)
+                {
                     m_TotalMagic = false;
+                }
 
                 Apply();
             }
         }
 
         // --------------------------------------------------------------------
-        // TRASH BOSS SLIDERS (hidden when Trash Boss is disabled)
+        // TRASH BOSS SLIDERS (hidden when Trash Boss is OFF)
         // --------------------------------------------------------------------
 
         [SettingsUISlider(min = 100, max = 500, step = 10, scalarMultiplier = 1, unit = Unit.kPercentage)]
@@ -142,7 +157,9 @@ namespace MagicGarbage
             set
             {
                 if (!value)
+                {
                     return;
+                }
 
                 GarbageTruckCapacityMultiplier = 200;
                 GarbageFacilityProcessingMultiplier = 200;
@@ -163,7 +180,9 @@ namespace MagicGarbage
             set
             {
                 if (!value)
+                {
                     return;
+                }
 
                 GarbageTruckCapacityMultiplier = 100;
                 GarbageFacilityVehicleMultiplier = 100;
@@ -176,49 +195,16 @@ namespace MagicGarbage
         }
 
         // --------------------------------------------------------------------
-        // ACTIONS TAB – STATUS
+        // STATUS (auto-refresh while Options is open)
         // --------------------------------------------------------------------
 
-        [SettingsUIButton]
         [SettingsUISection(ActionsTab, StatusGrp)]
-        public bool RefreshGarbageStatus
-        {
-            set
-            {
-                if (!value)
-                    return;
-
-#if DEBUG
-                Mod.Log.Info($"{Mod.ModTag} [DEBUG] GarbageStatus button clicked");
-#endif
-
-                GameManager gm = GameManager.instance;
-                if (gm == null || !gm.gameMode.IsGame())
-                {
-#if DEBUG
-                    Mod.Log.Info($"{Mod.ModTag} [DEBUG] NoCity: GameManager null or not IsGame()");
-#endif
-                    GarbageStatusSystem.SetUiNoCity();
-                    Apply();
-                    return;
-                }
-
-                GarbageStatusSystem.SetUiRunning();
-                Apply();
-
-                GarbageStatusSystem.RunNow(writeToLog: true);
-
-                Apply();
-            }
-        }
-
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusRates
+        public string StatusGarbageProcessing
         {
             get
             {
-                GarbageStatusSystem.AutoRefreshOnOptionsRead();
-                return GarbageStatusSystem.GetRates();
+                GarbageStatus.RefreshIfNeeded();
+                return GarbageStatus.GetUiGarbageProcessing();
             }
         }
 
@@ -227,8 +213,8 @@ namespace MagicGarbage
         {
             get
             {
-                GarbageStatusSystem.AutoRefreshOnOptionsRead();
-                return GarbageStatusSystem.GetProducers();
+                GarbageStatus.RefreshIfNeeded();
+                return GarbageStatus.GetUiProducers();
             }
         }
 
@@ -237,8 +223,8 @@ namespace MagicGarbage
         {
             get
             {
-                GarbageStatusSystem.AutoRefreshOnOptionsRead();
-                return GarbageStatusSystem.GetRequests();
+                GarbageStatus.RefreshIfNeeded();
+                return GarbageStatus.GetUiRequests();
             }
         }
 
@@ -247,45 +233,59 @@ namespace MagicGarbage
         {
             get
             {
-                GarbageStatusSystem.AutoRefreshOnOptionsRead();
-                return GarbageStatusSystem.GetTrucks();
+                GarbageStatus.RefreshIfNeeded();
+                return GarbageStatus.GetUiTrucks();
             }
         }
 
         [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusFacility1 { get { GarbageStatusSystem.AutoRefreshOnOptionsRead(); return GarbageStatusSystem.GetFacility(0); } }
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusFacility2 { get { GarbageStatusSystem.AutoRefreshOnOptionsRead(); return GarbageStatusSystem.GetFacility(1); } }
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusFacility3 { get { GarbageStatusSystem.AutoRefreshOnOptionsRead(); return GarbageStatusSystem.GetFacility(2); } }
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusFacility4 { get { GarbageStatusSystem.AutoRefreshOnOptionsRead(); return GarbageStatusSystem.GetFacility(3); } }
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusFacility5 { get { GarbageStatusSystem.AutoRefreshOnOptionsRead(); return GarbageStatusSystem.GetFacility(4); } }
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusFacility6 { get { GarbageStatusSystem.AutoRefreshOnOptionsRead(); return GarbageStatusSystem.GetFacility(5); } }
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusFacility7 { get { GarbageStatusSystem.AutoRefreshOnOptionsRead(); return GarbageStatusSystem.GetFacility(6); } }
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusFacility8 { get { GarbageStatusSystem.AutoRefreshOnOptionsRead(); return GarbageStatusSystem.GetFacility(7); } }
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusFacility9 { get { GarbageStatusSystem.AutoRefreshOnOptionsRead(); return GarbageStatusSystem.GetFacility(8); } }
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusFacility10 { get { GarbageStatusSystem.AutoRefreshOnOptionsRead(); return GarbageStatusSystem.GetFacility(9); } }
-
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusLastUpdate
+        public string StatusFacilities
         {
             get
             {
-                GarbageStatusSystem.AutoRefreshOnOptionsRead();
-                return GarbageStatusSystem.GetLastUpdate();
+                GarbageStatus.RefreshIfNeeded();
+                return GarbageStatus.GetUiFacilities();
             }
         }
 
-        // --------------------------------------------------------------------
-        // ABOUT TAB
-        // --------------------------------------------------------------------
+        [SettingsUIButton]
+        [SettingsUIButtonGroup(StatusButtonsRow)]
+        [SettingsUISection(ActionsTab, StatusGrp)]
+        public bool GarbageStatusLog
+        {
+            set
+            {
+                if (!value)
+                {
+                    return;
+                }
+
+#if DEBUG
+                Mod.Log.Info($"{Mod.ModTag} [DEBUG] GarbageStatusLog clicked");
+#endif
+                GarbageStatus.RefreshNow(writeToLog: true);
+            }
+        }
+
+        [SettingsUIButton]
+        [SettingsUIButtonGroup(StatusButtonsRow)]
+        [SettingsUISection(ActionsTab, StatusGrp)]
+        public bool OpenLog
+        {
+            set
+            {
+                if (!value)
+                {
+                    return;
+                }
+
+                OpenLogFolder();
+            }
+        }
+
+        // ------------------------------------
+        // ABOUT
+        // ------------------------------------
 
         [SettingsUISection(AboutTab, AboutInfoGrp)]
         public string AboutName => Mod.ModName;
@@ -300,8 +300,18 @@ namespace MagicGarbage
         {
             set
             {
-                if (value)
+                if (!value)
+                {
+                    return;
+                }
+
+                try
+                {
                     Application.OpenURL(UrlParadox);
+                }
+                catch (Exception)
+                {
+                }
             }
         }
 
@@ -312,8 +322,18 @@ namespace MagicGarbage
         {
             set
             {
-                if (value)
+                if (!value)
+                {
+                    return;
+                }
+
+                try
+                {
                     Application.OpenURL(UrlDiscord);
+                }
+                catch (Exception)
+                {
+                }
             }
         }
 
@@ -321,9 +341,9 @@ namespace MagicGarbage
         [SettingsUISection(AboutTab, AboutUsageGrp)]
         public string UsageNotes => string.Empty;
 
-        // --------------------------------------------------------------------
+        // ---------------------------------
         // DEFAULTS
-        // --------------------------------------------------------------------
+        // ---------------------------------
 
         public override void SetDefaults()
         {
@@ -335,67 +355,117 @@ namespace MagicGarbage
             GarbageFacilityProcessingMultiplier = 100;
             GarbageFacilityStorageMultiplier = 100;
 
-            GarbageStatusSystem.ResetUi();
+            GarbageStatus.ResetUi();
         }
 
-        // --------------------------------------------------------------------
+        // --------------------------------------------
         // SettingsUISetter callbacks
-        // --------------------------------------------------------------------
+        // --------------------------------------------
 
         private void OnModeToggleChanged(bool _)
         {
             if (!TryGetWorld(out World world))
+            {
                 return;
+            }
 
             TotalMagicSystem tm = world.GetExistingSystemManaged<TotalMagicSystem>();
             if (tm != null)
+            {
                 tm.Enabled = true;
+            }
 
             GarbageTruckCapacitySystem truckSys = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
             if (truckSys != null)
+            {
                 truckSys.Enabled = true;
+            }
 
             GarbageFacilityCapacitySystem facSys = world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
             if (facSys != null)
+            {
                 facSys.Enabled = true;
+            }
         }
 
         private void OnTruckSliderChanged(int _)
         {
             if (!TryGetWorld(out World world))
+            {
                 return;
+            }
 
             GarbageTruckCapacitySystem sys = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
             if (sys != null)
+            {
                 sys.Enabled = true;
+            }
         }
 
         private void OnFacilitySliderChanged(int _)
         {
             if (!TryGetWorld(out World world))
+            {
                 return;
+            }
 
             GarbageFacilityCapacitySystem sys = world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
             if (sys != null)
+            {
                 sys.Enabled = true;
+            }
         }
 
-        // --------------------------------------------------------------------
-        // Helpers (bottom)
-        // --------------------------------------------------------------------
+        // ----------------------
+        // Helpers
+        // ----------------------
 
         private void EnableTuningSystemsOnce()
         {
             if (!TryGetWorld(out World world))
+            {
                 return;
+            }
 
             GarbageTruckCapacitySystem truckSys = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
             if (truckSys != null)
+            {
                 truckSys.Enabled = true;
+            }
 
             GarbageFacilityCapacitySystem facSys = world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
             if (facSys != null)
+            {
                 facSys.Enabled = true;
+            }
+        }
+
+        private static void OpenLogFolder()
+        {
+            try
+            {
+                string consoleLogPath = Application.consoleLogPath;
+                if (string.IsNullOrEmpty(consoleLogPath))
+                {
+                    return;
+                }
+
+                string rootFolder = Path.GetDirectoryName(consoleLogPath);
+                if (string.IsNullOrEmpty(rootFolder))
+                {
+                    return;
+                }
+
+                string logsFolder = Path.Combine(rootFolder, "Logs");
+                string targetFolder = Directory.Exists(logsFolder) ? logsFolder : rootFolder;
+
+                string targetUri = new Uri(targetFolder + Path.DirectorySeparatorChar).AbsoluteUri;
+                Application.OpenURL(targetUri);
+            }
+            catch (Exception ex)
+            {
+                Mod.Log.Warn($"{Mod.ModTag} OpenLog failed: {ex.GetType().Name}: {ex.Message}");
+            }
         }
 
         private static bool TryGetWorld(out World world)
