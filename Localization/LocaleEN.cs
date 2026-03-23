@@ -131,58 +131,94 @@ namespace MagicGarbage
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), string.Empty },
 
                 // Status
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)), string.Empty },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Garbage/mo." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
+                    "Shows the current citywide garbage amount and the total garbage processing rate.\n" +
+                    "Increase processing if the monthly garbage produced is much higher.\n" +
+                    "**Produced** and **Processed** use tons per month.\n" +
+                    "Update time = last refreshed."
+                },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusProducers)), "Producers" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusProducers)), string.Empty },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Collect Requests" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Collect requests" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
-                    "Request = garbage amount where a building starts qualifying for collection\n" +
-                    "Collect = collection-side threshold used by the simulation\n" +
-                    "Warning = garbage level for the warning state/icon.\n" +
-                    "Max = hard cap on garbage accumulation."
+                    "**Pending** = active collection requests not yet assigned to a truck or path.\n" +
+                    "**Dispatched** = active collection requests already assigned.\n" +
+                    "**Total** = all active garbage collection requests.\n" +
+                    "This can be temporarily higher than **Above request threshold** because older requests are cleaned up later by vanilla revalidation."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusProducers)), "Buildings" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusProducers)),
+                    "**Has garbage** = buildings currently holding any garbage.\n" +
+                    "**Total** = all garbage-producing buildings in the city.\n" +
+                    "**Above request threshold** = buildings above the live garbage level needed to create or keep a collect request.\n" +
+                    "At vanilla values this is usually above <100> internal garbage units, but Status reads the **live** in-city value."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "Facilities" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacilities)),
+                    "Summary of counted garbage facilities.\n" +
+                    "**Facilities** = counted garbage-facility buildings in the same set used for the detailed facility lines.\n" +
+                    "**Trucks total** = garbage trucks owned by those facilities.\n" +
+                    "**Max workers** = total worker capacity across those same facilities."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "Trucks" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusTrucks)), string.Empty },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusTrucks)),
+                    "**Moving** = trucks currently out in the city.\n" +
+                    "**Returning** = subset of moving trucks flagged to go back to their facility.\n" +
+                    "**Parked** = trucks parked at a facility.\n" +
+                    "**Total** = count of all garbage trucks."
+                },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "Facilities" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacilities)), string.Empty },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Send Status to Log" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Detailed Status to Log" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageStatusLog)),
-                    "Write a detailed garbage report into **Logs/MagicGarbage.log**."
+                    "Write a more detailed garbage report into **Logs/MagicGarbage.log**.\n" +
+                    "This includes a short legend, live threshold values, disabled trucks, and per-facility max worker counts."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Open Log" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)),
-                    "Open the Log folder."
+                    "Open the Logs/ folder."
                 },
 
                 // Runtime status strings
                 { "MG.Status.NoCity", "No city loaded yet." },
 
-                { "MG.Status.Row.GarbageProcessing", "Garbage: {0:N0} t/mo | Processing: {1:N0} t/mo | updated {2}" },
-                { "MG.Status.Row.Producers", "Buildings with garbage: {0:N0} / {1:N0} | Already requested: {2:N0}" },
-                { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total " },
-                { "MG.Status.Row.Trucks", "{1:N0} moving | {2:N0} parked | {3:N0} returning | {0:N0} total" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} facilities: {1:N0} moving trucks | {2:N0} total trucks" },
-                { "MG.Status.Row.FacilitiesNone", "No facility truck data yet." },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Processed | updated {2}" },
+                { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} has garbage | {2:N0} above request threshold" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} facilities | {1:N0} trucks total | {2:N0} max workers" },
+                { "MG.Status.Row.Trucks", "{1:N0} moving ({3:N0} returning) | {2:N0} parked | {0:N0} total" },
+                { "MG.Status.Row.FacilitiesNone", "No facility data yet." },
 
                 // Log strings
                 { "MG.Status.Log.Title", "Garbage Status ({0})" },
                 { "MG.Status.Log.City", "City: {0}" },
                 { "MG.Status.Log.Mode", "Mode: Total Magic={0}, Trash Boss={1}" },
-                { "MG.Status.Log.Thresholds", "Thresholds: request starts at {0:N0}, dispatch target {1:N0}, warning icon at {2:N0}, hard cap {3:N0}" },
+                { "MG.Status.Log.Legend",
+                    "Legend:\n" +
+                    "- Produced/Processed uses tons per month.\n" +
+                    "- Threshold values below use internal garbage units, not tons.\n" +
+                    "- Pickup threshold = minimum garbage before a truck will collect from a building.\n" +
+                    "- Request threshold = minimum garbage before the game creates or keeps a collect request.\n" +
+                    "- Warning threshold = garbage amount where the warning icon can appear above a building.\n" +
+                    "- Hard cap = maximum garbage a building can accumulate.\n" +
+                    "- Returning = subset of moving trucks.\n" +
+                    "- Active request count can temporarily exceed buildings currently above request threshold because older requests are cleaned up later by vanilla revalidation.\n" +
+                    "- Facility worker numbers below currently show **max workers** for each facility."
+                },
+                { "MG.Status.Log.Thresholds",
+                    "Thresholds (internal garbage units): pickup={1:N0}, request={0:N0}, warning={2:N0}, hard cap={3:N0}"
+                },
                 { "MG.Status.Log.ThresholdsMissing", "Thresholds: <GarbageParameterData not available>" },
                 { "MG.Status.Log.GarbageProcessing", "Garbage: {0:N0} t/mo | Processing: {1:N0} t/mo" },
-                { "MG.Status.Log.Producers", "Buildings: total={0:N0}, with garbage={1:N0}, above request threshold={2:N0}, warning-level={3:N0}, already linked to a request={4:N0}" },
                 { "MG.Status.Log.Requests", "Collect Requests: pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
-                { "MG.Status.Log.Trucks", "Garbage trucks: parked={1:N0}, moving={2:N0}, returning={3:N0}, disabled={4:N0}, total={0:N0}" },
+                { "MG.Status.Log.Producers", "Buildings: {0:N0} total | {1:N0} has garbage | {2:N0} above request threshold | {3:N0} warning-level" },
+                { "MG.Status.Log.FacilitiesSummary", "Facilities: {0:N0} total | {1:N0} trucks total | {2:N0} max workers" },
+                { "MG.Status.Log.Trucks", "Garbage trucks: {2:N0} moving ({3:N0} returning) | {1:N0} parked | {4:N0} disabled | {0:N0} total" },
                 { "MG.Status.Log.FacilitiesHeader", "Facility Summary" },
-                { "MG.Status.Log.FacilityLine", "- Facility {0}: , moving={2:N0}, parked={3:N0}, total={1:N0}" },
+                { "MG.Status.Log.FacilityLine", "- Facility {0}: moving={2:N0}, parked={3:N0}, total={1:N0}, max workers={4:N0}" },
             };
         }
 

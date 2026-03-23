@@ -10,6 +10,7 @@ namespace MagicGarbage
     using Game;
     using Game.Buildings;
     using Game.Common;
+    using Game.Companies;
     using Game.Pathfind;
     using Game.Prefabs;
     using Game.Simulation;
@@ -21,21 +22,21 @@ namespace MagicGarbage
 
     public sealed partial class GarbageStatusSystem : GameSystemBase
     {
-        private const int MaxFacilityEntries = 10;
-
         public readonly struct FacilityEntry
         {
             public readonly Entity Facility;
             public readonly int Total;
             public readonly int Moving;
             public readonly int Parked;
+            public readonly int MaxWorkers;
 
-            public FacilityEntry(Entity facility, int total, int moving, int parked)
+            public FacilityEntry(Entity facility, int total, int moving, int parked, int maxWorkers)
             {
                 Facility = facility;
                 Total = total;
                 Moving = moving;
                 Parked = parked;
+                MaxWorkers = maxWorkers;
             }
         }
 
@@ -60,7 +61,6 @@ namespace MagicGarbage
             public readonly int ProducerGarbageGt0;
             public readonly int ProducerOverRequest;
             public readonly int ProducerOverWarning;
-            public readonly int ProducerHasRequestPtr;
 
             public readonly int RequestTotal;
             public readonly int RequestPending;
@@ -71,6 +71,10 @@ namespace MagicGarbage
             public readonly int TruckMoving;
             public readonly int TruckReturning;
             public readonly int TruckDisabled;
+
+            public readonly int FacilityTotal;
+            public readonly int FacilityTruckTotal;
+            public readonly int FacilityMaxWorkers;
 
             public readonly FacilityEntry[] Facilities;
 
@@ -90,7 +94,6 @@ namespace MagicGarbage
                 int producerGarbageGt0,
                 int producerOverRequest,
                 int producerOverWarning,
-                int producerHasRequestPtr,
                 int requestTotal,
                 int requestPending,
                 int requestDispatched,
@@ -99,6 +102,9 @@ namespace MagicGarbage
                 int truckMoving,
                 int truckReturning,
                 int truckDisabled,
+                int facilityTotal,
+                int facilityTruckTotal,
+                int facilityMaxWorkers,
                 FacilityEntry[] facilities)
             {
                 InGame = inGame;
@@ -120,7 +126,6 @@ namespace MagicGarbage
                 ProducerGarbageGt0 = producerGarbageGt0;
                 ProducerOverRequest = producerOverRequest;
                 ProducerOverWarning = producerOverWarning;
-                ProducerHasRequestPtr = producerHasRequestPtr;
 
                 RequestTotal = requestTotal;
                 RequestPending = requestPending;
@@ -131,6 +136,10 @@ namespace MagicGarbage
                 TruckMoving = truckMoving;
                 TruckReturning = truckReturning;
                 TruckDisabled = truckDisabled;
+
+                FacilityTotal = facilityTotal;
+                FacilityTruckTotal = facilityTruckTotal;
+                FacilityMaxWorkers = facilityMaxWorkers;
 
                 Facilities = facilities;
             }
@@ -259,7 +268,6 @@ namespace MagicGarbage
                     producerGarbageGt0: 0,
                     producerOverRequest: 0,
                     producerOverWarning: 0,
-                    producerHasRequestPtr: 0,
                     requestTotal: 0,
                     requestPending: 0,
                     requestDispatched: 0,
@@ -268,30 +276,22 @@ namespace MagicGarbage
                     truckMoving: 0,
                     truckReturning: 0,
                     truckDisabled: 0,
+                    facilityTotal: 0,
+                    facilityTruckTotal: 0,
+                    facilityMaxWorkers: 0,
                     facilities: Array.Empty<FacilityEntry>());
             }
+
+            ComponentLookup<WorkProvider> workProviderLookup = GetComponentLookup<WorkProvider>(true);
 
             long garbageRaw = m_GarbageAccumulationSystem != null
                 ? m_GarbageAccumulationSystem.garbageAccumulation
                 : 0L;
 
-            long processingRaw = 0L;
-
-            foreach (RefRO<Game.Buildings.GarbageFacility> facility in SystemAPI
-                         .Query<RefRO<Game.Buildings.GarbageFacility>>()
-                         .WithNone<Deleted, Destroyed, Temp>())
-            {
-                processingRaw += facility.ValueRO.m_ProcessingRate;
-            }
-
-            long garbageTonsPerMonth = ToTonsPerMonth(garbageRaw);
-            long processingTonsPerMonth = ToTonsPerMonth(processingRaw);
-
             int producerTotal = m_ProducerQuery.CalculateEntityCount();
             int producerGarbageGt0 = 0;
             int producerOverRequest = 0;
             int producerOverWarning = 0;
-            int producerHasRequestPtr = 0;
 
             foreach (RefRO<GarbageProducer> producer in SystemAPI
                          .Query<RefRO<GarbageProducer>>()
@@ -312,11 +312,6 @@ namespace MagicGarbage
                 if (haveParams && garbage > warningLimit)
                 {
                     producerOverWarning++;
-                }
-
-                if (producer.ValueRO.m_CollectionRequest != Entity.Null)
-                {
-                    producerHasRequestPtr++;
                 }
             }
 
@@ -407,9 +402,61 @@ namespace MagicGarbage
                 facilityStats[owner] = new FacilityCounts(nextTotal, nextMoving, nextParked);
             }
 
-            int truckMoving = truckTotal - truckParked;
+            long processingRaw = 0L;
+            int facilityTotal = 0;
+            int facilityTruckTotal = 0;
+            int facilityMaxWorkers = 0;
 
-            FacilityEntry[] facilities = BuildFacilityEntries(facilityStats);
+            List<FacilityEntry> facilityEntries =
+                new List<FacilityEntry>(facilityStats.Count > 0 ? facilityStats.Count : 8);
+
+            foreach ((RefRO<Game.Buildings.GarbageFacility> facility, Entity facilityEntity) in SystemAPI
+                         .Query<RefRO<Game.Buildings.GarbageFacility>>()
+                         .WithEntityAccess()
+                         .WithNone<Deleted, Destroyed, Temp>())
+            {
+                if (!SystemAPI.HasComponent<Building>(facilityEntity))
+                {
+                    continue;
+                }
+
+                int maxWorkers = 0;
+                if (workProviderLookup.HasComponent(facilityEntity))
+                {
+                    maxWorkers = workProviderLookup[facilityEntity].m_MaxWorkers;
+                }
+
+                FacilityCounts counts;
+                if (!facilityStats.TryGetValue(facilityEntity, out counts))
+                {
+                    counts = new FacilityCounts(0, 0, 0);
+                }
+
+                if (facility.ValueRO.m_ProcessingRate <= 0 &&
+                    counts.Total <= 0 &&
+                    maxWorkers <= 0)
+                {
+                    continue;
+                }
+
+                processingRaw += facility.ValueRO.m_ProcessingRate;
+                facilityTotal++;
+                facilityTruckTotal += counts.Total;
+                facilityMaxWorkers += maxWorkers;
+
+                facilityEntries.Add(new FacilityEntry(
+                    facilityEntity,
+                    counts.Total,
+                    counts.Moving,
+                    counts.Parked,
+                    maxWorkers));
+            }
+
+            facilityEntries.Sort(CompareFacilityEntries);
+
+            int truckMoving = truckTotal - truckParked;
+            long garbageTonsPerMonth = ToTonsPerMonth(garbageRaw);
+            long processingTonsPerMonth = ToTonsPerMonth(processingRaw);
 
             return new Snapshot(
                 inGame: true,
@@ -427,7 +474,6 @@ namespace MagicGarbage
                 producerGarbageGt0: producerGarbageGt0,
                 producerOverRequest: producerOverRequest,
                 producerOverWarning: producerOverWarning,
-                producerHasRequestPtr: producerHasRequestPtr,
                 requestTotal: requestTotal,
                 requestPending: requestPending,
                 requestDispatched: requestDispatched,
@@ -436,39 +482,10 @@ namespace MagicGarbage
                 truckMoving: truckMoving,
                 truckReturning: truckReturning,
                 truckDisabled: truckDisabled,
-                facilities: facilities);
-        }
-
-        private static FacilityEntry[] BuildFacilityEntries(
-            Dictionary<Entity, FacilityCounts> facilityStats)
-        {
-            if (facilityStats.Count == 0)
-            {
-                return Array.Empty<FacilityEntry>();
-            }
-
-            List<FacilityEntry> list = new List<FacilityEntry>(facilityStats.Count);
-
-            foreach (KeyValuePair<Entity, FacilityCounts> kvp in facilityStats)
-            {
-                list.Add(new FacilityEntry(
-                    kvp.Key,
-                    kvp.Value.Total,
-                    kvp.Value.Moving,
-                    kvp.Value.Parked));
-            }
-
-            list.Sort(CompareFacilityEntries);
-
-            int take = Math.Min(MaxFacilityEntries, list.Count);
-            FacilityEntry[] result = new FacilityEntry[take];
-
-            for (int i = 0; i < take; i++)
-            {
-                result[i] = list[i];
-            }
-
-            return result;
+                facilityTotal: facilityTotal,
+                facilityTruckTotal: facilityTruckTotal,
+                facilityMaxWorkers: facilityMaxWorkers,
+                facilities: facilityEntries.ToArray());
         }
 
         private static int CompareFacilityEntries(FacilityEntry a, FacilityEntry b)
@@ -499,4 +516,3 @@ namespace MagicGarbage
         }
     }
 }
-

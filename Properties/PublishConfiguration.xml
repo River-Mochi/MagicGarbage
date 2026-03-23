@@ -4,7 +4,7 @@
 	<!--Name of the mod to display to players-->
 	<DisplayName Value="Magic Garbage + Trash Boss" />
 	<!--Short description of the mod-->
-	<ShortDescription Value="Auto-Clean all garbage or be Trash Boss = Self manage garbage trucks and buildings" />
+	<ShortDescription Value="Auto-Clean garbage OR be the Trash Boss = Self manage garbage trucks + buildings" />
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
 	<LongDescription>
@@ -28,7 +28,7 @@ Handle garbage your way:
 **OPTION 2  SELF MANAGE**
 - ✅ Trash Boss On; manage how you like.
 - **Sliders** to control all garbage trucks + facilities
-- 🚚 Super powere your trucks reduce traffic and service strain.
+- 🚚 Enhance trucks to reduce traffic and service strain.
 - Great if you still want to see trucks driving around, just fewer problems.
 - **Helper buttons**
 - [Game Defaults]	reset all sliders to 100% (pure vanilla).  
@@ -80,10 +80,8 @@ Handle garbage your way:
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-* Fix: saved settings persist on reboot.
-* Fix: switching Total Magic now reverts Trash Boss tuning to vanilla immediately (values preserved).
-* Updated: Recommended preset (200% load, 200% processing, 160% storage, 140% facility trucks).
-* Sliders increment in 10% steps now (former was 20-25%)
+* renamed semi-magic to Trash Boss.
+* added Status Report section with garbage related data.
 * Updated translations and docs.
 </ChangeLog>
 

@@ -116,9 +116,9 @@ namespace MagicGarbage
             }
         }
 
-        // --------------------------------------------------------------------
+        // --------------------------------------------------------
         // TRASH BOSS SLIDERS (hidden when Trash Boss is OFF)
-        // --------------------------------------------------------------------
+        // --------------------------------------------------------
 
         [SettingsUISlider(min = 100, max = 500, step = 10, scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, TrashBossGrp)]
@@ -144,9 +144,9 @@ namespace MagicGarbage
         [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
         public int GarbageFacilityVehicleMultiplier { get; set; } = 100;
 
-        // --------------------------------------------------------------------
+        // -----------------------------------------
         // TRASH BOSS PRESET BUTTONS
-        // --------------------------------------------------------------------
+        // -----------------------------------------
 
         [SettingsUIButton]
         [SettingsUIButtonGroup(TrashBossButtonsRow)]
@@ -194,9 +194,9 @@ namespace MagicGarbage
             }
         }
 
-        // --------------------------------------------------------------------
+        // ------------------------------------------------------
         // STATUS (auto-refresh while Options is open)
-        // --------------------------------------------------------------------
+        // ------------------------------------------------------
 
         [SettingsUISection(ActionsTab, StatusGrp)]
         public string StatusGarbageProcessing
@@ -205,16 +205,6 @@ namespace MagicGarbage
             {
                 GarbageStatus.RefreshIfNeeded();
                 return GarbageStatus.GetUiGarbageProcessing();
-            }
-        }
-
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusProducers
-        {
-            get
-            {
-                GarbageStatus.RefreshIfNeeded();
-                return GarbageStatus.GetUiProducers();
             }
         }
 
@@ -229,12 +219,12 @@ namespace MagicGarbage
         }
 
         [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusTrucks
+        public string StatusProducers
         {
             get
             {
                 GarbageStatus.RefreshIfNeeded();
-                return GarbageStatus.GetUiTrucks();
+                return GarbageStatus.GetUiProducers();
             }
         }
 
@@ -245,6 +235,16 @@ namespace MagicGarbage
             {
                 GarbageStatus.RefreshIfNeeded();
                 return GarbageStatus.GetUiFacilities();
+            }
+        }
+
+        [SettingsUISection(ActionsTab, StatusGrp)]
+        public string StatusTrucks
+        {
+            get
+            {
+                GarbageStatus.RefreshIfNeeded();
+                return GarbageStatus.GetUiTrucks();
             }
         }
 

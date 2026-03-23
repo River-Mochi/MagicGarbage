@@ -166,17 +166,19 @@ namespace MagicGarbage
                 snap.ProcessingTonsPerMonth,
                 updatedAt);
 
-            s_UiProducers = Mod.LF(
-                "MG.Status.Row.Producers",
-                snap.ProducerGarbageGt0,
-                snap.ProducerTotal,
-                snap.ProducerHasRequestPtr);
-
             s_UiRequests = Mod.LF(
                 "MG.Status.Row.Requests",
                 snap.RequestTotal,
                 snap.RequestPending,
                 snap.RequestDispatched);
+
+            s_UiProducers = Mod.LF(
+                "MG.Status.Row.Producers",
+                snap.ProducerGarbageGt0,
+                snap.ProducerTotal,
+                snap.ProducerOverRequest);
+
+            s_UiFacilities = BuildFacilitiesSummary(snap);
 
             s_UiTrucks = Mod.LF(
                 "MG.Status.Row.Trucks",
@@ -184,31 +186,20 @@ namespace MagicGarbage
                 snap.TruckMoving,
                 snap.TruckParked,
                 snap.TruckReturning);
-
-            s_UiFacilities = BuildFacilitiesSummary(snap.Facilities);
         }
 
-        private static string BuildFacilitiesSummary(GarbageStatusSystem.FacilityEntry[] facilities)
+        private static string BuildFacilitiesSummary(GarbageStatusSystem.Snapshot snap)
         {
-            if (facilities == null || facilities.Length == 0)
+            if (snap.FacilityTotal <= 0)
             {
                 return Mod.L("MG.Status.Row.FacilitiesNone");
             }
 
-            int moving = 0;
-            int total = 0;
-
-            for (int i = 0; i < facilities.Length; i++)
-            {
-                moving += facilities[i].Moving;
-                total += facilities[i].Total;
-            }
-
             return Mod.LF(
                 "MG.Status.Row.FacilitiesSummary",
-                facilities.Length,
-                moving,
-                total);
+                snap.FacilityTotal,
+                snap.FacilityTruckTotal,
+                snap.FacilityMaxWorkers);
         }
 
         private static string BuildLogText(GarbageStatusSystem.Snapshot snap)
@@ -220,6 +211,7 @@ namespace MagicGarbage
             log.AppendLine(Mod.LF("MG.Status.Log.Title", nowText));
             log.AppendLine(Mod.LF("MG.Status.Log.City", Fmt(snap.City)));
             log.AppendLine(Mod.LF("MG.Status.Log.Mode", snap.TotalMagic, snap.TrashBoss));
+            log.AppendLine(Mod.L("MG.Status.Log.Legend"));
 
             if (snap.HaveParams)
             {
@@ -242,18 +234,23 @@ namespace MagicGarbage
 
             log.AppendLine();
             log.AppendLine(Mod.LF(
-                "MG.Status.Log.Producers",
-                snap.ProducerTotal,
-                snap.ProducerGarbageGt0,
-                snap.ProducerOverRequest,
-                snap.ProducerOverWarning,
-                snap.ProducerHasRequestPtr));
-
-            log.AppendLine(Mod.LF(
                 "MG.Status.Log.Requests",
                 snap.RequestTotal,
                 snap.RequestPending,
                 snap.RequestDispatched));
+
+            log.AppendLine(Mod.LF(
+                "MG.Status.Log.Producers",
+                snap.ProducerTotal,
+                snap.ProducerGarbageGt0,
+                snap.ProducerOverRequest,
+                snap.ProducerOverWarning));
+
+            log.AppendLine(Mod.LF(
+                "MG.Status.Log.FacilitiesSummary",
+                snap.FacilityTotal,
+                snap.FacilityTruckTotal,
+                snap.FacilityMaxWorkers));
 
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.Trucks",
@@ -276,7 +273,8 @@ namespace MagicGarbage
                         Fmt(f.Facility),
                         f.Total,
                         f.Moving,
-                        f.Parked));
+                        f.Parked,
+                        f.MaxWorkers));
                 }
             }
 
