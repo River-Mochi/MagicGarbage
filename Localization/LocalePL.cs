@@ -48,7 +48,8 @@ namespace MagicGarbage
                     "**Włączone [ ✓ ]** utrzymuje całe miasto w czystości.\n\n" +
                     "Gdy **Total Magic** jest ON:\n" +
                     "- Trash Boss jest wymuszony na OFF.\n" +
-                    "- Suwaki Trash Boss nie są stosowane (wartości pozostają zapisane).\n"
+                    "- Suwaki Trash Boss nie są stosowane (wartości pozostają zapisane).\n" +
+                    "- Niektóre ciężarówki mogą nadal się poruszać z powodu timingu logiki dispatchu vanilla."
                 },
 
                 // Trash Boss

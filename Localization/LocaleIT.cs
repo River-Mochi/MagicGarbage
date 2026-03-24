@@ -48,7 +48,8 @@ namespace MagicGarbage
                     "**Attivato [ ✓ ]** mantiene pulita tutta la città.\n\n" +
                     "Quando **Total Magic** è ON:\n" +
                     "- Trash Boss viene forzato su OFF.\n" +
-                    "- Gli slider di Trash Boss non vengono applicati (i valori restano salvati).\n"
+                    "- Gli slider di Trash Boss non vengono applicati (i valori restano salvati).\n" +
+                    "- Alcuni camion possono ancora muoversi a causa dei tempi della logica di dispatch vanilla."
                 },
 
                 // Trash Boss

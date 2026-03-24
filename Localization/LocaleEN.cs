@@ -4,7 +4,10 @@
 namespace MagicGarbage
 {
     using Colossal;
+    using Game.Simulation;
     using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEngine.Diagnostics;
 
     public sealed class LocaleEN : IDictionarySource
     {
@@ -48,7 +51,8 @@ namespace MagicGarbage
                     "**Enabled [ ✓ ]** keeps the whole city clean.\n\n" +
                     "While **Total Magic** is ON:\n" +
                     "- Trash Boss is forced OFF.\n" +
-                    "- Trash Boss sliders are not applied (values are saved for later).\n"
+                    "- Trash Boss sliders are not applied (values are saved for later).\n" +
+                    "- A few trucks may still move due to vanilla dispatch logic timing."
                 },
 
                 // Trash Boss

@@ -48,7 +48,8 @@ namespace MagicGarbage
                     "**啟用 [ ✓ ]** 後可讓整座城市保持乾淨。\n\n" +
                     "當 **Total Magic** 為 ON 時：\n" +
                     "- Trash Boss 會被強制設為 OFF。\n" +
-                    "- Trash Boss 滑桿不會生效（數值仍會保存）。\n"
+                    "- Trash Boss 滑桿不會生效（數值仍會保存）。\n" +
+                    "- 由於原版調度邏輯的時序影響，仍可能會有少量垃圾車繼續移動。"
                 },
 
                 // Trash Boss

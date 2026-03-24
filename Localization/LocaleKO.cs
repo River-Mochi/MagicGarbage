@@ -48,7 +48,8 @@ namespace MagicGarbage
                     "**활성 [ ✓ ]** 시 도시 전체를 깨끗하게 유지합니다.\n\n" +
                     "**Total Magic** 이 ON 인 동안:\n" +
                     "- Trash Boss 는 강제로 OFF 됩니다.\n" +
-                    "- Trash Boss 슬라이더는 적용되지 않습니다 (값은 저장 유지).\n"
+                    "- Trash Boss 슬라이더는 적용되지 않습니다 (값은 저장 유지).\n" +
+                    "- 바닐라 배차 로직 타이밍 때문에 일부 트럭은 아직 움직일 수 있습니다."
                 },
 
                 // Trash Boss
