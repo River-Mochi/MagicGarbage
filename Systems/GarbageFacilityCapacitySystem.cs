@@ -1,6 +1,6 @@
 // File: Systems/GarbageFacilityCapacitySystem.cs
-// Semi-Magic: scales facility trucks, processing speed, and storage capacity.
-// Total Magic (or Semi-Magic OFF): reverts to vanilla (100%) once, then sleeps.
+// Trash Boss: scales facility trucks, processing speed, and storage capacity.
+// Total Magic (or Trash Boss OFF): reverts to vanilla (100%) once, then sleeps.
 
 namespace MagicGarbage
 {
@@ -13,7 +13,7 @@ namespace MagicGarbage
 
     /// <summary>
     /// Adjusts GarbageFacilityData (vehicle count, processing speed, storage)
-    /// according to Semi-Magic sliders. When Total Magic is enabled (or Semi-Magic disabled),
+    /// according to Trash Boss sliders. When Total Magic is enabled (or Trash Boss disabled),
     /// it reverts to vanilla (100%) once.
     /// Uses cached base values to avoid rounding drift.
     /// </summary>
@@ -51,7 +51,7 @@ namespace MagicGarbage
             Enabled = true;
 
 #if DEBUG
-            Mod.Log.Info("[MGT] GarbageFacilityCapacitySystem: OnGameLoadingComplete -> Enabled");
+            Mod.Log.Info("[MG] [Trash Boss] GarbageFacilityCapacitySystem: OnGameLoadingComplete -> Enabled");
 #endif
         }
 
@@ -64,13 +64,13 @@ namespace MagicGarbage
 
             // Effective targets:
             // - Total Magic ON => behave like vanilla 100% (but keep user's saved Semi sliders).
-            // - Semi-Magic OFF => also behave like vanilla 100%.
-            // - Semi-Magic ON  => use sliders.
+            // - Trash Boss OFF => also behave like vanilla 100%.
+            // - Trash Boss ON  => use sliders.
             int targetVehicle = 100;
             int targetProcessing = 100;
             int targetStorage = 100;
 
-            if (!setting.TotalMagic && setting.SemiMagicEnabled)
+            if (!setting.TotalMagic && setting.TrashBossEnabled)
             {
                 targetProcessing = math.clamp(setting.GarbageFacilityProcessingMultiplier, 100, 500);
                 targetStorage = math.clamp(setting.GarbageFacilityStorageMultiplier, 100, 500);
@@ -83,7 +83,7 @@ namespace MagicGarbage
                 targetStorage == m_LastStorageMultiplier)
             {
 #if DEBUG
-                Mod.Log.Info("[MGT] FacilityCapacity sleep");
+                Mod.Log.Info("[MG] [Trash Boss] FacilityCapacity sleep");
 #endif
                 Enabled = false;
                 return;
@@ -94,7 +94,7 @@ namespace MagicGarbage
             {
                 ref GarbageFacilityData data = ref facility.ValueRW;
 
-                if (!m_Base.TryGetValue(entity, out var b))
+                if (!m_Base.TryGetValue(entity, out (int VehicleCap, int ProcessingSpeed, int StorageCap) b))
                 {
                     // Capture base values the first time we touch this prefab entity.
                     // If we were already scaled in-session, reverse last multipliers once (best-effort).
@@ -127,7 +127,7 @@ namespace MagicGarbage
 
 #if DEBUG
             Mod.Log.Info(
-                $"[MGT] FacilityCapacity apply: veh {m_LastVehicleMultiplier}%->{targetVehicle}%, " +
+                $"[MG] FacilityCapacity apply: veh {m_LastVehicleMultiplier}%->{targetVehicle}%, " +
                 $"proc {m_LastProcessingMultiplier}%->{targetProcessing}%, " +
                 $"stor {m_LastStorageMultiplier}%->{targetStorage}%");
 #endif

@@ -1,4 +1,4 @@
-﻿# Magic Garbage Truck [MGT]
+# Magic Garbage [MG]
 
 Two ways to handle garbage in **Cities: Skylines II**.
 
@@ -8,13 +8,13 @@ Two ways to handle garbage in **Cities: Skylines II**.
 - All city garbage is removed almost instantly.
 - Garbage warning icons are cleared because there is no garbage.
 - Garbage trucks and buildings become mostly cosmetic.
-- A few trucks may still drive around due to the game’s dispatch logic (usually empty).
+- A few trucks may still drive around due to the game’s dispatch logic.
 
 Under the hood: a **Burst-compiled ECS job** runs periodically and clears garbage in chunks, so even huge cities stay smooth.
 
-## Option 2 – Semi-Magic (Self-Manage)
+## Option 2 – Trash Boss (Self Manage)
 
-- ✅ **Semi-Magic ON**, **Total Magic OFF**
+- ✅ **Trash Boss ON**, **Total Magic OFF**
 - Vanilla garbage simulation stays active, but you control these stats:
   - **Truck load capacity** (100–500%)
   - **Facility truck count** (100–400%)
@@ -29,14 +29,29 @@ Under the hood: a **Burst-compiled ECS job** runs periodically and clears garbag
   - Storage capacity: **160%**
   - Facility truck count: **140%**
 
-> 💡 Total Magic and Semi-Magic are mutually exclusive.  
-> Your Semi-Magic slider values are saved even while Total Magic is ON.
+> 💡 Total Magic and Trash Boss are mutually exclusive.  
+> Your Trash Boss slider values are saved even while Total Magic is ON.
+
+## Status panel
+
+The **Status** section in Options shows a live garbage snapshot while the menu is open, including:
+
+- citywide garbage produced vs processed
+- active collection requests
+- buildings with garbage / above request threshold
+- garbage facilities, trucks, and max workers
+- truck state summary
+
+You can also:
+
+- **Detailed Status to Log** – writes a more detailed report into `Logs/MagicGarbage.log`
+- **Open Log** – opens the log folder
 
 ## Compatibility
 
 - Works with new and existing saves.
 - Safe to disable or remove.
-- Uses ECS + Burst and slider-driven tuning — **no Harmony**, **no reflection**.
+- Uses ECS + Burst and slider-driven tuning — **no Harmony**
 - Designed to be lightweight and resilient to game updates.
 
 ## Credits
@@ -45,3 +60,4 @@ Under the hood: a **Burst-compiled ECS job** runs periodically and clears garbag
 - Thanks to **Wayz** for the original “Magical Garbage Truck” idea
 - yenyang: code review, tech advice
 - Necko1996: testing and feedback
+- gagaxm: thumbnail image

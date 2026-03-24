@@ -1,5 +1,6 @@
-// Settings/Setting.cs
-// Options UI + settings for Magic Garbage Truck [MGT].
+// File: Settings/Setting.cs
+// Options UI + settings for Magic Garbage.
+// Status is pull-based and only refreshes while Options UI is open.
 
 namespace MagicGarbage
 {
@@ -7,23 +8,19 @@ namespace MagicGarbage
     using Game.Modding;
     using Game.Settings;
     using Game.UI;
+    using System;
+    using System.IO;
     using Unity.Entities;
-    using UnityEngine;  // Application.OpenURL
+    using UnityEngine;
 
     [FileLocation("ModsSettings/MagicGarbage/MagicGarbage")]
-    [SettingsUITabOrder(ActionsTab, AboutTab)] // Actions then About tab
+    [SettingsUITabOrder(ActionsTab, AboutTab)]
     [SettingsUIGroupOrder(
-        TotalMagicGrp,
-        SemiMagicGrp,
-        AboutInfoGrp,
-        AboutLinksGrp,
-        AboutUsageGrp)]
+        TotalMagicGrp, TrashBossGrp, StatusGrp,
+        AboutInfoGrp, AboutLinksGrp, AboutUsageGrp)]
     [SettingsUIShowGroupName(
-        TotalMagicGrp,
-        SemiMagicGrp,
-        // AboutInfoGrp is intentionally omitted so it has no header
-        AboutLinksGrp,
-        AboutUsageGrp)]
+        TotalMagicGrp, TrashBossGrp, StatusGrp,
+        AboutLinksGrp, AboutUsageGrp)]
     public sealed class Setting : ModSetting
     {
         // ---- TABS ----
@@ -32,36 +29,39 @@ namespace MagicGarbage
 
         // ---- GROUPS ----
         public const string TotalMagicGrp = "TotalMagic";
-        public const string SemiMagicGrp = "SemiMagic";
+        public const string TrashBossGrp = "TrashBoss";
+        public const string StatusGrp = "Status";
         public const string AboutInfoGrp = "AboutInfo";
         public const string AboutLinksGrp = "AboutLinks";
-        public const string AboutUsageGrp = "AboutUsage";  // USAGE NOTES group on About tab
+        public const string AboutUsageGrp = "AboutUsage";
+
+        // ---- ROW GROUPS (button rows) ----
+        private const string TrashBossButtonsRow = "TrashBossButtonsRow";
+        private const string StatusButtonsRow = "StatusButtonsRow";
+        private const string AboutLinksRow = "AboutLinksRow";
 
         // ---- EXTERNAL LINKS ----
-        private const string kUrlParadox =
+        private const string UrlParadox =
             "https://mods.paradoxplaza.com/authors/River-mochi/cities_skylines_2?games=cities_skylines_2&orderBy=desc&sortBy=best&time=alltime";
 
-        private const string kUrlDiscord =
+        private const string UrlDiscord =
             "https://discord.gg/HTav7ARPs2";
 
-        // ---- BACKING FIELDS FOR MUTUAL EXCLUSION ----
+        // ---- BACKING FIELDS ----
         private bool m_TotalMagic = true;
-        private bool m_SemiMagicEnabled; // default OFF
+        private bool m_TrashBossEnabled;
 
-        public Setting(IMod mod)
-            : base(mod)
+        public Setting(IMod mod) : base(mod)
         {
+            SetDefaults();
         }
 
         // --------------------------------------------------------------------
-        // TOTAL MAGIC vs SEMI-MAGIC (mutually exclusive)
+        // TOTAL MAGIC vs TRASH BOSS (mutually exclusive)
         // --------------------------------------------------------------------
 
-        /// <summary>
-        /// Full Magic Garbage (no garbage gameplay, just visuals).
-        /// UI label: "Total Magic".
-        /// </summary>
         [SettingsUISection(ActionsTab, TotalMagicGrp)]
+        [SettingsUISetter(typeof(Setting), nameof(OnModeToggleChanged))]
         public bool TotalMagic
         {
             get => m_TotalMagic;
@@ -72,8 +72,7 @@ namespace MagicGarbage
                     return;
                 }
 
-                // Do not allow both toggles to be OFF.
-                if (!value && !m_SemiMagicEnabled)
+                if (!value && !m_TrashBossEnabled)
                 {
                     return;
                 }
@@ -82,111 +81,78 @@ namespace MagicGarbage
 
                 if (m_TotalMagic)
                 {
-                    // Total Magic ON => Semi-Magic OFF.
-                    m_SemiMagicEnabled = false;
+                    m_TrashBossEnabled = false;
                 }
 
-                // Re-apply so systems can react.
                 Apply();
             }
         }
 
-        /// <summary>
-        /// Semi-Magic tuning (sliders below). Mutually exclusive with TotalMagic.
-        /// UI label: "Semi-Magic".
-        /// </summary>
-        [SettingsUISection(ActionsTab, SemiMagicGrp)]
-        public bool SemiMagicEnabled
+        [SettingsUISection(ActionsTab, TrashBossGrp)]
+        [SettingsUISetter(typeof(Setting), nameof(OnModeToggleChanged))]
+        public bool TrashBossEnabled
         {
-            get => m_SemiMagicEnabled;
+            get => m_TrashBossEnabled;
             set
             {
-                if (m_SemiMagicEnabled == value)
+                if (m_TrashBossEnabled == value)
                 {
                     return;
                 }
 
-                // Do not allow both toggles to be OFF.
                 if (!value && !m_TotalMagic)
                 {
                     return;
                 }
 
-                m_SemiMagicEnabled = value;
+                m_TrashBossEnabled = value;
 
-                if (m_SemiMagicEnabled)
+                if (m_TrashBossEnabled)
                 {
-                    // Semi-Magic ON => Total Magic OFF.
                     m_TotalMagic = false;
                 }
 
-                // Re-apply so systems can react.
                 Apply();
             }
         }
 
-        // --------------------------------------------------------------------
-        // SEMI-MAGIC SLIDERS (truck + facility tuning)
-        // All are hidden when Semi-Magic is disabled.
-        // --------------------------------------------------------------------
+        // --------------------------------------------------------
+        // TRASH BOSS SLIDERS (hidden when Trash Boss is OFF)
+        // --------------------------------------------------------
 
-        // Slider: garbage truck capacity (100–500%)
-        [SettingsUISlider(min = 100, max = 500, step = 10,
-                          scalarMultiplier = 1, unit = Unit.kPercentage)]
-        [SettingsUISection(ActionsTab, SemiMagicGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
-        public int GarbageTruckCapacityMultiplier
-        {
-            get;
-            set;
-        } = 100;
+        [SettingsUISlider(min = 100, max = 500, step = 10, scalarMultiplier = 1, unit = Unit.kPercentage)]
+        [SettingsUISection(ActionsTab, TrashBossGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnTruckSliderChanged))]
+        public int GarbageTruckCapacityMultiplier { get; set; } = 100;
 
-        // Slider: facility garbage processing speed (100–500%)
-        [SettingsUISlider(min = 100, max = 500, step = 10,
-                          scalarMultiplier = 1, unit = Unit.kPercentage)]
-        [SettingsUISection(ActionsTab, SemiMagicGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
-        public int GarbageFacilityProcessingMultiplier
-        {
-            get;
-            set;
-        } = 100;
+        [SettingsUISlider(min = 100, max = 500, step = 10, scalarMultiplier = 1, unit = Unit.kPercentage)]
+        [SettingsUISection(ActionsTab, TrashBossGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
+        public int GarbageFacilityProcessingMultiplier { get; set; } = 100;
 
-        // Slider: facility garbage storage capacity (100–500%)
-        [SettingsUISlider(min = 100, max = 500, step = 10,
-                          scalarMultiplier = 1, unit = Unit.kPercentage)]
-        [SettingsUISection(ActionsTab, SemiMagicGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
-        public int GarbageFacilityStorageMultiplier
-        {
-            get;
-            set;
-        } = 100;
+        [SettingsUISlider(min = 100, max = 500, step = 10, scalarMultiplier = 1, unit = Unit.kPercentage)]
+        [SettingsUISection(ActionsTab, TrashBossGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
+        public int GarbageFacilityStorageMultiplier { get; set; } = 100;
 
-        // Slider: number of facility trucks (vehicles) (100–400%)
-        // 100% = vanilla number of trucks, 400% = +300% more.
-        [SettingsUISlider(min = 100, max = 400, step = 10,
-                          scalarMultiplier = 1, unit = Unit.kPercentage)]
-        [SettingsUISection(ActionsTab, SemiMagicGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
-        public int GarbageFacilityVehicleMultiplier
-        {
-            get;
-            set;
-        } = 100;
+        [SettingsUISlider(min = 100, max = 400, step = 10, scalarMultiplier = 1, unit = Unit.kPercentage)]
+        [SettingsUISection(ActionsTab, TrashBossGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
+        public int GarbageFacilityVehicleMultiplier { get; set; } = 100;
 
-        // --------------------------------------------------------------------
-        // SEMI-MAGIC PRESET BUTTONS (same row)
-        // --------------------------------------------------------------------
+        // -----------------------------------------
+        // TRASH BOSS PRESET BUTTONS
+        // -----------------------------------------
 
-        private const string kSemiMagicButtonsRow = "SemiMagicButtonsRow";
-
-        // Button: Recommended preset (preferred values).
         [SettingsUIButton]
-        [SettingsUIButtonGroup(kSemiMagicButtonsRow)]
-        [SettingsUISection(ActionsTab, SemiMagicGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
-        public bool SemiMagicRecommended
+        [SettingsUIButtonGroup(TrashBossButtonsRow)]
+        [SettingsUISection(ActionsTab, TrashBossGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
+        public bool TrashBossRecommended
         {
             set
             {
@@ -195,23 +161,21 @@ namespace MagicGarbage
                     return;
                 }
 
-                // Recommended:
-                // 200% truck load, 200% process speed, 160% facility storage, 140% facility trucks,
                 GarbageTruckCapacityMultiplier = 200;
                 GarbageFacilityProcessingMultiplier = 200;
                 GarbageFacilityStorageMultiplier = 160;
                 GarbageFacilityVehicleMultiplier = 140;
 
+                EnableTuningSystemsOnce();
                 Apply();
             }
         }
 
-        // Button: Game defaults (all sliders back to 100%).
         [SettingsUIButton]
-        [SettingsUIButtonGroup(kSemiMagicButtonsRow)]
-        [SettingsUISection(ActionsTab, SemiMagicGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(SemiMagicEnabled), true)]
-        public bool SemiMagicDefaults
+        [SettingsUIButtonGroup(TrashBossButtonsRow)]
+        [SettingsUISection(ActionsTab, TrashBossGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
+        public bool TrashBossDefaults
         {
             set
             {
@@ -220,19 +184,108 @@ namespace MagicGarbage
                     return;
                 }
 
-                // Vanilla settings.
                 GarbageTruckCapacityMultiplier = 100;
                 GarbageFacilityVehicleMultiplier = 100;
                 GarbageFacilityProcessingMultiplier = 100;
                 GarbageFacilityStorageMultiplier = 100;
 
+                EnableTuningSystemsOnce();
                 Apply();
             }
         }
 
-        // --------------------------------------------------------------------
-        // ABOUT TAB – INFO
-        // --------------------------------------------------------------------
+        // ------------------------------------------------------
+        // STATUS (auto-refresh while Options is open)
+        // ------------------------------------------------------
+
+        [SettingsUISection(ActionsTab, StatusGrp)]
+        public string StatusGarbageProcessing
+        {
+            get
+            {
+                GarbageStatus.RefreshIfNeeded();
+                return GarbageStatus.GetUiGarbageProcessing();
+            }
+        }
+
+        [SettingsUISection(ActionsTab, StatusGrp)]
+        public string StatusRequests
+        {
+            get
+            {
+                GarbageStatus.RefreshIfNeeded();
+                return GarbageStatus.GetUiRequests();
+            }
+        }
+
+        [SettingsUISection(ActionsTab, StatusGrp)]
+        public string StatusProducers
+        {
+            get
+            {
+                GarbageStatus.RefreshIfNeeded();
+                return GarbageStatus.GetUiProducers();
+            }
+        }
+
+        [SettingsUISection(ActionsTab, StatusGrp)]
+        public string StatusFacilities
+        {
+            get
+            {
+                GarbageStatus.RefreshIfNeeded();
+                return GarbageStatus.GetUiFacilities();
+            }
+        }
+
+        [SettingsUISection(ActionsTab, StatusGrp)]
+        public string StatusTrucks
+        {
+            get
+            {
+                GarbageStatus.RefreshIfNeeded();
+                return GarbageStatus.GetUiTrucks();
+            }
+        }
+
+        [SettingsUIButton]
+        [SettingsUIButtonGroup(StatusButtonsRow)]
+        [SettingsUISection(ActionsTab, StatusGrp)]
+        public bool GarbageStatusLog
+        {
+            set
+            {
+                if (!value)
+                {
+                    return;
+                }
+
+#if DEBUG
+                Mod.Log.Info($"{Mod.ModTag} [DEBUG] GarbageStatusLog clicked");
+#endif
+                GarbageStatus.RefreshNow(writeToLog: true);
+            }
+        }
+
+        [SettingsUIButton]
+        [SettingsUIButtonGroup(StatusButtonsRow)]
+        [SettingsUISection(ActionsTab, StatusGrp)]
+        public bool OpenLog
+        {
+            set
+            {
+                if (!value)
+                {
+                    return;
+                }
+
+                OpenLogFolder();
+            }
+        }
+
+        // ------------------------------------
+        // ABOUT
+        // ------------------------------------
 
         [SettingsUISection(AboutTab, AboutInfoGrp)]
         public string AboutName => Mod.ModName;
@@ -240,12 +293,8 @@ namespace MagicGarbage
         [SettingsUISection(AboutTab, AboutInfoGrp)]
         public string AboutVersion => Mod.ModVersion;
 
-        // --------------------------------------------------------------------
-        // ABOUT TAB – LINKS
-        // --------------------------------------------------------------------
-
         [SettingsUIButton]
-        [SettingsUIButtonGroup(AboutLinksGrp)]
+        [SettingsUIButtonGroup(AboutLinksRow)]
         [SettingsUISection(AboutTab, AboutLinksGrp)]
         public bool OpenParadoxPage
         {
@@ -256,12 +305,18 @@ namespace MagicGarbage
                     return;
                 }
 
-                Application.OpenURL(kUrlParadox);
+                try
+                {
+                    Application.OpenURL(UrlParadox);
+                }
+                catch (Exception)
+                {
+                }
             }
         }
 
         [SettingsUIButton]
-        [SettingsUIButtonGroup(AboutLinksGrp)]
+        [SettingsUIButtonGroup(AboutLinksRow)]
         [SettingsUISection(AboutTab, AboutLinksGrp)]
         public bool OpenDiscord
         {
@@ -272,63 +327,151 @@ namespace MagicGarbage
                     return;
                 }
 
-                Application.OpenURL(kUrlDiscord);
+                try
+                {
+                    Application.OpenURL(UrlDiscord);
+                }
+                catch (Exception)
+                {
+                }
             }
         }
 
-        // --------------------------------------------------------------------
-        // ABOUT TAB – USAGE NOTES
-        // --------------------------------------------------------------------
-
         [SettingsUIMultilineText]
         [SettingsUISection(AboutTab, AboutUsageGrp)]
-        public string UsageNotes => string.Empty; // Text comes from Locale files.
+        public string UsageNotes => string.Empty;
 
-        // --------------------------------------------------------------------
-        // DEFAULTS & APPLY
-        // --------------------------------------------------------------------
+        // ---------------------------------
+        // DEFAULTS
+        // ---------------------------------
 
         public override void SetDefaults()
         {
-            // First-time defaults:
-            // - Total Magic ON
-            // - Semi-Magic OFF
-            // - All sliders at 100% (vanilla)
             m_TotalMagic = true;
-            m_SemiMagicEnabled = false;
+            m_TrashBossEnabled = false;
 
             GarbageTruckCapacityMultiplier = 100;
             GarbageFacilityVehicleMultiplier = 100;
             GarbageFacilityProcessingMultiplier = 100;
             GarbageFacilityStorageMultiplier = 100;
+
+            GarbageStatus.ResetUi();
         }
 
-        public override void Apply()
-        {
-            base.Apply();
+        // --------------------------------------------
+        // SettingsUISetter callbacks
+        // --------------------------------------------
 
-            World world = World.DefaultGameObjectInjectionWorld;
-            if (world == null || !world.IsCreated)
+        private void OnModeToggleChanged(bool _)
+        {
+            if (!TryGetWorld(out World world))
             {
                 return;
             }
 
-            // Recalculate truck stats when sliders/toggles change.
-            GarbageTruckCapacitySystem truckSystem =
-                world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
-            if (truckSystem != null)
+            TotalMagicSystem tm = world.GetExistingSystemManaged<TotalMagicSystem>();
+            if (tm != null)
             {
-                truckSystem.Enabled = true;
+                tm.Enabled = true;
             }
 
-            // Recalculate facility stats when sliders/toggles change.
-            GarbageFacilityCapacitySystem facilitySystem =
-                world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
-            if (facilitySystem != null)
+            GarbageTruckCapacitySystem truckSys = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
+            if (truckSys != null)
             {
-                facilitySystem.Enabled = true;
+                truckSys.Enabled = true;
             }
 
+            GarbageFacilityCapacitySystem facSys = world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
+            if (facSys != null)
+            {
+                facSys.Enabled = true;
+            }
+        }
+
+        private void OnTruckSliderChanged(int _)
+        {
+            if (!TryGetWorld(out World world))
+            {
+                return;
+            }
+
+            GarbageTruckCapacitySystem sys = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
+            if (sys != null)
+            {
+                sys.Enabled = true;
+            }
+        }
+
+        private void OnFacilitySliderChanged(int _)
+        {
+            if (!TryGetWorld(out World world))
+            {
+                return;
+            }
+
+            GarbageFacilityCapacitySystem sys = world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
+            if (sys != null)
+            {
+                sys.Enabled = true;
+            }
+        }
+
+        // ----------------------
+        // Helpers
+        // ----------------------
+
+        private void EnableTuningSystemsOnce()
+        {
+            if (!TryGetWorld(out World world))
+            {
+                return;
+            }
+
+            GarbageTruckCapacitySystem truckSys = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
+            if (truckSys != null)
+            {
+                truckSys.Enabled = true;
+            }
+
+            GarbageFacilityCapacitySystem facSys = world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
+            if (facSys != null)
+            {
+                facSys.Enabled = true;
+            }
+        }
+
+        private static void OpenLogFolder()
+        {
+            try
+            {
+                string consoleLogPath = Application.consoleLogPath;
+                if (string.IsNullOrEmpty(consoleLogPath))
+                {
+                    return;
+                }
+
+                string rootFolder = Path.GetDirectoryName(consoleLogPath);
+                if (string.IsNullOrEmpty(rootFolder))
+                {
+                    return;
+                }
+
+                string logsFolder = Path.Combine(rootFolder, "Logs");
+                string targetFolder = Directory.Exists(logsFolder) ? logsFolder : rootFolder;
+
+                string targetUri = new Uri(targetFolder + Path.DirectorySeparatorChar).AbsoluteUri;
+                Application.OpenURL(targetUri);
+            }
+            catch (Exception ex)
+            {
+                Mod.Log.Warn($"{Mod.ModTag} OpenLog failed: {ex.GetType().Name}: {ex.Message}");
+            }
+        }
+
+        private static bool TryGetWorld(out World world)
+        {
+            world = World.DefaultGameObjectInjectionWorld;
+            return world != null && world.IsCreated;
         }
     }
 }

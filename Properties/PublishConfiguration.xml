@@ -1,41 +1,45 @@
-﻿<Publish>
+<Publish>
 	<!--Id must be set in order to update existed mod. it is not required for publishing mod for the first time-->
 	<ModId Value="124159" />
 	<!--Name of the mod to display to players-->
-	<DisplayName Value="Magic Garbage Truck" />
+	<DisplayName Value="Magic Garbage + Trash Boss" />
 	<!--Short description of the mod-->
-	<ShortDescription Value="Auto-Clean = remove all city garbage; Self-Manage = tune all garbage trucks and buildings" />
+	<ShortDescription Value="Auto-Clean garbage OR use Trash Boss = Self manage garbage trucks + buildings" />
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
 	<LongDescription>
-**Magic Garbage Truck**
+**Magic Garbage + Trash Boss**
 
 Handle garbage your way:
-- **Total Magic** option cleans all city garbage.
-- **Semi-Magic** option lets you tune all garbage trucks and facilities.
 
 ---
 
 ### How it works
 
 **OPTION 1  AUTO CLEAN**
-- ✅ Total Magic on, removes all garbage instantly.
-- Perfect if you want to forget about all garbage.
-- Set it and forget it! (most like classic old "magical garbage")
-- No garbage issues; trucks and facilities become mostly cosmetic.
+- ✅ Total Magic On, removes all garbage.
+- Warning icons clear because there is no garbage.
+- Trucks and facilities become mostly cosmetic.
+- Mod does not stop Garbage system, it's just very fast cleanup.
 
-**OPTION 2  SELF-MANAGE**
-- ✅ Semi-Magic on; manage how you like.
+**OPTION 2  SELF MANAGE**
+- ✅ Trash Boss On; manage how you like.
 - **Sliders** to control all garbage trucks + facilities
-- 🚚 Super powered trucks reduce traffic and service strain.
+- 🚚 Enhance trucks to reduce traffic and service strain.
 - Great if you still want to see trucks driving around, just fewer problems.
+
 - **Helper buttons**
-  - [Game Defaults]	reset all sliders to 100% (pure vanilla).  
-  - [Recommended]	presets for % load, truck count, process speed, storage max.
+- [Game Defaults] = reset all sliders to 100% (pure vanilla).
+- [Recommended]	  = suggested preset values for easier management.
+
+### STATUS PANEL
+NEW **Status** section in Options Menu:
+- garbage produced vs processed
+- and other unique garbage data.
 
 **OPTION 3  NO MAGIC** (vanilla)
-- Turn Semi-Magic on ✅, Click [Game Defaults]
-- All sliders at 100% = exactly standard gameplay.
+- Turn Trash Boss on ✅, Click [Game Defaults]
+- All sliders at 100% = standard gameplay.
 
 ### 11 languages
 - English, Français French, Deutsch German, Español Spanish, Italiano Italian
@@ -46,8 +50,8 @@ Handle garbage your way:
 ---
 
 ### Compatibility
-- Works with new and existing cities. Enable/Disable any time, safely remove any time.
-- Does not use Harmony or Reflection; lightweight, compatible, and less likely to break with game updates.
+- Works with new and existing cities. Enable/Disable any time, safe to remove any time.
+- Does not use Harmony or Reflection; lightweight, compatible.
 
 ---
 
@@ -60,13 +64,12 @@ Handle garbage your way:
 
 </LongDescription>
 	<!--Thumbnail-->
-	<Thumbnail Value="Properties/Thumbnail.jpg" />
+	<Thumbnail Value="Properties/thumbnail-garbageTruck.jpg" />
 	<!--Screenshot, can be set multiple times-->
-	<Screenshot Value="Properties/40-image-ActionsEN.jpg" />
-	<Screenshot Value="Properties/50-image-ActionsEN.jpg" />
-	<Screenshot Value="Properties/55-image-ActionsCN.jpg" />
-	<Screenshot Value="Properties/60-image-ActionsFR.jpg" />
-	<Screenshot Value="Properties/65-image-UsageEN.jpg" />
+    <Screenshot Value="Properties/10-image-TotalMagic.jpg" />
+    <Screenshot Value="Properties/30-image-TrashBoss.jpg" />
+	<Screenshot Value="Properties/40-image-Status.jpg" />
+	<Screenshot Value="Properties/60-image-UsageEN.jpg" />
 	<Screenshot Value="Properties/70-image-Before.jpg" />
 	<Screenshot Value="Properties/80-image-After.jpg" />
 	<!--Tag, can be set multiple times-->
@@ -74,18 +77,18 @@ Handle garbage your way:
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.2.0" />
+	<ModVersion Value="1.2.1" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.5.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-* Fix: saved settings persist on reboot.
-* Fix: switching Total Magic now reverts Semi-Magic tuning to vanilla immediately (values preserved).
-* Updated: Recommended preset (200% load, 200% processing, 160% storage, 140% facility trucks).
-* Sliders increment in 10% steps now (former was 20-25%)
-* Updated translations and docs.
+* Trash Boss is the new self-manage feature.
+* added Status report to Options menu.
+* added detailed garbage report to log.
+* added facility truck + Worker summary in Status/log.
+* updated translations and docs.
 </ChangeLog>
 
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
