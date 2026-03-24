@@ -55,7 +55,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
                     "Directly manage garbage systems; leaves vanilla garbage logic running.\n\n" +
-                    "- When Trash Boss is ON [ ✓ ], Total Magic is forced OFF.\n" +
+                    "- When **Trash Boss is ON [ ✓ ]**, Total Magic is forced OFF.\n" +
                     "- Sliders only apply when Trash Boss is enabled.\n"
                 },
 
@@ -144,21 +144,21 @@ namespace MagicGarbage
                     "**Pending** = active collection requests not yet assigned to a truck or path.\n" +
                     "**Dispatched** = active collection requests already assigned.\n" +
                     "**Total** = all active garbage collection requests.\n" +
-                    "This can be temporarily higher than **Above request threshold** because older requests are cleaned up later by vanilla revalidation."
+                    "This can be temporarily higher than **Above request threshold** because older requests are cleaned up later by game's revalidation."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusProducers)), "Buildings" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusProducers)),
                     "**Has garbage** = buildings currently holding any garbage.\n" +
                     "**Total** = all garbage-producing buildings in the city.\n" +
-                    "**Above request threshold** = buildings above the live garbage level needed to create or keep a collect request.\n" +
-                    "At vanilla values this is usually above <100> internal garbage units, but Status reads the **live** in-city value."
+                    "**Above request threshold** = buildings with enough garbage to create a collect request.\n" +
+                    "This is usually more than <100> garbage units."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "Facilities" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacilities)),
                     "Summary of counted garbage facilities.\n" +
-                    "**Facilities** = counted garbage-facility buildings in the same set used for the detailed facility lines.\n" +
+                    "**Facilities** = counted garbage buildings.\n" +
                     "**Trucks total** = garbage trucks owned by those facilities.\n" +
                     "**Max workers** = total worker capacity across those same facilities."
                 },
