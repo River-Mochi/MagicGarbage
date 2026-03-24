@@ -4,7 +4,7 @@
 	<!--Name of the mod to display to players-->
 	<DisplayName Value="Magic Garbage + Trash Boss" />
 	<!--Short description of the mod-->
-	<ShortDescription Value="Auto-Clean garbage OR be the Trash Boss = Self manage garbage trucks + buildings" />
+	<ShortDescription Value="Auto-Clean garbage OR use Trash Boss = Self manage garbage trucks + buildings" />
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
 	<LongDescription>
@@ -64,11 +64,12 @@ NEW **Status** section in Options Menu:
 
 </LongDescription>
 	<!--Thumbnail-->
-	<Thumbnail Value="Properties/Thumbnail.jpg" />
+	<Thumbnail Value="Properties/thumbnail-garbageTruck.jpg" />
 	<!--Screenshot, can be set multiple times-->
-	<Screenshot Value="Properties/40-image-ActionsEN.jpg" />
-	<Screenshot Value="Properties/50-image-ActionsEN.jpg" />
-	<Screenshot Value="Properties/65-image-UsageEN.jpg" />
+    <Screenshot Value="Properties/10-image-TotalMagic.jpg" />
+    <Screenshot Value="Properties/30-image-TrashBoss.jpg" />
+	<Screenshot Value="Properties/40-image-Status.jpg" />
+	<Screenshot Value="Properties/60-image-UsageEN.jpg" />
 	<Screenshot Value="Properties/70-image-Before.jpg" />
 	<Screenshot Value="Properties/80-image-After.jpg" />
 	<!--Tag, can be set multiple times-->
@@ -76,14 +77,14 @@ NEW **Status** section in Options Menu:
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.2.0" />
+	<ModVersion Value="1.2.1" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.5.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-* renamed Semi Magic to Trash Boss.
+* Trash Boss is the new self-manage feature.
 * added Status report to Options menu.
 * added detailed garbage report to log.
 * added facility truck + Worker summary in Status/log.
