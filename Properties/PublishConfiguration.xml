@@ -8,61 +8,61 @@
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
 	<LongDescription>
-        **Magic Garbage + Trash Boss**
+**Magic Garbage + Trash Boss**
 
-        Handle garbage your way:
+Handle garbage your way:
 
-        ---
+---
 
-        ### How it works
+### How it works
 
-        **OPTION 1  AUTO CLEAN**
-        - ✅ Total Magic On, removes all garbage.
-        - Warning icons clear because there is no garbage.
-        - Trucks and facilities become mostly cosmetic.
-        - Mod does not stop Garbage system, it's just very fast cleanup.
+**OPTION 1  AUTO CLEAN**
+- ✅ Total Magic On, removes all garbage.
+- Warning icons clear because there is no garbage.
+- Trucks and facilities become mostly cosmetic.
+- Mod does not stop Garbage system, it's just very fast cleanup.
 
-        **OPTION 2  SELF MANAGE**
-        - ✅ Trash Boss On; manage how you like.
-        - **Sliders** to control all garbage trucks + facilities
-        - 🚚 Enhance trucks to reduce traffic and service strain.
-        - Great if you still want to see trucks driving around, just fewer problems.
+**OPTION 2  SELF MANAGE**
+- ✅ Trash Boss On; manage how you like.
+- **Sliders** to control all garbage trucks + facilities
+- 🚚 Enhance trucks to reduce traffic and service strain.
+- Great if you still want to see trucks driving around, just fewer problems.
 
-        - **Helper buttons**
-        - [Game Defaults] = reset all sliders to 100% (pure vanilla).
-        - [Recommended]	  = suggested preset values for easier management.
+- **Helper buttons**
+- [Game Defaults] = reset all sliders to 100% (pure vanilla).
+- [Recommended]	  = suggested preset values for easier management.
 
-        ### STATUS PANEL
-        NEW **Status** section in Options Menu:
-        - garbage produced vs processed
-        - and other unique garbage data.
+### STATUS PANEL
+NEW **Status** section in Options Menu:
+- garbage produced vs processed
+- and other unique garbage data.
 
-        **OPTION 3  NO MAGIC** (vanilla)
-        - Turn Trash Boss on ✅, Click [Game Defaults]
-        - All sliders at 100% = standard gameplay.
+**OPTION 3  NO MAGIC** (vanilla)
+- Turn Trash Boss on ✅, Click [Game Defaults]
+- All sliders at 100% = standard gameplay.
 
-        ### 11 languages
-        - English, Français French, Deutsch German, Español Spanish, Italiano Italian
-        - 日本語 Japanese, 한국어 Korean
-        - 简体中文 Simplified Chinese, 繁體中文 Traditional Chinese
-        - Português Brasil, Polski Polish
+### 11 languages
+- English, Français French, Deutsch German, Español Spanish, Italiano Italian
+- 日本語 Japanese, 한국어 Korean
+- 简体中文 Simplified Chinese, 繁體中文 Traditional Chinese
+- Português Brasil, Polski Polish
 
-        ---
+---
 
-        ### Compatibility
-        - Works with new and existing cities. Enable/Disable any time, safe to remove any time.
-        - Does not use Harmony or Reflection; lightweight, compatible.
+### Compatibility
+- Works with new and existing cities. Enable/Disable any time, safe to remove any time.
+- Does not use Harmony or Reflection; lightweight, compatible.
 
-        ---
+---
 
-        ### Credits
-        - RiverMochi - author
-        - Thanks to Wayz for inspiration on the original Magical Garbage mod
-        - yenyang - code review, tech advice
-        - Necko1996 - testing and screenshots
-        - gagaxm - thumbnail image
+### Credits
+- RiverMochi - author
+- Thanks to Wayz for inspiration on the original Magical Garbage mod
+- yenyang - code review, tech advice
+- Necko1996 - testing and screenshots
+- gagaxm - thumbnail image
 
-    </LongDescription>
+</LongDescription>
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/Thumbnail.jpg" />
 	<!--Screenshot, can be set multiple times-->
@@ -83,11 +83,11 @@
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-    * renamed Semi Magic to Trash Boss.
-    * added Status report to Options menu.
-    * added detailed garbage report to log.
-    * added facility truck + Worker summary in Status/log.
-    * updated translations and docs.
+* renamed Semi Magic to Trash Boss.
+* added Status report to Options menu.
+* added detailed garbage report to log.
+* added facility truck + Worker summary in Status/log.
+* updated translations and docs.
 </ChangeLog>
 
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
