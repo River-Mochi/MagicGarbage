@@ -122,7 +122,7 @@ namespace MagicGarbage
                     "<Self-Manage state>\n" +
                     "  * Trash Boss = **[ ✓ ]**\n" +
                     "  * Set sliders as desired.\n" +
-                    "  * Vanilla garbage logic with better self-managed trucks/facilities.\n" +
+                    "  * Same game garbage; better self-managed trucks/facilities.\n" +
                     " <-------------------------------------->\n\n" +
                     "<Normal vanilla game>\n" +
                     "  * Trash Boss = **[ ✓ ]**\n" +
