@@ -51,16 +51,6 @@ namespace MagicGarbage
         private bool m_TotalMagic = true;
         private bool m_TrashBossEnabled;
 
-        // Compatibility alias for older saved settings files.
-        // Old versions saved TrashBoss toggle as "SemiMagicEnabled".
-        // Let old saves map into TrashBossEnabled.
-        public bool SemiMagicEnabled
-        {
-            get => TrashBossEnabled;
-            set => TrashBossEnabled = value;
-        }
-
-
         public Setting(IMod mod) : base(mod)
         {
             SetDefaults();
