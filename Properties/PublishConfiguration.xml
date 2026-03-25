@@ -85,10 +85,10 @@ Handle garbage your way:
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
 * Trash Boss is the new self-manage feature.
+* Clarify definitions in tool tips.
 * added new Status report to Options menu.
 * added detailed garbage report to log.
 * added facility truck + Worker summary in Status/log.
-* updated translations, fix typos.
 </ChangeLog>
 
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->

@@ -117,19 +117,19 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<Auto Clean state>\n" +
                     "  * Total Magic ON  = **[ ✓ ]**\n" +
-                    "  * Garbage is auto removed\n" +
+                    "  * Garbage is auto removed - Done.\n" +
                     " <-------------------------------------->\n\n" +
                     "<Self-Manage state>\n" +
                     "  * Trash Boss = **[ ✓ ]**\n" +
                     "  * Set sliders as desired.\n" +
-                    "  * Vanilla garbage logic with better managed trucks/facilities.\n" +
+                    "  * Vanilla garbage logic with better self-managed trucks/facilities.\n" +
                     " <-------------------------------------->\n\n" +
                     "<Normal vanilla game>\n" +
                     "  * Trash Boss = **[ ✓ ]**\n" +
                     "  * Click **[Game Defaults]**\n" +
                     "  * All sliders at 100% (vanilla)\n"
                 },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), string.Empty },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), "Instructions" },
 
                 // Status
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Garbage/mo." },
@@ -137,23 +137,23 @@ namespace MagicGarbage
                     "Shows the current citywide garbage amount and the total garbage processing rate.\n" +
                     "Increase processing if the monthly garbage produced is much higher.\n" +
                     "**Produced** and **Processed** use tons per month.\n" +
-                    "Update time = last refreshed."
+                    "<Update time = last refreshed.>"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Collect requests" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
                     "**Pending** = active collection requests not yet assigned to a truck or path.\n" +
                     "**Dispatched** = active collection requests already assigned.\n" +
-                    "**Total** = all active garbage collection requests.\n" +
-                    "This can be temporarily higher than **Above request threshold** because older requests are cleaned up later by game's revalidation."
+                    "**Total** = counts current **active** request entity (in the garbage pipeline).\n\n" +
+                    "Tech note: This is different from <Above request threshold>. This counts <requests>, not buildings."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusProducers)), "Buildings" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusProducers)),
                     "**Has garbage** = buildings currently holding any garbage.\n" +
                     "**Total** = all garbage-producing buildings in the city.\n" +
-                    "**Above request threshold** = buildings with enough garbage to create a collect request.\n" +
-                    "This is usually more than <100> garbage units."
+                    "**Above request threshold** = current count of **buildings** with enough garbage to create a collect request.\n" +
+                    "In vanilla, the threshold is usually more than <100> garbage units."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "Facilities" },
@@ -175,12 +175,12 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Detailed Status to Log" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageStatusLog)),
                     "Write a more detailed garbage report into **Logs/MagicGarbage.log**.\n" +
-                    "This includes a short legend, live threshold values, disabled trucks, and per-facility max worker counts."
+                    "This includes a short legend, threshold values, disabled trucks, and per-facility max worker counts."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Open Log" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)),
-                    "Open the Logs/ folder."
+                    "Open the game Logs/.. folder."
                 },
 
                 // Runtime status strings
