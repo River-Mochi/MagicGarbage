@@ -85,6 +85,7 @@ Handle garbage your way:
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
 * Trash Boss is the new self-manage feature.
+* Compatibility fix to map old Semi-magic name.
 * Clarify definitions in tool tips.
 * added new Status report to Options menu.
 * added detailed garbage report to log.
