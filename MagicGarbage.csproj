@@ -12,7 +12,7 @@
 		<PublishConfigurationPath>Properties\PublishConfiguration.xml</PublishConfigurationPath>
 
   <!-- Single source of truth for version number -->
-	  <Version>1.2.1</Version>
+	  <Version>1.2.2</Version>
 	<AssemblyVersion>$(Version).0</AssemblyVersion>
 	<FileVersion>$(Version).0</FileVersion>  <!-- for file properties -->
 
@@ -100,13 +100,17 @@
     </None>
 </ItemGroup>
 
-<!-- AUTO UPDATE PublishConfiguration ModVersion using CSPROJ Version number
-	     remove bom, make EOL=CRLF, and left-align text -->
-<Target Name="UpdatePublishConfigVersion" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'         AND Exists('$(MSBuildProjectDirectory)\Scripts\Update-PublishConfig.ps1')          AND Exists('$(MSBuildProjectDirectory)\$(PublishConfigurationPath)')">
+<!-- AUTO UPDATE PublishConfiguration ModVersion using csproj Version
+     remove BOM, make EOL=CRLF, and left-align text -->
+<Target Name="UpdatePublishConfigVersion"
+        BeforeTargets="Build"
+        Condition="Exists('$(MSBuildProjectDirectory)\Scripts\Update-PublishConfig.ps1') AND Exists('$(MSBuildProjectDirectory)\$(PublishConfigurationPath)')">
 
-    <Message Text="PwP PublishConfig: syncing ModVersion + normalizing EOL/BOM + left-align blocks..." Importance="high" />
+    <Message Text="MagicGarbage PublishConfig: syncing ModVersion + normalizing EOL/BOM + left-align blocks..." Importance="high" />
 
     <Exec Command="&quot;$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\Scripts\Update-PublishConfig.ps1&quot; -Path &quot;$(MSBuildProjectDirectory)\$(PublishConfigurationPath)&quot; -Version &quot;$(Version)&quot; -Eol crlf -LeftAlignBlocks" />
 </Target>
 
+
 </Project>
+

@@ -4,10 +4,7 @@
 namespace MagicGarbage
 {
     using Colossal;
-    using Game.Simulation;
     using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Diagnostics;
 
     public sealed class LocaleEN : IDictionarySource
     {
@@ -43,7 +40,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "Status" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "Mod info" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Links" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "USAGE NOTES" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "USAGE" },
 
                 // Total Magic
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
@@ -120,7 +117,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<Auto Clean state>\n" +
                     "  * Total Magic ON  = **[ ✓ ]**\n" +
-                    "  * All garbage is instantly removed\n" +
+                    "  * Garbage is auto removed\n" +
                     " <-------------------------------------->\n\n" +
                     "<Self-Manage state>\n" +
                     "  * Trash Boss = **[ ✓ ]**\n" +

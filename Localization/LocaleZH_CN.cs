@@ -115,9 +115,9 @@ namespace MagicGarbage
 
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
-                    "<自动清理模式>\n" +
+                    "<自动清理状态>\n" +
                     "  * Total Magic ON  = **[ ✓ ]**\n" +
-                    "  * 垃圾几乎会被立刻清除\n" +
+                    "  * 垃圾会被自动清除\n" +
                     " <-------------------------------------->\n\n" +
                     "<手动管理模式>\n" +
                     "  * Trash Boss = **[ ✓ ]**\n" +

@@ -14,38 +14,33 @@ Handle garbage your way:
 
 ---
 
-### How it works
-
-**OPTION 1  AUTO CLEAN**
+### OPTION 1  AUTO CLEAN
 - ✅ Total Magic On, removes all garbage.
-- Warning icons clear because there is no garbage.
+- Garbage icons clear because there is no garbage.
 - Trucks and facilities become mostly cosmetic.
 - Mod does not stop Garbage system, it's just very fast cleanup.
 
-**OPTION 2  SELF MANAGE**
+### OPTION 2  SELF MANAGE
 - ✅ Trash Boss On; manage how you like.
-- **Sliders** to control all garbage trucks + facilities
+- **Sliders** to control garbage trucks + facilities
 - 🚚 Enhance trucks to reduce traffic and service strain.
-- Great if you still want to see trucks driving around, just fewer problems.
+- Great if you still want to see trucks driving around with fewer problems.
 
 - **Helper buttons**
 - [Game Defaults] = reset all sliders to 100% (pure vanilla).
-- [Recommended]	  = suggested preset values for easier management.
+- [Recommended]	  = suggested preset values for easy management.
 
-### STATUS PANEL
-NEW **Status** section in Options Menu:
-- garbage produced vs processed
-- and other unique garbage data.
+### NEW STATUS Report
+- Useful garbage statistics; helps any Trash Boss or to figure out what is happening.
+- Lean: runs in Options menu, does not run in-city per frame.
 
-**OPTION 3  NO MAGIC** (vanilla)
+#### OPTION 3  NO MAGIC (vanilla)
 - Turn Trash Boss on ✅, Click [Game Defaults]
 - All sliders at 100% = standard gameplay.
 
-### 11 languages
-- English, Français French, Deutsch German, Español Spanish, Italiano Italian
-- 日本語 Japanese, 한국어 Korean
-- 简体中文 Simplified Chinese, 繁體中文 Traditional Chinese
-- Português Brasil, Polski Polish
+#### Support and feedback
+- If the mod helps you, give it a Like, it's free + easy :)
+- Feedback on: Github, Discord, etc., links on this page.
 
 ---
 
@@ -60,7 +55,12 @@ NEW **Status** section in Options Menu:
 - Thanks to Wayz for inspiration on the original Magical Garbage mod
 - yenyang - code review, tech advice
 - Necko1996 - testing and screenshots
-- gagaxm - thumbnail image
+- gagaxm - truck image
+
+#### 11 languages
+- English, Français French, Deutsch German, Español Spanish, Italiano Italian
+- 日本語 Japanese, 한국어 Korean, Português Brasil, Polski Polish
+- 简体中文 Simplified Chinese, 繁體中文 Traditional Chinese
 
 </LongDescription>
 	<!--Thumbnail-->
@@ -77,7 +77,7 @@ NEW **Status** section in Options Menu:
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.2.1" />
+	<ModVersion Value="1.2.2" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.5.*" />
 	<!--Dependency for the mod, can be set multiple times-->
@@ -85,10 +85,10 @@ NEW **Status** section in Options Menu:
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
 * Trash Boss is the new self-manage feature.
-* added Status report to Options menu.
+* added new Status report to Options menu.
 * added detailed garbage report to log.
 * added facility truck + Worker summary in Status/log.
-* updated translations and docs.
+* updated translations, fix typos.
 </ChangeLog>
 
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->

@@ -117,7 +117,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<Mode nettoyage auto>\n" +
                     "  * Total Magic ON  = **[ ✓ ]**\n" +
-                    "  * Tous les déchets sont supprimés instantanément\n" +
+                    "  * Les déchets sont supprimés automatiquement\n" +
                     " <-------------------------------------->\n\n" +
                     "<Mode gestion manuelle>\n" +
                     "  * Trash Boss = **[ ✓ ]**\n" +
