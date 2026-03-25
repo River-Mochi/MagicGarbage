@@ -77,7 +77,7 @@ Handle garbage your way:
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.2.2" />
+	<ModVersion Value="1.2.3" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.5.*" />
 	<!--Dependency for the mod, can be set multiple times-->
@@ -85,7 +85,7 @@ Handle garbage your way:
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
 * Trash Boss is the new self-manage feature.
-* Compatibility fix to map old Semi-magic name.
+* Compatibility shim to map old Semi-magic name.
 * Clarify definitions in tool tips.
 * added new Status report to Options menu.
 * added detailed garbage report to log.
