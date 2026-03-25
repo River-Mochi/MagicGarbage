@@ -31,8 +31,9 @@ Handle garbage your way:
 - [Recommended]	  = suggested preset values for easy management.
 
 ### NEW STATUS Report
-- Useful garbage statistics; helps any Trash Boss or to figure out what is happening.
-- Lean: runs in Options menu, does not run in-city per frame.
+- Yearning for more useful data?
+- Real garbage stats helps a Trash Boss figure out what is happening.
+- Lean: does not run in-city per frame; runs in Options menu for best performance to not affect gameplay.
 
 #### OPTION 3  NO MAGIC (vanilla)
 - Turn Trash Boss on ✅, Click [Game Defaults]
@@ -77,7 +78,7 @@ Handle garbage your way:
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.2.3" />
+	<ModVersion Value="1.2.4" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.5.*" />
 	<!--Dependency for the mod, can be set multiple times-->
