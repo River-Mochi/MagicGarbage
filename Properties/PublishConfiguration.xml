@@ -85,7 +85,7 @@ Handle garbage your way:
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-* fix a legacy named semi-magic toggle that may have appeared in options.
+* fix a legacy name semi-magic toggle that may have appeared in options.
 * Trash Boss is the new self-manage feature.
 * added new Status report to Options menu.
 * optional detailed garbage report to log.
