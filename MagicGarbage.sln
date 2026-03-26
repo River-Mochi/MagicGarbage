@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.4.11612.150 stable
+VisualStudioVersion = 18.4.11620.152 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicGarbage", "MagicGarbage.csproj", "{6E4A0E71-6A3D-1817-BB95-87571F818BB6}"
 EndProject
@@ -20,6 +20,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {0F29FF14-DD73-43C0-9512-C837D4085BEE}
+		SolutionGuid = {DF619127-C9BD-491E-9C71-9C2DC42B8B9B}
 	EndGlobalSection
 EndGlobal
