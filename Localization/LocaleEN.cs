@@ -207,11 +207,14 @@ namespace MagicGarbage
                     "- Hard cap = maximum garbage a building can accumulate.\n" +
                     "- Returning = subset of moving trucks.\n" +
                     "- Active request count can temporarily exceed buildings currently above request threshold because older requests are cleaned up later by vanilla revalidation.\n" +
-                    "- Facility worker numbers below currently show **max workers** for each facility."
+                    "- Facility worker numbers below currently show **max workers** for each facility.\n" +
+                    "-----------------------------------------------------------------------------\n"
+
                 },
                 { "MG.Status.Log.Thresholds",
-                    "Thresholds (internal garbage units): pickup={1:N0}, request={0:N0}, warning={2:N0}, hard cap={3:N0}"
+                    "Game Thresholds (internal garbage units): pickup={1:N0}, request={0:N0}, warning icon={2:N0}, hard cap={3:N0}"
                 },
+
                 { "MG.Status.Log.ThresholdsMissing", "Thresholds: <GarbageParameterData not available>" },
                 { "MG.Status.Log.GarbageProcessing", "Garbage: {0:N0} t/mo | Processing: {1:N0} t/mo" },
                 { "MG.Status.Log.Requests", "Collect Requests: pending={1:N0}, dispatched={2:N0}, total={0:N0}" },

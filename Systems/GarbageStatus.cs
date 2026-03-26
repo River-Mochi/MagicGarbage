@@ -212,6 +212,7 @@ namespace MagicGarbage
             log.AppendLine(Mod.LF("MG.Status.Log.City", Fmt(snap.City)));
             log.AppendLine(Mod.LF("MG.Status.Log.Mode", snap.TotalMagic, snap.TrashBoss));
             log.AppendLine(Mod.L("MG.Status.Log.Legend"));
+            log.AppendLine();
 
             if (snap.HaveParams)
             {
@@ -227,6 +228,7 @@ namespace MagicGarbage
                 log.AppendLine(Mod.L("MG.Status.Log.ThresholdsMissing"));
             }
 
+            log.AppendLine();
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.GarbageProcessing",
                 snap.GarbageTonsPerMonth,

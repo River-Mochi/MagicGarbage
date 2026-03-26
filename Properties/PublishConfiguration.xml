@@ -85,12 +85,10 @@ Handle garbage your way:
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
+* fix a legacy named semi-magic toggle that may have appeared in options.
 * Trash Boss is the new self-manage feature.
-* Compatibility shim to map old Semi-magic name.
-* Clarify definitions in tool tips.
 * added new Status report to Options menu.
-* added detailed garbage report to log.
-* added facility truck + Worker summary in Status/log.
+* optional detailed garbage report to log.
 </ChangeLog>
 
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
