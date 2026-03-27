@@ -116,7 +116,7 @@ namespace MagicGarbage
             updateSystem.UpdateAfter<GarbageStatusSystem>(SystemUpdatePhase.GameSimulation);
 
             updateSystem.UpdateAfter<TotalMagicSystem>(SystemUpdatePhase.GameSimulation);
-
+            // note to future me: don't add pre-dispatch garbage request suppression for Total Magic. it causes severe Player.log spam ("UpdateFrame added to unsupported type").
 
 
 #if DEBUG

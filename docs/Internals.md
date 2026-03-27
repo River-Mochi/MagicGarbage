@@ -18,6 +18,17 @@
 
 Legend: **[NOW]** used directly by this mod today. **[REF]** useful reference / future work.
 
+Important: Do not add a pre-dispatch garbage request suppression step for Total Magic.
+previous attempt deleted/cancelled pending `GarbageCollectionRequest` entities before vanilla garbage dispatch.
+not needed - Total Magic already clears producer garbage, and vanilla request validation cleans up stale requests afterward.
+That approach caused severe `Player.log` spam:
+- `UpdateFrame added to unsupported type`
+
+Rule:
+- Do not intercept, cancel, or destroy garbage request entities as a pre-dispatch optimization for Total Magic.
+- Let vanilla request cleanup handle stale requests after Total Magic clears garbage.
+
+
 1. **Game.Prefabs.GarbagePrefab** → writes `GarbageParameterData` **[REF]**  
    - Global thresholds (`m_RequestGarbageLimit`, `m_CollectionGarbageLimit`, `m_WarningGarbageLimit`, `m_MaxGarbageAccumulation`).
 
@@ -74,6 +85,6 @@ Legend: **[NOW]** used directly by this mod today. **[REF]** useful reference / 
 
 ## Implementation notes
 
-- Trash Boss scaling should is based on cached/base values to avoid cumulative drift.
+- Trash Boss scaling should be based on cached/base values to avoid cumulative drift.
 - Status should read the live `GarbageParameterData` singleton rather than relying on decompiled defaults.
 - Invalid garbage requests are cleaned up by vanilla when target/handler validation fails.
