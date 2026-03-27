@@ -136,13 +136,13 @@ namespace MagicGarbage
         [SettingsUISection(ActionsTab, TrashBossGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
         [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
-        public int GarbageFacilityProcessingMultiplier { get; set; } = 100;
+        public int GarbageFacilityStorageMultiplier { get; set; } = 100;
 
         [SettingsUISlider(min = 100, max = 500, step = 10, scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, TrashBossGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
         [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
-        public int GarbageFacilityStorageMultiplier { get; set; } = 100;
+        public int GarbageFacilityProcessingMultiplier { get; set; } = 100;
 
         [SettingsUISlider(min = 100, max = 400, step = 10, scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, TrashBossGrp)]
@@ -168,9 +168,9 @@ namespace MagicGarbage
                 }
 
                 GarbageTruckCapacityMultiplier = 200;
-                GarbageDispatchThresholdScale = 1;
-                GarbageFacilityProcessingMultiplier = 200;
+                GarbageDispatchThresholdScale = 5;
                 GarbageFacilityStorageMultiplier = 160;
+                GarbageFacilityProcessingMultiplier = 200;
                 GarbageFacilityVehicleMultiplier = 140;
 
                 EnableTuningSystemsOnce();
