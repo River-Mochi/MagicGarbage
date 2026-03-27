@@ -21,7 +21,7 @@ namespace MagicGarbage
 
     public partial class TotalMagicSystem : GameSystemBase
     {
-        // Tune cadence here. 262144 / 64 = 4096 ticks between sweeps.
+        // Tune cadence here. 262144 / 64 = 4096 ticks between sweeps, ~22.5 in-game minutes.
         public static readonly int UpdatesPerDay = 64; // raise (128, 256...) if warn garbage icons appear
         private const int TicksPerDay = 262144;
 
