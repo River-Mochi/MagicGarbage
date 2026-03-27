@@ -1,4 +1,4 @@
-// File: Locale/LocaleEN.cs
+// File: Localization/LocaleEN.cs
 // English (en-US)
 
 namespace MagicGarbage
@@ -67,6 +67,16 @@ namespace MagicGarbage
                     "100% = normal game default.\n"
                 },
 
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchThresholdScale)), "Dispatch threshold" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchThresholdScale)),
+                    "**Raises pickup and request thresholds together.**\n" +
+                    "- **Pickup threshold** reduces small stop-and-go pickups along a truck route.\n" +
+                    "- **Request threshold** reduces how often buildings enter the formal dispatch pipeline.\n\n" +
+                    "**1 = vanilla.** Vanilla uses **20 pickup** and **100 request** internal garbage units.\n" +
+                    "In most game displays, **1,000** internal garbage units is about **1t**.\n" +
+                    "Example: **30x** = pickup **600** and request **3,000**."
+                },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)), "Processing speed" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
                     "**How fast facilities process incoming garbage.**\n" +
@@ -90,6 +100,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
                     "Apply recommended Trash Boss values:\n" +
                     "- Truck load capacity: **200%**\n" +
+                    "- Dispatch threshold: **1x**\n" +
                     "- Processing speed: **200%**\n" +
                     "- Storage capacity: **160%**\n" +
                     "- Facility truck count: **140%**"
@@ -97,7 +108,9 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Game Defaults" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Set all sliders back to **100%** (vanilla values)."
+                    "Set all Trash Boss sliders back to vanilla values.\n" +
+                    "- Percent sliders return to **100%**.\n" +
+                    "- Dispatch threshold returns to **1x**."
                 },
 
                 // About
@@ -127,7 +140,7 @@ namespace MagicGarbage
                     "<Normal vanilla game>\n" +
                     "  * Trash Boss = **[ ✓ ]**\n" +
                     "  * Click **[Game Defaults]**\n" +
-                    "  * All sliders at 100% (vanilla)\n"
+                    "  * All sliders at vanilla values\n"
                 },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), "Instructions" },
 
@@ -153,7 +166,8 @@ namespace MagicGarbage
                     "**Has garbage** = buildings currently holding any garbage.\n" +
                     "**Total** = all garbage-producing buildings in the city.\n" +
                     "**Above request threshold** = current count of **buildings** with enough garbage to create a collect request.\n" +
-                    "In vanilla, the threshold is usually more than <100> garbage units."
+                    "In vanilla, request threshold is **100** internal garbage units.\n" +
+                    "Trash Boss **Dispatch threshold** raises both pickup and request thresholds together."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "Facilities" },
@@ -174,8 +188,8 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Detailed Status to Log" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageStatusLog)),
-                    "Write a more detailed garbage report into **Logs/MagicGarbage.log**.\n" +
-                    "This includes a short legend, threshold values, disabled trucks, and per-facility max worker counts."
+                    "Send a more detailed garbage report into **Logs/MagicGarbage.log**.\n" +
+                    "Includes a short legend, vanilla reference values, per-facility max worker counts."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Open Log" },
@@ -201,6 +215,7 @@ namespace MagicGarbage
                     "Legend:\n" +
                     "- Produced/Processed uses tons per month.\n" +
                     "- Threshold values below use internal garbage units, not tons.\n" +
+                    "- In most game displays, 1,000 internal garbage units is about 1t.\n" +
                     "- Pickup threshold = minimum garbage before a truck will collect from a building.\n" +
                     "- Request threshold = minimum garbage before the game creates or keeps a collect request.\n" +
                     "- Warning threshold = garbage amount where the warning icon can appear above a building.\n" +
@@ -209,7 +224,6 @@ namespace MagicGarbage
                     "- Active request count can temporarily exceed buildings currently above request threshold because older requests are cleaned up later by vanilla revalidation.\n" +
                     "- Facility worker numbers below currently show **max workers** for each facility.\n" +
                     "-----------------------------------------------------------------------------\n"
-
                 },
                 { "MG.Status.Log.Thresholds",
                     "Game Thresholds (internal garbage units): pickup={1:N0}, request={0:N0}, warning icon={2:N0}, hard cap={3:N0}"

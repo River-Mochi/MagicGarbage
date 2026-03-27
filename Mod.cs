@@ -111,8 +111,9 @@ namespace MagicGarbage
             // Main simulation phase
             updateSystem.UpdateAfter<GarbageTruckCapacitySystem>(SystemUpdatePhase.GameSimulation);
             updateSystem.UpdateAfter<GarbageFacilityCapacitySystem>(SystemUpdatePhase.GameSimulation);
+            updateSystem.UpdateAfter<GarbageThresholdSystem>(SystemUpdatePhase.GameSimulation);
 
-            // On-demand Status report (disabled by default; button executes)
+            // On-demand only Status report (disabled by default; button executes)
             updateSystem.UpdateAfter<GarbageStatusSystem>(SystemUpdatePhase.GameSimulation);
 
             updateSystem.UpdateAfter<TotalMagicSystem>(SystemUpdatePhase.GameSimulation);
