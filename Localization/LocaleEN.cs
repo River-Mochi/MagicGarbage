@@ -69,17 +69,18 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchThresholdScale)), "Dispatch threshold" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchThresholdScale)),
-                    "Raises both related thresholds: **request + pickup.**\n" +
-                    "Increasing this could help reduce garbage truck traffic.\n" +
-                    "- **Request threshold** = amount of garbage before a building requests a truck dispatch (typically 100).\n" +
-                    "- **Pickup threshold** = truck is allowed to pick up at this amount (typically a lower 20)\n" +
-                    "       If a truck has room, then buildings with the smaller pick up amount are added to the route.\n" +
-                    "       Low vanilla <20> creates a lot of stop and go added traffic while driving back to the facility.\n" +
+                    "Raises **thresholds** a building needs to get garbage collection. \n" +
+                    "Increasing this could help reduce garbage truck traffic; but too high is also a problem, infrequent garbage collection.\n" +
+                    "- **R: Request threshold** = amount of garbage before a **dispatch request** is made for the building.\n" +
+                    "- **P: Pickup threshold** = minimum on all buildings before a truck can collect from it (this is lower amount than dispatch request)\n" +
+                    "       If a truck has space, then some buildings along the same route to the dispatch building, that have minimum B amount also get collected.\n" +
               
-                    "**1x = vanilla.** (typically <100 request> + <20 pickup>).\n" +
+                    "**1x = vanilla.**\n" +
                     "**1,000** game garbage units is usually **1t**.\n" +
-                    "At **30x** the request threshold is **3,000** and pickup is **600**.\n" +
-                    "vanilla 100 = 0.1t  and 20 = 0.02t"
+                    "Example: at **20x scale** the building's **request threshold** must reach >= **2,000 (2t)** units before a truck gets a <dispatch request>;\n" +
+                    "The truck could also stop at buildings near the <dispatch> building if the truck is not empty and if those others have more than **600 garbage** (20x factor).\n" +
+                    "Balance this with care as too high on this slider, and trucks will not pick up trash fast enough, and you will get Garbage Icons.\n" +
+                    "You might need to increase truck capacity if you increase this Threshold slider a lot because it means houses hold garbage a lot longer before calling for a truck."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)), "Facility storage" },
