@@ -57,7 +57,7 @@ namespace MagicGarbage
 
             if (!setting.TotalMagic && setting.TrashBossEnabled)
             {
-                targetScale = math.clamp(setting.GarbageDispatchThresholdScale, 1, 50);
+                targetScale = math.clamp(setting.GarbageDispatchThresholdScale, 1, 30);
             }
 
             if (targetScale == m_LastScale)

@@ -61,10 +61,17 @@ namespace MagicGarbage
             public readonly int ProducerGarbageGt0;
             public readonly int ProducerOverRequest;
             public readonly int ProducerOverWarning;
+            public readonly int ProducerNearWarning75;
+            public readonly int ProducerAverageGarbage;
+            public readonly int ProducerMedianGarbage;
+            public readonly int ProducerMaxGarbage;
+            public readonly Entity ProducerMaxGarbageEntity;
 
             public readonly int RequestTotal;
             public readonly int RequestPending;
             public readonly int RequestDispatched;
+            public readonly int PendingMaxTargetGarbage;
+            public readonly Entity PendingMaxTargetEntity;
 
             public readonly int TruckTotal;
             public readonly int TruckParked;
@@ -94,9 +101,16 @@ namespace MagicGarbage
                 int producerGarbageGt0,
                 int producerOverRequest,
                 int producerOverWarning,
+                int producerNearWarning75,
+                int producerAverageGarbage,
+                int producerMedianGarbage,
+                int producerMaxGarbage,
+                Entity producerMaxGarbageEntity,
                 int requestTotal,
                 int requestPending,
                 int requestDispatched,
+                int pendingMaxTargetGarbage,
+                Entity pendingMaxTargetEntity,
                 int truckTotal,
                 int truckParked,
                 int truckMoving,
@@ -126,10 +140,17 @@ namespace MagicGarbage
                 ProducerGarbageGt0 = producerGarbageGt0;
                 ProducerOverRequest = producerOverRequest;
                 ProducerOverWarning = producerOverWarning;
+                ProducerNearWarning75 = producerNearWarning75;
+                ProducerAverageGarbage = producerAverageGarbage;
+                ProducerMedianGarbage = producerMedianGarbage;
+                ProducerMaxGarbage = producerMaxGarbage;
+                ProducerMaxGarbageEntity = producerMaxGarbageEntity;
 
                 RequestTotal = requestTotal;
                 RequestPending = requestPending;
                 RequestDispatched = requestDispatched;
+                PendingMaxTargetGarbage = pendingMaxTargetGarbage;
+                PendingMaxTargetEntity = pendingMaxTargetEntity;
 
                 TruckTotal = truckTotal;
                 TruckParked = truckParked;
@@ -177,14 +198,14 @@ namespace MagicGarbage
             {
                 All = new[]
                 {
-                    ComponentType.ReadOnly<GarbageProducer>()
+                    ComponentType.ReadOnly<GarbageProducer>(),
                 },
                 None = new[]
                 {
                     ComponentType.ReadOnly<Deleted>(),
                     ComponentType.ReadOnly<Destroyed>(),
-                    ComponentType.ReadOnly<Temp>()
-                }
+                    ComponentType.ReadOnly<Temp>(),
+                },
             });
 
             m_RequestQuery = GetEntityQuery(new EntityQueryDesc
@@ -192,26 +213,26 @@ namespace MagicGarbage
                 All = new[]
                 {
                     ComponentType.ReadOnly<GarbageCollectionRequest>(),
-                    ComponentType.ReadOnly<ServiceRequest>()
+                    ComponentType.ReadOnly<ServiceRequest>(),
                 },
                 None = new[]
                 {
                     ComponentType.ReadOnly<Deleted>(),
-                    ComponentType.ReadOnly<Temp>()
-                }
+                    ComponentType.ReadOnly<Temp>(),
+                },
             });
 
             m_TruckQuery = GetEntityQuery(new EntityQueryDesc
             {
                 All = new[]
                 {
-                    ComponentType.ReadOnly<Game.Vehicles.GarbageTruck>()
+                    ComponentType.ReadOnly<Game.Vehicles.GarbageTruck>(),
                 },
                 None = new[]
                 {
                     ComponentType.ReadOnly<Deleted>(),
-                    ComponentType.ReadOnly<Temp>()
-                }
+                    ComponentType.ReadOnly<Temp>(),
+                },
             });
 
             Enabled = false;
@@ -268,9 +289,16 @@ namespace MagicGarbage
                     producerGarbageGt0: 0,
                     producerOverRequest: 0,
                     producerOverWarning: 0,
+                    producerNearWarning75: 0,
+                    producerAverageGarbage: 0,
+                    producerMedianGarbage: 0,
+                    producerMaxGarbage: 0,
+                    producerMaxGarbageEntity: Entity.Null,
                     requestTotal: 0,
                     requestPending: 0,
                     requestDispatched: 0,
+                    pendingMaxTargetGarbage: 0,
+                    pendingMaxTargetEntity: Entity.Null,
                     truckTotal: 0,
                     truckParked: 0,
                     truckMoving: 0,
@@ -292,9 +320,24 @@ namespace MagicGarbage
             int producerGarbageGt0 = 0;
             int producerOverRequest = 0;
             int producerOverWarning = 0;
+            int producerNearWarning75 = 0;
+            int producerAverageGarbage = 0;
+            int producerMedianGarbage = 0;
+            int producerMaxGarbage = 0;
+            Entity producerMaxGarbageEntity = Entity.Null;
 
-            foreach (RefRO<GarbageProducer> producer in SystemAPI
+            int nearWarning75Limit = 0;
+            if (haveParams && warningLimit > 0)
+            {
+                nearWarning75Limit = (int)Math.Ceiling(warningLimit * 0.75d);
+            }
+
+            long garbageSum = 0L;
+            List<int> garbageValues = new List<int>(producerTotal > 0 ? producerTotal : 16);
+
+            foreach ((RefRO<GarbageProducer> producer, Entity producerEntity) in SystemAPI
                          .Query<RefRO<GarbageProducer>>()
+                         .WithEntityAccess()
                          .WithNone<Deleted, Destroyed, Temp>())
             {
                 int garbage = producer.ValueRO.m_Garbage;
@@ -302,6 +345,14 @@ namespace MagicGarbage
                 if (garbage > 0)
                 {
                     producerGarbageGt0++;
+                    garbageSum += garbage;
+                    garbageValues.Add(garbage);
+
+                    if (garbage > producerMaxGarbage)
+                    {
+                        producerMaxGarbage = garbage;
+                        producerMaxGarbageEntity = producerEntity;
+                    }
                 }
 
                 if (haveParams && garbage > requestLimit)
@@ -313,13 +364,41 @@ namespace MagicGarbage
                 {
                     producerOverWarning++;
                 }
+
+                if (haveParams && nearWarning75Limit > 0 && garbage >= nearWarning75Limit)
+                {
+                    producerNearWarning75++;
+                }
+            }
+
+            if (producerGarbageGt0 > 0)
+            {
+                producerAverageGarbage = (int)Math.Round(
+                    garbageSum / (double)producerGarbageGt0,
+                    MidpointRounding.AwayFromZero);
+
+                garbageValues.Sort();
+                int middle = garbageValues.Count / 2;
+
+                if ((garbageValues.Count & 1) == 1)
+                {
+                    producerMedianGarbage = garbageValues[middle];
+                }
+                else
+                {
+                    producerMedianGarbage = (int)Math.Round(
+                        (garbageValues[middle - 1] + garbageValues[middle]) / 2.0,
+                        MidpointRounding.AwayFromZero);
+                }
             }
 
             int requestTotal = m_RequestQuery.CalculateEntityCount();
             int requestPending = 0;
             int requestDispatched = 0;
+            int pendingMaxTargetGarbage = 0;
+            Entity pendingMaxTargetEntity = Entity.Null;
 
-            foreach ((RefRO<GarbageCollectionRequest> _, Entity requestEntity) in SystemAPI
+            foreach ((RefRO<GarbageCollectionRequest> request, Entity requestEntity) in SystemAPI
                          .Query<RefRO<GarbageCollectionRequest>>()
                          .WithEntityAccess()
                          .WithNone<Deleted, Temp>())
@@ -339,6 +418,17 @@ namespace MagicGarbage
                 else
                 {
                     requestPending++;
+
+                    Entity target = request.ValueRO.m_Target;
+                    if (target != Entity.Null && SystemAPI.HasComponent<GarbageProducer>(target))
+                    {
+                        int targetGarbage = SystemAPI.GetComponent<GarbageProducer>(target).m_Garbage;
+                        if (targetGarbage > pendingMaxTargetGarbage)
+                        {
+                            pendingMaxTargetGarbage = targetGarbage;
+                            pendingMaxTargetEntity = target;
+                        }
+                    }
                 }
             }
 
@@ -474,9 +564,16 @@ namespace MagicGarbage
                 producerGarbageGt0: producerGarbageGt0,
                 producerOverRequest: producerOverRequest,
                 producerOverWarning: producerOverWarning,
+                producerNearWarning75: producerNearWarning75,
+                producerAverageGarbage: producerAverageGarbage,
+                producerMedianGarbage: producerMedianGarbage,
+                producerMaxGarbage: producerMaxGarbage,
+                producerMaxGarbageEntity: producerMaxGarbageEntity,
                 requestTotal: requestTotal,
                 requestPending: requestPending,
                 requestDispatched: requestDispatched,
+                pendingMaxTargetGarbage: pendingMaxTargetGarbage,
+                pendingMaxTargetEntity: pendingMaxTargetEntity,
                 truckTotal: truckTotal,
                 truckParked: truckParked,
                 truckMoving: truckMoving,
