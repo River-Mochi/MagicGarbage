@@ -477,7 +477,7 @@ def count_markup_angle_brackets(s: str) -> Tuple[int, int]:
 
     Important:
     - <some words> are valid markup CS2 shows as green highlighted text.
-    - Ignore real math/comparison operators on the same line, including:
+    - Ignore true math/comparison operators:
         1 < 2
         10 > 3
         >=
@@ -502,12 +502,21 @@ def count_markup_angle_brackets(s: str) -> Tuple[int, int]:
         left_digit = left.isdigit() if left else False
         right_digit = right.isdigit() if right else False
 
-        # Ignore >=, <=, =>, =< style operator usage if '=' is directly adjacent
-        # (ignoring spaces) on the same line.
-        if left == "=" or right == "=":
+        # Immediate adjacent chars only (not skipping spaces).
+        left_adj = s[i - 1] if i > 0 and s[i - 1] not in "\r\n" else ""
+        right_adj = s[i + 1] if i + 1 < len(s) and s[i + 1] not in "\r\n" else ""
+
+        # Ignore contiguous comparison operators.
+        # Normal operators are:
+        #   <=   (the '<' is before '=')
+        #   >=   (the '>' is before '=')
+        # Also ignore odd reversed forms just in case: =< and =>
+        if ch == "<" and (right_adj == "=" or left_adj == "="):
+            continue
+        if ch == ">" and (right_adj == "=" or left_adj == "="):
             continue
 
-        # Ignore only true numeric comparators.
+        # Ignore only true numeric comparators like 1 < 2 or 10 > 3.
         if left_digit and right_digit:
             continue
 
@@ -517,7 +526,6 @@ def count_markup_angle_brackets(s: str) -> Tuple[int, int]:
             gt += 1
 
     return lt, gt
-
 
 def marker_issues(s: str) -> List[str]:
     """
