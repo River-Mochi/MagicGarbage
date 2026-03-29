@@ -31,7 +31,7 @@ Two ways to handle garbage.
 - Increase means garbage levels can be much higher before the building needs to call for a truck (reduces truck dispatches).
 - May need higher truck capacity to keep balance.
 
-- **Helper buttons**
+**Helper buttons**
 - [Game Defaults] = reset all sliders to 100% (pure vanilla).
 - [Recommended]	  = suggested preset values for easy management.
 
