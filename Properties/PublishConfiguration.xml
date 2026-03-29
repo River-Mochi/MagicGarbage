@@ -47,7 +47,7 @@ Two ways to handle garbage.
 
 ### Compatibility
 - Works with new and existing cities. Enable/Disable any time, safe to remove any time.
-- Does not use Harmony patch or Reflection; lightweight.
+- Does not use Harmony patch, lightweight.
 
 ---
 
