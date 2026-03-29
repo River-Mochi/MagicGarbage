@@ -242,7 +242,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.Requests", "Zgłoszenia odbioru: oczekujące={1:N0}, przydzielone={2:N0}, łącznie={0:N0}" },
                 { "MG.Status.Log.PendingPeak", "Największy oczekujący cel śmieci: {0:N0} ({1:N1}t) przy {2}" },
                 { "MG.Status.Log.Producers", "Budynki: {0:N0} łącznie | {1:N0} ma śmieci | {2:N0} powyżej progu zgłoszenia | {3:N0} na poziomie ostrzeżenia" },
-                { "MG.Status.Log.ProducerGarbageStats", "Śmieci w budynkach (tylko >0): średnia={0:N0} ({1:N1}t) | mediana={2:N0} ({3:N1}t) | max={4:N0} ({5:N1}t) przy {6}" },
+                { "MG.Status.Log.ProducerGarbageStats", "Śmieci w budynkach (tylko niezerowe): średnia={0:N0} ({1:N1}t) | mediana={2:N0} ({3:N1}t) | max={4:N0} ({5:N1}t) przy {6}" },
                 { "MG.Status.Log.NearWarning75", "Budynki blisko ostrzeżenia (>= {1:N0} jednostek / {2:N1}t): {0:N0}" },
                 { "MG.Status.Log.FacilitiesSummary", "Obiekty: {0:N0} łącznie | {1:N0} ciężarówek łącznie | max pracowników {2:N0}" },
                 { "MG.Status.Log.Trucks", "Śmieciarki: {2:N0} w ruchu ({3:N0} wraca) | {1:N0} zaparkowane | {4:N0} wyłączone | {0:N0} łącznie" },

@@ -477,10 +477,14 @@ def count_markup_angle_brackets(s: str) -> Tuple[int, int]:
 
     Important:
     - <some words> are valid markup CS2 shows as green highlighted text.
-    - Only ignore real numeric comparators where BOTH sides look numeric
-      on the same line, such as:
-          1 < 2
-          10 > 3
+    - Ignore real math/comparison operators on the same line, including:
+        1 < 2
+        10 > 3
+        >=
+        <=
+    - Still count real CS2 markup like:
+        <RMB cycles>
+        <dispatch request>
 
     Avoids false positives for numbered instructions like:
         4. <RMB cycles>
@@ -497,6 +501,11 @@ def count_markup_angle_brackets(s: str) -> Tuple[int, int]:
 
         left_digit = left.isdigit() if left else False
         right_digit = right.isdigit() if right else False
+
+        # Ignore >=, <=, =>, =< style operator usage if '=' is directly adjacent
+        # (ignoring spaces) on the same line.
+        if left == "=" or right == "=":
+            continue
 
         # Ignore only true numeric comparators.
         if left_digit and right_digit:

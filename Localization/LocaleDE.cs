@@ -242,7 +242,7 @@ namespace MagicGarbage
         { "MG.Status.Log.Requests", "Abholanforderungen: ausstehend={1:N0}, zugewiesen={2:N0}, gesamt={0:N0}" },
         { "MG.Status.Log.PendingPeak", "Höchstes ausstehendes Ziel mit Müll: {0:N0} ({1:N1}t) bei {2}" },
         { "MG.Status.Log.Producers", "Gebäude: {0:N0} gesamt | {1:N0} haben Müll | {2:N0} über Anforderungsschwelle | {3:N0} auf Warnstufe" },
-        { "MG.Status.Log.ProducerGarbageStats", "Gebäudemüll (nur >0): Ø={0:N0} ({1:N1}t) | Median={2:N0} ({3:N1}t) | Max={4:N0} ({5:N1}t) bei {6}" },
+        { "MG.Status.Log.ProducerGarbageStats", "Gebäudemüll (nur mit Müll): Ø={0:N0} ({1:N1}t) | Median={2:N0} ({3:N1}t) | Max={4:N0} ({5:N1}t) bei {6}" },
         { "MG.Status.Log.NearWarning75", "Gebäude nahe Warnstufe (>= {1:N0} Einheiten / {2:N1}t): {0:N0}" },
         { "MG.Status.Log.FacilitiesSummary", "Anlagen: {0:N0} gesamt | {1:N0} Lkw gesamt | {2:N0} max. Arbeiter" },
         { "MG.Status.Log.Trucks", "Müll-Lkw: {2:N0} unterwegs ({3:N0} auf Rückfahrt) | {1:N0} geparkt | {4:N0} deaktiviert | {0:N0} gesamt" },
