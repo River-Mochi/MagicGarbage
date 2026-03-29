@@ -25,19 +25,18 @@ Handle garbage your way:
 - **Sliders** to control garbage trucks + facilities
 - 🚚 Enhance trucks to reduce traffic and service strain.
 - Great if you still want to see trucks driving around with fewer problems.
+- Advanced users can tweak threshold garbage levels
+  The mod worked fine before this slider, so it's not required.
+  Balance advised: increase in garbage levels (potential warn icons), and reduces number of truck visits.
+  Truck capacity may need an increase to balance more garbage per building each visit.
 
 - **Helper buttons**
 - [Game Defaults] = reset all sliders to 100% (pure vanilla).
 - [Recommended]	  = suggested preset values for easy management.
 
 ### NEW STATUS Report
-- Yearning for more useful data?
-- Real garbage stats helps a Trash Boss figure out what is happening.
+- Real garbage stats help a Trash Boss figure out what is happening.
 - Lean: does not run in-city per frame; runs in Options menu for best performance to not affect gameplay.
-
-#### OPTION 3  NO MAGIC (vanilla)
-- Turn Trash Boss on ✅, Click [Game Defaults]
-- All sliders at 100% = standard gameplay.
 
 #### Support and feedback
 - If the mod helps you, give it a Like, it's free + easy :)
@@ -47,7 +46,7 @@ Handle garbage your way:
 
 ### Compatibility
 - Works with new and existing cities. Enable/Disable any time, safe to remove any time.
-- Does not use Harmony or Reflection; lightweight, compatible.
+- Does not use Harmony patch or Reflection; lightweight.
 
 ---
 
@@ -78,16 +77,15 @@ Handle garbage your way:
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.2.5" />
+	<ModVersion Value="1.2.6" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.5.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-* fix Total Magic state too many log.
-* Trash Boss is now self-manage feature.
-* added new Status report to Options menu.
+    * added adjustable slider for Building threshold levels; triggers when a truck is dispatched 
+    * added more Status log info to Options menu.
 </ChangeLog>
 
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->

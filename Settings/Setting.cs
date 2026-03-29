@@ -130,19 +130,26 @@ namespace MagicGarbage
         [SettingsUISection(ActionsTab, TrashBossGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
         [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
-        public int GarbageFacilityProcessingMultiplier { get; set; } = 100;
+        public int GarbageFacilityStorageMultiplier { get; set; } = 100;
 
         [SettingsUISlider(min = 100, max = 500, step = 10, scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, TrashBossGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
         [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
-        public int GarbageFacilityStorageMultiplier { get; set; } = 100;
+        public int GarbageFacilityProcessingMultiplier { get; set; } = 100;
 
         [SettingsUISlider(min = 100, max = 400, step = 10, scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, TrashBossGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
         [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
         public int GarbageFacilityVehicleMultiplier { get; set; } = 100;
+
+        [SettingsUISlider(min = 1, max = 30, step = 1, scalarMultiplier = 1)]
+        [SettingsUISection(ActionsTab, TrashBossGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnThresholdSliderChanged))]
+        public int GarbageDispatchThresholdScale { get; set; } = 1;
+
 
         // -----------------------------------------
         // TRASH BOSS PRESET BUTTONS
@@ -162,8 +169,9 @@ namespace MagicGarbage
                 }
 
                 GarbageTruckCapacityMultiplier = 200;
+                GarbageDispatchThresholdScale = 5;
+                GarbageFacilityStorageMultiplier = 150;
                 GarbageFacilityProcessingMultiplier = 200;
-                GarbageFacilityStorageMultiplier = 160;
                 GarbageFacilityVehicleMultiplier = 140;
 
                 EnableTuningSystemsOnce();
@@ -185,6 +193,7 @@ namespace MagicGarbage
                 }
 
                 GarbageTruckCapacityMultiplier = 100;
+                GarbageDispatchThresholdScale = 1;
                 GarbageFacilityVehicleMultiplier = 100;
                 GarbageFacilityProcessingMultiplier = 100;
                 GarbageFacilityStorageMultiplier = 100;
@@ -351,6 +360,7 @@ namespace MagicGarbage
             m_TrashBossEnabled = false;
 
             GarbageTruckCapacityMultiplier = 100;
+            GarbageDispatchThresholdScale = 1;
             GarbageFacilityVehicleMultiplier = 100;
             GarbageFacilityProcessingMultiplier = 100;
             GarbageFacilityStorageMultiplier = 100;
@@ -381,6 +391,12 @@ namespace MagicGarbage
                 truckSys.Enabled = true;
             }
 
+            GarbageThresholdSystem thresholdSys = world.GetExistingSystemManaged<GarbageThresholdSystem>();
+            if (thresholdSys != null)
+            {
+                thresholdSys.Enabled = true;
+            }
+
             GarbageFacilityCapacitySystem facSys = world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
             if (facSys != null)
             {
@@ -396,6 +412,20 @@ namespace MagicGarbage
             }
 
             GarbageTruckCapacitySystem sys = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
+            if (sys != null)
+            {
+                sys.Enabled = true;
+            }
+        }
+
+        private void OnThresholdSliderChanged(int _)
+        {
+            if (!TryGetWorld(out World world))
+            {
+                return;
+            }
+
+            GarbageThresholdSystem sys = world.GetExistingSystemManaged<GarbageThresholdSystem>();
             if (sys != null)
             {
                 sys.Enabled = true;
@@ -431,6 +461,12 @@ namespace MagicGarbage
             if (truckSys != null)
             {
                 truckSys.Enabled = true;
+            }
+
+            GarbageThresholdSystem thresholdSys = world.GetExistingSystemManaged<GarbageThresholdSystem>();
+            if (thresholdSys != null)
+            {
+                thresholdSys.Enabled = true;
             }
 
             GarbageFacilityCapacitySystem facSys = world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();

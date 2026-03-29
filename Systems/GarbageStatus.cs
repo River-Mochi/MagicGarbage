@@ -206,7 +206,7 @@ namespace MagicGarbage
         {
             string nowText = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            StringBuilder log = new StringBuilder(1024);
+            StringBuilder log = new StringBuilder(1400);
 
             log.AppendLine(Mod.LF("MG.Status.Log.Title", nowText));
             log.AppendLine(Mod.LF("MG.Status.Log.City", Fmt(snap.City)));
@@ -242,11 +242,33 @@ namespace MagicGarbage
                 snap.RequestDispatched));
 
             log.AppendLine(Mod.LF(
+                "MG.Status.Log.PendingPeak",
+                snap.PendingMaxTargetGarbage,
+                ToTons(snap.PendingMaxTargetGarbage),
+                Fmt(snap.PendingMaxTargetEntity)));
+
+            log.AppendLine(Mod.LF(
                 "MG.Status.Log.Producers",
                 snap.ProducerTotal,
                 snap.ProducerGarbageGt0,
                 snap.ProducerOverRequest,
                 snap.ProducerOverWarning));
+
+            log.AppendLine(Mod.LF(
+                "MG.Status.Log.ProducerGarbageStats",
+                snap.ProducerAverageGarbage,
+                ToTons(snap.ProducerAverageGarbage),
+                snap.ProducerMedianGarbage,
+                ToTons(snap.ProducerMedianGarbage),
+                snap.ProducerMaxGarbage,
+                ToTons(snap.ProducerMaxGarbage),
+                Fmt(snap.ProducerMaxGarbageEntity)));
+
+            log.AppendLine(Mod.LF(
+                "MG.Status.Log.NearWarning75",
+                snap.ProducerNearWarning75,
+                snap.HaveParams ? (int)Math.Ceiling(snap.WarningLimit * 0.75d) : 0,
+                ToTons(snap.HaveParams ? (int)Math.Ceiling(snap.WarningLimit * 0.75d) : 0)));
 
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.FacilitiesSummary",
@@ -309,6 +331,11 @@ namespace MagicGarbage
         private static string Fmt(Entity e)
         {
             return e == Entity.Null ? "Entity.Null" : $"Entity({e.Index}:{e.Version})";
+        }
+
+        private static double ToTons(int garbageUnits)
+        {
+            return garbageUnits / 1000.0;
         }
     }
 }

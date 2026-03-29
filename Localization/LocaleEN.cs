@@ -1,4 +1,4 @@
-// File: Locale/LocaleEN.cs
+// File: Localization/LocaleEN.cs
 // English (en-US)
 
 namespace MagicGarbage
@@ -67,16 +67,16 @@ namespace MagicGarbage
                     "100% = normal game default.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)), "Processing speed" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
-                    "**How fast facilities process incoming garbage.**\n" +
-                    "100% = vanilla processing speed.\n"
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)), "Facility storage capacity" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)), "Facility storage" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
                     "**How much garbage a facility can store.**\n" +
                     "100% = vanilla storage.\n"
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)), "Facility Process speed" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
+                    "**How fast facilities process incoming garbage.**\n" +
+                    "100% = vanilla processing speed.\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)), "Facility Fleet" },
@@ -85,19 +85,37 @@ namespace MagicGarbage
                     "100% = vanilla number of trucks.\n"
                 },
 
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchThresholdScale)), "Building thresholds" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchThresholdScale)),
+                    "**Optional**: changes **thresholds** a building needs for garbage collection. \n" +
+                    "Most <do Not> need this. Mod worked fine before this bonus feature; it's for players who want to experiment.\n"+
+                    "<----------------------------------------------------->\n" +
+                    "- **Dispatch Request threshold (R)** = building garbage level before <truck dispatch request>.\n" +
+                    "- **Pickup threshold (P)** = minimum garbage level before a <truck can collect> from it.\n" +
+                    "**1x** = vanilla (R =100, P=20). Note: **1,000** garbage units is usually **1t**.\n" +
+                    "<---------- Example ---------------------------------->\n\n" +
+                    "At **20x** slider, a building's **R** must reach >= **2,000 (2t)** units before a truck gets a <dispatch request>;\n" +
+                    "Vanilla also has trucks stop at more buildings to/from the <dispatch> building; the eligible buildings at 20x have **400+ garbage** (20 x vanilla P = 20).\n" +
+                    "Balance advised: check detailed log report button while adjusting.\n" +
+                    "If you make threshold high, it means houses hold garbage longer before calling for a truck."
+                },
+
                 // Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Recommended" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
                     "Apply recommended Trash Boss values:\n" +
                     "- Truck load capacity: **200%**\n" +
+                    "- Dispatch threshold: **5x**\n" +
                     "- Processing speed: **200%**\n" +
-                    "- Storage capacity: **160%**\n" +
+                    "- Storage capacity: **150%**\n" +
                     "- Facility truck count: **140%**"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Game Defaults" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Set all sliders back to **100%** (vanilla values)."
+                    "Set all Trash Boss sliders back to vanilla values.\n" +
+                    "- Percent sliders return to **100%**.\n" +
+                    "- Dispatch threshold returns to **1x**."
                 },
 
                 // About
@@ -127,9 +145,9 @@ namespace MagicGarbage
                     "<Normal vanilla game>\n" +
                     "  * Trash Boss = **[ ✓ ]**\n" +
                     "  * Click **[Game Defaults]**\n" +
-                    "  * All sliders at 100% (vanilla)\n"
+                    "  * All sliders at vanilla values\n"
                 },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), "Instructions" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), "Usage" },
 
                 // Status
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Garbage/mo." },
@@ -142,10 +160,11 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Collect requests" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
-                    "**Pending** = active collection requests not yet assigned to a truck or path.\n" +
+                    "**Pending** = active collection requests not currently assigned to a truck or path.\n" +
                     "**Dispatched** = active collection requests already assigned.\n" +
                     "**Total** = counts current **active** request entity (in the garbage pipeline).\n\n" +
-                    "Tech note: This is different from <Above request threshold>. This counts <requests>, not buildings."
+                    "Tech note: This is different from <Above request threshold>. This counts <requests>, not buildings.\n" +
+                    "Some pending requests will be assigned later; some can also clear later if vanilla revalidation decides the target no longer needs service."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusProducers)), "Buildings" },
@@ -153,7 +172,9 @@ namespace MagicGarbage
                     "**Has garbage** = buildings currently holding any garbage.\n" +
                     "**Total** = all garbage-producing buildings in the city.\n" +
                     "**Above request threshold** = current count of **buildings** with enough garbage to create a collect request.\n" +
-                    "In vanilla, the threshold is usually more than <100> garbage units."
+                    "In vanilla, request threshold is **100** internal garbage units.\n" +
+                    "Trash Boss **Dispatch threshold** raises both pickup and request thresholds together.\n" +
+                    "This reduces garbage truck traffic because it lowers the total buildings with <above request threshold> and <dispatched> totals."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "Facilities" },
@@ -174,8 +195,8 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Detailed Status to Log" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageStatusLog)),
-                    "Write a more detailed garbage report into **Logs/MagicGarbage.log**.\n" +
-                    "This includes a short legend, threshold values, disabled trucks, and per-facility max worker counts."
+                    "Send a more detailed garbage report into **Logs/MagicGarbage.log**.\n" +
+                    "Includes a short legend, vanilla reference values, and many extra real city current garbage statistics."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Open Log" },
@@ -201,15 +222,15 @@ namespace MagicGarbage
                     "Legend:\n" +
                     "- Produced/Processed uses tons per month.\n" +
                     "- Threshold values below use internal garbage units, not tons.\n" +
-                    "- Pickup threshold = minimum garbage before a truck will collect from a building.\n" +
-                    "- Request threshold = minimum garbage before the game creates or keeps a collect request.\n" +
-                    "- Warning threshold = garbage amount where the warning icon can appear above a building.\n" +
+                    "- For player-facing, the game converts 1,000 units = 1t.\n" +
+                    "Dispatch threshold slider:\n" +
+                    "  - Pickup threshold = minimum garbage before a truck will collect from a building.\n" +
+                    "  - Request threshold = minimum garbage before the game creates or keeps a collect request.\n" +
+                    "- Warning icon = garbage amount that causes a warning icon to appear above a building.\n" +
                     "- Hard cap = maximum garbage a building can accumulate.\n" +
-                    "- Returning = subset of moving trucks.\n" +
-                    "- Active request count can temporarily exceed buildings currently above request threshold because older requests are cleaned up later by vanilla revalidation.\n" +
-                    "- Facility worker numbers below currently show **max workers** for each facility.\n" +
+                    "- Pending = active requests not currently assigned to a truck or path.\n" +
+                    "- Some pending requests will be assigned later; some can also clear later if vanilla revalidation decides the target no longer needs service.\n" +
                     "-----------------------------------------------------------------------------\n"
-
                 },
                 { "MG.Status.Log.Thresholds",
                     "Game Thresholds (internal garbage units): pickup={1:N0}, request={0:N0}, warning icon={2:N0}, hard cap={3:N0}"
@@ -218,7 +239,10 @@ namespace MagicGarbage
                 { "MG.Status.Log.ThresholdsMissing", "Thresholds: <GarbageParameterData not available>" },
                 { "MG.Status.Log.GarbageProcessing", "Garbage: {0:N0} t/mo | Processing: {1:N0} t/mo" },
                 { "MG.Status.Log.Requests", "Collect Requests: pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
+                { "MG.Status.Log.PendingPeak", "Highest pending target garbage: {0:N0} ({1:N1}t) at {2}" },
                 { "MG.Status.Log.Producers", "Buildings: {0:N0} total | {1:N0} has garbage | {2:N0} above request threshold | {3:N0} warning-level" },
+                { "MG.Status.Log.ProducerGarbageStats", "Building garbage (non-zero only): avg={0:N0} ({1:N1}t) | median={2:N0} ({3:N1}t) | max={4:N0} ({5:N1}t) at {6}" },
+                { "MG.Status.Log.NearWarning75", "Buildings near warning (>= {1:N0} units / {2:N1}t): {0:N0}" },
                 { "MG.Status.Log.FacilitiesSummary", "Facilities: {0:N0} total | {1:N0} trucks total | {2:N0} max workers" },
                 { "MG.Status.Log.Trucks", "Garbage trucks: {2:N0} moving ({3:N0} returning) | {1:N0} parked | {4:N0} disabled | {0:N0} total" },
                 { "MG.Status.Log.FacilitiesHeader", "Facility Summary" },

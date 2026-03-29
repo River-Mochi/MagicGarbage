@@ -1,4 +1,4 @@
-## Internal systems & behaviour
+## Internal systems & behaviour (Internals.md)
 
 | Area / Feature | What it does | Where |
 |---|---|---|
