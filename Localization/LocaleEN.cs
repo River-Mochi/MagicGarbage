@@ -87,18 +87,17 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchThresholdScale)), "Building thresholds" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchThresholdScale)),
-                    "Optional: raises **thresholds** a building needs to get garbage collection. \n" +
-                    "Increasing this could help reduce garbage truck traffic; but too high reduces trips to get garbage.\n" +
-                    "Most people <do not> need to adjust this. Mod worked fine before this option was added, it's just bonus for experiments.\n"+
-                    "--------------------------------\n" +
-                    "- **Dispatch Request threshold (R)** = building garbage needed to call a <truck dispatch request>.\n" +
-                    "- **Pickup threshold (P)** = minimum building garbage before a truck can collect from it.\n" +
-                    "**1x** = vanilla (100 R, 20 P). Note: **1,000** garbage units is usually **1t**.\n" +
-                    "<---------- Example ------------------------------------------>\n\n" +
-                    "At **20x** slider, the building's **R** must reach >= **2,000 (2t)** units before a truck gets a <dispatch request>;\n" +
-                    "Vanilla game also has trucks stop at buildings to/from the <dispatch> building if the truck is not empty; at 20x, buildings en route need more than **400 garbage** (20 x vanilla P = 20).\n" +
-                    "Balance advised: look at the detailed log report button frequently while adjusting this.\n" +
-                    "You might need to increase truck capacity if you make threshold high because it means houses hold garbage a lot longer before calling for a truck."
+                    "**Optional**: changes **thresholds** a building needs for garbage collection. \n" +
+                    "Most <do Not> need this. Mod worked fine before this bonus feature; it's for players who want to experiment.\n"+
+                    "<----------------------------------------------------->\n" +
+                    "- **Dispatch Request threshold (R)** = building garbage level before <truck dispatch request>.\n" +
+                    "- **Pickup threshold (P)** = minimum garbage level before a <truck can collect> from it.\n" +
+                    "**1x** = vanilla (R =100, P=20). Note: **1,000** garbage units is usually **1t**.\n" +
+                    "<---------- Example ---------------------------------->\n\n" +
+                    "At **20x** slider, a building's **R** must reach >= **2,000 (2t)** units before a truck gets a <dispatch request>;\n" +
+                    "Vanilla also has trucks stop at more buildings to/from the <dispatch> building; the eligible buildings at 20x have **400+ garbage** (20 x vanilla P = 20).\n" +
+                    "Balance advised: check detailed log report button while adjusting.\n" +
+                    "If you make threshold high, it means houses hold garbage longer before calling for a truck."
                 },
 
                 // Presets

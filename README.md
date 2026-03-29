@@ -2,57 +2,104 @@
 
 Two ways to handle garbage in **Cities: Skylines II**.
 
+All controls are in the **Options** menu.  
+There is **no in-city UI panel** and **no Harmony**.
+
 ## Option 1 – Total Magic (Auto Clean)
 
 - ✅ **Total Magic ON**
 - All city garbage is removed almost instantly.
 - Garbage warning icons are cleared because there is no garbage.
-- Garbage trucks and buildings become mostly cosmetic.
-- A few trucks may still drive around due to the game’s dispatch logic.
+- Garbage trucks and garbage buildings become mostly cosmetic.
+- A few trucks may still drive around due to vanilla dispatch timing.
 
 Under the hood: a **Burst-compiled ECS job** runs periodically and clears garbage in chunks, so even huge cities stay smooth.
+
+---
 
 ## Option 2 – Trash Boss (Self Manage)
 
 - ✅ **Trash Boss ON**, **Total Magic OFF**
-- Vanilla garbage simulation stays active, but you control these stats:
-  - **Truck load capacity** (100–500%)
-  - **Facility truck count** (100–400%)
-  - **Processing speed** (100–500%)
-  - **Facility storage capacity** (100–500%)
+- Vanilla garbage simulation stays active, but these values can be tuned:
+
+  - **Truck load capacity** (**100–500%**)
+  - **Facility storage** (**100–500%**)
+  - **Facility process speed** (**100–500%**)
+  - **Facility fleet** (**100–400%**)
+  - **Building thresholds** (**1x–30x**) *(optional)*
+
+### Building thresholds
+This optional slider raises both of these together:
+
+- **Dispatch Request threshold**
+- **Pickup threshold**
+
+Higher values can reduce garbage truck traffic, but setting it too high can also reduce pickup frequency too much.
+
+- **1x** = vanilla
+- vanilla thresholds are **100 request** and **20 pickup**
+- as a rough player-facing conversion, **1,000 garbage units ≈ 1t**
+
+Most players do **not** need to change this slider.  
+It is mainly there for testing and for players who want to experiment with reducing garbage truck traffic further.
 
 ### Preset buttons
-- **Game Defaults** – sets all sliders to **100%** (pure vanilla behavior).
+- **Game Defaults** – returns all Trash Boss sliders to vanilla values
+  - Percent sliders back to **100%**
+  - Building thresholds back to **1x**
+
 - **Recommended** – applies:
   - Truck load capacity: **200%**
-  - Processing speed: **200%**
-  - Storage capacity: **160%**
-  - Facility truck count: **140%**
+  - Building thresholds: **5x**
+  - Facility process speed: **200%**
+  - Facility storage: **150%**
+  - Facility fleet: **140%**
 
-> 💡 Total Magic and Trash Boss are mutually exclusive.  
-> Your Trash Boss slider values are saved even while Total Magic is ON.
+> 💡 **Total Magic** and **Trash Boss** are mutually exclusive.  
+> Trash Boss slider values are saved even while **Total Magic** is ON.
+
+---
 
 ## Status panel
 
 The **Status** section in Options shows a live garbage snapshot while the menu is open, including:
 
 - citywide garbage produced vs processed
-- active collection requests
-- buildings with garbage / above request threshold
+- active collect requests
+- buildings with garbage
+- buildings above request threshold
 - garbage facilities, trucks, and max workers
 - truck state summary
 
-You can also:
+### Detailed Status to Log
+The **Detailed Status to Log** button writes a larger report into:
 
-- **Detailed Status to Log** – writes a more detailed report into `Logs/MagicGarbage.log`
-- **Open Log** – opens the log folder
+`Logs/MagicGarbage.log`
+
+This includes things like:
+
+- current live game garbage thresholds
+- pending vs dispatched requests
+- building garbage stats
+- highest pending target garbage
+- near-warning building counts
+- truck summary
+- per-facility summary
+
+### Open Log
+- **Open Log** opens the game log folder.
+
+---
 
 ## Compatibility
 
-- Works with new and existing saves.
-- Safe to disable or remove.
-- Uses ECS + Burst and slider-driven tuning — **no Harmony**
-- Designed to be lightweight and resilient to game updates.
+- Works with new and existing saves
+- Safe to disable or remove
+- Uses **ECS + Burst** and slider-driven tuning
+- **No Harmony**
+- Designed to be lightweight and resilient to game updates
+
+---
 
 ## Credits
 
@@ -61,3 +108,4 @@ You can also:
 - yenyang: code review, tech advice
 - Necko1996: testing and feedback
 - gagaxm: thumbnail image
+-
