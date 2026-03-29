@@ -85,8 +85,8 @@ Handle garbage your way:
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-* added a Dispatch 
-* added new Status report to Options menu.
+* added slider to adjust threshold levels for buildings which controls when they call trucks for pickup.
+* added more Status log info to Options menu.
 </ChangeLog>
 
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->

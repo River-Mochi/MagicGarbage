@@ -249,10 +249,6 @@ namespace MagicGarbage
                 { "MG.Status.Log.FacilitiesHeader", "設施摘要" },
                 { "MG.Status.Log.FacilityLine", "- 設施 {0}：移動中={2:N0}、已停放={3:N0}、總計={1:N0}、最大工人人數={4:N0}" },
 
-
-
-
-
             };
         }
 
