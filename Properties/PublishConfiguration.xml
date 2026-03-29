@@ -4,31 +4,32 @@
 	<!--Name of the mod to display to players-->
 	<DisplayName Value="Magic Garbage + Trash Boss" />
 	<!--Short description of the mod-->
-	<ShortDescription Value="Auto-Clean garbage OR use Trash Boss = Self manage garbage trucks + buildings" />
+	<ShortDescription Value="Auto-Clean garbage OR use Trash Boss = Self manage trucks + facilities" />
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
 	<LongDescription>
 **Magic Garbage + Trash Boss**
 
-Handle garbage your way:
-
+Two ways to handle garbage.
 ---
 
 ### OPTION 1  AUTO CLEAN
-- ✅ Total Magic On, removes all garbage.
-- Garbage icons clear because there is no garbage.
+- ✅ **Total Magic On**
+- Removes all garbage automatically.
+- Garbage icons clear.
 - Trucks and facilities become mostly cosmetic.
-- Mod does not stop Garbage system, it's just very fast cleanup.
+- Mod does not stop Garbage system; cleanup is just very fast.
 
 ### OPTION 2  SELF MANAGE
-- ✅ Trash Boss On; manage how you like.
-- **Sliders** to control garbage trucks + facilities
-- 🚚 Enhance trucks to reduce traffic and service strain.
-- Great if you still want to see trucks driving around with fewer problems.
-- Advanced users can tweak threshold garbage levels
-  The mod worked fine before this slider, so it's not required.
-  Balance advised: increase in garbage levels (potential warn icons), and reduces number of truck visits.
-  Truck capacity may need an increase to balance more garbage per building each visit.
+- ✅ **Trash Boss On**
+- Keep vanilla garbage gameplay, but tune key garbage values.
+- Adjust garbage trucks and facilities to reduce traffic and service strain.
+- 🚚 Great for players who still want to see trucks driving around, with fewer problems.
+
+**Threshold slider**
+- Advanced optional setting (mod worked fine before this new slider so it's bonus for power users)
+- Increase means garbage levels can be much higher before the building needs to call for a truck (reduces truck dispatches).
+- May need higher truck capacity to keep balance.
 
 - **Helper buttons**
 - [Game Defaults] = reset all sliders to 100% (pure vanilla).
@@ -84,8 +85,8 @@ Handle garbage your way:
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-    * added adjustable slider for Building threshold levels; triggers when a truck is dispatched 
-    * added more Status log info to Options menu.
+* added optional Building threshold slider; triggers when a truck is dispatched 
+* added more detailed Status log info to mod Options menu.
 </ChangeLog>
 
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
