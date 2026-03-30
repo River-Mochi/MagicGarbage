@@ -8,62 +8,62 @@
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
 	<LongDescription>
-**Magic Garbage + Trash Boss**
+        **Magic Garbage + Trash Boss**
 
-Two ways to handle garbage.
----
+        Two ways to handle garbage.
+        ---
 
-### OPTION 1  AUTO CLEAN
-- ✅ **Total Magic On**
-- Removes all garbage automatically.
-- Garbage icons clear.
-- Trucks and facilities become mostly cosmetic.
-- Mod does not stop Garbage system; cleanup is just very fast.
+        ### OPTION 1  AUTO CLEAN
+        - ✅ **Total Magic On**
+        - Removes all garbage automatically.
+        - Garbage icons clear.
+        - Trucks and facilities become mostly cosmetic.
+        - Mod does not stop Garbage system; cleanup is just very fast.
 
-### OPTION 2  SELF MANAGE
-- ✅ **Trash Boss On**
-- Keep vanilla garbage gameplay, but tune key garbage values.
-- Adjust garbage trucks and facilities to reduce traffic and service strain.
-- 🚚 Great for players who still want to see trucks driving around, with fewer problems.
+        ### OPTION 2  SELF MANAGE
+        - ✅ **Trash Boss On**
+        - Keep vanilla garbage gameplay, but tune key garbage values.
+        - Adjust garbage trucks and facilities to reduce traffic and service strain.
+        - 🚚 Great for players who still want to see trucks driving around, with fewer problems.
 
-**Threshold slider**
-- Advanced optional setting (mod worked fine before this new slider so it's bonus for power users)
-- Increase means garbage levels can be much higher before the building needs to call for a truck (reduces truck dispatches).
-- May need higher truck capacity to keep balance.
+        **Threshold slider**
+        - Advanced option (mod worked fine before this slider; it's bonus for power users)
+        - Increase means garbage levels can be much higher before the building calls for a truck (reduce truck dispatches). May need higher truck capacity.
+        Balance advised: use status log button to check details while tweaking this. Allow city to run a few hours between threshold changes to get better analysis.
 
-**Helper buttons**
-- [Game Defaults] = reset all sliders to 100% (pure vanilla).
-- [Recommended]	  = suggested preset values for easy management.
+        **Helper buttons**
+        - [Game Defaults] = reset all sliders to 100% (pure vanilla).
+        - [Recommended]	  = suggested preset values for easy management.
 
-### NEW STATUS Report
-- Real garbage stats help a Trash Boss figure out what is happening.
-- Lean: does not run in-city per frame; runs in Options menu for best performance to not affect gameplay.
+        ### NEW STATUS Report
+        - Real garbage stats help a Trash Boss figure out what is happening.
+        - Lean: status does not run in-city per frame; runs in Options menu for best performance to not affect gameplay.
 
-#### Support and feedback
-- If the mod helps you, give it a Like, it's free + easy :)
-- Feedback on: Github, Discord, etc., links on this page.
+        #### Support and feedback
+        - If the mod helps you, give it a Like, it's free + easy :)
+        - Feedback on: Github, Discord, etc., links on this page.
 
----
+        ---
 
-### Compatibility
-- Works with new and existing cities. Enable/Disable any time, safe to remove any time.
-- Does not use Harmony patch, lightweight.
+        ### Compatibility
+        - Works with new and existing cities. Enable/Disable any time, safe to remove any time.
+        - Does not use Harmony patch, lightweight.
 
----
+        ---
 
-### Credits
-- RiverMochi - author
-- Thanks to Wayz for inspiration on the original Magical Garbage mod
-- yenyang - code review, tech advice
-- Necko1996 - testing and screenshots
-- gagaxm - truck image
+        ### Credits
+        - RiverMochi - author
+        - Thanks to Wayz for inspiration on the original Magical Garbage mod
+        - yenyang - code review, tech advice
+        - Necko1996 - testing and screenshots
+        - gagaxm - truck image
 
-#### 11 languages
-- English, Français French, Deutsch German, Español Spanish, Italiano Italian
-- 日本語 Japanese, 한국어 Korean, Português Brasil, Polski Polish
-- 简体中文 Simplified Chinese, 繁體中文 Traditional Chinese
+        #### 11 languages
+        - English, Français French, Deutsch German, Español Spanish, Italiano Italian
+        - 日本語 Japanese, 한국어 Korean, Português Brasil, Polski Polish
+        - 简体中文 Simplified Chinese, 繁體中文 Traditional Chinese
 
-</LongDescription>
+    </LongDescription>
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/thumbnail-garbageTruck.jpg" />
 	<!--Screenshot, can be set multiple times-->
