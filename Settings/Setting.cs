@@ -40,6 +40,14 @@ namespace MagicGarbage
         private const string StatusButtonsRow = "StatusButtonsRow";
         private const string AboutLinksRow = "AboutLinksRow";
 
+        // ---- THRESHOLD DEFAULTS ----
+        private const int VanillaDispatchRequestThreshold = 100;
+        private const int VanillaPickupThreshold = 20;
+        private const int MaxDispatchRequestThreshold = 3000;
+        private const int MaxPickupThreshold = 600;
+        private const int RecommendedDispatchRequestThreshold = 1000;
+        private const int RecommendedPickupThreshold = 200;
+
         // ---- EXTERNAL LINKS ----
         private const string UrlParadox =
             "https://mods.paradoxplaza.com/authors/River-mochi/cities_skylines_2?games=cities_skylines_2&orderBy=desc&sortBy=best&time=alltime";
@@ -50,6 +58,10 @@ namespace MagicGarbage
         // ---- BACKING FIELDS ----
         private bool m_TotalMagic = true;
         private bool m_TrashBossEnabled;
+        private bool m_PowerUserOptions;
+        private int m_GarbageDispatchRequestThreshold = VanillaDispatchRequestThreshold;
+        private int m_GarbagePickupThreshold = VanillaPickupThreshold;
+        private bool ShowPowerUserThresholdSliders => m_TrashBossEnabled && m_PowerUserOptions;
 
         public Setting(IMod mod) : base(mod)
         {
@@ -144,12 +156,62 @@ namespace MagicGarbage
         [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
         public int GarbageFacilityVehicleMultiplier { get; set; } = 100;
 
-        [SettingsUISlider(min = 1, max = 30, step = 1, scalarMultiplier = 1)]
         [SettingsUISection(ActionsTab, TrashBossGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
-        [SettingsUISetter(typeof(Setting), nameof(OnThresholdSliderChanged))]
-        public int GarbageDispatchThresholdScale { get; set; } = 1;
+        [SettingsUISetter(typeof(Setting), nameof(OnThresholdOptionsChanged))]
+        public bool PowerUserOptions
+        {
+            get => m_PowerUserOptions;
+            set
+            {
+                if (m_PowerUserOptions == value)
+                {
+                    return;
+                }
 
+                m_PowerUserOptions = value;
+                Apply();
+            }
+        }
+
+        [SettingsUISlider(min = VanillaDispatchRequestThreshold, max = MaxDispatchRequestThreshold, step = 100, scalarMultiplier = 1)]
+        [SettingsUISection(ActionsTab, TrashBossGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUserThresholdSliders), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnThresholdSliderChanged))]
+        public int GarbageDispatchRequestThreshold
+        {
+            get => m_GarbageDispatchRequestThreshold;
+            set
+            {
+                int clamped = ClampInt(value, VanillaDispatchRequestThreshold, MaxDispatchRequestThreshold);
+                m_GarbageDispatchRequestThreshold = clamped;
+
+                if (m_GarbagePickupThreshold > m_GarbageDispatchRequestThreshold)
+                {
+                    m_GarbagePickupThreshold = m_GarbageDispatchRequestThreshold;
+                }
+            }
+        }
+
+        [SettingsUISlider(min = VanillaPickupThreshold, max = MaxPickupThreshold, step = 20, scalarMultiplier = 1)]
+        [SettingsUISection(ActionsTab, TrashBossGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUserThresholdSliders), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnThresholdSliderChanged))]
+        public int GarbagePickupThreshold
+        {
+            get => m_GarbagePickupThreshold;
+            set
+            {
+                int clamped = ClampInt(value, VanillaPickupThreshold, MaxPickupThreshold);
+
+                if (clamped > m_GarbageDispatchRequestThreshold)
+                {
+                    clamped = m_GarbageDispatchRequestThreshold;
+                }
+
+                m_GarbagePickupThreshold = clamped;
+            }
+        }
 
         // -----------------------------------------
         // TRASH BOSS PRESET BUTTONS
@@ -169,10 +231,13 @@ namespace MagicGarbage
                 }
 
                 GarbageTruckCapacityMultiplier = 200;
-                GarbageDispatchThresholdScale = 5;
                 GarbageFacilityStorageMultiplier = 150;
                 GarbageFacilityProcessingMultiplier = 200;
                 GarbageFacilityVehicleMultiplier = 140;
+
+                PowerUserOptions = true;
+                GarbageDispatchRequestThreshold = RecommendedDispatchRequestThreshold;
+                GarbagePickupThreshold = RecommendedPickupThreshold;
 
                 EnableTuningSystemsOnce();
                 Apply();
@@ -193,10 +258,13 @@ namespace MagicGarbage
                 }
 
                 GarbageTruckCapacityMultiplier = 100;
-                GarbageDispatchThresholdScale = 1;
                 GarbageFacilityVehicleMultiplier = 100;
                 GarbageFacilityProcessingMultiplier = 100;
                 GarbageFacilityStorageMultiplier = 100;
+
+                PowerUserOptions = false;
+                GarbageDispatchRequestThreshold = VanillaDispatchRequestThreshold;
+                GarbagePickupThreshold = VanillaPickupThreshold;
 
                 EnableTuningSystemsOnce();
                 Apply();
@@ -358,12 +426,14 @@ namespace MagicGarbage
         {
             m_TotalMagic = true;
             m_TrashBossEnabled = false;
+            m_PowerUserOptions = false;
 
             GarbageTruckCapacityMultiplier = 100;
-            GarbageDispatchThresholdScale = 1;
             GarbageFacilityVehicleMultiplier = 100;
             GarbageFacilityProcessingMultiplier = 100;
             GarbageFacilityStorageMultiplier = 100;
+            GarbageDispatchRequestThreshold = VanillaDispatchRequestThreshold;
+            GarbagePickupThreshold = VanillaPickupThreshold;
 
             GarbageStatus.ResetUi();
         }
@@ -412,6 +482,20 @@ namespace MagicGarbage
             }
 
             GarbageTruckCapacitySystem sys = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
+            if (sys != null)
+            {
+                sys.Enabled = true;
+            }
+        }
+
+        private void OnThresholdOptionsChanged(bool _)
+        {
+            if (!TryGetWorld(out World world))
+            {
+                return;
+            }
+
+            GarbageThresholdSystem sys = world.GetExistingSystemManaged<GarbageThresholdSystem>();
             if (sys != null)
             {
                 sys.Enabled = true;
@@ -474,6 +558,21 @@ namespace MagicGarbage
             {
                 facSys.Enabled = true;
             }
+        }
+
+        private static int ClampInt(int value, int min, int max)
+        {
+            if (value < min)
+            {
+                return min;
+            }
+
+            if (value > max)
+            {
+                return max;
+            }
+
+            return value;
         }
 
         private static void OpenLogFolder()

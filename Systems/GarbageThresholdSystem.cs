@@ -1,6 +1,6 @@
 // File: Systems/GarbageThresholdSystem.cs
-// Trash Boss: scales pickup + request thresholds together.
-// Total Magic (or Trash Boss OFF): reverts to 1x once, then sleeps.
+// Trash Boss: adjusts pickup + request thresholds.
+// Total Magic, Trash Boss OFF, or Power User Options OFF: reverts to vanilla once, then sleeps.
 
 namespace MagicGarbage
 {
@@ -11,13 +11,17 @@ namespace MagicGarbage
     using Unity.Mathematics;
 
     /// <summary>
-    /// Adjusts GarbageParameterData pickup/request thresholds together according
-    /// to the Trash Boss Dispatch Threshold slider.
+    /// Adjusts GarbageParameterData request/pickup thresholds according to
+    /// the Power User threshold sliders.
     /// Uses the live singleton as the source of truth for the base values.
     /// </summary>
     public partial class GarbageThresholdSystem : GameSystemBase
     {
-        private int m_LastScale = 1;
+        private const int MinDispatchRequestThreshold = 100;
+        private const int MaxDispatchRequestThreshold = 3000;
+        private const int MinPickupThreshold = 20;
+        private const int MaxPickupThreshold = 600;
+
         private bool m_HaveBase;
         private int m_BaseCollectLimit;
         private int m_BaseRequestLimit;
@@ -34,7 +38,6 @@ namespace MagicGarbage
         {
             base.OnGameLoadingComplete(purpose, mode);
 
-            m_LastScale = 1;
             m_HaveBase = false;
             m_BaseCollectLimit = 0;
             m_BaseRequestLimit = 0;
@@ -42,7 +45,7 @@ namespace MagicGarbage
             Enabled = true;
 
 #if DEBUG
-            Mod.Log.Info("[MG] [Trash Boss] GarbageParameterThresholdSystem: OnGameLoadingComplete -> Enabled");
+            Mod.Log.Info("[MG] [Trash Boss] GarbageThresholdSystem: OnGameLoadingComplete -> Enabled");
 #endif
         }
 
@@ -50,22 +53,6 @@ namespace MagicGarbage
         {
             if (!Mod.TryGetSetting(out Setting setting))
             {
-                return;
-            }
-
-            int targetScale = 1;
-
-            if (!setting.TotalMagic && setting.TrashBossEnabled)
-            {
-                targetScale = math.clamp(setting.GarbageDispatchThresholdScale, 1, 30);
-            }
-
-            if (targetScale == m_LastScale)
-            {
-#if DEBUG
-                Mod.Log.Info("[MG] [Trash Boss] Threshold sleep");
-#endif
-                Enabled = false;
                 return;
             }
 
@@ -78,36 +65,53 @@ namespace MagicGarbage
 
             if (!m_HaveBase)
             {
-                if (m_LastScale == 1)
-                {
-                    m_BaseCollectLimit = math.max(1, data.m_CollectionGarbageLimit);
-                    m_BaseRequestLimit = math.max(1, data.m_RequestGarbageLimit);
-                }
-                else
-                {
-                    m_BaseCollectLimit = math.max(1, (int)math.round(data.m_CollectionGarbageLimit / (float)m_LastScale));
-                    m_BaseRequestLimit = math.max(1, (int)math.round(data.m_RequestGarbageLimit / (float)m_LastScale));
-                }
-
+                m_BaseCollectLimit = math.max(1, data.m_CollectionGarbageLimit);
+                m_BaseRequestLimit = math.max(1, data.m_RequestGarbageLimit);
                 m_HaveBase = true;
             }
 
-            int oldCollect = math.max(1, m_BaseCollectLimit * m_LastScale);
-            int oldRequest = math.max(1, m_BaseRequestLimit * m_LastScale);
+            int targetCollect = m_BaseCollectLimit;
+            int targetRequest = m_BaseRequestLimit;
 
-            int newCollect = math.max(1, m_BaseCollectLimit * targetScale);
-            int newRequest = math.max(1, m_BaseRequestLimit * targetScale);
+            if (!setting.TotalMagic && setting.TrashBossEnabled && setting.PowerUserOptions)
+            {
+                targetRequest = math.clamp(
+                    setting.GarbageDispatchRequestThreshold,
+                    MinDispatchRequestThreshold,
+                    MaxDispatchRequestThreshold);
 
-            data.m_CollectionGarbageLimit = newCollect;
-            data.m_RequestGarbageLimit = newRequest;
+                targetCollect = math.clamp(
+                    setting.GarbagePickupThreshold,
+                    MinPickupThreshold,
+                    MaxPickupThreshold);
+
+                if (targetCollect > targetRequest)
+                {
+                    targetCollect = targetRequest;
+                }
+            }
+
+            if (data.m_CollectionGarbageLimit == targetCollect &&
+                data.m_RequestGarbageLimit == targetRequest)
+            {
+#if DEBUG
+                Mod.Log.Info("[MG] [Trash Boss] Threshold sleep");
+#endif
+                Enabled = false;
+                return;
+            }
+
+            int oldCollect = data.m_CollectionGarbageLimit;
+            int oldRequest = data.m_RequestGarbageLimit;
+
+            data.m_CollectionGarbageLimit = targetCollect;
+            data.m_RequestGarbageLimit = targetRequest;
 
 #if DEBUG
             Mod.Log.Info(
-                $"[MG] Threshold apply: scale {m_LastScale}x->{targetScale}x, " +
-                $"pickup {oldCollect}->{newCollect}, request {oldRequest}->{newRequest}");
+                $"[MG] Threshold apply: pickup {oldCollect}->{targetCollect}, request {oldRequest}->{targetRequest}");
 #endif
 
-            m_LastScale = targetScale;
             Enabled = false;
         }
     }

@@ -38,6 +38,18 @@
 	<!-- CS2 toolchain -->
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.props" />
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.targets" />
+	<ItemGroup>
+	  <Compile Remove="Localization\LocaleDE.cs" />
+	  <Compile Remove="Localization\LocaleES.cs" />
+	  <Compile Remove="Localization\LocaleFR.cs" />
+	  <Compile Remove="Localization\LocaleIT.cs" />
+	  <Compile Remove="Localization\LocaleJA.cs" />
+	  <Compile Remove="Localization\LocaleKO.cs" />
+	  <Compile Remove="Localization\LocalePL.cs" />
+	  <Compile Remove="Localization\LocalePT_BR.cs" />
+	  <Compile Remove="Localization\LocaleZH_CN.cs" />
+	  <Compile Remove="Localization\LocaleZH_HANT.cs" />
+	</ItemGroup>
 
 	<!-- Core game + Colossal / Unity references used by this mod -->
 	<ItemGroup>
@@ -102,9 +114,7 @@
 
 <!-- AUTO UPDATE PublishConfiguration ModVersion using csproj Version
      remove BOM, make EOL=CRLF, and left-align text -->
-<Target Name="UpdatePublishConfigVersion"
-        BeforeTargets="Build"
-        Condition="Exists('$(MSBuildProjectDirectory)\Scripts\Update-PublishConfig.ps1') AND Exists('$(MSBuildProjectDirectory)\$(PublishConfigurationPath)')">
+<Target Name="UpdatePublishConfigVersion" BeforeTargets="Build" Condition="Exists('$(MSBuildProjectDirectory)\Scripts\Update-PublishConfig.ps1') AND Exists('$(MSBuildProjectDirectory)\$(PublishConfigurationPath)')">
 
     <Message Text="MagicGarbage PublishConfig: syncing ModVersion + normalizing EOL/BOM + left-align blocks..." Importance="high" />
 

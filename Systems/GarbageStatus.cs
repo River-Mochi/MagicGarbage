@@ -198,7 +198,8 @@ namespace MagicGarbage
             return Mod.LF(
                 "MG.Status.Row.FacilitiesSummary",
                 snap.FacilityTotal,
-                snap.FacilityTruckTotal,
+                snap.FacilityGarbageTruckTotal,
+                snap.FacilityDumpTruckTotal,
                 snap.FacilityMaxWorkers);
         }
 
@@ -273,7 +274,9 @@ namespace MagicGarbage
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.FacilitiesSummary",
                 snap.FacilityTotal,
-                snap.FacilityTruckTotal,
+                snap.FacilityGarbageTruckTotal,
+                snap.FacilityDumpTruckTotal,
+                snap.FacilityDumpTruckMoving,
                 snap.FacilityMaxWorkers));
 
             log.AppendLine(Mod.LF(
@@ -295,9 +298,11 @@ namespace MagicGarbage
                     log.AppendLine(Mod.LF(
                         "MG.Status.Log.FacilityLine",
                         Fmt(f.Facility),
-                        f.Total,
-                        f.Moving,
-                        f.Parked,
+                        f.GarbageTruckTotal,
+                        f.GarbageTruckMoving,
+                        f.GarbageTruckParked,
+                        f.DumpTruckTotal,
+                        f.DumpTruckMoving,
                         f.MaxWorkers));
                 }
             }

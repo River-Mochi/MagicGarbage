@@ -25,17 +25,28 @@ namespace MagicGarbage
         public readonly struct FacilityEntry
         {
             public readonly Entity Facility;
-            public readonly int Total;
-            public readonly int Moving;
-            public readonly int Parked;
+            public readonly int GarbageTruckTotal;
+            public readonly int GarbageTruckMoving;
+            public readonly int GarbageTruckParked;
+            public readonly int DumpTruckTotal;
+            public readonly int DumpTruckMoving;
             public readonly int MaxWorkers;
 
-            public FacilityEntry(Entity facility, int total, int moving, int parked, int maxWorkers)
+            public FacilityEntry(
+                Entity facility,
+                int garbageTruckTotal,
+                int garbageTruckMoving,
+                int garbageTruckParked,
+                int dumpTruckTotal,
+                int dumpTruckMoving,
+                int maxWorkers)
             {
                 Facility = facility;
-                Total = total;
-                Moving = moving;
-                Parked = parked;
+                GarbageTruckTotal = garbageTruckTotal;
+                GarbageTruckMoving = garbageTruckMoving;
+                GarbageTruckParked = garbageTruckParked;
+                DumpTruckTotal = dumpTruckTotal;
+                DumpTruckMoving = dumpTruckMoving;
                 MaxWorkers = maxWorkers;
             }
         }
@@ -80,7 +91,9 @@ namespace MagicGarbage
             public readonly int TruckDisabled;
 
             public readonly int FacilityTotal;
-            public readonly int FacilityTruckTotal;
+            public readonly int FacilityGarbageTruckTotal;
+            public readonly int FacilityDumpTruckTotal;
+            public readonly int FacilityDumpTruckMoving;
             public readonly int FacilityMaxWorkers;
 
             public readonly FacilityEntry[] Facilities;
@@ -117,7 +130,9 @@ namespace MagicGarbage
                 int truckReturning,
                 int truckDisabled,
                 int facilityTotal,
-                int facilityTruckTotal,
+                int facilityGarbageTruckTotal,
+                int facilityDumpTruckTotal,
+                int facilityDumpTruckMoving,
                 int facilityMaxWorkers,
                 FacilityEntry[] facilities)
             {
@@ -159,24 +174,12 @@ namespace MagicGarbage
                 TruckDisabled = truckDisabled;
 
                 FacilityTotal = facilityTotal;
-                FacilityTruckTotal = facilityTruckTotal;
+                FacilityGarbageTruckTotal = facilityGarbageTruckTotal;
+                FacilityDumpTruckTotal = facilityDumpTruckTotal;
+                FacilityDumpTruckMoving = facilityDumpTruckMoving;
                 FacilityMaxWorkers = facilityMaxWorkers;
 
                 Facilities = facilities;
-            }
-        }
-
-        private readonly struct FacilityCounts
-        {
-            public readonly int Total;
-            public readonly int Moving;
-            public readonly int Parked;
-
-            public FacilityCounts(int total, int moving, int parked)
-            {
-                Total = total;
-                Moving = moving;
-                Parked = parked;
             }
         }
 
@@ -305,12 +308,15 @@ namespace MagicGarbage
                     truckReturning: 0,
                     truckDisabled: 0,
                     facilityTotal: 0,
-                    facilityTruckTotal: 0,
+                    facilityGarbageTruckTotal: 0,
+                    facilityDumpTruckTotal: 0,
+                    facilityDumpTruckMoving: 0,
                     facilityMaxWorkers: 0,
                     facilities: Array.Empty<FacilityEntry>());
             }
 
             ComponentLookup<WorkProvider> workProviderLookup = GetComponentLookup<WorkProvider>(true);
+            BufferLookup<OwnedVehicle> ownedVehicleLookup = GetBufferLookup<OwnedVehicle>(true);
 
             long garbageRaw = m_GarbageAccumulationSystem != null
                 ? m_GarbageAccumulationSystem.garbageAccumulation
@@ -437,9 +443,6 @@ namespace MagicGarbage
             int truckReturning = 0;
             int truckDisabled = 0;
 
-            Dictionary<Entity, FacilityCounts> facilityStats =
-                new Dictionary<Entity, FacilityCounts>(32);
-
             foreach ((RefRO<Game.Vehicles.GarbageTruck> truckRef, Entity truckEntity) in SystemAPI
                          .Query<RefRO<Game.Vehicles.GarbageTruck>>()
                          .WithEntityAccess()
@@ -462,43 +465,16 @@ namespace MagicGarbage
                 {
                     truckDisabled++;
                 }
-
-                if (!SystemAPI.HasComponent<Owner>(truckEntity))
-                {
-                    continue;
-                }
-
-                Entity owner = SystemAPI.GetComponent<Owner>(truckEntity).m_Owner;
-                if (owner == Entity.Null)
-                {
-                    continue;
-                }
-
-                if (!SystemAPI.HasComponent<Game.Buildings.GarbageFacility>(owner))
-                {
-                    continue;
-                }
-
-                FacilityCounts counts;
-                if (!facilityStats.TryGetValue(owner, out counts))
-                {
-                    counts = new FacilityCounts(0, 0, 0);
-                }
-
-                int nextTotal = counts.Total + 1;
-                int nextMoving = counts.Moving + (isParked ? 0 : 1);
-                int nextParked = counts.Parked + (isParked ? 1 : 0);
-
-                facilityStats[owner] = new FacilityCounts(nextTotal, nextMoving, nextParked);
             }
 
             long processingRaw = 0L;
             int facilityTotal = 0;
-            int facilityTruckTotal = 0;
+            int facilityGarbageTruckTotal = 0;
+            int facilityDumpTruckTotal = 0;
+            int facilityDumpTruckMoving = 0;
             int facilityMaxWorkers = 0;
 
-            List<FacilityEntry> facilityEntries =
-                new List<FacilityEntry>(facilityStats.Count > 0 ? facilityStats.Count : 8);
+            List<FacilityEntry> facilityEntries = new List<FacilityEntry>(16);
 
             foreach ((RefRO<Game.Buildings.GarbageFacility> facility, Entity facilityEntity) in SystemAPI
                          .Query<RefRO<Game.Buildings.GarbageFacility>>()
@@ -516,14 +492,71 @@ namespace MagicGarbage
                     maxWorkers = workProviderLookup[facilityEntity].m_MaxWorkers;
                 }
 
-                FacilityCounts counts;
-                if (!facilityStats.TryGetValue(facilityEntity, out counts))
+                int garbageTruckTotal = 0;
+                int garbageTruckMoving = 0;
+                int garbageTruckParked = 0;
+                int dumpTruckTotal = 0;
+                int dumpTruckMoving = 0;
+
+                if (ownedVehicleLookup.HasBuffer(facilityEntity))
                 {
-                    counts = new FacilityCounts(0, 0, 0);
+                    DynamicBuffer<OwnedVehicle> ownedVehicles = ownedVehicleLookup[facilityEntity];
+
+                    for (int i = 0; i < ownedVehicles.Length; i++)
+                    {
+                        Entity vehicle = ownedVehicles[i].m_Vehicle;
+                        if (vehicle == Entity.Null || !EntityManager.Exists(vehicle))
+                        {
+                            continue;
+                        }
+
+                        if (SystemAPI.HasComponent<Deleted>(vehicle) || SystemAPI.HasComponent<Temp>(vehicle))
+                        {
+                            continue;
+                        }
+
+                        if (SystemAPI.HasComponent<Game.Vehicles.GarbageTruck>(vehicle))
+                        {
+                            bool isParked = SystemAPI.HasComponent<ParkedCar>(vehicle);
+                            garbageTruckTotal++;
+
+                            if (isParked)
+                            {
+                                garbageTruckParked++;
+                            }
+                            else
+                            {
+                                garbageTruckMoving++;
+                            }
+
+                            continue;
+                        }
+
+                        if (SystemAPI.HasComponent<Game.Vehicles.DeliveryTruck>(vehicle))
+                        {
+                            Game.Vehicles.DeliveryTruck deliveryTruck =
+                                SystemAPI.GetComponent<Game.Vehicles.DeliveryTruck>(vehicle);
+
+                            if ((deliveryTruck.m_State & DeliveryTruckFlags.DummyTraffic) != 0)
+                            {
+                                continue;
+                            }
+
+                            bool isParked = SystemAPI.HasComponent<ParkedCar>(vehicle);
+
+                            dumpTruckTotal++;
+
+                            if (!isParked)
+                            {
+                                dumpTruckMoving++;
+                            }
+                        }
+                    }
                 }
 
                 if (facility.ValueRO.m_ProcessingRate <= 0 &&
-                    counts.Total <= 0 &&
+                    garbageTruckTotal <= 0 &&
+                    dumpTruckTotal <= 0 &&
                     maxWorkers <= 0)
                 {
                     continue;
@@ -531,14 +564,18 @@ namespace MagicGarbage
 
                 processingRaw += facility.ValueRO.m_ProcessingRate;
                 facilityTotal++;
-                facilityTruckTotal += counts.Total;
+                facilityGarbageTruckTotal += garbageTruckTotal;
+                facilityDumpTruckTotal += dumpTruckTotal;
+                facilityDumpTruckMoving += dumpTruckMoving;
                 facilityMaxWorkers += maxWorkers;
 
                 facilityEntries.Add(new FacilityEntry(
                     facilityEntity,
-                    counts.Total,
-                    counts.Moving,
-                    counts.Parked,
+                    garbageTruckTotal,
+                    garbageTruckMoving,
+                    garbageTruckParked,
+                    dumpTruckTotal,
+                    dumpTruckMoving,
                     maxWorkers));
             }
 
@@ -580,20 +617,28 @@ namespace MagicGarbage
                 truckReturning: truckReturning,
                 truckDisabled: truckDisabled,
                 facilityTotal: facilityTotal,
-                facilityTruckTotal: facilityTruckTotal,
+                facilityGarbageTruckTotal: facilityGarbageTruckTotal,
+                facilityDumpTruckTotal: facilityDumpTruckTotal,
+                facilityDumpTruckMoving: facilityDumpTruckMoving,
                 facilityMaxWorkers: facilityMaxWorkers,
                 facilities: facilityEntries.ToArray());
         }
 
         private static int CompareFacilityEntries(FacilityEntry a, FacilityEntry b)
         {
-            int cmp = b.Moving.CompareTo(a.Moving);
+            int aActivity = a.GarbageTruckMoving + a.DumpTruckMoving;
+            int bActivity = b.GarbageTruckMoving + b.DumpTruckMoving;
+
+            int cmp = bActivity.CompareTo(aActivity);
             if (cmp != 0)
             {
                 return cmp;
             }
 
-            cmp = b.Total.CompareTo(a.Total);
+            int aTotal = a.GarbageTruckTotal + a.DumpTruckTotal;
+            int bTotal = b.GarbageTruckTotal + b.DumpTruckTotal;
+
+            cmp = bTotal.CompareTo(aTotal);
             if (cmp != 0)
             {
                 return cmp;
