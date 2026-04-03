@@ -48,6 +48,16 @@ namespace MagicGarbage
         private const int RecommendedDispatchRequestThreshold = 1000;
         private const int RecommendedPickupThreshold = 200;
 
+        private const int VanillaGarbageHappinessBaseline = 100;
+        private const int VanillaGarbageHappinessStep = 65;
+        private const int MinGarbageHappinessBaseline = 0;
+        private const int MaxGarbageHappinessBaseline = 3000;
+        private const int MinGarbageHappinessStep = 1;
+        private const int MaxGarbageHappinessStep = 500;
+        private const int RecommendedGarbageHappinessBaseline = 300;
+        private const int RecommendedGarbageHappinessStep = 150;
+
+
         // ---- EXTERNAL LINKS ----
         private const string UrlParadox =
             "https://mods.paradoxplaza.com/authors/River-mochi/cities_skylines_2?games=cities_skylines_2&orderBy=desc&sortBy=best&time=alltime";
@@ -61,6 +71,8 @@ namespace MagicGarbage
         private bool m_PowerUserOptions;
         private int m_GarbageDispatchRequestThreshold = VanillaDispatchRequestThreshold;
         private int m_GarbagePickupThreshold = VanillaPickupThreshold;
+        private int m_GarbageHappinessBaseline = VanillaGarbageHappinessBaseline;
+        private int m_GarbageHappinessStep = VanillaGarbageHappinessStep;
         private bool ShowPowerUserThresholdSliders => m_TrashBossEnabled && m_PowerUserOptions;
 
         public Setting(IMod mod) : base(mod)
@@ -213,6 +225,42 @@ namespace MagicGarbage
             }
         }
 
+
+        [SettingsUISlider(min = MinGarbageHappinessBaseline, max = MaxGarbageHappinessBaseline, step = 50, scalarMultiplier = 1)]
+        [SettingsUISection(ActionsTab, TrashBossGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUserThresholdSliders), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnThresholdSliderChanged))]
+        public int GarbageHappinessBaseline
+        {
+            get => m_GarbageHappinessBaseline;
+            set
+            {
+                m_GarbageHappinessBaseline = ClampInt(
+                    value,
+                    MinGarbageHappinessBaseline,
+                    MaxGarbageHappinessBaseline);
+            }
+        }
+
+        [SettingsUISlider(min = MinGarbageHappinessStep, max = MaxGarbageHappinessStep, step = 5, scalarMultiplier = 1)]
+        [SettingsUISection(ActionsTab, TrashBossGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUserThresholdSliders), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnThresholdSliderChanged))]
+        public int GarbageHappinessStep
+        {
+            get => m_GarbageHappinessStep;
+            set
+            {
+                m_GarbageHappinessStep = ClampInt(
+                    value,
+                    MinGarbageHappinessStep,
+                    MaxGarbageHappinessStep);
+            }
+        }
+
+
+
+
         // -----------------------------------------
         // TRASH BOSS PRESET BUTTONS
         // -----------------------------------------
@@ -238,6 +286,8 @@ namespace MagicGarbage
                 PowerUserOptions = true;
                 GarbageDispatchRequestThreshold = RecommendedDispatchRequestThreshold;
                 GarbagePickupThreshold = RecommendedPickupThreshold;
+                GarbageHappinessBaseline = RecommendedGarbageHappinessBaseline;
+                GarbageHappinessStep = RecommendedGarbageHappinessStep;
 
                 EnableTuningSystemsOnce();
                 Apply();
@@ -265,6 +315,8 @@ namespace MagicGarbage
                 PowerUserOptions = false;
                 GarbageDispatchRequestThreshold = VanillaDispatchRequestThreshold;
                 GarbagePickupThreshold = VanillaPickupThreshold;
+                GarbageHappinessBaseline = VanillaGarbageHappinessBaseline;
+                GarbageHappinessStep = VanillaGarbageHappinessStep;
 
                 EnableTuningSystemsOnce();
                 Apply();
@@ -434,8 +486,11 @@ namespace MagicGarbage
             GarbageFacilityStorageMultiplier = 100;
             GarbageDispatchRequestThreshold = VanillaDispatchRequestThreshold;
             GarbagePickupThreshold = VanillaPickupThreshold;
+            GarbageHappinessBaseline = VanillaGarbageHappinessBaseline;
+            GarbageHappinessStep = VanillaGarbageHappinessStep;
 
             GarbageStatus.ResetUi();
+
         }
 
         // --------------------------------------------

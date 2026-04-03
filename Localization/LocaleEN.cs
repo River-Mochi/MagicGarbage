@@ -87,11 +87,13 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Power User Options" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
-                    "**Optional advanced threshold tuning.**\n" +
-                    "When OFF, pickup and dispatch request thresholds stay vanilla.\n" +
-                    "When ON, the two threshold sliders appear.\n" +
-                    "Saved slider values are remembered even while this option is OFF.\n"
+                    "**Optional advanced threshold + garbage happiness tuning.**\n" +
+                    "When OFF, pickup/request thresholds and garbage happiness stay vanilla.\n" +
+                    "When ON, the advanced sliders appear.\n" +
+                    "Last slider values are saved when this option is OFF (in case you want to enable it again).\n"
                 },
+
+
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Dispatch Request Threshold" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
@@ -110,6 +112,28 @@ namespace MagicGarbage
                     "Always keep Dispatch Request at or above the eligible pickup value to prevent logic mishaps.\n"
                 },
 
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "Garbage Happiness Baseline" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
+                    "**Building garbage before garbage starts causing health + happiness penalty.**\n" +
+                    "Vanilla = **100** garbage units.\n" +
+                    "Higher baseline = buildings can hold more garbage before penalty starts.\n" +
+                    "100 garbage units = 0.1t\n" +
+                    "Overview:\n" +
+                    "- Threshold = trigger point for system behavior\n" +
+                    "- Baseline = start point for penalty formula\n"+
+                    "- Step = increment size in the formula, how fast penalty ramps after it starts"
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "Garbage Happiness Step" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
+                    "**Extra garbage needed for each additional -1 garbage penalty.**\n" +
+                    "Vanilla = **65** garbage units.\n" +
+                    "Higher step = slower penalty growth.\n" +
+                    "Game caps garbage penalty at **-10**.\n" +
+                    "Vanilla happiness: **100 baseline + 65 step = -1 penalty at 165 garbage**.\n" +
+                    "If garbage thresholds are increased, but happiness stays vanilla, buildings can get heavy penalties more easily."
+                },
+
                 // Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Recommended" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
@@ -120,7 +144,9 @@ namespace MagicGarbage
                     "- Facility truck count: **140%**\n" +
                     "- Power User Options: **ON**\n" +
                     "- Dispatch Request Threshold: **1000**\n" +
-                    "- Pickup Threshold: **200**"
+                    "- Pickup Threshold: **200**\n" +
+                    "- Garbage Happiness Baseline: **300**\n" +
+                    "- Garbage Happiness Step: **150**"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Game Defaults" },
@@ -129,8 +155,11 @@ namespace MagicGarbage
                     "- Percent sliders return to **100%**.\n" +
                     "- Power User Options turn **OFF**.\n" +
                     "- Dispatch Request Threshold returns to **100**.\n" +
-                    "- Pickup Threshold returns to **20**."
+                    "- Pickup Threshold returns to **20**.\n" +
+                    "- Garbage Happiness Baseline returns to **100**.\n" +
+                    "- Garbage Happiness Step returns to **65**."
                 },
+
 
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
@@ -195,7 +224,7 @@ namespace MagicGarbage
                     "Summary of counted garbage facilities.\n" +
                     "**Facilities** = counted garbage buildings.\n" +
                     "**Garbage trucks** = normal garbage trucks owned by those facilities.\n" +
-                    "**Dump trucks** = transfer / industrial-waste trucks owned by those facilities.\n" +
+                    "**Dump trucks** = inter garbage facility transfers.\n" +
                     "**Max workers** = total worker capacity across those same facilities."
                 },
 
@@ -257,7 +286,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.Producers", "Buildings: {0:N0} total | {1:N0} has garbage | {2:N0} above request threshold | {3:N0} warning-level" },
                 { "MG.Status.Log.ProducerGarbageStats", "Building garbage (non-zero only): avg={0:N0} ({1:N1}t) | median={2:N0} ({3:N1}t) | max={4:N0} ({5:N1}t) at {6}" },
                 { "MG.Status.Log.NearWarning75", "Buildings near warning (at least {1:N0} units / {2:N1}t): {0:N0}" },
-                { "MG.Status.Log.FacilitiesSummary", "Facilities: {0:N0} total | {1:N0} garbage trucks | {2:N0} dump trucks ({3:N0} moving) | {4:N0} max workers" },
+                { "MG.Status.Log.FacilitiesSummary", "Facilities: {0:N0} total | {1:N0} garbage trucks | {2:N0} dump trucks ({3:N0} moving) | {4:N0} workers" },
                 { "MG.Status.Log.Trucks", "Garbage trucks: {2:N0} moving ({3:N0} returning) | {1:N0} parked | {4:N0} disabled | {0:N0} total" },
                 { "MG.Status.Log.FacilitiesHeader", "Facility Summary" },
                 { "MG.Status.Log.FacilityLine", "- Facility {0}: garbage={1:N0} ({2:N0} moving, {3:N0} parked) | dump={4:N0} ({5:N0} moving) | max workers={6:N0}" },
