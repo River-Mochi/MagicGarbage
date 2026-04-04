@@ -31,173 +31,226 @@ namespace MagicGarbage
                 { m_Setting.GetSettingsLocaleID(), title },
 
                 // Tabs
-                { m_Setting.GetOptionTabLocaleID(Setting.ActionsTab), "Actions" },
+                { m_Setting.GetOptionTabLocaleID(Setting.ActionsTab), "Acciones" },
                 { m_Setting.GetOptionTabLocaleID(Setting.AboutTab), "Acerca de" },
 
                 // Groups
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Limpieza auto" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "Gestión manual" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "Status" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.PowerUserGrp), "Avanzado" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "Estado" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "Info del mod" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Enlaces" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "USAGE" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "USO" },
 
                 // Total Magic
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
-                    "**Activado [ ✓ ]** mantiene toda la ciudad limpia.\n\n" +
-                    "Mientras **Total Magic** está activado:\n" +
+                    "**Activado [ ✓ ]** mantiene limpia toda la ciudad.\n\n" +
+                    "Mientras **Total Magic** está ON:\n" +
                     "- Trash Boss se fuerza a OFF.\n" +
-                    "- Los controles de Trash Boss no se aplican (los valores se guardan para después).\n" +
-                    "- Algunos camiones aún pueden moverse por el tiempo de despacho vanilla."
+                    "- Los deslizadores de Trash Boss no se aplican (los valores quedan guardados para después).\n" +
+                    "- Aún pueden circular algunos camiones por el timing de envío vanilla."
                 },
 
                 // Trash Boss
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
-                    "Gestiona directamente los sistemas de basura; deja funcionando la lógica vanilla.\n\n" +
-                    "- Cuando **Trash Boss está activado [ ✓ ]**, Total Magic se fuerza a OFF.\n" +
-                    "- Los controles solo se aplican cuando Trash Boss está activado.\n"
+                    "Gestiona directamente el sistema de basura; la lógica vanilla sigue activa.\n\n" +
+                    "- Cuando **Trash Boss está ON [ ✓ ]**, Total Magic se fuerza a OFF.\n" +
+                    "- Los deslizadores solo se aplican si Trash Boss está activado.\n" +
+                    "- Total Magic + Trash Boss pueden estar ambos en **OFF** si solo hace falta el **reporte de estado**.\n"
                 },
 
                 // Sliders
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "Capacidad de carga" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
                     "**Cuánta basura puede llevar cada camión.**\n" +
-                    "100% = normal game default.\n"
+                    "**100% = valor normal** del juego.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)), "Almacenamiento de instalación" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)), "Almacenamiento del sitio" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
                     "**Cuánta basura puede almacenar una instalación.**\n" +
-                    "100% = vanilla storage.\n"
+                    "**100% = almacenamiento vanilla**.\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)), "Velocidad de proceso" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
                     "**Qué tan rápido procesan la basura entrante las instalaciones.**\n" +
-                    "100% = vanilla processing speed.\n"
+                    "**100% = velocidad vanilla**.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)), "Facility Fleet" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)), "Flota del sitio" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "**Cuántos camiones puede enviar cada instalación.**\n" +
-                    "100% = vanilla number of trucks.\n"
+                    "**Cuántos camiones puede despachar cada instalación.**\n" +
+                    "**100% = cantidad vanilla** de camiones.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchThresholdScale)), "Umbrales de edificios" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchThresholdScale)),
-                    "Opcional: sube los **umbrales** que un edificio necesita para recibir recogida de basura. \n" +
-                    "Aumentar esto puede ayudar a reducir el tráfico de camiones de basura; pero demasiado alto reduce los viajes de recogida.\n" +
-                    "La mayoría de la gente <no> necesita ajustar esto. El mod ya funcionaba bien antes de esta opción; es solo un extra para experimentar.\n"+
-                    "--------------------------------\n" +
-                    "- **Umbral de solicitud de despacho (R)** = basura del edificio necesaria para llamar una <solicitud de despacho de camión>.\n" +
-                    "- **Umbral de recogida (P)** = basura mínima del edificio antes de que un camión pueda recogerla.\n" +
-                    "**1x** = vanilla (100 R, 20 P). Nota: **1.000** unidades de basura suelen ser **1t**.\n" +
-                    "<---------- Example ------------------------------------------>\n\n" +
-                    "Con el control en **20x**, la **R** del edificio debe llegar a >= **2.000 (2t)** unidades antes de que un camión reciba una <solicitud de despacho>;\n" +
-                    "El juego vanilla también hace que los camiones paren en edificios de ida/vuelta al edificio de <dispatch> si el camión no está vacío; a 20x, los edificios de la ruta necesitan más de **400 de basura** (20 x P vanilla = 20).\n" +
-                    "Consejo de equilibrio: mira el botón del informe detallado en el log con frecuencia mientras ajustas esto.\n" +
-                    "Puede que necesites aumentar la capacidad de los camiones si subes mucho el umbral, porque las casas mantendrán la basura mucho más tiempo antes de llamar a un camión."
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Opciones avanzadas" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
+                    "**Ajuste avanzado opcional para umbrales + felicidad por basura.**\n" +
+                    "Cuando está **OFF**, los umbrales de recogida/solicitud y la felicidad por basura **siguen en vanilla**.\n" +
+                    "Cuando está **ON**, aparecen los **deslizadores avanzados**.\n\n" +
+                    "<--- Ejemplos de felicidad por basura --->\n"+
+                    " - <Vanilla> 100/65 = 1.ª penalización en <165>.\n" +
+                    " - <Recomendado> 550/150 = 1.ª penalización en <700>.\n" +
+                    " - <Muy suave> 950/200 = 1.ª penalización por basura en <1150>.\n" +
+                    "Comodidad: los últimos valores se guardan cuando esta opción está OFF."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Umbral de solicitud" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
+                    "**Basura necesaria en un edificio antes de crear o mantener una solicitud de despacho de camión.**\n" +
+                    "Vanilla = **100** unidades de basura.\n" +
+                    "**100 unidades de basura = 0.1t**\n" +
+                    "**1.000 unidades de basura = 1t**\n" +
+                    "Mantén esto al mismo nivel o por encima del umbral de recogida.\n"
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "Umbral de recogida" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
+                    "**Basura mínima en un edificio antes de que un camión pueda recogerla.**\n" +
+                    "Vanilla = **20** unidades de basura.\n" +
+                    "La recogida nunca puede ser mayor que la solicitud.\n" +
+                    "Mantén la solicitud al mismo nivel o por encima del valor de recogida para evitar fallos de lógica;" +
+                    " si se envía un camión a un edificio y el valor de recogida es más alto, podría no poder recoger (también influye la tasa de acumulación).\n"
                 },
 
                 // Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Recomendado" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "Aplica los valores recomendados de Trash Boss:\n" +
-                    "- Capacidad de carga: **200%**\n" +
-                    "- Umbral de despacho: **5x**\n" +
-                    "- Velocidad de proceso: **200%**\n" +
-                    "- Capacidad de almacenamiento: **150%**\n" +
-                    "- Cantidad de camiones de la instalación: **140%**"
+                    "Se aplicaron los valores estándar **recomendados** de Trash Boss.\n" +
+                    "No cambia la configuración de Power User."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Valores del juego" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Devuelve todos los controles de Trash Boss a los valores vanilla.\n" +
-                    "- Los controles porcentuales vuelven a **100%**.\n" +
-                    "- El umbral de despacho vuelve a **1x**."
+                    "Devuelve los deslizadores de Trash Boss a los **valores vanilla**.\n" +
+                    "No cambia <no> la configuración de Power User.\n" +
+                    "**Vanilla:**\n" +
+                    "- Los deslizadores en % vuelven a **100%**.\n" +
+                    "- El umbral de solicitud vuelve a **100 unidades**.\n" +
+                    "- El umbral de recogida vuelve a **20 unidades**.\n"
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "Base de felicidad por basura" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
+                    "**Nivel de basura de un edificio antes de empezar la penalización a salud + felicidad.**\n" +
+                    "**Vanilla = 100** unidades de basura.\n" +
+                    "Base más alta = los edificios pueden aguantar más basura antes de la penalización.\n" +
+                    "100 unidades de basura = 0.1t\n" +
+                    "Resumen:\n" +
+                    "- <Umbral> = punto de activación del sistema\n" +
+                    "- <Base> = punto inicial de la fórmula de penalización\n"+
+                    "- <Paso> = tamaño del incremento en la fórmula, o sea la rapidez con la que sube la penalización"
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "Paso de felicidad por basura" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
+                    "**Basura extra por encima de la base que hace empezar una penalización de -1.**\n" +
+                    "Vanilla = **65** unidades de basura.\n" +
+                    "Paso más alto = crecimiento más lento de la penalización.\n" +
+                    "El juego limita la penalización por basura a **-10**.\n" +
+                    "La primera penalización vanilla <-1 penalty> pasa a **165 de basura** (100 base + 65 paso)\n" +
+                    "Equilibra los cambios de umbral con los deslizadores de felicidad o tendrás penalizaciones más fuertes de lo normal."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "Recomendado" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
+                    "Aplica los valores **recomendados** de Power User.\n" +
+                    "Activa Power User.\n" +
+                    "La primera penalización por basura empieza en **700** de basura (550 base + 150 paso)."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "Valores del juego" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
+                    "Devuelve los valores de Power User a **vanilla**.\n" +
+                    "Pone **Power User en OFF**."
                 },
 
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "Nombre mostrado de este mod." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "Nombre visible de este mod." },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)), "Version" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)), "Versión" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)), "Versión actual del mod." },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenParadoxPage)), "Paradox Mods" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenParadoxPage)), "Abre la página de Paradox Mods." },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenDiscord)), "Discord" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)), "Abre la invitación de Discord en tu navegador." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)), "Abre la invitación de Discord en el navegador." },
 
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
-                    "<Estado Auto Clean>\n" +
+                    "<Estado auto limpieza>\n" +
                     "  * Total Magic ON  = **[ ✓ ]**\n" +
-                    "  * La basura se elimina automáticamente - Listo.\n" +
+                    "  * La basura se elimina sola - listo.\n" +
                     " <-------------------------------------->\n\n" +
                     "<Estado gestión manual>\n" +
                     "  * Trash Boss = **[ ✓ ]**\n" +
-                    "  * Ajusta los controles a tu gusto.\n" +
-                    "  * Misma basura del juego; mejores camiones/instalaciones autogestionados.\n" +
+                    "  * Ajusta los deslizadores a tu gusto.\n" +
+                    "  * Opcional: activa Power User para umbrales + felicidad por basura.\n" +
+                    "  * Mismo sistema de basura del juego; camiones/instalaciones mejor gestionados.\n" +
                     " <-------------------------------------->\n\n" +
-                    "<Juego vanilla normal>\n" +
-                    "  * Trash Boss = **[ ✓ ]**\n" +
-                    "  * Click **[Game Defaults]**\n" +
-                    "  * Todos los controles en valores vanilla\n"
+                    "<Estado estado / vanilla>\n" +
+                    "  * Total Magic = OFF\n" +
+                    "  * Trash Boss = OFF\n" +
+                    "  * Solo reporte de estado.\n" +
+                    "  * El juego vanilla de basura no cambia."
+
                 },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), "Uso" },
 
                 // Status
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Basura/mes" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
-                    "Muestra la cantidad actual de basura en toda la ciudad y la tasa total de procesamiento.\n" +
-                    "Aumenta el procesamiento si la basura producida al mes es mucho mayor.\n" +
-                    "**Producido** y **Procesado** usan toneladas por mes.\n" +
-                    "<Hora de actualización = última actualización.>"
+                    "Muestra la cantidad actual de basura de toda la ciudad y la tasa total de procesamiento.\n" +
+                    "Sube el procesamiento si la basura producida al mes es mucho mayor.\n" +
+                    "**Producida** y **Procesada** usan toneladas por mes.\n" +
+                    "<Hora de actualización = última vez que se refrescó.>"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Solicitudes de recogida" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
-                    "**Pendientes** = solicitudes de recogida activas que no están asignadas actualmente a un camión o ruta.\n" +
-                    "**Despachadas** = solicitudes de recogida activas ya asignadas.\n" +
-                    "**Total** = cuenta la entidad de solicitud **activa** actual (en la cadena de basura).\n\n" +
-                    "Nota técnica: esto es diferente de <Por encima del umbral de solicitud>. Esto cuenta <solicitudes>, no edificios.\n" +
-                    "Algunas solicitudes pendientes se asignarán después; otras también pueden borrarse más tarde si la revalidación vanilla decide que el objetivo ya no necesita servicio."
+                    "**Pendientes** = solicitudes activas de recogida todavía no asignadas a un camión o ruta.\n" +
+                    "**Despachadas** = solicitudes activas de recogida ya asignadas.\n" +
+                    "**Total** = cuenta las entidades de solicitud **activas** actuales (en la cadena de basura).\n\n" +
+                    "Nota técnica: esto es distinto de <Por encima del umbral de solicitud>. Aquí se cuentan <solicitudes>, no edificios.\n" +
+                    "Algunas solicitudes pendientes se asignarán después; otras también pueden limpiarse si la revalidación vanilla decide que el objetivo ya no necesita servicio."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusProducers)), "Buildings" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusProducers)), "Edificios" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusProducers)),
-                    "**Tiene basura** = edificios que actualmente guardan basura.\n" +
+                    "**Tiene basura** = edificios que ahora mismo guardan basura.\n" +
                     "**Total** = todos los edificios productores de basura de la ciudad.\n" +
                     "**Por encima del umbral de solicitud** = cantidad actual de **edificios** con basura suficiente para crear una solicitud de recogida.\n" +
                     "En vanilla, el umbral de solicitud es **100** unidades internas de basura.\n" +
-                    "El **umbral de despacho** de Trash Boss sube juntos los umbrales de recogida y solicitud.\n" +
-                    "Esto reduce el tráfico de camiones de basura porque baja el total de edificios <por encima del umbral de solicitud> y el total <despachado>."
+                    "Power User puede cambiar los umbrales de solicitud y recogida.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "Facilities" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "Instalaciones" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacilities)),
                     "Resumen de las instalaciones de basura contadas.\n" +
                     "**Instalaciones** = edificios de basura contados.\n" +
-                    "**Camiones totales** = camiones de basura propiedad de esas instalaciones.\n" +
-                    "**Trabajadores máx.** = capacidad total de trabajadores en esas mismas instalaciones."
+                    "**Camiones de basura** = camiones normales de recogida. En instalaciones de residuos industriales, recogen residuos industriales en vez de basura normal.\n" +
+                    "**Dump trucks** = transferencias de basura entre instalaciones.\n" +
+                    "**Trabajadores máx.** = capacidad total de trabajadores de esas mismas instalaciones."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "Trucks" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "Camiones" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusTrucks)),
-                    "**En movimiento** = camiones actualmente por la ciudad.\n" +
-                    "**Regresando** = subconjunto de camiones en movimiento marcados para volver a su instalación.\n" +
+                    "**En marcha** = camiones que ahora mismo están fuera por la ciudad.\n" +
+                    "**Regresando** = parte de los camiones en marcha que vuelven a su instalación.\n" +
                     "**Aparcados** = camiones aparcados en una instalación.\n" +
-                    "**Total** = cantidad de todos los camiones de basura."
+                    "**Total** = número de todos los camiones de basura."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Estado detallado al log" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageStatusLog)),
-                    "Envía un informe de basura más detallado a **Logs/MagicGarbage.log**.\n" +
-                    "Incluye una leyenda corta, valores de referencia vanilla y muchas estadísticas extra reales de basura de la ciudad."
+                    "Envía un informe más detallado de basura a **Logs/MagicGarbage.log**.\n" +
+                    "Incluye una leyenda corta, valores vanilla de referencia y muchas estadísticas reales extra de la ciudad."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Abrir log" },
@@ -205,51 +258,49 @@ namespace MagicGarbage
                     "Abre la carpeta Logs/.. del juego."
                 },
 
-            // Runtime status strings
-            { "MG.Status.NoCity", "Todavía no hay ninguna ciudad cargada." },
+                // Runtime status strings
+                { "MG.Status.NoCity", "Todavía no hay ciudad cargada." },
 
-            { "MG.Status.Row.GarbageProcessing", "{0:N0} t producidas | {1:N0} t procesadas | act. {2}" },
-            { "MG.Status.Row.Requests", "{1:N0} pendientes | {2:N0} despachadas | {0:N0} total" },
-            { "MG.Status.Row.Producers", "{0:N0} / {1:N0} tienen basura | {2:N0} por encima del umbral de solicitud" },
-            { "MG.Status.Row.FacilitiesSummary", "{0:N0} instalaciones | {1:N0} camiones totales | {2:N0} trabajadores máx." },
-            { "MG.Status.Row.Trucks", "{1:N0} en movimiento ({3:N0} regresando) | {2:N0} aparcados | {0:N0} total" },
-            { "MG.Status.Row.FacilitiesNone", "Todavía no hay datos de instalaciones." },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t producidas | {1:N0} t procesadas | act. {2}" },
+                { "MG.Status.Row.Requests", "{1:N0} pendientes | {2:N0} despachadas | {0:N0} total" },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} tienen basura | {2:N0} sobre el umbral" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} instalaciones | {1:N0} camiones de basura | {2:N0} dump trucks | {3:N0} trabajadores máx." },
+                { "MG.Status.Row.Trucks", "{1:N0} en marcha ({3:N0} regresando) | {2:N0} aparcados | {0:N0} total" },
+                { "MG.Status.Row.FacilitiesNone", "Aún no hay datos de instalaciones." },
 
-            // Log strings
-            { "MG.Status.Log.Title", "Estado de basura ({0})" },
-            { "MG.Status.Log.City", "Ciudad: {0}" },
-            { "MG.Status.Log.Mode", "Modo: Total Magic={0}, Trash Boss={1}" },
-            { "MG.Status.Log.Legend",
-                "Leyenda:\n" +
-                "- Producida/Procesada usa toneladas por mes.\n" +
-                "- Los valores de umbral de abajo usan unidades internas de basura, no toneladas.\n" +
-                "- Para el jugador, el juego convierte 1.000 unidades = 1t.\n" +
-                "Control deslizante de umbral de despacho:\n" +
-                "  - Umbral de recogida = basura mínima antes de que un camión recoja en un edificio.\n" +
-                "  - Umbral de solicitud = basura mínima antes de que el juego cree o mantenga una solicitud de recogida.\n" +
-                "- Icono de aviso = cantidad de basura que hace aparecer un icono de aviso sobre un edificio.\n" +
-                "- Límite máximo = cantidad máxima de basura que un edificio puede acumular.\n" +
-                "- Pendiente = solicitudes activas que actualmente no están asignadas a un camión ni a una ruta.\n" +
-                "- Algunas solicitudes pendientes se asignarán más tarde; otras también pueden desaparecer después si la revalidación vanilla decide que el objetivo ya no necesita servicio.\n" +
-                "-----------------------------------------------------------------------------\n"
-            },
-            { "MG.Status.Log.Thresholds",
-                "Umbrales del juego (unidades internas de basura): recogida={1:N0}, solicitud={0:N0}, icono de aviso={2:N0}, límite máximo={3:N0}"
-            },
+                // Log strings
+                { "MG.Status.Log.Title", "Estado de basura ({0})" },
+                { "MG.Status.Log.City", "Ciudad: {0}" },
+                { "MG.Status.Log.Mode", "Modo: Total Magic={0}, Trash Boss={1}" },
+                { "MG.Status.Log.Legend",
+                    "Leyenda:\n" +
+                    "- Producida/Procesada usa toneladas por mes.\n" +
+                    "- Los umbrales de abajo usan unidades internas de basura, no toneladas.\n" +
+                    "- Para el jugador, el juego convierte 100 unidades = 0.1t y 1.000 unidades = 1t.\n" +
+                    "Deslizadores de umbral:\n" +
+                    "  - Umbral de recogida = basura mínima antes de que un camión pueda recoger de un edificio.\n" +
+                    "  - Umbral de solicitud = basura mínima antes de que el juego cree o mantenga una solicitud de recogida.\n" +
+                    "- Icono de aviso = cantidad de basura que hace aparecer un aviso sobre un edificio.\n" +
+                    "- Límite duro = basura máxima que puede acumular un edificio.\n" +
+                    "- Pendientes = solicitudes activas todavía no asignadas a un camión o ruta.\n" +
+                    "- Algunas pendientes se asignarán más tarde; otras también pueden limpiarse si la revalidación vanilla decide que el objetivo ya no necesita servicio.\n" +
+                    "-----------------------------------------------------------------------------\n"
+                },
+                { "MG.Status.Log.Thresholds",
+                    "Umbrales del juego (unidades internas de basura): recogida={1:N0}, solicitud={0:N0}, icono de aviso={2:N0}, límite duro={3:N0}"
+                },
 
-            { "MG.Status.Log.ThresholdsMissing", "Umbrales: <GarbageParameterData no disponible>" },
-            { "MG.Status.Log.GarbageProcessing", "Basura: {0:N0} t/mes | Procesamiento: {1:N0} t/mes" },
-            { "MG.Status.Log.Requests", "Solicitudes de recogida: pendientes={1:N0}, despachadas={2:N0}, total={0:N0}" },
-            { "MG.Status.Log.PendingPeak", "Objetivo pendiente con más basura: {0:N0} ({1:N1}t) en {2}" },
-            { "MG.Status.Log.Producers", "Edificios: {0:N0} total | {1:N0} tienen basura | {2:N0} por encima del umbral de solicitud | {3:N0} a nivel de aviso" },
-            { "MG.Status.Log.ProducerGarbageStats", "Basura en edificios (solo no cero): prom={0:N0} ({1:N1}t) | mediana={2:N0} ({3:N1}t) | máx={4:N0} ({5:N1}t) en {6}" },
-            { "MG.Status.Log.NearWarning75", "Edificios cerca del aviso (>= {1:N0} unidades / {2:N1}t): {0:N0}" },
-            { "MG.Status.Log.FacilitiesSummary", "Instalaciones: {0:N0} total | {1:N0} camiones totales | {2:N0} trabajadores máx." },
-            { "MG.Status.Log.Trucks", "Camiones de basura: {2:N0} en movimiento ({3:N0} regresando) | {1:N0} aparcados | {4:N0} deshabilitados | {0:N0} total" },
-            { "MG.Status.Log.FacilitiesHeader", "Resumen de instalaciones" },
-            { "MG.Status.Log.FacilityLine", "- Instalación {0}: en movimiento={2:N0}, aparcados={3:N0}, total={1:N0}, trabajadores máx.={4:N0}" },
-
-
+                { "MG.Status.Log.ThresholdsMissing", "Umbrales: <GarbageParameterData no disponible>" },
+                { "MG.Status.Log.GarbageProcessing", "Basura: {0:N0} t/mes | Procesamiento: {1:N0} t/mes" },
+                { "MG.Status.Log.Requests", "Solicitudes de recogida: pendientes={1:N0}, despachadas={2:N0}, total={0:N0}" },
+                { "MG.Status.Log.PendingPeak", "Objetivo pendiente más alto: {0:N0} ({1:N1}t) en {2}" },
+                { "MG.Status.Log.Producers", "Edificios: {0:N0} total | {1:N0} tienen basura | {2:N0} sobre el umbral | {3:N0} nivel aviso" },
+                { "MG.Status.Log.ProducerGarbageStats", "Basura en edificios (solo no cero): media={0:N0} ({1:N1}t) | mediana={2:N0} ({3:N1}t) | máx={4:N0} ({5:N1}t) en {6}" },
+                { "MG.Status.Log.NearWarning75", "Edificios cerca del aviso (al menos {1:N0} unidades / {2:N1}t): {0:N0}" },
+                { "MG.Status.Log.FacilitiesSummary", "Instalaciones: {0:N0} total | {1:N0} camiones de basura | {2:N0} dump trucks ({3:N0} en marcha) | {4:N0} trabajadores" },
+                { "MG.Status.Log.Trucks", "Camiones de basura: {2:N0} en marcha ({3:N0} regresando) | {1:N0} aparcados | {4:N0} desactivados | {0:N0} total" },
+                { "MG.Status.Log.FacilitiesHeader", "Resumen de instalaciones" },
+                { "MG.Status.Log.FacilityLine", "- Instalación {0}: garbage={1:N0} ({2:N0} en marcha, {3:N0} aparcados) | dump={4:N0} ({5:N0} en marcha) | trabajadores máx={6:N0}" },
             };
         }
 

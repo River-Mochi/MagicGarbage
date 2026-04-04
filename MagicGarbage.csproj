@@ -12,7 +12,7 @@
 		<PublishConfigurationPath>Properties\PublishConfiguration.xml</PublishConfigurationPath>
 
   <!-- Single source of truth for version number -->
-	  <Version>1.2.6</Version>
+	  <Version>1.2.7</Version>
 	<AssemblyVersion>$(Version).0</AssemblyVersion>
 	<FileVersion>$(Version).0</FileVersion>  <!-- for file properties -->
 
@@ -38,18 +38,6 @@
 	<!-- CS2 toolchain -->
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.props" />
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.targets" />
-	<ItemGroup>
-	  <Compile Remove="Localization\LocaleDE.cs" />
-	  <Compile Remove="Localization\LocaleES.cs" />
-	  <Compile Remove="Localization\LocaleFR.cs" />
-	  <Compile Remove="Localization\LocaleIT.cs" />
-	  <Compile Remove="Localization\LocaleJA.cs" />
-	  <Compile Remove="Localization\LocaleKO.cs" />
-	  <Compile Remove="Localization\LocalePL.cs" />
-	  <Compile Remove="Localization\LocalePT_BR.cs" />
-	  <Compile Remove="Localization\LocaleZH_CN.cs" />
-	  <Compile Remove="Localization\LocaleZH_HANT.cs" />
-	</ItemGroup>
 
 	<!-- Core game + Colossal / Unity references used by this mod -->
 	<ItemGroup>
@@ -96,7 +84,7 @@
 		<Reference Update="System.Data"><Private>false</Private></Reference>
 	</ItemGroup>
 
-	<!-- make CS2 toolchain files visable in Properties/ for easier viewing -->
+	<!-- make CS2 toolchain files visible in Properties/ for easier viewing -->
 	<ItemGroup>
 		<None Include="$(ModPropsFile)" Link="Properties\Mod.props" />
 		<None Include="$(ModTargetsFile)" Link="Properties\Mod.targets" />
@@ -112,7 +100,7 @@
     </None>
 </ItemGroup>
 
-<!-- AUTO UPDATE PublishConfiguration ModVersion using csproj Version
+<!-- AUTO UPDATE on Release and Debug build, PublishConfiguration ModVersion using csproj Version
      remove BOM, make EOL=CRLF, and left-align text -->
 <Target Name="UpdatePublishConfigVersion" BeforeTargets="Build" Condition="Exists('$(MSBuildProjectDirectory)\Scripts\Update-PublishConfig.ps1') AND Exists('$(MSBuildProjectDirectory)\$(PublishConfigurationPath)')">
 
