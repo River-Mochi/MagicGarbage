@@ -55,7 +55,7 @@ It is mainly there for testing and for players who want to experiment with reduc
   - Facility storage: **150%**
   - Facility fleet: **140%**
 
-> 💡 **Total Magic** and **Trash Boss** are mutually exclusive.  
+> 💡 **Total Magic** and **Trash Boss** can both be off if only Status report desired.  
 > Trash Boss slider values are saved even while **Total Magic** is ON.
 
 ---
@@ -108,4 +108,42 @@ This includes things like:
 - yenyang: code review, tech advice
 - Necko1996: testing and feedback
 - gagaxm: thumbnail image
--
+
+
+---
+
+### Garbage happiness penalty comparison
+
+**Formula used by the game**
+
+- Penalty starts after: `baseline + step`
+- Penalty value: `-floor((garbage - baseline) / step)`
+- Capped at **-10**
+
+### Presets compared
+
+- **Vanilla:** baseline **100**, step **65** → first `-1` at **165**
+- **Compromise:** baseline **550**, step **150** → first `-1` at **700**
+- **Very soft:** baseline **950**, step **200** → first `-1` at **1150**
+
+| Garbage in Building | Vanilla<br>`100 / 65` | Compromise<br>`550 / 150` | Very soft<br>`950 / 200` |
+|---:|---:|---:|---:|
+| 100  | 0   | 0   | 0   |
+| 165  | -1  | 0   | 0   |
+| 300  | -3  | 0   | 0   |
+| 600  | -7  | 0   | 0   |
+| 700  | -9  | -1  | 0   |
+| 850  | -10 | -2  | 0   |
+| 1000 | -10 | -3  | 0   |
+| 1150 | -10 | -4  | -1  |
+| 1400 | -10 | -5  | -2  |
+| 2000 | -10 | -10 | -5  |
+
+### Suggested preset
+
+- **Dispatch Request Threshold:** `1000`
+- **Pickup Threshold:** `200`
+- **Garbage Happiness Baseline:** `550`
+- **Garbage Happiness Step:** `150`
+
+This keeps some garbage-related happiness pressure in the game, but is much less harsh than vanilla.

@@ -16,10 +16,10 @@ namespace MagicGarbage
     [FileLocation("ModsSettings/MagicGarbage/MagicGarbage")]
     [SettingsUITabOrder(ActionsTab, AboutTab)]
     [SettingsUIGroupOrder(
-        TotalMagicGrp, TrashBossGrp, StatusGrp,
+        TotalMagicGrp, TrashBossGrp, PowerUserGrp, StatusGrp,
         AboutInfoGrp, AboutLinksGrp, AboutUsageGrp)]
     [SettingsUIShowGroupName(
-        TotalMagicGrp, TrashBossGrp, StatusGrp,
+        TotalMagicGrp, TrashBossGrp, PowerUserGrp, StatusGrp,
         AboutLinksGrp, AboutUsageGrp)]
     public sealed class Setting : ModSetting
     {
@@ -30,6 +30,7 @@ namespace MagicGarbage
         // ---- GROUPS ----
         public const string TotalMagicGrp = "TotalMagic";
         public const string TrashBossGrp = "TrashBoss";
+        public const string PowerUserGrp = "PowerUser";
         public const string StatusGrp = "Status";
         public const string AboutInfoGrp = "AboutInfo";
         public const string AboutLinksGrp = "AboutLinks";
@@ -37,6 +38,7 @@ namespace MagicGarbage
 
         // ---- ROW GROUPS (button rows) ----
         private const string TrashBossButtonsRow = "TrashBossButtonsRow";
+        private const string PowerUserButtonsRow = "PowerUserButtonsRow";
         private const string StatusButtonsRow = "StatusButtonsRow";
         private const string AboutLinksRow = "AboutLinksRow";
 
@@ -44,19 +46,14 @@ namespace MagicGarbage
         private const int VanillaDispatchRequestThreshold = 100;
         private const int VanillaPickupThreshold = 20;
         private const int MaxDispatchRequestThreshold = 3000;
-        private const int MaxPickupThreshold = 600;
-        private const int RecommendedDispatchRequestThreshold = 1000;
-        private const int RecommendedPickupThreshold = 200;
+        private const int MaxPickupThreshold = 1000;
 
         private const int VanillaGarbageHappinessBaseline = 100;
         private const int VanillaGarbageHappinessStep = 65;
-        private const int MinGarbageHappinessBaseline = 0;
+        private const int MinGarbageHappinessBaseline = 100;
         private const int MaxGarbageHappinessBaseline = 3000;
-        private const int MinGarbageHappinessStep = 1;
+        private const int MinGarbageHappinessStep = 65;
         private const int MaxGarbageHappinessStep = 500;
-        private const int RecommendedGarbageHappinessBaseline = 300;
-        private const int RecommendedGarbageHappinessStep = 150;
-
 
         // ---- EXTERNAL LINKS ----
         private const string UrlParadox =
@@ -73,16 +70,17 @@ namespace MagicGarbage
         private int m_GarbagePickupThreshold = VanillaPickupThreshold;
         private int m_GarbageHappinessBaseline = VanillaGarbageHappinessBaseline;
         private int m_GarbageHappinessStep = VanillaGarbageHappinessStep;
-        private bool ShowPowerUserThresholdSliders => m_TrashBossEnabled && m_PowerUserOptions;
+
+        private bool ShowPowerUsers => m_TrashBossEnabled && m_PowerUserOptions;
 
         public Setting(IMod mod) : base(mod)
         {
             SetDefaults();
         }
 
-        // --------------------------------------------------------------------
-        // TOTAL MAGIC vs TRASH BOSS (mutually exclusive)
-        // --------------------------------------------------------------------
+        // --------------------------------------------------------------------------
+        // TOTAL MAGIC vs TRASH BOSS (Both can be off to just use STATUS)
+        // --------------------------------------------------------------------------
 
         [SettingsUISection(ActionsTab, TotalMagicGrp)]
         [SettingsUISetter(typeof(Setting), nameof(OnModeToggleChanged))]
@@ -92,11 +90,6 @@ namespace MagicGarbage
             set
             {
                 if (m_TotalMagic == value)
-                {
-                    return;
-                }
-
-                if (!value && !m_TrashBossEnabled)
                 {
                     return;
                 }
@@ -124,11 +117,6 @@ namespace MagicGarbage
                     return;
                 }
 
-                if (!value && !m_TotalMagic)
-                {
-                    return;
-                }
-
                 m_TrashBossEnabled = value;
 
                 if (m_TrashBossEnabled)
@@ -141,7 +129,7 @@ namespace MagicGarbage
         }
 
         // --------------------------------------------------------
-        // TRASH BOSS SLIDERS (hidden when Trash Boss is OFF)
+        // TRASH BOSS STANDARD SLIDERS
         // --------------------------------------------------------
 
         [SettingsUISlider(min = 100, max = 500, step = 10, scalarMultiplier = 1, unit = Unit.kPercentage)]
@@ -168,101 +156,8 @@ namespace MagicGarbage
         [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
         public int GarbageFacilityVehicleMultiplier { get; set; } = 100;
 
-        [SettingsUISection(ActionsTab, TrashBossGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
-        [SettingsUISetter(typeof(Setting), nameof(OnThresholdOptionsChanged))]
-        public bool PowerUserOptions
-        {
-            get => m_PowerUserOptions;
-            set
-            {
-                if (m_PowerUserOptions == value)
-                {
-                    return;
-                }
-
-                m_PowerUserOptions = value;
-                Apply();
-            }
-        }
-
-        [SettingsUISlider(min = VanillaDispatchRequestThreshold, max = MaxDispatchRequestThreshold, step = 100, scalarMultiplier = 1)]
-        [SettingsUISection(ActionsTab, TrashBossGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUserThresholdSliders), true)]
-        [SettingsUISetter(typeof(Setting), nameof(OnThresholdSliderChanged))]
-        public int GarbageDispatchRequestThreshold
-        {
-            get => m_GarbageDispatchRequestThreshold;
-            set
-            {
-                int clamped = ClampInt(value, VanillaDispatchRequestThreshold, MaxDispatchRequestThreshold);
-                m_GarbageDispatchRequestThreshold = clamped;
-
-                if (m_GarbagePickupThreshold > m_GarbageDispatchRequestThreshold)
-                {
-                    m_GarbagePickupThreshold = m_GarbageDispatchRequestThreshold;
-                }
-            }
-        }
-
-        [SettingsUISlider(min = VanillaPickupThreshold, max = MaxPickupThreshold, step = 20, scalarMultiplier = 1)]
-        [SettingsUISection(ActionsTab, TrashBossGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUserThresholdSliders), true)]
-        [SettingsUISetter(typeof(Setting), nameof(OnThresholdSliderChanged))]
-        public int GarbagePickupThreshold
-        {
-            get => m_GarbagePickupThreshold;
-            set
-            {
-                int clamped = ClampInt(value, VanillaPickupThreshold, MaxPickupThreshold);
-
-                if (clamped > m_GarbageDispatchRequestThreshold)
-                {
-                    clamped = m_GarbageDispatchRequestThreshold;
-                }
-
-                m_GarbagePickupThreshold = clamped;
-            }
-        }
-
-
-        [SettingsUISlider(min = MinGarbageHappinessBaseline, max = MaxGarbageHappinessBaseline, step = 50, scalarMultiplier = 1)]
-        [SettingsUISection(ActionsTab, TrashBossGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUserThresholdSliders), true)]
-        [SettingsUISetter(typeof(Setting), nameof(OnThresholdSliderChanged))]
-        public int GarbageHappinessBaseline
-        {
-            get => m_GarbageHappinessBaseline;
-            set
-            {
-                m_GarbageHappinessBaseline = ClampInt(
-                    value,
-                    MinGarbageHappinessBaseline,
-                    MaxGarbageHappinessBaseline);
-            }
-        }
-
-        [SettingsUISlider(min = MinGarbageHappinessStep, max = MaxGarbageHappinessStep, step = 5, scalarMultiplier = 1)]
-        [SettingsUISection(ActionsTab, TrashBossGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUserThresholdSliders), true)]
-        [SettingsUISetter(typeof(Setting), nameof(OnThresholdSliderChanged))]
-        public int GarbageHappinessStep
-        {
-            get => m_GarbageHappinessStep;
-            set
-            {
-                m_GarbageHappinessStep = ClampInt(
-                    value,
-                    MinGarbageHappinessStep,
-                    MaxGarbageHappinessStep);
-            }
-        }
-
-
-
-
         // -----------------------------------------
-        // TRASH BOSS PRESET BUTTONS
+        // TRASH BOSS STANDARD PRESET BUTTONS
         // -----------------------------------------
 
         [SettingsUIButton]
@@ -282,12 +177,6 @@ namespace MagicGarbage
                 GarbageFacilityStorageMultiplier = 150;
                 GarbageFacilityProcessingMultiplier = 200;
                 GarbageFacilityVehicleMultiplier = 140;
-
-                PowerUserOptions = true;
-                GarbageDispatchRequestThreshold = RecommendedDispatchRequestThreshold;
-                GarbagePickupThreshold = RecommendedPickupThreshold;
-                GarbageHappinessBaseline = RecommendedGarbageHappinessBaseline;
-                GarbageHappinessStep = RecommendedGarbageHappinessStep;
 
                 EnableTuningSystemsOnce();
                 Apply();
@@ -311,6 +200,145 @@ namespace MagicGarbage
                 GarbageFacilityVehicleMultiplier = 100;
                 GarbageFacilityProcessingMultiplier = 100;
                 GarbageFacilityStorageMultiplier = 100;
+
+                EnableTuningSystemsOnce();
+                Apply();
+            }
+        }
+
+        // --------------------------------------------------------
+        // POWER USER
+        // --------------------------------------------------------
+
+        [SettingsUISection(ActionsTab, PowerUserGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnThresholdOptionsChanged))]
+        public bool PowerUserOptions
+        {
+            get => m_PowerUserOptions;
+            set
+            {
+                if (m_PowerUserOptions == value)
+                {
+                    return;
+                }
+
+                m_PowerUserOptions = value;
+                Apply();
+            }
+        }
+
+        [SettingsUISlider(min = VanillaDispatchRequestThreshold, max = MaxDispatchRequestThreshold, step = 100, scalarMultiplier = 1)]
+        [SettingsUISection(ActionsTab, PowerUserGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUsers), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnThresholdSliderChanged))]
+        public int GarbageDispatchRequestThreshold
+        {
+            get => m_GarbageDispatchRequestThreshold;
+            set
+            {
+                int clamped = ClampInt(value, VanillaDispatchRequestThreshold, MaxDispatchRequestThreshold);
+                m_GarbageDispatchRequestThreshold = clamped;
+
+                if (m_GarbagePickupThreshold > m_GarbageDispatchRequestThreshold)
+                {
+                    m_GarbagePickupThreshold = m_GarbageDispatchRequestThreshold;
+                }
+            }
+        }
+
+        [SettingsUISlider(min = VanillaPickupThreshold, max = MaxPickupThreshold, step = 20, scalarMultiplier = 1)]
+        [SettingsUISection(ActionsTab, PowerUserGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUsers), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnThresholdSliderChanged))]
+        public int GarbagePickupThreshold
+        {
+            get => m_GarbagePickupThreshold;
+            set
+            {
+                int clamped = ClampInt(value, VanillaPickupThreshold, MaxPickupThreshold);
+
+                if (clamped > m_GarbageDispatchRequestThreshold)
+                {
+                    clamped = m_GarbageDispatchRequestThreshold;
+                }
+
+                m_GarbagePickupThreshold = clamped;
+            }
+        }
+
+        [SettingsUISlider(min = MinGarbageHappinessBaseline, max = MaxGarbageHappinessBaseline, step = 50, scalarMultiplier = 1)]
+        [SettingsUISection(ActionsTab, PowerUserGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUsers), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnThresholdSliderChanged))]
+        public int GarbageHappinessBaseline
+        {
+            get => m_GarbageHappinessBaseline;
+            set
+            {
+                m_GarbageHappinessBaseline = ClampInt(
+                    value,
+                    MinGarbageHappinessBaseline,
+                    MaxGarbageHappinessBaseline);
+            }
+        }
+
+        [SettingsUISlider(min = MinGarbageHappinessStep, max = MaxGarbageHappinessStep, step = 5, scalarMultiplier = 1)]
+        [SettingsUISection(ActionsTab, PowerUserGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUsers), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnThresholdSliderChanged))]
+        public int GarbageHappinessStep
+        {
+            get => m_GarbageHappinessStep;
+            set
+            {
+                m_GarbageHappinessStep = ClampInt(
+                    value,
+                    MinGarbageHappinessStep,
+                    MaxGarbageHappinessStep);
+            }
+        }
+
+        // -----------------------------------------
+        // POWER USER PRESET BUTTONS
+        // -----------------------------------------
+
+        [SettingsUIButton]
+        [SettingsUIButtonGroup(PowerUserButtonsRow)]
+        [SettingsUISection(ActionsTab, PowerUserGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUsers), true)]
+        public bool PowerUserRecommended
+        {
+            set
+            {
+                if (!value)
+                {
+                    return;
+                }
+
+                PowerUserOptions = true;
+                GarbageDispatchRequestThreshold = 1000;
+                GarbagePickupThreshold = 200;
+                GarbageHappinessBaseline = 550;
+                GarbageHappinessStep = 150;
+
+                EnableTuningSystemsOnce();
+                Apply();
+            }
+        }
+
+        [SettingsUIButton]
+        [SettingsUIButtonGroup(PowerUserButtonsRow)]
+        [SettingsUISection(ActionsTab, PowerUserGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUsers), true)]
+        public bool PowerUserDefaults
+        {
+            set
+            {
+                if (!value)
+                {
+                    return;
+                }
 
                 PowerUserOptions = false;
                 GarbageDispatchRequestThreshold = VanillaDispatchRequestThreshold;
@@ -490,7 +518,6 @@ namespace MagicGarbage
             GarbageHappinessStep = VanillaGarbageHappinessStep;
 
             GarbageStatus.ResetUi();
-
         }
 
         // --------------------------------------------

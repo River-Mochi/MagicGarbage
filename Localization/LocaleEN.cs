@@ -37,6 +37,7 @@ namespace MagicGarbage
                 // Groups
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Auto Clean" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "Self Manage" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.PowerUserGrp), "Power User" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "Status" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "Mod info" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Links" },
@@ -88,12 +89,15 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Power User Options" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
                     "**Optional advanced threshold + garbage happiness tuning.**\n" +
-                    "When OFF, pickup/request thresholds and garbage happiness stay vanilla.\n" +
-                    "When ON, the advanced sliders appear.\n" +
-                    "Last slider values are saved when this option is OFF (in case you want to enable it again).\n"
+                    "When **OFF**, pickup/request thresholds and garbage happiness **stay vanilla**.\n" +
+                    "When **ON**, the advanced **sliders appear**.\n\n" +
+                    "------- Garbage Happiness options -------------\n"+
+                    " - <Vanilla> = 1st penalty at <165>.\n" +
+                    " - <Recommended> = 1st penalty at <700>.\n" +
+                    " - <Very soft> = 1st garbage penalty at <1150>.\n" +
+                    "Note: you do not need to use these bonus **Power user** options.\n" +
+                    "Last slider values are saved when this option is OFF (in case you want to enable it again)."
                 },
-
-
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Dispatch Request Threshold" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
@@ -109,12 +113,31 @@ namespace MagicGarbage
                     "**Minimum building garbage before a truck can collect from it.**\n" +
                     "Vanilla = **20** garbage units.\n" +
                     "Pickup can never be higher than Dispatch Request.\n" +
-                    "Always keep Dispatch Request at or above the eligible pickup value to prevent logic mishaps.\n"
+                    "Keep Dispatch Request at or above the eligible pickup value to prevent logic mishap;" +
+                    " if a truck is dispatched to a building and the pickup value is higher, truck could potentially not be able to collect (rate of accumulation also a factor).\n"
                 },
+
+                // Presets
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Recommended" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
+                    "Apply **recommended** standard Trash Boss values.\n" +
+                    "Does not change Power User settings."
+                },
+
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Game Defaults" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
+                    "Set standard Trash Boss sliders back to vanilla values.\n" +
+                    "Does not change Power User settings.\n" +
+                    "- Percent sliders return to **100%**.\n" +
+                    "- Dispatch Request Threshold returns to **100**.\n" +
+                    "- Pickup Threshold returns to **20**.\n"
+                },
+
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "Garbage Happiness Baseline" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
-                    "**Building garbage before garbage starts causing health + happiness penalty.**\n" +
+                    "**Building garbage level before it starts causing health + happiness penalty.**\n" +
                     "Vanilla = **100** garbage units.\n" +
                     "Higher baseline = buildings can hold more garbage before penalty starts.\n" +
                     "100 garbage units = 0.1t\n" +
@@ -126,38 +149,25 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "Garbage Happiness Step" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
-                    "**Extra garbage needed for each additional -1 garbage penalty.**\n" +
+                    "**Extra garbage over baseline amount that causes -1 penalty to start.**\n" +
                     "Vanilla = **65** garbage units.\n" +
                     "Higher step = slower penalty growth.\n" +
                     "Game caps garbage penalty at **-10**.\n" +
-                    "Vanilla happiness: **100 baseline + 65 step = -1 penalty at 165 garbage**.\n" +
-                    "If garbage thresholds are increased, but happiness stays vanilla, buildings can get heavy penalties more easily."
+                    "Vanilla first <-1 penalty> happens at **165 garbage** (100 baseline + 65 step)\n" +
+                    "Balance threshold changes with happiness sliders or incur heavier than normal penalties."
                 },
 
-                // Presets
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Recommended" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "Apply recommended Trash Boss values:\n" +
-                    "- Truck load capacity: **200%**\n" +
-                    "- Facility storage: **150%**\n" +
-                    "- Processing speed: **200%**\n" +
-                    "- Facility truck count: **140%**\n" +
-                    "- Power User Options: **ON**\n" +
-                    "- Dispatch Request Threshold: **1000**\n" +
-                    "- Pickup Threshold: **200**\n" +
-                    "- Garbage Happiness Baseline: **300**\n" +
-                    "- Garbage Happiness Step: **150**"
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "Recommended" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
+                    "Apply **recommended** Power User values.\n" +
+                    "Turns Power User ON.\n" +
+                    "First garbage penalty starts at **700** garbage (550 baseline + 150 step)."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Game Defaults" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Set all Trash Boss sliders back to vanilla values.\n" +
-                    "- Percent sliders return to **100%**.\n" +
-                    "- Power User Options turn **OFF**.\n" +
-                    "- Dispatch Request Threshold returns to **100**.\n" +
-                    "- Pickup Threshold returns to **20**.\n" +
-                    "- Garbage Happiness Baseline returns to **100**.\n" +
-                    "- Garbage Happiness Step returns to **65**."
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "Game Defaults" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
+                    "Set Power User values **back to vanilla**.\n" +
+                    "Turns **Power User OFF**."
                 },
 
 
@@ -183,6 +193,7 @@ namespace MagicGarbage
                     "<Self-Manage state>\n" +
                     "  * Trash Boss = **[ ✓ ]**\n" +
                     "  * Set sliders as desired.\n" +
+                    "  * Optional: turn on Power User for advanced thresholds + garbage happiness.\n" +
                     "  * Same game garbage; better self-managed trucks/facilities.\n" +
                     " <-------------------------------------->\n\n" +
                     "<Normal vanilla game>\n" +
@@ -223,8 +234,8 @@ namespace MagicGarbage
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacilities)),
                     "Summary of counted garbage facilities.\n" +
                     "**Facilities** = counted garbage buildings.\n" +
-                    "**Garbage trucks** = normal garbage trucks owned by those facilities.\n" +
-                    "**Dump trucks** = inter garbage facility transfers.\n" +
+                    "**Garbage trucks** = normal collection trucks. At Industrial Waste facilities, they collect industrial waste instead of garbage.\n" +
+                    "**Dump trucks** = inter-facility transfers of garbage.\n" +
                     "**Max workers** = total worker capacity across those same facilities."
                 },
 
