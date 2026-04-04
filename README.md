@@ -1,6 +1,6 @@
 # Magic Garbage [MG]
 
-Two ways to handle garbage in **Cities: Skylines II**.
+Two main ways to handle garbage in **Cities: Skylines II**, plus a **Status-only** option.
 
 All controls are in the **Options** menu.  
 There is **no in-city UI panel** and **no Harmony**.
@@ -19,44 +19,96 @@ Under the hood: a **Burst-compiled ECS job** runs periodically and clears garbag
 
 ## Option 2 – Trash Boss (Self Manage)
 
-- ✅ **Trash Boss ON**, **Total Magic OFF**
-- Vanilla garbage simulation stays active, but these values can be tuned:
+- ✅ **Trash Boss ON**
+- **Total Magic OFF**
+- Vanilla garbage simulation stays active, but these standard values can be tuned:
 
   - **Truck load capacity** (**100–500%**)
   - **Facility storage** (**100–500%**)
   - **Facility process speed** (**100–500%**)
   - **Facility fleet** (**100–400%**)
-  - **Building thresholds** (**1x–30x**) *(optional)*
 
-### Building thresholds
-This optional slider raises both of these together:
+### Standard preset buttons
 
-- **Dispatch Request threshold**
-- **Pickup threshold**
-
-Higher values can reduce garbage truck traffic, but setting it too high can also reduce pickup frequency too much.
-
-- **1x** = vanilla
-- vanilla thresholds are **100 request** and **20 pickup**
-- as a rough player-facing conversion, **1,000 garbage units ≈ 1t**
-
-Most players do **not** need to change this slider.  
-It is mainly there for testing and for players who want to experiment with reducing garbage truck traffic further.
-
-### Preset buttons
-- **Game Defaults** – returns all Trash Boss sliders to vanilla values
-  - Percent sliders back to **100%**
-  - Building thresholds back to **1x**
-
-- **Recommended** – applies:
+- **Recommended**
   - Truck load capacity: **200%**
-  - Building thresholds: **5x**
   - Facility process speed: **200%**
   - Facility storage: **150%**
   - Facility fleet: **140%**
 
-> 💡 **Total Magic** and **Trash Boss** can both be off if only Status report desired.  
-> Trash Boss slider values are saved even while **Total Magic** is ON.
+- **Game Defaults**
+  - Returns the standard Trash Boss sliders to vanilla values
+  - Percent sliders back to **100%**
+
+> These standard buttons do **not** change Power User settings.
+
+---
+
+## Optional – Power User
+
+Power User is a separate advanced section inside **Trash Boss**.
+
+When **Power User** is enabled, these extra sliders appear:
+
+- **Dispatch Request Threshold** (**100–3000**)
+- **Pickup Threshold** (**20–1000**)
+- **Garbage Happiness Baseline** (**100–3000**)
+- **Garbage Happiness Step** (**65–500**)
+
+### What they do
+
+- **Dispatch Request Threshold**  
+  Building garbage needed before a truck dispatch request is created or kept.
+
+- **Pickup Threshold**  
+  Minimum building garbage before a truck can collect from it.
+
+- **Garbage Happiness Baseline**  
+  Building garbage level before it starts causing health + happiness penalty.
+
+- **Garbage Happiness Step**  
+  Extra garbage over baseline amount that causes each additional `-1` garbage penalty.
+
+### Power User rules
+
+- **Pickup Threshold** can never be higher than **Dispatch Request Threshold**
+- Power User slider values are saved even when **Power User** is turned off
+- Standard Trash Boss buttons do not overwrite Power User values
+
+### Power User preset buttons
+
+- **Recommended**
+  - Dispatch Request Threshold: **1000**
+  - Pickup Threshold: **200**
+  - Garbage Happiness Baseline: **550**
+  - Garbage Happiness Step: **150**
+
+- **Game Defaults**
+  - Dispatch Request Threshold: **100**
+  - Pickup Threshold: **20**
+  - Garbage Happiness Baseline: **100**
+  - Garbage Happiness Step: **65**
+  - Turns **Power User** back off
+
+### Why use Power User?
+
+Higher request/pickup thresholds can reduce garbage truck traffic, but setting them too high can also reduce pickup frequency too much.
+
+Most players do **not** need Power User.  
+It is mainly there for testing and for players who want to experiment with advanced garbage tuning.
+
+As a rough player-facing conversion:
+
+- **100 garbage units = 0.1t**
+- **1,000 garbage units = 1t**
+
+---
+
+## Status-only option
+
+You can also leave **Total Magic OFF** and **Trash Boss OFF** if you only want the live **Status** report.
+
+This is useful for checking garbage behavior without changing the simulation.
 
 ---
 
@@ -68,10 +120,11 @@ The **Status** section in Options shows a live garbage snapshot while the menu i
 - active collect requests
 - buildings with garbage
 - buildings above request threshold
-- garbage facilities, trucks, and max workers
+- garbage facilities, trucks, dump trucks, and max workers
 - truck state summary
 
 ### Detailed Status to Log
+
 The **Detailed Status to Log** button writes a larger report into:
 
 `Logs/MagicGarbage.log`
@@ -87,6 +140,7 @@ This includes things like:
 - per-facility summary
 
 ### Open Log
+
 - **Open Log** opens the game log folder.
 
 ---
@@ -104,15 +158,14 @@ This includes things like:
 ## Credits
 
 - RiverMochi: author
-- Thanks to **Wayz** for the original “Magical Garbage Truck” idea
+- Thanks to **Wayz** for the original “Magical Garbage Truck” idea. It has evolved a lot since then.
 - yenyang: code review, tech advice
 - Necko1996: testing and feedback
 - gagaxm: thumbnail image
 
-
 ---
 
-### Garbage happiness penalty comparison
+## Garbage happiness penalty comparison
 
 **Formula used by the game**
 
@@ -123,10 +176,10 @@ This includes things like:
 ### Presets compared
 
 - **Vanilla:** baseline **100**, step **65** → first `-1` at **165**
-- **Compromise:** baseline **550**, step **150** → first `-1` at **700**
+- **Recommended:** baseline **550**, step **150** → first `-1` at **700**
 - **Very soft:** baseline **950**, step **200** → first `-1` at **1150**
 
-| Garbage in Building | Vanilla<br>`100 / 65` | Compromise<br>`550 / 150` | Very soft<br>`950 / 200` |
+| Garbage in Building | Vanilla<br>`100 / 65` | Recommended<br>`550 / 150` | Very soft<br>`950 / 200` |
 |---:|---:|---:|---:|
 | 100  | 0   | 0   | 0   |
 | 165  | -1  | 0   | 0   |
@@ -139,11 +192,5 @@ This includes things like:
 | 1400 | -10 | -5  | -2  |
 | 2000 | -10 | -10 | -5  |
 
-### Suggested preset
-
-- **Dispatch Request Threshold:** `1000`
-- **Pickup Threshold:** `200`
-- **Garbage Happiness Baseline:** `550`
-- **Garbage Happiness Step:** `150`
-
 This keeps some garbage-related happiness pressure in the game, but is much less harsh than vanilla.
+- At 1,000 garbage units (1t), the vanilla penalty is already at `-10`, while the recommended is still at `-3` and the very soft preset is still at `0`.
