@@ -89,8 +89,8 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Power User Options" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
-                    "**Optional advanced threshold + garbage happiness tuning.**\n" +
-                    "When **OFF**, pickup/request thresholds and garbage happiness **stay vanilla**.\n" +
+                    "**Optional advanced threshold + garbage happiness + accumulation tuning.**\n" +
+                    "When **OFF**, pickup/request thresholds, garbage happiness, and garbage accumulation rate **stay vanilla**.\n" +
                     "When **ON**, the advanced **sliders appear**.\n\n" +
                     "<--- Garbage happiness examples --->\n" +
                     " - <Vanilla> 100/65 = 1st penalty at <165>.\n" +
@@ -98,6 +98,7 @@ namespace MagicGarbage
                     " - <Very soft> 950/200 = 1st garbage penalty at <1150>.\n" +
                     "Convenience: last slider values are saved when this option is OFF (in case you want to enable later)."
                 },
+
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Dispatch Request Threshold" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
@@ -157,17 +158,32 @@ namespace MagicGarbage
                     "Balance threshold changes with happiness sliders or incur heavier than normal penalties."
                 },
 
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "Garbage Accumulation Rate" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
+                    "**Scales supported building garbage source values.**\n" +
+                    "This is a strong lever and changing this rate affects many things." +
+                    "It is possible to get a good balanced system without using this.\n\n" +
+                    "**100% = vanilla** accumulation.\n" +
+                    "**20%** = much slower buildup.\n" +
+                    "**200%** = double buildup.\n" +
+                    "At 20%, all Cims are obviously composting, thus a lower garbage accumulation rate."
+                },
+
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "Recommended" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
                     "Apply **recommended** Power User values.\n" +
                     "Turns Power User ON.\n" +
-                    "First garbage penalty starts at **700** garbage (550 baseline + 150 step)."
+                    "First garbage penalty starts at **700** garbage (550 baseline + 150 step).\n" +
+                    "Garbage Accumulation Rate stays at **100%** vanilla unless changed manually."
                 },
+
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "Game Defaults" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
                     "Set Power User values **back to vanilla**.\n" +
-                    "Turns **Power User OFF**."
+                    "Turns **Power User OFF**.\n"
                 },
 
                 // About
@@ -211,10 +227,11 @@ namespace MagicGarbage
                     "**-1 = Needs minor tweak** game might go between 0 to -1 often and could be ignored.\n" +
                     "**-2 to -4 = Slightly stinky**\n" +
                     "**-5 to -10 = Garbage problem**\n" +
-
-                    "**Indirect knobs:** truck/facility/threshold sliders can improve this over time by reducing actual garbage buildup.\n " +
-                    "**Direct knobs:** <Garbage Happiness Baseline> + Garbage Happiness Step.> changes what cims tolerate before they are unhappy.\n"
+                    "**Indirect knobs:** truck/facility/threshold sliders can improve this over time by reducing actual garbage buildup.\n" +
+                    "**Direct knobs:** <Garbage Happiness Baseline> + <Garbage Happiness Step> change what cims tolerate before they are unhappy.\n" +
+                    "**Source-rate knob:** <Garbage Accumulation Rate> changes how fast supported buildings produce garbage."
                 },
+
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Garbage/mo." },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
@@ -293,15 +310,21 @@ namespace MagicGarbage
                 { "MG.Status.Log.SettingsTrashBoss",
                     "Trash Boss sliders (saved): truck load={0:N0}% | facility storage={1:N0}% | facility process={2:N0}% | facility fleet={3:N0}%"
                 },
+                
                 { "MG.Status.Log.SettingsPowerUser",
-                    "Power User (saved): enabled={0} | request={1:N0} | pickup={2:N0} | happiness baseline={3:N0} | happiness step={4:N0}"
+                    "Power User (saved): enabled={0} | request={1:N0} | pickup={2:N0} | happiness baseline={3:N0} | happiness step={4:N0} | accumulation rate={5:N0}%"
                 },
+
                 { "MG.Status.Log.Legend",
                     "Legend:\n" +
                     "- Produced/Processed uses tons per month.\n" +
                     "- Threshold values below use internal garbage units, not tons.\n" +
                     "- For player-facing, the game converts 100 units = 0.1t and 1,000 units = 1t.\n" +
-                    "- Garbage Service Rating = game city garbage happiness factor. 0 is excellent; negative values are worse.\n" +
+                    "- Garbage Service Rating = game city garbage happiness factor.\n" +
+                    "  - 0 = Excellent\n" +
+                    "  - -1 = Needs minor tweak, or ignore\n" +
+                    "  - -2 to -4 = Slightly stinky\n" +
+                    "  - -5 to -10 = Garbage problem\n" +
                     "Threshold sliders:\n" +
                     "  - Pickup threshold = minimum garbage before a truck will collect from a building.\n" +
                     "  - Request threshold = minimum garbage before the game creates or keeps a collect request.\n" +
@@ -311,15 +334,17 @@ namespace MagicGarbage
                     "- Some pending requests will be assigned later; some can also clear later if vanilla revalidation decides the target no longer needs service.\n" +
                     "-----------------------------------------------------------------------------\n"
                 },
+
                 { "MG.Status.Log.Thresholds",
                     "Game Thresholds (internal garbage units): pickup={1:N0}, request={0:N0}, warning icon={2:N0}, hard cap={3:N0}"
                 },
 
                 { "MG.Status.Log.ThresholdsMissing", "Thresholds: <GarbageParameterData not available>" },
                 { "MG.Status.Log.GarbageProcessing", "Garbage: {0:N0} t/mo | Processing: {1:N0} t/mo" },
-                { "MG.Status.Log.GarbageServiceRating", "Garbage Service Rating: raw={0:N2} | rounded={1:N0}" },
+                { "MG.Status.Log.GarbageServiceRating", "Garbage Service Rating: {0} | raw={1:N2} | rounded={2:N0}" },
                 { "MG.Status.Log.Requests", "Collect Requests: pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
                 { "MG.Status.Log.PendingPeak", "Highest pending target garbage: {0:N0} ({1:N1}t) at {2}" },
+                { "MG.Status.Log.PendingPeakNone", "Highest pending target garbage: none" },
                 { "MG.Status.Log.Producers", "Buildings: {0:N0} warning icons | {1:N0} total | {2:N0} has garbage | {3:N0} above request threshold " },
                 { "MG.Status.Log.ProducerGarbageStats", "Building garbage (non-zero only): avg={0:N0} ({1:N1}t) | median={2:N0} ({3:N1}t) | max={4:N0} ({5:N1}t) at {6}" },
                 { "MG.Status.Log.NearWarning75", "Buildings near warning icon (at least {1:N0} units / {2:N1}t): {0:N0}" },
@@ -327,6 +352,11 @@ namespace MagicGarbage
                 { "MG.Status.Log.Trucks", "Garbage trucks: {2:N0} moving ({3:N0} returning) | {1:N0} parked | {4:N0} disabled | {0:N0} total" },
                 { "MG.Status.Log.FacilitiesHeader", "Facility Summary" },
                 { "MG.Status.Log.FacilityLine", "- Facility {0}: garbage trucks={1:N0} ({2:N0} moving, {3:N0} parked) | dump trucks={4:N0} ({5:N0} moving) | max workers={6:N0}" },
+
+                { "MG.Status.Log.GarbageServiceRating.Excellent", "Excellent" },
+                { "MG.Status.Log.GarbageServiceRating.Minor", "Needs minor tweak" },
+                { "MG.Status.Log.GarbageServiceRating.Stinky", "Slightly stinky" },
+                { "MG.Status.Log.GarbageServiceRating.Problem", "Garbage problem" },
             };
         }
 

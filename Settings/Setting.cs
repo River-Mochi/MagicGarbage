@@ -67,6 +67,10 @@ namespace MagicGarbage
         internal const int RecommendedGarbageHappinessBaseline = 550;
         internal const int RecommendedGarbageHappinessStep = 150;
 
+        internal const int VanillaGarbageAccumulationRate = 100;
+        internal const int MinGarbageAccumulationRate = 20;
+        internal const int MaxGarbageAccumulationRate = 200;
+
         // ---- EXTERNAL LINKS ----
         private const string UrlParadox =
             "https://mods.paradoxplaza.com/authors/River-mochi/cities_skylines_2?games=cities_skylines_2&orderBy=desc&sortBy=best&time=alltime";
@@ -82,6 +86,7 @@ namespace MagicGarbage
         private int m_GarbagePickupThreshold = VanillaPickupThreshold;
         private int m_GarbageHappinessBaseline = VanillaGarbageHappinessBaseline;
         private int m_GarbageHappinessStep = VanillaGarbageHappinessStep;
+        private int m_GarbageAccumulationRate = VanillaGarbageAccumulationRate;
 
         // Power User sliders only show when both Trash Boss and Power User are enabled.
         private bool ShowPowerUsers => m_TrashBossEnabled && m_PowerUserOptions;
@@ -316,6 +321,23 @@ namespace MagicGarbage
             }
         }
 
+        [SettingsUISlider(min = MinGarbageAccumulationRate, max = MaxGarbageAccumulationRate, step = 10, scalarMultiplier = 1, unit = Unit.kPercentage)]
+        [SettingsUISection(ActionsTab, PowerUserGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUsers), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnAccumulationSliderChanged))]
+        public int GarbageAccumulationRate
+        {
+            get => m_GarbageAccumulationRate;
+            set
+            {
+                m_GarbageAccumulationRate = math.clamp(
+                    value,
+                    MinGarbageAccumulationRate,
+                    MaxGarbageAccumulationRate);
+            }
+        }
+
+
         // -----------------------------------------
         // POWER USER PRESET BUTTONS
         // -----------------------------------------
@@ -338,6 +360,7 @@ namespace MagicGarbage
                 GarbagePickupThreshold = RecommendedPickupThreshold;
                 GarbageHappinessBaseline = RecommendedGarbageHappinessBaseline;
                 GarbageHappinessStep = RecommendedGarbageHappinessStep;
+                GarbageAccumulationRate = VanillaGarbageAccumulationRate;
 
                 EnableTuningSystemsOnce();
                 Apply();
@@ -362,6 +385,7 @@ namespace MagicGarbage
                 GarbagePickupThreshold = VanillaPickupThreshold;
                 GarbageHappinessBaseline = VanillaGarbageHappinessBaseline;
                 GarbageHappinessStep = VanillaGarbageHappinessStep;
+                GarbageAccumulationRate = VanillaGarbageAccumulationRate;
 
                 EnableTuningSystemsOnce();
                 Apply();
@@ -444,6 +468,7 @@ namespace MagicGarbage
             GarbagePickupThreshold = VanillaPickupThreshold;
             GarbageHappinessBaseline = VanillaGarbageHappinessBaseline;
             GarbageHappinessStep = VanillaGarbageHappinessStep;
+            GarbageAccumulationRate = VanillaGarbageAccumulationRate;
 
             GarbageStatus.ResetUi();
         }
@@ -482,6 +507,15 @@ namespace MagicGarbage
             {
                 facSys.Enabled = true;
             }
+
+
+            GarbageAccumulationRateSystem accumulationSys = world.GetExistingSystemManaged<GarbageAccumulationRateSystem>();
+            if (accumulationSys != null)
+            {
+                accumulationSys.Enabled = true;
+            }
+
+
         }
 
         private void OnTruckSliderChanged(int _)
@@ -505,12 +539,20 @@ namespace MagicGarbage
                 return;
             }
 
-            GarbageThresholdSystem sys = world.GetExistingSystemManaged<GarbageThresholdSystem>();
-            if (sys != null)
+            GarbageThresholdSystem thresholdSys = world.GetExistingSystemManaged<GarbageThresholdSystem>();
+            if (thresholdSys != null)
             {
-                sys.Enabled = true;
+                thresholdSys.Enabled = true;
+            }
+
+            // Power User ON/OFF also controls whether accumulation rate should revert to vanilla.
+            GarbageAccumulationRateSystem accumulationSys = world.GetExistingSystemManaged<GarbageAccumulationRateSystem>();
+            if (accumulationSys != null)
+            {
+                accumulationSys.Enabled = true;
             }
         }
+
 
         private void OnThresholdSliderChanged(int _)
         {
@@ -520,6 +562,20 @@ namespace MagicGarbage
             }
 
             GarbageThresholdSystem sys = world.GetExistingSystemManaged<GarbageThresholdSystem>();
+            if (sys != null)
+            {
+                sys.Enabled = true;
+            }
+        }
+
+        private void OnAccumulationSliderChanged(int _)
+        {
+            if (!TryGetWorld(out World world))
+            {
+                return;
+            }
+
+            GarbageAccumulationRateSystem sys = world.GetExistingSystemManaged<GarbageAccumulationRateSystem>();
             if (sys != null)
             {
                 sys.Enabled = true;
@@ -569,6 +625,13 @@ namespace MagicGarbage
             {
                 facSys.Enabled = true;
             }
+
+            GarbageAccumulationRateSystem accumulationSys = world.GetExistingSystemManaged<GarbageAccumulationRateSystem>();
+            if (accumulationSys != null)
+            {
+                accumulationSys.Enabled = true;
+            }
+
         }
 
         private static void OpenLogFolder()

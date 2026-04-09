@@ -133,7 +133,6 @@ namespace MagicGarbage
             }
         }
 
-
         public static string GetUiGarbageServiceRating()
         {
             return string.IsNullOrEmpty(s_UiGarbageServiceRating) ? "-" : s_UiGarbageServiceRating;
@@ -233,11 +232,31 @@ namespace MagicGarbage
             return Mod.LF("MG.Status.Row.GarbageServiceRating.Problem", rounded);
         }
 
+        private static string BuildGarbageServiceRatingLabel(int rounded)
+        {
+            if (rounded >= 0)
+            {
+                return Mod.L("MG.Status.Log.GarbageServiceRating.Excellent");
+            }
+
+            if (rounded == -1)
+            {
+                return Mod.L("MG.Status.Log.GarbageServiceRating.Minor");
+            }
+
+            if (rounded >= -4)
+            {
+                return Mod.L("MG.Status.Log.GarbageServiceRating.Stinky");
+            }
+
+            return Mod.L("MG.Status.Log.GarbageServiceRating.Problem");
+        }
+
         private static string BuildLogText(GarbageStatusSystem.Snapshot snap)
         {
             string nowText = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            StringBuilder log = new StringBuilder(2600);
+            StringBuilder log = new StringBuilder(2800);
 
             log.AppendLine(Mod.LF("MG.Status.Log.Title", nowText));
             log.AppendLine(Mod.LF("MG.Status.Log.City", Fmt(snap.City)));
@@ -268,6 +287,7 @@ namespace MagicGarbage
 
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.GarbageServiceRating",
+                BuildGarbageServiceRatingLabel(snap.GarbageServiceRatingRounded),
                 snap.GarbageServiceRatingRaw,
                 snap.GarbageServiceRatingRounded));
 
@@ -278,11 +298,18 @@ namespace MagicGarbage
                 snap.RequestPending,
                 snap.RequestDispatched));
 
-            log.AppendLine(Mod.LF(
-                "MG.Status.Log.PendingPeak",
-                snap.PendingMaxTargetGarbage,
-                ToTons(snap.PendingMaxTargetGarbage),
-                Fmt(snap.PendingMaxTargetEntity)));
+            if (snap.PendingMaxTargetGarbage <= 0 || snap.PendingMaxTargetEntity == Entity.Null)
+            {
+                log.AppendLine(Mod.L("MG.Status.Log.PendingPeakNone"));
+            }
+            else
+            {
+                log.AppendLine(Mod.LF(
+                    "MG.Status.Log.PendingPeak",
+                    snap.PendingMaxTargetGarbage,
+                    ToTons(snap.PendingMaxTargetGarbage),
+                    Fmt(snap.PendingMaxTargetEntity)));
+            }
 
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.Producers",
@@ -369,7 +396,8 @@ namespace MagicGarbage
                 setting.GarbageDispatchRequestThreshold,
                 setting.GarbagePickupThreshold,
                 setting.GarbageHappinessBaseline,
-                setting.GarbageHappinessStep));
+                setting.GarbageHappinessStep,
+                setting.GarbageAccumulationRate));
             log.AppendLine();
         }
 
