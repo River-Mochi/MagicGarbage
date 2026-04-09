@@ -208,11 +208,12 @@ namespace MagicGarbage
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageServiceRating)),
                     "Simple citywide garbage happiness rating from the game.\n" +
                     "**0 = Excellent**\n" +
-                    "**-1 = Needs minor tweak**\n" +
+                    "**-1 = Needs minor tweak** game might go between 0 to -1 often and could be ignored.\n" +
                     "**-2 to -4 = Slightly stinky**\n" +
                     "**-5 to -10 = Garbage problem**\n" +
-                    "Direct knobs: **Garbage Happiness Baseline** + **Garbage Happiness Step**.\n" +
-                    "Indirect improvement: truck/facility sliders can improve this over time by reducing garbage buildup."
+
+                    "**Indirect knobs:** truck/facility/threshold sliders can improve this over time by reducing actual garbage buildup.\n " +
+                    "**Direct knobs:** <Garbage Happiness Baseline> + Garbage Happiness Step.> changes what cims tolerate before they are unhappy.\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Garbage/mo." },
@@ -319,7 +320,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.GarbageServiceRating", "Garbage Service Rating: raw={0:N2} | rounded={1:N0}" },
                 { "MG.Status.Log.Requests", "Collect Requests: pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
                 { "MG.Status.Log.PendingPeak", "Highest pending target garbage: {0:N0} ({1:N1}t) at {2}" },
-                { "MG.Status.Log.Producers", "Buildings: {0:N0} total | {1:N0} has garbage | {2:N0} above request threshold | {3:N0} warning icons" },
+                { "MG.Status.Log.Producers", "Buildings: {0:N0} warning icons | {1:N0} total | {2:N0} has garbage | {3:N0} above request threshold " },
                 { "MG.Status.Log.ProducerGarbageStats", "Building garbage (non-zero only): avg={0:N0} ({1:N1}t) | median={2:N0} ({3:N1}t) | max={4:N0} ({5:N1}t) at {6}" },
                 { "MG.Status.Log.NearWarning75", "Buildings near warning icon (at least {1:N0} units / {2:N1}t): {0:N0}" },
                 { "MG.Status.Log.FacilitiesSummary", "Facilities: {0:N0} total | {1:N0} garbage trucks | {2:N0} dump trucks ({3:N0} moving) | {4:N0} workers" },

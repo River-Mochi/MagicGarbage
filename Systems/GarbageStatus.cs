@@ -286,10 +286,10 @@ namespace MagicGarbage
 
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.Producers",
+                snap.ProducerOverWarning,
                 snap.ProducerTotal,
                 snap.ProducerGarbageGt0,
-                snap.ProducerOverRequest,
-                snap.ProducerOverWarning));
+                snap.ProducerOverRequest));
 
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.ProducerGarbageStats",
