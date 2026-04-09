@@ -3,20 +3,22 @@
 | Area / Feature | What it does | Where |
 |---|---|---|
 | Total Magic toggle | Auto-clean mode. Turning it ON forces Trash Boss OFF. Both can also be OFF. | `Setting.TotalMagic`, `Setting.TrashBossEnabled` |
-| Trash Boss toggle | “Enhanced vanilla” tuning. Turning it ON forces Total Magic OFF. Both can also be OFF. | `Setting.TotalMagic`, `Setting.TrashBossEnabled` |
-| Total Magic cadence | Periodic sweep (not every frame). OFF = cheap early-return | `TotalMagicSystem.GetUpdateInterval`, `OnUpdate` gates |
-| Total Magic sweep | Clears producer garbage + request + warning; removes icon | `TotalMagicSystem.MagicJob` + `IconCommandSystem` |
-| Standard Trash Boss tuning | Scales garbage truck capacity and facility storage / processing / fleet | `GarbageTruckCapacitySystem`, `GarbageFacilityCapacitySystem` |
-| Power User toggle | Enables advanced thresholds + garbage happiness tuning | `Setting.PowerUserOptions` |
-| Power User sliders | Request threshold, pickup threshold, happiness baseline, happiness step | `Setting`, `GarbageThresholdSystem` |
-| Power User button visibility | Power User buttons/sliders only show when Trash Boss ON + Power User ON | `ShowPowerUserThresholdSliders` |
-| Standard preset buttons | Standard Trash Boss Recommended / Game Defaults only affect the standard Trash Boss sliders | `Setting.TrashBossRecommended`, `Setting.TrashBossDefaults` |
-| Power User preset buttons | Power User Recommended / Game Defaults only affect advanced Power User values | `Setting.PowerUserRecommended`, `Setting.PowerUserDefaults` |
-| Tuning timing | Applies only on change; then sleeps | capacity / threshold systems: wake → apply → `Enabled=false` |
-| Status panel | Pull-refresh snapshot while Options is open | `GarbageStatus`, `GarbageStatusSystem` |
-| Status log button | Writes a more detailed one-shot report to mod log | `GarbageStatus.RefreshNow(writeToLog: true)` |
-| Options UI layout | Actions + About; Actions contains Auto Clean, Self Manage, Power User, Status | `Setting` + locales |
-| Logging | Mod log only; Status logs on button press | `Mod.Log` |
+| Trash Boss toggle | Self-manage / enhanced-vanilla tuning. Turning it ON forces Total Magic OFF. Both can also be OFF. | `Setting.TotalMagic`, `Setting.TrashBossEnabled` |
+| Total Magic cadence | Periodic sweep, not every frame. OFF = cheap early-return / sleep. | `TotalMagicSystem` |
+| Total Magic sweep | Clears producer garbage and lets vanilla clean up stale request state afterward. | `TotalMagicSystem` |
+| Standard Trash Boss tuning | Scales garbage truck capacity and facility storage / processing / fleet. | `GarbageTruckCapacitySystem`, `GarbageFacilityCapacitySystem` |
+| Power User toggle | Enables advanced tuning. | `Setting.PowerUserOptions` |
+| Power User sliders | Request threshold, pickup threshold, happiness baseline, happiness step, garbage accumulation rate. | `Setting`, threshold/accumulation tuning systems |
+| Standard preset buttons | Standard Trash Boss Recommended / Game Defaults only affect the standard Trash Boss sliders. | `Setting.TrashBossRecommended`, `Setting.TrashBossDefaults` |
+| Power User preset buttons | Power User Recommended / Game Defaults only affect advanced Power User values. | `Setting.PowerUserRecommended`, `Setting.PowerUserDefaults` |
+| Pickup clamp rule | Pickup cannot be higher than Dispatch Request. | `Setting`, `GarbageThresholdSystem` |
+| Tuning timing | Applies only on change, then sleeps. | capacity / threshold systems: wake → apply → `Enabled = false` |
+| Status panel | Pull-refresh snapshot while Options is open. | `GarbageStatus`, `GarbageStatusSystem` |
+| Status rows | Garbage Service Rating, garbage/mo., requests, buildings, facilities, trucks. | locales + `GarbageStatus` |
+| Status log button | Writes a more detailed one-shot report to the mod log. | `GarbageStatus.RefreshNow(writeToLog: true)` |
+| Open Log button | Opens the game log folder. | `Setting.OpenLog` |
+| Options UI layout | Actions + About; Actions contains Auto Clean, Self Manage, Power User, Status. | `Setting` + locales |
+| Logging | Mod log only; Status logs on button press. | `Mod.Log` |
 
 ## dnSpy research
 
@@ -145,6 +147,13 @@ That approach caused severe `Player.log` spam:
 - Industrial-waste collection is on the **`GarbageTruck`** side
 - Inter-facility garbage transfer is on the **`DeliveryTruck`** side
 - These are related garbage systems, but not the same live truck path
+
+## Status notes
+
+- Status is valid even when **Total Magic** and **Trash Boss** are both OFF
+- UI status is pull-refreshed while Options is open
+- Detailed status logging is one-shot on button press
+- Status reads live game values rather than hard-coded guessed defaults
 
 ## Implementation notes
 

@@ -85,11 +85,14 @@ Balance advised: use status log button to check details while tweaking this. All
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-* added optional Building threshold slider; triggers when a truck is dispatched 
-* added more detailed Status log info to mod Options menu.
-</ChangeLog>
+    * added optional Power User advanced settings for garbage tuning
+    * added Garbage Accumulation Rate for power users to tinker with; not needed for most cities.
+    * added optional Building threshold slider; triggers when a truck is dispatched
+    * added more detailed Status log info to mod Options menu.
+* updated all locale files.
 
-	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
+</ChangeLog>
+<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 <ExternalLink Type="discord" Url="https://discord.gg/HTav7ARPs2" />
 <ExternalLink Type="github" Url="https://github.com/River-Mochi/MagicGarbage" />
 
