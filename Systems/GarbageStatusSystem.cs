@@ -23,6 +23,7 @@ namespace MagicGarbage
 
     public sealed partial class GarbageStatusSystem : GameSystemBase
     {
+        // Per-facility summary used by the detailed log.
         public readonly struct FacilityEntry
         {
             public readonly Entity Facility;
@@ -52,6 +53,7 @@ namespace MagicGarbage
             }
         }
 
+        // Full snapshot consumed by GarbageStatus.cs for UI + log output.
         public readonly struct Snapshot
         {
             public readonly bool InGame;
@@ -215,6 +217,7 @@ namespace MagicGarbage
             m_GarbageAccumulationSystem = World.GetOrCreateSystemManaged<GarbageAccumulationSystem>();
             m_CitizenHappinessSystem = World.GetOrCreateSystemManaged<CitizenHappinessSystem>();
 
+            // Buildings that currently hold garbage.
             m_ProducerQuery = GetEntityQuery(new EntityQueryDesc
             {
                 All = new[]
@@ -229,6 +232,7 @@ namespace MagicGarbage
                 },
             });
 
+            // Active garbage collection requests in the current city.
             m_RequestQuery = GetEntityQuery(new EntityQueryDesc
             {
                 All = new[]
@@ -243,6 +247,7 @@ namespace MagicGarbage
                 },
             });
 
+            // Normal curbside garbage trucks only.
             m_TruckQuery = GetEntityQuery(new EntityQueryDesc
             {
                 All = new[]
@@ -256,12 +261,14 @@ namespace MagicGarbage
                 },
             });
 
+            // Buffer used by the game's city happiness factor calculation.
             m_HappinessFactorParameterQuery = GetEntityQuery(
                 ComponentType.ReadOnly<HappinessFactorParameterData>());
 
             Enabled = false;
         }
 
+        // Snapshot system only in Options UI, no auto sim work needed on purpose, does not affect city performance.
         protected override void OnUpdate()
         {
         }
@@ -280,6 +287,7 @@ namespace MagicGarbage
                 trashBoss = setting.TrashBossEnabled;
             }
 
+            // Read current live garbage parameters from the singleton.
             bool haveParams = SystemAPI.TryGetSingleton(out GarbageParameterData gp);
 
             int requestLimit = 0;
@@ -299,6 +307,7 @@ namespace MagicGarbage
                 happinessStep = gp.m_HappinessEffectStep;
             }
 
+            // Early empty snapshot when no city is loaded.
             if (!inGame)
             {
                 return new Snapshot(
@@ -347,6 +356,7 @@ namespace MagicGarbage
             ComponentLookup<WorkProvider> workProviderLookup = GetComponentLookup<WorkProvider>(true);
             BufferLookup<OwnedVehicle> ownedVehicleLookup = GetBufferLookup<OwnedVehicle>(true);
 
+            // Citywide production-style number exposed by GarbageAccumulationSystem.
             long garbageRaw = m_GarbageAccumulationSystem != null
                 ? m_GarbageAccumulationSystem.garbageAccumulation
                 : 0L;
@@ -354,6 +364,7 @@ namespace MagicGarbage
             double garbageServiceRatingRaw = 0.0;
             int garbageServiceRatingRounded = 0;
 
+            // Pull the city's current Garbage happiness factor directly from the game.
             if (m_CitizenHappinessSystem != null && !m_HappinessFactorParameterQuery.IsEmptyIgnoreFilter)
             {
                 Entity happinessParamEntity = m_HappinessFactorParameterQuery.GetSingletonEntity();
@@ -395,6 +406,7 @@ namespace MagicGarbage
             long garbageSum = 0L;
             List<int> garbageValues = new List<int>(producerTotal > 0 ? producerTotal : 16);
 
+            // Scan all garbage-producing buildings to build summary stats.
             foreach ((RefRO<GarbageProducer> producer, Entity producerEntity) in SystemAPI
                          .Query<RefRO<GarbageProducer>>()
                          .WithEntityAccess()
@@ -458,6 +470,7 @@ namespace MagicGarbage
             int pendingMaxTargetGarbage = 0;
             Entity pendingMaxTargetEntity = Entity.Null;
 
+            // Separate pending requests from already-assigned/dispatched requests.
             foreach ((RefRO<GarbageCollectionRequest> request, Entity requestEntity) in SystemAPI
                          .Query<RefRO<GarbageCollectionRequest>>()
                          .WithEntityAccess()
@@ -479,6 +492,7 @@ namespace MagicGarbage
                 {
                     requestPending++;
 
+                    // Track the worst currently pending target for easier troubleshooting.
                     Entity target = request.ValueRO.m_Target;
                     if (target != Entity.Null && SystemAPI.HasComponent<GarbageProducer>(target))
                     {
@@ -497,6 +511,7 @@ namespace MagicGarbage
             int truckReturning = 0;
             int truckDisabled = 0;
 
+            // Scan normal garbage trucks only for global truck-state totals.
             foreach ((RefRO<Game.Vehicles.GarbageTruck> truckRef, Entity truckEntity) in SystemAPI
                          .Query<RefRO<Game.Vehicles.GarbageTruck>>()
                          .WithEntityAccess()
@@ -530,6 +545,7 @@ namespace MagicGarbage
 
             List<FacilityEntry> facilityEntries = new List<FacilityEntry>(16);
 
+            // Build per-facility summaries by scanning each facility's owned vehicles.
             foreach ((RefRO<Game.Buildings.GarbageFacility> facility, Entity facilityEntity) in SystemAPI
                          .Query<RefRO<Game.Buildings.GarbageFacility>>()
                          .WithEntityAccess()
@@ -569,6 +585,7 @@ namespace MagicGarbage
                             continue;
                         }
 
+                        // Normal curbside garbage trucks.
                         if (SystemAPI.HasComponent<Game.Vehicles.GarbageTruck>(vehicle))
                         {
                             bool isParked = SystemAPI.HasComponent<ParkedCar>(vehicle);
@@ -586,11 +603,13 @@ namespace MagicGarbage
                             continue;
                         }
 
+                        // Hazardous-waste / transfer dump trucks use the DeliveryTruck path.
                         if (SystemAPI.HasComponent<Game.Vehicles.DeliveryTruck>(vehicle))
                         {
                             Game.Vehicles.DeliveryTruck deliveryTruck =
                                 SystemAPI.GetComponent<Game.Vehicles.DeliveryTruck>(vehicle);
 
+                            // Ignore dummy traffic so only real owned trucks are counted.
                             if ((deliveryTruck.m_State & DeliveryTruckFlags.DummyTraffic) != 0)
                             {
                                 continue;
@@ -608,6 +627,7 @@ namespace MagicGarbage
                     }
                 }
 
+                // Skip facilities that currently contribute nothing useful to the report.
                 if (facility.ValueRO.m_ProcessingRate <= 0 &&
                     garbageTruckTotal <= 0 &&
                     dumpTruckTotal <= 0 &&
@@ -633,6 +653,7 @@ namespace MagicGarbage
                     maxWorkers));
             }
 
+            // Sort busiest facilities first for the log.
             facilityEntries.Sort(CompareFacilityEntries);
 
             int truckMoving = truckTotal - truckParked;
@@ -682,6 +703,7 @@ namespace MagicGarbage
                 facilities: facilityEntries.ToArray());
         }
 
+        // Sort by activity first, then total fleet, then stable entity order.
         private static int CompareFacilityEntries(FacilityEntry a, FacilityEntry b)
         {
             int aActivity = a.GarbageTruckMoving + a.DumpTruckMoving;
@@ -705,6 +727,7 @@ namespace MagicGarbage
             return a.Facility.Index.CompareTo(b.Facility.Index);
         }
 
+        // Convert internal raw garbage totals to the player-facing tons-per-month style output.
         private static long ToTonsPerMonth(long raw)
         {
             if (raw <= 0L)
