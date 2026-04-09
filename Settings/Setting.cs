@@ -1,6 +1,6 @@
 // File: Settings/Setting.cs
 // Options UI + settings for Magic Garbage.
-// Status is pull-based and only refreshes while Options UI is open.
+// Main settings file. Status UI members live in Setting.Status.cs.
 
 namespace MagicGarbage
 {
@@ -11,6 +11,7 @@ namespace MagicGarbage
     using System;
     using System.IO;
     using Unity.Entities;
+    using Unity.Mathematics;
     using UnityEngine;
 
     [FileLocation("ModsSettings/MagicGarbage/MagicGarbage")]
@@ -21,7 +22,7 @@ namespace MagicGarbage
     [SettingsUIShowGroupName(
         TotalMagicGrp, TrashBossGrp, PowerUserGrp, StatusGrp,
         AboutLinksGrp, AboutUsageGrp)]
-    public sealed class Setting : ModSetting
+    public sealed partial class Setting : ModSetting
     {
         // ---- TABS ----
         public const string ActionsTab = "Actions";
@@ -42,18 +43,29 @@ namespace MagicGarbage
         private const string StatusButtonsRow = "StatusButtonsRow";
         private const string AboutLinksRow = "AboutLinksRow";
 
-        // ---- THRESHOLD DEFAULTS ----
-        private const int VanillaDispatchRequestThreshold = 100;
-        private const int VanillaPickupThreshold = 20;
-        private const int MaxDispatchRequestThreshold = 3000;
-        private const int MaxPickupThreshold = 1000;
+        // ---- TUNING LIMITS (source of truth for UI + runtime) ----
+        internal const int VanillaDispatchRequestThreshold = 100;
+        internal const int VanillaPickupThreshold = 20;
+        internal const int MaxDispatchRequestThreshold = 2000;
+        internal const int MaxPickupThreshold = 1000;
 
-        private const int VanillaGarbageHappinessBaseline = 100;
-        private const int VanillaGarbageHappinessStep = 65;
-        private const int MinGarbageHappinessBaseline = 100;
-        private const int MaxGarbageHappinessBaseline = 3000;
-        private const int MinGarbageHappinessStep = 65;
-        private const int MaxGarbageHappinessStep = 500;
+        internal const int VanillaGarbageHappinessBaseline = 100;
+        internal const int VanillaGarbageHappinessStep = 65;
+        internal const int MinGarbageHappinessBaseline = 100;
+        internal const int MaxGarbageHappinessBaseline = 2000;
+        internal const int MinGarbageHappinessStep = 65;
+        internal const int MaxGarbageHappinessStep = 1000;
+
+        // ---- RECOMMENDED VALUES ----
+        internal const int RecommendedTruckCapacityMultiplier = 250;
+        internal const int RecommendedFacilityStorageMultiplier = 150;
+        internal const int RecommendedFacilityProcessingMultiplier = 250;
+        internal const int RecommendedFacilityVehicleMultiplier = 100;
+
+        internal const int RecommendedDispatchRequestThreshold = 500;
+        internal const int RecommendedPickupThreshold = 300;
+        internal const int RecommendedGarbageHappinessBaseline = 550;
+        internal const int RecommendedGarbageHappinessStep = 150;
 
         // ---- EXTERNAL LINKS ----
         private const string UrlParadox =
@@ -71,6 +83,7 @@ namespace MagicGarbage
         private int m_GarbageHappinessBaseline = VanillaGarbageHappinessBaseline;
         private int m_GarbageHappinessStep = VanillaGarbageHappinessStep;
 
+        // Power User sliders only show when both Trash Boss and Power User are enabled.
         private bool ShowPowerUsers => m_TrashBossEnabled && m_PowerUserOptions;
 
         public Setting(IMod mod) : base(mod)
@@ -96,6 +109,7 @@ namespace MagicGarbage
 
                 m_TotalMagic = value;
 
+                // Total Magic takes priority over Trash Boss when enabled.
                 if (m_TotalMagic)
                 {
                     m_TrashBossEnabled = false;
@@ -119,6 +133,7 @@ namespace MagicGarbage
 
                 m_TrashBossEnabled = value;
 
+                // Trash Boss takes priority over Total Magic when enabled.
                 if (m_TrashBossEnabled)
                 {
                     m_TotalMagic = false;
@@ -173,10 +188,10 @@ namespace MagicGarbage
                     return;
                 }
 
-                GarbageTruckCapacityMultiplier = 200;
-                GarbageFacilityStorageMultiplier = 150;
-                GarbageFacilityProcessingMultiplier = 200;
-                GarbageFacilityVehicleMultiplier = 140;
+                GarbageTruckCapacityMultiplier = RecommendedTruckCapacityMultiplier;
+                GarbageFacilityStorageMultiplier = RecommendedFacilityStorageMultiplier;
+                GarbageFacilityProcessingMultiplier = RecommendedFacilityProcessingMultiplier;
+                GarbageFacilityVehicleMultiplier = RecommendedFacilityVehicleMultiplier;
 
                 EnableTuningSystemsOnce();
                 Apply();
@@ -237,9 +252,10 @@ namespace MagicGarbage
             get => m_GarbageDispatchRequestThreshold;
             set
             {
-                int clamped = ClampInt(value, VanillaDispatchRequestThreshold, MaxDispatchRequestThreshold);
+                int clamped = math.clamp(value, VanillaDispatchRequestThreshold, MaxDispatchRequestThreshold);
                 m_GarbageDispatchRequestThreshold = clamped;
 
+                // Pickup can never exceed dispatch request threshold.
                 if (m_GarbagePickupThreshold > m_GarbageDispatchRequestThreshold)
                 {
                     m_GarbagePickupThreshold = m_GarbageDispatchRequestThreshold;
@@ -256,8 +272,9 @@ namespace MagicGarbage
             get => m_GarbagePickupThreshold;
             set
             {
-                int clamped = ClampInt(value, VanillaPickupThreshold, MaxPickupThreshold);
+                int clamped = math.clamp(value, VanillaPickupThreshold, MaxPickupThreshold);
 
+                // Clamp again against the current dispatch threshold.
                 if (clamped > m_GarbageDispatchRequestThreshold)
                 {
                     clamped = m_GarbageDispatchRequestThreshold;
@@ -276,7 +293,7 @@ namespace MagicGarbage
             get => m_GarbageHappinessBaseline;
             set
             {
-                m_GarbageHappinessBaseline = ClampInt(
+                m_GarbageHappinessBaseline = math.clamp(
                     value,
                     MinGarbageHappinessBaseline,
                     MaxGarbageHappinessBaseline);
@@ -292,7 +309,7 @@ namespace MagicGarbage
             get => m_GarbageHappinessStep;
             set
             {
-                m_GarbageHappinessStep = ClampInt(
+                m_GarbageHappinessStep = math.clamp(
                     value,
                     MinGarbageHappinessStep,
                     MaxGarbageHappinessStep);
@@ -317,10 +334,10 @@ namespace MagicGarbage
                 }
 
                 PowerUserOptions = true;
-                GarbageDispatchRequestThreshold = 1000;
-                GarbagePickupThreshold = 200;
-                GarbageHappinessBaseline = 550;
-                GarbageHappinessStep = 150;
+                GarbageDispatchRequestThreshold = RecommendedDispatchRequestThreshold;
+                GarbagePickupThreshold = RecommendedPickupThreshold;
+                GarbageHappinessBaseline = RecommendedGarbageHappinessBaseline;
+                GarbageHappinessStep = RecommendedGarbageHappinessStep;
 
                 EnableTuningSystemsOnce();
                 Apply();
@@ -348,95 +365,6 @@ namespace MagicGarbage
 
                 EnableTuningSystemsOnce();
                 Apply();
-            }
-        }
-
-        // ------------------------------------------------------
-        // STATUS (auto-refresh while Options is open)
-        // ------------------------------------------------------
-
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusGarbageProcessing
-        {
-            get
-            {
-                GarbageStatus.RefreshIfNeeded();
-                return GarbageStatus.GetUiGarbageProcessing();
-            }
-        }
-
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusRequests
-        {
-            get
-            {
-                GarbageStatus.RefreshIfNeeded();
-                return GarbageStatus.GetUiRequests();
-            }
-        }
-
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusProducers
-        {
-            get
-            {
-                GarbageStatus.RefreshIfNeeded();
-                return GarbageStatus.GetUiProducers();
-            }
-        }
-
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusFacilities
-        {
-            get
-            {
-                GarbageStatus.RefreshIfNeeded();
-                return GarbageStatus.GetUiFacilities();
-            }
-        }
-
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public string StatusTrucks
-        {
-            get
-            {
-                GarbageStatus.RefreshIfNeeded();
-                return GarbageStatus.GetUiTrucks();
-            }
-        }
-
-        [SettingsUIButton]
-        [SettingsUIButtonGroup(StatusButtonsRow)]
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public bool GarbageStatusLog
-        {
-            set
-            {
-                if (!value)
-                {
-                    return;
-                }
-
-#if DEBUG
-                Mod.Log.Info($"{Mod.ModTag} [DEBUG] GarbageStatusLog clicked");
-#endif
-                GarbageStatus.RefreshNow(writeToLog: true);
-            }
-        }
-
-        [SettingsUIButton]
-        [SettingsUIButtonGroup(StatusButtonsRow)]
-        [SettingsUISection(ActionsTab, StatusGrp)]
-        public bool OpenLog
-        {
-            set
-            {
-                if (!value)
-                {
-                    return;
-                }
-
-                OpenLogFolder();
             }
         }
 
@@ -623,6 +551,7 @@ namespace MagicGarbage
                 return;
             }
 
+            // Wake all tuning systems once after preset changes.
             GarbageTruckCapacitySystem truckSys = world.GetExistingSystemManaged<GarbageTruckCapacitySystem>();
             if (truckSys != null)
             {
@@ -640,21 +569,6 @@ namespace MagicGarbage
             {
                 facSys.Enabled = true;
             }
-        }
-
-        private static int ClampInt(int value, int min, int max)
-        {
-            if (value < min)
-            {
-                return min;
-            }
-
-            if (value > max)
-            {
-                return max;
-            }
-
-            return value;
         }
 
         private static void OpenLogFolder()

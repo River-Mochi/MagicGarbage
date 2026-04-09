@@ -92,7 +92,7 @@ namespace MagicGarbage
                     "**Optional advanced threshold + garbage happiness tuning.**\n" +
                     "When **OFF**, pickup/request thresholds and garbage happiness **stay vanilla**.\n" +
                     "When **ON**, the advanced **sliders appear**.\n\n" +
-                    "<--- Garbage happiness examples --->\n"+
+                    "<--- Garbage happiness examples --->\n" +
                     " - <Vanilla> 100/65 = 1st penalty at <165>.\n" +
                     " - <Recommended> 550/150 = 1st penalty at <700>.\n" +
                     " - <Very soft> 950/200 = 1st garbage penalty at <1150>.\n" +
@@ -105,14 +105,15 @@ namespace MagicGarbage
                     "Vanilla = **100** garbage units.\n" +
                     "**100 garbage units = 0.1t**\n" +
                     "**1,000 garbage units = 1t**\n" +
-                    "Keep this at or above the Pickup Threshold.\n"
+                    "Keep this at or above the Pickup Threshold.\n" +
+                    "This usually increases how many trucks are used vs parked."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "Pickup Threshold" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
                     "**Minimum building garbage before a truck can collect from it.**\n" +
                     "Vanilla = **20** garbage units.\n" +
-                    "Pickup can never be higher than Dispatch Request.\n" +
+                    "Pickup can not be higher than Dispatch Request, it's clamped.\n" +
                     "Keep Dispatch Request at or above the eligible pickup value to prevent logic mishap;" +
                     " if a truck is dispatched to a building and the pickup value is higher, truck could potentially not be able to collect (rate of accumulation also a factor).\n"
                 },
@@ -124,7 +125,6 @@ namespace MagicGarbage
                     "Does not change Power User settings."
                 },
 
-
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Game Defaults" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
                     "Set Trash Boss sliders back to **vanilla values**.\n" +
@@ -135,7 +135,6 @@ namespace MagicGarbage
                     "- Pickup Threshold returns to **20 units**.\n"
                 },
 
-
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "Garbage Happiness Baseline" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
                     "**Building garbage level before it starts causing health + happiness penalty.**\n" +
@@ -144,7 +143,7 @@ namespace MagicGarbage
                     "100 garbage units = 0.1t\n" +
                     "Overview:\n" +
                     "- <Threshold> = trigger point for system behavior\n" +
-                    "- <Baseline> = start point for penalty formula\n"+
+                    "- <Baseline> = start point for penalty formula\n" +
                     "- <Step> = increment size in the formula, how fast penalty ramps after it starts"
                 },
 
@@ -170,7 +169,6 @@ namespace MagicGarbage
                     "Set Power User values **back to vanilla**.\n" +
                     "Turns **Power User OFF**."
                 },
-
 
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
@@ -202,11 +200,21 @@ namespace MagicGarbage
                     "  * Trash Boss = OFF\n" +
                     "  * Status report only.\n" +
                     "  * Vanilla garbage game unchanged."
-
                 },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), "Usage" },
 
                 // Status
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageServiceRating)), "Garbage Service Rating" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageServiceRating)),
+                    "Simple citywide garbage happiness rating from the game.\n" +
+                    "**0 = Excellent**\n" +
+                    "**-1 = Needs minor tweak**\n" +
+                    "**-2 to -4 = Slightly stinky**\n" +
+                    "**-5 to -10 = Garbage problem**\n" +
+                    "Direct knobs: **Garbage Happiness Baseline** + **Garbage Happiness Step**.\n" +
+                    "Indirect improvement: truck/facility sliders can improve this over time by reducing garbage buildup."
+                },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Garbage/mo." },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
                     "Shows the current citywide garbage amount and the total garbage processing rate.\n" +
@@ -242,7 +250,7 @@ namespace MagicGarbage
                     "**Max workers** = total worker capacity across those same facilities."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "Trucks" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "Garbage Trucks" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusTrucks)),
                     "**Moving** = trucks currently out in the city.\n" +
                     "**Returning** = subset of moving trucks flagged to go back to their facility.\n" +
@@ -264,6 +272,11 @@ namespace MagicGarbage
                 // Runtime status strings
                 { "MG.Status.NoCity", "No city loaded yet." },
 
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "Excellent ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "Needs minor tweak ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "Slightly stinky ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Problem", "Garbage problem ({0:N0})" },
+
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Processed | updated {2}" },
                 { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} has garbage | {2:N0} above request threshold" },
@@ -275,11 +288,19 @@ namespace MagicGarbage
                 { "MG.Status.Log.Title", "Garbage Status ({0})" },
                 { "MG.Status.Log.City", "City: {0}" },
                 { "MG.Status.Log.Mode", "Mode: Total Magic={0}, Trash Boss={1}" },
+                { "MG.Status.Log.SettingsHeader", "Current mod settings" },
+                { "MG.Status.Log.SettingsTrashBoss",
+                    "Trash Boss sliders (saved): truck load={0:N0}% | facility storage={1:N0}% | facility process={2:N0}% | facility fleet={3:N0}%"
+                },
+                { "MG.Status.Log.SettingsPowerUser",
+                    "Power User (saved): enabled={0} | request={1:N0} | pickup={2:N0} | happiness baseline={3:N0} | happiness step={4:N0}"
+                },
                 { "MG.Status.Log.Legend",
                     "Legend:\n" +
                     "- Produced/Processed uses tons per month.\n" +
                     "- Threshold values below use internal garbage units, not tons.\n" +
                     "- For player-facing, the game converts 100 units = 0.1t and 1,000 units = 1t.\n" +
+                    "- Garbage Service Rating = game city garbage happiness factor. 0 is excellent; negative values are worse.\n" +
                     "Threshold sliders:\n" +
                     "  - Pickup threshold = minimum garbage before a truck will collect from a building.\n" +
                     "  - Request threshold = minimum garbage before the game creates or keeps a collect request.\n" +
@@ -295,15 +316,16 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.ThresholdsMissing", "Thresholds: <GarbageParameterData not available>" },
                 { "MG.Status.Log.GarbageProcessing", "Garbage: {0:N0} t/mo | Processing: {1:N0} t/mo" },
+                { "MG.Status.Log.GarbageServiceRating", "Garbage Service Rating: raw={0:N2} | rounded={1:N0}" },
                 { "MG.Status.Log.Requests", "Collect Requests: pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
                 { "MG.Status.Log.PendingPeak", "Highest pending target garbage: {0:N0} ({1:N1}t) at {2}" },
-                { "MG.Status.Log.Producers", "Buildings: {0:N0} total | {1:N0} has garbage | {2:N0} above request threshold | {3:N0} warning-level" },
+                { "MG.Status.Log.Producers", "Buildings: {0:N0} total | {1:N0} has garbage | {2:N0} above request threshold | {3:N0} warning icons" },
                 { "MG.Status.Log.ProducerGarbageStats", "Building garbage (non-zero only): avg={0:N0} ({1:N1}t) | median={2:N0} ({3:N1}t) | max={4:N0} ({5:N1}t) at {6}" },
-                { "MG.Status.Log.NearWarning75", "Buildings near warning (at least {1:N0} units / {2:N1}t): {0:N0}" },
+                { "MG.Status.Log.NearWarning75", "Buildings near warning icon (at least {1:N0} units / {2:N1}t): {0:N0}" },
                 { "MG.Status.Log.FacilitiesSummary", "Facilities: {0:N0} total | {1:N0} garbage trucks | {2:N0} dump trucks ({3:N0} moving) | {4:N0} workers" },
                 { "MG.Status.Log.Trucks", "Garbage trucks: {2:N0} moving ({3:N0} returning) | {1:N0} parked | {4:N0} disabled | {0:N0} total" },
                 { "MG.Status.Log.FacilitiesHeader", "Facility Summary" },
-                { "MG.Status.Log.FacilityLine", "- Facility {0}: garbage={1:N0} ({2:N0} moving, {3:N0} parked) | dump={4:N0} ({5:N0} moving) | max workers={6:N0}" },
+                { "MG.Status.Log.FacilityLine", "- Facility {0}: garbage trucks={1:N0} ({2:N0} moving, {3:N0} parked) | dump trucks={4:N0} ({5:N0} moving) | max workers={6:N0}" },
             };
         }
 

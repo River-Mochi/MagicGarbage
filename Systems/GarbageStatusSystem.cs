@@ -19,6 +19,7 @@ namespace MagicGarbage
     using System;
     using System.Collections.Generic;
     using Unity.Entities;
+    using UnityEngine;
 
     public sealed partial class GarbageStatusSystem : GameSystemBase
     {
@@ -64,9 +65,14 @@ namespace MagicGarbage
             public readonly int CollectLimit;
             public readonly int WarningLimit;
             public readonly int MaxAccumulation;
+            public readonly int HappinessBaseline;
+            public readonly int HappinessStep;
 
             public readonly long GarbageTonsPerMonth;
             public readonly long ProcessingTonsPerMonth;
+
+            public readonly double GarbageServiceRatingRaw;
+            public readonly int GarbageServiceRatingRounded;
 
             public readonly int ProducerTotal;
             public readonly int ProducerGarbageGt0;
@@ -108,8 +114,12 @@ namespace MagicGarbage
                 int collectLimit,
                 int warningLimit,
                 int maxAccumulation,
+                int happinessBaseline,
+                int happinessStep,
                 long garbageTonsPerMonth,
                 long processingTonsPerMonth,
+                double garbageServiceRatingRaw,
+                int garbageServiceRatingRounded,
                 int producerTotal,
                 int producerGarbageGt0,
                 int producerOverRequest,
@@ -147,9 +157,14 @@ namespace MagicGarbage
                 CollectLimit = collectLimit;
                 WarningLimit = warningLimit;
                 MaxAccumulation = maxAccumulation;
+                HappinessBaseline = happinessBaseline;
+                HappinessStep = happinessStep;
 
                 GarbageTonsPerMonth = garbageTonsPerMonth;
                 ProcessingTonsPerMonth = processingTonsPerMonth;
+
+                GarbageServiceRatingRaw = garbageServiceRatingRaw;
+                GarbageServiceRatingRounded = garbageServiceRatingRounded;
 
                 ProducerTotal = producerTotal;
                 ProducerGarbageGt0 = producerGarbageGt0;
@@ -185,10 +200,12 @@ namespace MagicGarbage
 
         private CitySystem m_CitySystem = null!;
         private GarbageAccumulationSystem m_GarbageAccumulationSystem = null!;
+        private CitizenHappinessSystem m_CitizenHappinessSystem = null!;
 
         private EntityQuery m_ProducerQuery;
         private EntityQuery m_RequestQuery;
         private EntityQuery m_TruckQuery;
+        private EntityQuery m_HappinessFactorParameterQuery;
 
         protected override void OnCreate()
         {
@@ -196,6 +213,7 @@ namespace MagicGarbage
 
             m_CitySystem = World.GetOrCreateSystemManaged<CitySystem>();
             m_GarbageAccumulationSystem = World.GetOrCreateSystemManaged<GarbageAccumulationSystem>();
+            m_CitizenHappinessSystem = World.GetOrCreateSystemManaged<CitizenHappinessSystem>();
 
             m_ProducerQuery = GetEntityQuery(new EntityQueryDesc
             {
@@ -238,6 +256,9 @@ namespace MagicGarbage
                 },
             });
 
+            m_HappinessFactorParameterQuery = GetEntityQuery(
+                ComponentType.ReadOnly<HappinessFactorParameterData>());
+
             Enabled = false;
         }
 
@@ -265,6 +286,8 @@ namespace MagicGarbage
             int collectLimit = 0;
             int warningLimit = 0;
             int maxAccumulation = 0;
+            int happinessBaseline = 0;
+            int happinessStep = 0;
 
             if (haveParams)
             {
@@ -272,6 +295,8 @@ namespace MagicGarbage
                 collectLimit = gp.m_CollectionGarbageLimit;
                 warningLimit = gp.m_WarningGarbageLimit;
                 maxAccumulation = gp.m_MaxGarbageAccumulation;
+                happinessBaseline = gp.m_HappinessEffectBaseline;
+                happinessStep = gp.m_HappinessEffectStep;
             }
 
             if (!inGame)
@@ -286,8 +311,12 @@ namespace MagicGarbage
                     collectLimit: collectLimit,
                     warningLimit: warningLimit,
                     maxAccumulation: maxAccumulation,
+                    happinessBaseline: happinessBaseline,
+                    happinessStep: happinessStep,
                     garbageTonsPerMonth: 0,
                     processingTonsPerMonth: 0,
+                    garbageServiceRatingRaw: 0.0,
+                    garbageServiceRatingRounded: 0,
                     producerTotal: 0,
                     producerGarbageGt0: 0,
                     producerOverRequest: 0,
@@ -321,6 +350,31 @@ namespace MagicGarbage
             long garbageRaw = m_GarbageAccumulationSystem != null
                 ? m_GarbageAccumulationSystem.garbageAccumulation
                 : 0L;
+
+            double garbageServiceRatingRaw = 0.0;
+            int garbageServiceRatingRounded = 0;
+
+            if (m_CitizenHappinessSystem != null && !m_HappinessFactorParameterQuery.IsEmptyIgnoreFilter)
+            {
+                Entity happinessParamEntity = m_HappinessFactorParameterQuery.GetSingletonEntity();
+                BufferLookup<HappinessFactorParameterData> happinessFactorLookup =
+                    GetBufferLookup<HappinessFactorParameterData>(true);
+                ComponentLookup<Locked> lockedLookup = GetComponentLookup<Locked>(true);
+
+                if (happinessFactorLookup.HasBuffer(happinessParamEntity))
+                {
+                    DynamicBuffer<HappinessFactorParameterData> parameters =
+                        happinessFactorLookup[happinessParamEntity];
+
+                    Unity.Mathematics.float3 factor = m_CitizenHappinessSystem.GetHappinessFactor(
+                        CitizenHappinessSystem.HappinessFactor.Garbage,
+                        parameters,
+                        ref lockedLookup);
+
+                    garbageServiceRatingRaw = factor.x;
+                    garbageServiceRatingRounded = Mathf.RoundToInt(factor.x);
+                }
+            }
 
             int producerTotal = m_ProducerQuery.CalculateEntityCount();
             int producerGarbageGt0 = 0;
@@ -366,7 +420,7 @@ namespace MagicGarbage
                     producerOverRequest++;
                 }
 
-                if (haveParams && garbage > warningLimit)
+                if (haveParams && garbage >= warningLimit)
                 {
                     producerOverWarning++;
                 }
@@ -595,8 +649,12 @@ namespace MagicGarbage
                 collectLimit: collectLimit,
                 warningLimit: warningLimit,
                 maxAccumulation: maxAccumulation,
+                happinessBaseline: happinessBaseline,
+                happinessStep: happinessStep,
                 garbageTonsPerMonth: garbageTonsPerMonth,
                 processingTonsPerMonth: processingTonsPerMonth,
+                garbageServiceRatingRaw: garbageServiceRatingRaw,
+                garbageServiceRatingRounded: garbageServiceRatingRounded,
                 producerTotal: producerTotal,
                 producerGarbageGt0: producerGarbageGt0,
                 producerOverRequest: producerOverRequest,

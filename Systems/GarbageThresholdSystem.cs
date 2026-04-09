@@ -14,19 +14,10 @@ namespace MagicGarbage
     /// Adjusts GarbageParameterData request/pickup thresholds and garbage
     /// happiness parameters according to the Power User sliders.
     /// Uses the live singleton as the source of truth for the base values.
+    /// Runtime clamp limits come from Setting.cs.
     /// </summary>
     public partial class GarbageThresholdSystem : GameSystemBase
     {
-        private const int MinDispatchRequestThreshold = 100;
-        private const int MaxDispatchRequestThreshold = 3000;
-        private const int MinPickupThreshold = 20;
-        private const int MaxPickupThreshold = 600;
-
-        private const int MinGarbageHappinessBaseline = 0;
-        private const int MaxGarbageHappinessBaseline = 3000;
-        private const int MinGarbageHappinessStep = 1;
-        private const int MaxGarbageHappinessStep = 500;
-
         private bool m_HaveBase;
         private int m_BaseCollectLimit;
         private int m_BaseRequestLimit;
@@ -90,13 +81,13 @@ namespace MagicGarbage
             {
                 targetRequest = math.clamp(
                     setting.GarbageDispatchRequestThreshold,
-                    MinDispatchRequestThreshold,
-                    MaxDispatchRequestThreshold);
+                    Setting.VanillaDispatchRequestThreshold,
+                    Setting.MaxDispatchRequestThreshold);
 
                 targetCollect = math.clamp(
                     setting.GarbagePickupThreshold,
-                    MinPickupThreshold,
-                    MaxPickupThreshold);
+                    Setting.VanillaPickupThreshold,
+                    Setting.MaxPickupThreshold);
 
                 if (targetCollect > targetRequest)
                 {
@@ -105,13 +96,13 @@ namespace MagicGarbage
 
                 targetHappinessBaseline = math.clamp(
                     setting.GarbageHappinessBaseline,
-                    MinGarbageHappinessBaseline,
-                    MaxGarbageHappinessBaseline);
+                    Setting.MinGarbageHappinessBaseline,
+                    Setting.MaxGarbageHappinessBaseline);
 
                 targetHappinessStep = math.clamp(
                     setting.GarbageHappinessStep,
-                    MinGarbageHappinessStep,
-                    MaxGarbageHappinessStep);
+                    Setting.MinGarbageHappinessStep,
+                    Setting.MaxGarbageHappinessStep);
             }
 
             if (data.m_CollectionGarbageLimit == targetCollect &&
