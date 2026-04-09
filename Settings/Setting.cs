@@ -477,6 +477,7 @@ namespace MagicGarbage
         // SettingsUISetter callbacks
         // --------------------------------------------
 
+        // Callback to update Live city immediately when main toggles are flipped (wake/apply system now).
         private void OnModeToggleChanged(bool _)
         {
             if (!TryGetWorld(out World world))

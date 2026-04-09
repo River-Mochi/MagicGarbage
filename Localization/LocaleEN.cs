@@ -75,7 +75,7 @@ namespace MagicGarbage
                     "**100% = vanilla** storage.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)), "Facility Process speed" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)), "Facility Processing speed" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
                     "**How fast facilities process incoming garbage.**\n" +
                     "**100% = vanilla** processing speed.\n"
@@ -87,18 +87,37 @@ namespace MagicGarbage
                     "**100% = vanilla** number of trucks.\n"
                 },
 
+
+                // Trash Boss Presets
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Recommended" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
+                    "**Recommended** standard Trash Boss values applied.\n" +
+                    "Does not change Power User settings (separate)."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Game Defaults" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
+                    "Set Trash Boss sliders back to **vanilla values**.\n" +
+                    "Does <not> change Power User settings.\n" +
+                    "**Vanilla:**\n" +
+                    "- Percent sliders return to **100%**.\n" +
+                    "- Dispatch Request Threshold returns to **100 units**.\n" +
+                    "- Pickup Threshold returns to **20 units**.\n"
+                },
+
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Power User Options" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
-                    "**Optional advanced threshold + garbage happiness + accumulation tuning.**\n" +
-                    "When **OFF**, pickup/request thresholds, garbage happiness, and garbage accumulation rate **stay vanilla**.\n" +
+                    "Optional Advanced Settings\n" +
+                    "<Warning: NOT needed> for good service; provided for players who want to experiment or know more how systems work.\n" +
+                    "When **OFF**, all Power User settings **stay vanilla**.\n" +
                     "When **ON**, the advanced **sliders appear**.\n\n" +
-                    "<--- Garbage happiness examples --->\n" +
+                    "<--- Happiness examples --->\n" +
                     " - <Vanilla> 100/65 = 1st penalty at <165>.\n" +
-                    " - <Recommended> 550/150 = 1st penalty at <700>.\n" +
+                    " - Click <Recommended> for 550/150 = 1st penalty at <700>.\n" +
                     " - <Very soft> 950/200 = 1st garbage penalty at <1150>.\n" +
                     "Convenience: last slider values are saved when this option is OFF (in case you want to enable later)."
                 },
-
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Dispatch Request Threshold" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
@@ -114,26 +133,8 @@ namespace MagicGarbage
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
                     "**Minimum building garbage before a truck can collect from it.**\n" +
                     "Vanilla = **20** garbage units.\n" +
-                    "Pickup can not be higher than Dispatch Request, it's clamped.\n" +
-                    "Keep Dispatch Request at or above the eligible pickup value to prevent logic mishap;" +
-                    " if a truck is dispatched to a building and the pickup value is higher, truck could potentially not be able to collect (rate of accumulation also a factor).\n"
-                },
-
-                // Presets
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Recommended" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "**Recommended** standard Trash Boss values applied.\n" +
-                    "Does not change Power User settings."
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Game Defaults" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Set Trash Boss sliders back to **vanilla values**.\n" +
-                    "Does <not> change Power User settings.\n" +
-                    "**Vanilla:**\n" +
-                    "- Percent sliders return to **100%**.\n" +
-                    "- Dispatch Request Threshold returns to **100 units**.\n" +
-                    "- Pickup Threshold returns to **20 units**.\n"
+                    "Pickup slider <cannot> be higher than Dispatch Request (DR); it's clamped to prevent logic mishap.\n" +
+                    "If a truck is dispatched to a building and the pickup value is higher than DR, the truck may sometimes not be able to collect from the building (accumulation rate also affects this).\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "Garbage Happiness Baseline" },
@@ -158,16 +159,15 @@ namespace MagicGarbage
                     "Balance threshold changes with happiness sliders or incur heavier than normal penalties."
                 },
 
-
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "Garbage Accumulation Rate" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
                     "**Scales supported building garbage source values.**\n" +
-                    "This is a strong lever and changing this rate affects many things." +
-                    "It is possible to get a good balanced system without using this.\n\n" +
+                    "This is a strong lever and changing this rate affects many things.\n" +
+                    "It is possible to get a good system without using this.\n\n" +
                     "**100% = vanilla** accumulation.\n" +
                     "**20%** = much slower buildup.\n" +
-                    "**200%** = double buildup.\n" +
-                    "At 20%, all Cims are obviously composting, thus a lower garbage accumulation rate."
+                    "**200%** = double rate - a whole lot of garbage.\n" +
+                    "At 20%, all Cims are obviously composting, thus a lower garbage accumulation rate ;)"
                 },
 
 
@@ -202,13 +202,13 @@ namespace MagicGarbage
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<Auto Clean state>\n" +
-                    "  * Total Magic ON  = **[ ✓ ]**\n" +
+                    "  * Total Magic ON = **[ ✓ ]**\n" +
                     "  * Garbage is auto removed - Done.\n" +
                     " <-------------------------------------->\n\n" +
                     "<Self-Manage state>\n" +
                     "  * Trash Boss = **[ ✓ ]**\n" +
                     "  * Set sliders as desired.\n" +
-                    "  * Optional: turn on Power User for thresholds + garbage happiness.\n" +
+                    "  * Optional: turn on for advanced sliders (not required).\n" +
                     "  * Same game garbage; better self-managed trucks/facilities.\n" +
                     " <-------------------------------------->\n\n" +
                     "<Status / vanilla state>\n" +
@@ -231,7 +231,6 @@ namespace MagicGarbage
                     "**Direct knobs:** <Garbage Happiness Baseline> + <Garbage Happiness Step> change what cims tolerate before they are unhappy.\n" +
                     "**Source-rate knob:** <Garbage Accumulation Rate> changes how fast supported buildings produce garbage."
                 },
-
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Garbage/mo." },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),

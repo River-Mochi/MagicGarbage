@@ -35,44 +35,44 @@ namespace MagicGarbage
                 { m_Setting.GetOptionTabLocaleID(Setting.AboutTab), "Info" },
 
                 // Groups
-                { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Auto sauber" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "Selbst verwalten" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.PowerUserGrp), "Erweitert" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Auto-Reinigung" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "Selbst steuern" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.PowerUserGrp), "Expertenmodus" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "Status" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "Mod-Info" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Links" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "NUTZUNG" },
 
                 // Total Magic
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Totale Magie" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
                     "**Aktiviert [ ✓ ]** hält die ganze Stadt sauber.\n\n" +
-                    "Wenn **Total Magic** AN ist:\n" +
-                    "- Trash Boss wird auf AUS erzwungen.\n" +
-                    "- Trash-Boss-Regler werden nicht angewendet (Werte bleiben für später gespeichert).\n" +
-                    "- Einige Lkw können wegen des vanilla Dispatch-Timings trotzdem noch fahren."
+                    "Während **Totale Magie** ON ist:\n" +
+                    "- Müllsteuerung wird auf OFF gezwungen.\n" +
+                    "- Die Regler der Müllsteuerung werden nicht angewendet (Werte werden für später gespeichert).\n" +
+                    "- Einige Fahrzeuge können sich wegen des vanilla-Dispatch-Timings trotzdem noch bewegen."
                 },
 
                 // Trash Boss
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Müllsteuerung" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
-                    "Verwaltet das Müllsystem direkt; die vanilla Müll-Logik läuft weiter.\n\n" +
-                    "- Wenn **Trash Boss AN [ ✓ ]** ist, wird Total Magic auf AUS erzwungen.\n" +
-                    "- Regler wirken nur, wenn Trash Boss aktiviert ist.\n" +
-                    "- Total Magic + Trash Boss können beide **AUS** sein, wenn nur der **Statusbericht** gebraucht wird.\n"
+                    "Steuert die Müllsysteme direkt; die vanilla-Mülllogik bleibt aktiv.\n\n" +
+                    "- Wenn **Müllsteuerung** ON [ ✓ ] ist, wird Totale Magie auf OFF gezwungen.\n" +
+                    "- Die Regler wirken nur, wenn Müllsteuerung aktiviert ist.\n" +
+                    "- Totale Magie + Müllsteuerung können beide **OFF** sein, wenn nur der **Statusbericht** gebraucht wird.\n"
                 },
 
                 // Sliders
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "Ladekapazität Lkw" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "Ladekapazität" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "**Wie viel Müll jeder Lkw tragen kann.**\n" +
+                    "**Wie viel Müll jedes Fahrzeug transportieren kann.**\n" +
                     "**100% = normaler** Spielstandard.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)), "Anlagenlager" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)), "Anlagenspeicher" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
                     "**Wie viel Müll eine Anlage lagern kann.**\n" +
-                    "**100% = vanilla** Lagerung.\n"
+                    "**100% = vanilla** Speicher.\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)), "Verarbeitungstempo" },
@@ -83,95 +83,112 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)), "Anlagenflotte" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "**Wie viele Lkw jede Anlage losschicken kann.**\n" +
-                    "**100% = vanilla** Anzahl an Lkw.\n"
+                    "**Wie viele Fahrzeuge jede Anlage losschicken kann.**\n" +
+                    "**100% = vanilla** Anzahl an Fahrzeugen.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Power-User-Optionen" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
-                    "**Optionale erweiterte Abstimmung für Schwellen + Müll-Zufriedenheit.**\n" +
-                    "Wenn **AUS**, bleiben Abhol-/Anforderungsschwellen und Müll-Zufriedenheit **vanilla**.\n" +
-                    "Wenn **AN**, erscheinen die erweiterten **Regler**.\n\n" +
-                    "<--- Beispiele Müll-Zufriedenheit --->\n"+
-                    " - <Vanilla> 100/65 = 1. Malus bei <165>.\n" +
-                    " - <Empfohlen> 550/150 = 1. Malus bei <700>.\n" +
-                    " - <Sehr weich> 950/200 = 1. Müll-Malus bei <1150>.\n" +
-                    "Praktisch: Die letzten Reglerwerte bleiben gespeichert, wenn diese Option AUS ist."
-                },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Anforderungsschwelle" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
-                    "**Gebäudemüllmenge, bevor eine Lkw-Anforderung erstellt oder beibehalten wird.**\n" +
-                    "Vanilla = **100** Mülleinheiten.\n" +
-                    "**100 Mülleinheiten = 0.1t**\n" +
-                    "**1.000 Mülleinheiten = 1t**\n" +
-                    "Diesen Wert immer mindestens so hoch wie die Abholschwelle halten.\n"
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "Abholschwelle" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
-                    "**Minimale Gebäudemüllmenge, bevor ein Lkw einsammeln kann.**\n" +
-                    "Vanilla = **20** Mülleinheiten.\n" +
-                    "Die Abholschwelle darf nie höher sein als die Anforderungsschwelle.\n" +
-                    "Die Anforderungsschwelle immer mindestens auf Höhe der Abholschwelle halten, um Logikfehler zu vermeiden;" +
-                    " wenn ein Lkw zu einem Gebäude geschickt wird und die Abholschwelle höher ist, kann er eventuell nicht sammeln (Ansammlungsrate spielt auch mit rein).\n"
-                },
-
-                // Presets
+                // Trash Boss Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Empfohlen" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "**Empfohlene** Standardwerte für Trash Boss angewendet.\n" +
-                    "Power-User-Einstellungen bleiben unverändert."
+                    "**Empfohlen**: wendet die Standardwerte der Müllsteuerung an.\n" +
+                    "Ändert die Einstellungen des Expertenmodus nicht (separat)."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Spielstandard" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Setzt die Trash-Boss-Regler auf **vanilla Werte** zurück.\n" +
-                    "Ändert die Power-User-Einstellungen <nicht>.\n" +
+                    "Setzt die Regler der Müllsteuerung auf **vanilla-Werte** zurück.\n" +
+                    "Ändert die Einstellungen des Expertenmodus <nicht>.\n" +
                     "**Vanilla:**\n" +
-                    "- Prozent-Regler zurück auf **100%**.\n" +
-                    "- Anforderungsschwelle zurück auf **100 Einheiten**.\n" +
-                    "- Abholschwelle zurück auf **20 Einheiten**.\n"
+                    "- Prozent-Regler gehen auf **100%** zurück.\n" +
+                    "- Der Dispatch-Anfrage-Schwellenwert geht auf **100 Einheiten** zurück.\n" +
+                    "- Der Abhol-Schwellenwert geht auf **20 Einheiten** zurück.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "Müll-Zufriedenheitsbasis" },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Optionen für Experten" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
+                    "Optionale erweiterte Einstellungen\n" +
+                    "<Warnung: NICHT nötig> für guten Service; gedacht für Spieler, die experimentieren oder das System besser verstehen wollen.\n" +
+                    "Wenn **OFF**, bleiben alle Einstellungen des Expertenmodus **vanilla**.\n" +
+                    "Wenn **ON**, erscheinen die **erweiterten Regler**.\n\n" +
+                    "<--- Glücklichkeitsbeispiele --->\n" +
+                    " - <Vanilla> 100/65 = 1. Malus bei <165>.\n" +
+                    " - Klicke auf <Empfohlen> für 550/150 = 1. Malus bei <700>.\n" +
+                    " - <Sehr weich> 950/200 = 1. Müll-Malus bei <1150>.\n" +
+                    "Praktisch: Die letzten Reglerwerte werden gespeichert, wenn diese Option OFF ist (falls später wieder aktiviert werden soll)."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Dispatch-Anfrage-Schwellenwert" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
+                    "**Müllmenge in einem Gebäude, bevor eine Fahrzeug-Anfrage erstellt oder behalten wird.**\n" +
+                    "Vanilla = **100** Mülleinheiten.\n" +
+                    "**100 Mülleinheiten = 0.1t**\n" +
+                    "**1.000 Mülleinheiten = 1t**\n" +
+                    "Diesen Wert auf Höhe des Abhol-Schwellenwerts oder darüber halten.\n" +
+                    "Das erhöht oft die Zahl genutzter statt geparkter Fahrzeuge."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "Abhol-Schwellenwert" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
+                    "**Minimale Müllmenge in einem Gebäude, bevor ein Fahrzeug dort abholen kann.**\n" +
+                    "Vanilla = **20** Mülleinheiten.\n" +
+                    "Der Abhol-Regler <kann nicht> höher sein als die Dispatch-Anfrage (DR); er wird begrenzt, um Logikfehler zu vermeiden.\n" +
+                    "Wenn ein Fahrzeug zu einem Gebäude geschickt wird und der Abholwert höher als die DR ist, kann es manchmal sein, dass das Fahrzeug dort nicht abholen kann (die Akkumulationsrate spielt ebenfalls mit hinein).\n"
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "Müll-Glücklichkeitsbasis" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
-                    "**Gebäudemüllmenge, bevor Gesundheits- + Zufriedenheitsmalus startet.**\n" +
+                    "**Müllstand eines Gebäudes, bevor Gesundheits- + Glücklichkeitsmalus beginnen.**\n" +
                     "**Vanilla = 100** Mülleinheiten.\n" +
-                    "Höhere Basis = Gebäude können mehr Müll halten, bevor der Malus beginnt.\n" +
+                    "Höhere Basis = Gebäude können mehr Müll halten, bevor der Malus startet.\n" +
                     "100 Mülleinheiten = 0.1t\n" +
-                    "Übersicht:\n" +
-                    "- <Schwelle> = Auslöser für Systemverhalten\n" +
-                    "- <Basis> = Startpunkt der Malus-Formel\n"+
-                    "- <Schritt> = Schrittgröße der Formel, also wie schnell der Malus ansteigt"
+                    "Überblick:\n" +
+                    "- <Threshold> = Auslösepunkt für Systemverhalten\n" +
+                    "- <Baseline> = Startpunkt der Malusformel\n" +
+                    "- <Step> = Schrittgröße der Formel, also wie schnell der Malus nach dem Start ansteigt"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "Müll-Zufriedenheitsschritt" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "Müll-Glücklichkeitsschritt" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
-                    "**Zusätzlicher Müll über der Basis, der einen -1-Malus startet.**\n" +
+                    "**Zusätzliche Müllmenge über der Basis, ab der ein -1-Malus beginnt.**\n" +
                     "Vanilla = **65** Mülleinheiten.\n" +
                     "Höherer Schritt = langsameres Anwachsen des Malus.\n" +
-                    "Der Spiel-Müllmalus ist bei **-10** gedeckelt.\n" +
-                    "Der erste vanilla <-1 penalty> passiert bei **165 Müll** (100 Basis + 65 Schritt)\n" +
-                    "Schwellenänderungen mit Zufriedenheitsreglern ausbalancieren, sonst werden die Mali stärker als normal."
+                    "Das Spiel begrenzt den Müll-Malus auf **-10**.\n" +
+                    "Der erste vanilla-Malus <-1 penalty> passiert bei **165 Müll** (100 Basis + 65 Schritt)\n" +
+                    "Wenn Schwellenwerte geändert werden, sollten die Glücklichkeitsregler mit angepasst werden, sonst können stärkere Malusse als normal entstehen."
                 },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "Müll-Akkumulationsrate" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
+                    "**Skaliert die Müllquellenwerte unterstützter Gebäude.**\n" +
+                    "Das ist ein starker Hebel und beeinflusst viele Dinge.\n" +
+                    "Ein gutes System ist auch ohne diese Einstellung möglich.\n\n" +
+                    "**100% = vanilla** Akkumulation.\n" +
+                    "**20%** = viel langsamerer Aufbau.\n" +
+                    "**200%** = doppelte Rate - eine ganze Menge Müll.\n" +
+                    "Bei 20% kompostieren offenbar alle Cims, daher die niedrigere Müllrate ;)"
+                },
+
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "Empfohlen" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
-                    "Wendet **empfohlene** Power-User-Werte an.\n" +
-                    "Schaltet Power User AN.\n" +
-                    "Der erste Müll-Malus startet bei **700** Müll (550 Basis + 150 Schritt)."
+                    "Wendet die **empfohlenen** Werte des Expertenmodus an.\n" +
+                    "Schaltet den Expertenmodus ein.\n" +
+                    "Der erste Müll-Malus beginnt bei **700** Müll (550 Basis + 150 Schritt).\n" +
+                    "Die Müll-Akkumulationsrate bleibt bei **100%** vanilla, außer sie wird manuell geändert."
                 },
+
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "Spielstandard" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
-                    "Setzt Power-User-Werte auf **vanilla** zurück.\n" +
-                    "Schaltet **Power User AUS**."
+                    "Setzt die Werte des Expertenmodus **auf vanilla** zurück.\n" +
+                    "Schaltet den **Expertenmodus** auf OFF.\n"
                 },
 
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "Anzeigename dieses Mods." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "Angezeigter Name dieses Mods." },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)), "Version" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)), "Aktuelle Mod-Version." },
@@ -184,73 +201,84 @@ namespace MagicGarbage
 
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
-                    "<Auto-Clean-Zustand>\n" +
-                    "  * Total Magic AN  = **[ ✓ ]**\n" +
+                    "<Auto-Reinigungsstatus>\n" +
+                    "  * Totale Magie ON = **[ ✓ ]**\n" +
                     "  * Müll wird automatisch entfernt - fertig.\n" +
                     " <-------------------------------------->\n\n" +
-                    "<Selbstverwaltungs-Zustand>\n" +
-                    "  * Trash Boss = **[ ✓ ]**\n" +
-                    "  * Regler nach Wunsch einstellen.\n" +
-                    "  * Optional: Power User für Schwellen + Müll-Zufriedenheit einschalten.\n" +
-                    "  * Gleiches Müllsystem im Spiel; besser selbst verwaltete Lkw/Anlagen.\n" +
+                    "<Status Selbststeuerung>\n" +
+                    "  * Müllsteuerung = **[ ✓ ]**\n" +
+                    "  * Regler wie gewünscht einstellen.\n" +
+                    "  * Optional: erweiterte Regler einschalten (nicht erforderlich).\n" +
+                    "  * Gleiches Müllspiel; Fahrzeuge/Anlagen besser selbst gesteuert.\n" +
                     " <-------------------------------------->\n\n" +
-                    "<Status / Vanilla-Zustand>\n" +
-                    "  * Total Magic = AUS\n" +
-                    "  * Trash Boss = AUS\n" +
+                    "<Status / vanilla>\n" +
+                    "  * Totale Magie = OFF\n" +
+                    "  * Müllsteuerung = OFF\n" +
                     "  * Nur Statusbericht.\n" +
-                    "  * Vanilla-Müllsystem bleibt unverändert."
-
+                    "  * Das vanilla-Müllsystem bleibt unverändert."
                 },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), "Nutzung" },
 
                 // Status
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageServiceRating)), "Müllservice-Wertung" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageServiceRating)),
+                    "Einfache stadtweite Müll-Glücklichkeitswertung aus dem Spiel.\n" +
+                    "**0 = Exzellent**\n" +
+                    "**-1 = Kleine Anpassung nötig** das Spiel kann oft zwischen 0 und -1 schwanken und das kann ignoriert werden.\n" +
+                    "**-2 bis -4 = Etwas müffelig**\n" +
+                    "**-5 bis -10 = Müllproblem**\n" +
+                    "**Indirekte Regler:** Fahrzeug-/Anlagen-/Schwellenwertregler können das mit der Zeit verbessern, indem sie den tatsächlichen Müllaufbau senken.\n" +
+                    "**Direkte Regler:** <Müll-Glücklichkeitsbasis> + <Müll-Glücklichkeitsschritt> ändern, was Cims tolerieren, bevor sie unglücklich werden.\n" +
+                    "**Quellen-Regler:** <Müll-Akkumulationsrate> ändert, wie schnell unterstützte Gebäude Müll produzieren."
+                },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Müll/Monat" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
                     "Zeigt die aktuelle stadtweite Müllmenge und die gesamte Verarbeitungsrate.\n" +
-                    "Verarbeitung erhöhen, wenn monatlich deutlich mehr Müll produziert wird.\n" +
-                    "**Produziert** und **Verarbeitet** sind Tonnen pro Monat.\n" +
-                    "<Update-Zeit = letzte Aktualisierung.>"
+                    "Verarbeitung erhöhen, wenn der monatlich produzierte Müll deutlich höher ist.\n" +
+                    "**Produziert** und **Verarbeitet** verwenden Tonnen pro Monat.\n" +
+                    "<Aktualisierungszeit = zuletzt aktualisiert.>"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Abholanfragen" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
-                    "**Ausstehend** = aktive Abholanfragen, die noch keinem Lkw oder Pfad zugewiesen sind.\n" +
-                    "**Verschickt** = aktive Abholanfragen, die schon zugewiesen wurden.\n" +
-                    "**Gesamt** = zählt aktuell **aktive** Anfrage-Entitäten (in der Müll-Pipeline).\n\n" +
-                    "Technik-Hinweis: Das ist etwas anderes als <Über Anforderungsschwelle>. Hier werden <Anfragen> gezählt, nicht Gebäude.\n" +
-                    "Einige ausstehende Anfragen werden später zugewiesen; andere können verschwinden, wenn die vanilla Neubewertung entscheidet, dass das Ziel den Dienst nicht mehr braucht."
+                    "**Ausstehend** = aktive Abholanfragen, die aktuell keinem Fahrzeug oder Pfad zugewiesen sind.\n" +
+                    "**Zugewiesen** = aktive Abholanfragen, die bereits zugewiesen sind.\n" +
+                    "**Gesamt** = zählt die aktuell **aktive** Anfrage-Entität (in der Müll-Pipeline).\n\n" +
+                    "Technischer Hinweis: Das ist etwas anderes als <Über Anfrage-Schwellenwert>. Hier werden <Anfragen> gezählt, nicht Gebäude.\n" +
+                    "Einige ausstehende Anfragen werden später zugewiesen; andere können auch später verschwinden, wenn die vanilla-Neuprüfung entscheidet, dass das Ziel keinen Service mehr braucht."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusProducers)), "Gebäude" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusProducers)),
-                    "**Hat Müll** = Gebäude, die aktuell Müll lagern.\n" +
-                    "**Gesamt** = alle müllproduzierenden Gebäude in der Stadt.\n" +
-                    "**Über Anforderungsschwelle** = aktuelle Anzahl **Gebäude** mit genug Müll für eine Abholanfrage.\n" +
-                    "In vanilla liegt die Anforderungsschwelle bei **100** internen Mülleinheiten.\n" +
-                    "Power User kann Anforderungs- und Abholschwelle überschreiben.\n"
+                    "**Hat Müll** = Gebäude, die aktuell Müll enthalten.\n" +
+                    "**Gesamt** = alle müllproduzierenden Gebäude der Stadt.\n" +
+                    "**Über Anfrage-Schwellenwert** = aktuelle Anzahl an **Gebäuden** mit genug Müll, um eine Abholanfrage zu erzeugen.\n" +
+                    "In vanilla liegt der Anfrage-Schwellenwert bei **100** internen Mülleinheiten.\n" +
+                    "Die Optionen für Experten können Anfrage- und Abhol-Schwellenwerte überschreiben.\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "Anlagen" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacilities)),
                     "Zusammenfassung der gezählten Müllanlagen.\n" +
                     "**Anlagen** = gezählte Müllgebäude.\n" +
-                    "**Müllwagen** = normale Sammelfahrzeuge. In Industrieabfall-Anlagen sammeln sie Industrieabfall statt normalen Müll.\n" +
-                    "**Dump trucks** = Mülltransfers zwischen Anlagen.\n" +
-                    "**Max Arbeiter** = gesamte Arbeiterkapazität dieser Anlagen."
+                    "**Müllfahrzeuge** = normale Sammelfahrzeuge. Bei Industrieabfall-Anlagen sammeln sie Industrieabfall statt normalen Müll.\n" +
+                    "**Kipper** = Mülltransfers zwischen Anlagen.\n" +
+                    "**Max. Arbeiter** = gesamte Arbeiterkapazität dieser Anlagen."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "Lkw" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "Müllfahrzeuge" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusTrucks)),
-                    "**Unterwegs** = Lkw, die gerade in der Stadt unterwegs sind.\n" +
-                    "**Rückkehr** = Teilmenge der fahrenden Lkw, die zur Anlage zurückfahren.\n" +
-                    "**Geparkt** = Lkw, die an einer Anlage geparkt sind.\n" +
-                    "**Gesamt** = Anzahl aller Müllwagen."
+                    "**Unterwegs** = Fahrzeuge, die aktuell in der Stadt unterwegs sind.\n" +
+                    "**Rückfahrt** = Teilmenge der unterwegs befindlichen Fahrzeuge, die zur Anlage zurückfahren.\n" +
+                    "**Geparkt** = Fahrzeuge, die an einer Anlage geparkt sind.\n" +
+                    "**Gesamt** = Anzahl aller Müllfahrzeuge."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Detaillierten Status ins Log" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageStatusLog)),
-                    "Schreibt einen ausführlicheren Müll-Bericht in **Logs/MagicGarbage.log**.\n" +
-                    "Enthält eine kurze Legende, vanilla Referenzwerte und viele weitere Echtzeit-Statistiken aus der Stadt."
+                    "Schreibt einen ausführlicheren Müllbericht in **Logs/MagicGarbage.log**.\n" +
+                    "Enthält eine kurze Legende, vanilla-Referenzwerte und viele zusätzliche echte Stadtstatistiken."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Log öffnen" },
@@ -261,46 +289,73 @@ namespace MagicGarbage
                 // Runtime status strings
                 { "MG.Status.NoCity", "Noch keine Stadt geladen." },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t produziert | {1:N0} t verarbeitet | update {2}" },
-                { "MG.Status.Row.Requests", "{1:N0} ausstehend | {2:N0} verschickt | {0:N0} gesamt" },
-                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} haben Müll | {2:N0} über Anforderungsschwelle" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} Anlagen | {1:N0} Müllwagen | {2:N0} dump trucks | {3:N0} max Arbeiter" },
-                { "MG.Status.Row.Trucks", "{1:N0} unterwegs ({3:N0} Rückkehr) | {2:N0} geparkt | {0:N0} gesamt" },
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "Exzellent ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "Kleine Anpassung nötig ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "Etwas müffelig ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Problem", "Müllproblem ({0:N0})" },
+
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t produziert | {1:N0} t verarbeitet | aktualisiert {2}" },
+                { "MG.Status.Row.Requests", "{1:N0} ausstehend | {2:N0} zugewiesen | {0:N0} gesamt" },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} haben Müll | {2:N0} über Anfrage-Schwellenwert" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} Anlagen | {1:N0} Müllfahrzeuge | {2:N0} Kipper | {3:N0} max. Arbeiter" },
+                { "MG.Status.Row.Trucks", "{1:N0} unterwegs ({3:N0} Rückfahrt) | {2:N0} geparkt | {0:N0} gesamt" },
                 { "MG.Status.Row.FacilitiesNone", "Noch keine Anlagendaten." },
 
                 // Log strings
-                { "MG.Status.Log.Title", "Müll-Status ({0})" },
+                { "MG.Status.Log.Title", "Müllstatus ({0})" },
                 { "MG.Status.Log.City", "Stadt: {0}" },
-                { "MG.Status.Log.Mode", "Modus: Total Magic={0}, Trash Boss={1}" },
-                { "MG.Status.Log.Legend",
-                    "Legende:\n" +
-                    "- Produziert/Verarbeitet nutzt Tonnen pro Monat.\n" +
-                    "- Die Schwellen unten nutzen interne Mülleinheiten, nicht Tonnen.\n" +
-                    "- Für Spieler rechnet das Spiel 100 Einheiten = 0.1t und 1.000 Einheiten = 1t.\n" +
-                    "Schwellen-Regler:\n" +
-                    "  - Abholschwelle = Mindestmüll, bevor ein Lkw von einem Gebäude abholt.\n" +
-                    "  - Anforderungsschwelle = Mindestmüll, bevor das Spiel eine Abholanfrage erstellt oder behält.\n" +
-                    "- Warnsymbol = Müllmenge, ab der über einem Gebäude ein Warnsymbol erscheint.\n" +
-                    "- Hartes Limit = maximale Müllmenge, die ein Gebäude ansammeln kann.\n" +
-                    "- Ausstehend = aktive Anfragen, die noch keinem Lkw oder Pfad zugewiesen sind.\n" +
-                    "- Einige ausstehende Anfragen werden später zugewiesen; andere können verschwinden, wenn die vanilla Neubewertung entscheidet, dass das Ziel den Dienst nicht mehr braucht.\n" +
-                    "-----------------------------------------------------------------------------\n"
-                },
-                { "MG.Status.Log.Thresholds",
-                    "Spiel-Schwellen (interne Mülleinheiten): Abholung={1:N0}, Anfrage={0:N0}, Warnsymbol={2:N0}, hartes Limit={3:N0}"
+                { "MG.Status.Log.Mode", "Modus: Totale Magie={0}, Müllsteuerung={1}" },
+                { "MG.Status.Log.SettingsHeader", "Aktuelle Mod-Einstellungen" },
+                { "MG.Status.Log.SettingsTrashBoss",
+                    "Regler der Müllsteuerung (gespeichert): Fahrzeugladung={0:N0}% | Anlagenspeicher={1:N0}% | Anlagenverarbeitung={2:N0}% | Anlagenflotte={3:N0}%"
                 },
 
-                { "MG.Status.Log.ThresholdsMissing", "Schwellen: <GarbageParameterData nicht verfügbar>" },
+                { "MG.Status.Log.SettingsPowerUser",
+                    "Expertenmodus (gespeichert): aktiviert={0} | Anfrage={1:N0} | Abholung={2:N0} | Glücklichkeitsbasis={3:N0} | Glücklichkeitsschritt={4:N0} | Akkumulationsrate={5:N0}%"
+                },
+
+                { "MG.Status.Log.Legend",
+                    "Legende:\n" +
+                    "- Produziert/Verarbeitet verwendet Tonnen pro Monat.\n" +
+                    "- Die Schwellenwerte unten verwenden interne Mülleinheiten, keine Tonnen.\n" +
+                    "- Für Spieler rechnet das Spiel 100 Einheiten = 0.1t und 1.000 Einheiten = 1t um.\n" +
+                    "- Müllservice-Wertung = Müll-Glücklichkeitsfaktor der Stadt im Spiel.\n" +
+                    "  - 0 = Exzellent\n" +
+                    "  - -1 = Kleine Anpassung nötig, oder ignorieren\n" +
+                    "  - -2 bis -4 = Etwas müffelig\n" +
+                    "  - -5 bis -10 = Müllproblem\n" +
+                    "Schwellenwert-Regler:\n" +
+                    "  - Abhol-Schwellenwert = minimale Müllmenge, bevor ein Fahrzeug bei einem Gebäude abholt.\n" +
+                    "  - Anfrage-Schwellenwert = minimale Müllmenge, bevor das Spiel eine Abholanfrage erstellt oder behält.\n" +
+                    "- Warnsymbol = Müllmenge, bei der über einem Gebäude ein Warnsymbol erscheint.\n" +
+                    "- Harte Obergrenze = maximale Müllmenge, die ein Gebäude ansammeln kann.\n" +
+                    "- Ausstehend = aktive Anfragen, die aktuell keinem Fahrzeug oder Pfad zugewiesen sind.\n" +
+                    "- Einige ausstehende Anfragen werden später zugewiesen; andere können auch später verschwinden, wenn die vanilla-Neuprüfung entscheidet, dass das Ziel keinen Service mehr braucht.\n" +
+                    "-----------------------------------------------------------------------------\n"
+                },
+
+                { "MG.Status.Log.Thresholds",
+                    "Spiel-Schwellenwerte (interne Mülleinheiten): Abholung={1:N0}, Anfrage={0:N0}, Warnsymbol={2:N0}, harte Obergrenze={3:N0}"
+                },
+
+                { "MG.Status.Log.ThresholdsMissing", "Schwellenwerte: <GarbageParameterData nicht verfügbar>" },
                 { "MG.Status.Log.GarbageProcessing", "Müll: {0:N0} t/Monat | Verarbeitung: {1:N0} t/Monat" },
-                { "MG.Status.Log.Requests", "Abholanfragen: ausstehend={1:N0}, verschickt={2:N0}, gesamt={0:N0}" },
-                { "MG.Status.Log.PendingPeak", "Höchstes ausstehendes Ziel: {0:N0} ({1:N1}t) bei {2}" },
-                { "MG.Status.Log.Producers", "Gebäude: {0:N0} gesamt | {1:N0} haben Müll | {2:N0} über Anforderungsschwelle | {3:N0} Warnstufe" },
-                { "MG.Status.Log.ProducerGarbageStats", "Gebäudemüll (nur >0): avg={0:N0} ({1:N1}t) | median={2:N0} ({3:N1}t) | max={4:N0} ({5:N1}t) bei {6}" },
-                { "MG.Status.Log.NearWarning75", "Gebäude nahe Warnung (mindestens {1:N0} Einheiten / {2:N1}t): {0:N0}" },
-                { "MG.Status.Log.FacilitiesSummary", "Anlagen: {0:N0} gesamt | {1:N0} Müllwagen | {2:N0} dump trucks ({3:N0} unterwegs) | {4:N0} Arbeiter" },
-                { "MG.Status.Log.Trucks", "Müllwagen: {2:N0} unterwegs ({3:N0} Rückkehr) | {1:N0} geparkt | {4:N0} deaktiviert | {0:N0} gesamt" },
+                { "MG.Status.Log.GarbageServiceRating", "Müllservice-Wertung: {0} | roh={1:N2} | gerundet={2:N0}" },
+                { "MG.Status.Log.Requests", "Abholanfragen: ausstehend={1:N0}, zugewiesen={2:N0}, gesamt={0:N0}" },
+                { "MG.Status.Log.PendingPeak", "Größtes ausstehendes Müllziel: {0:N0} ({1:N1}t) bei {2}" },
+                { "MG.Status.Log.PendingPeakNone", "Größtes ausstehendes Müllziel: keines" },
+                { "MG.Status.Log.Producers", "Gebäude: {0:N0} Warnsymbole | {1:N0} gesamt | {2:N0} haben Müll | {3:N0} über Anfrage-Schwellenwert " },
+                { "MG.Status.Log.ProducerGarbageStats", "Gebäudemüll (nur positive Werte): avg={0:N0} ({1:N1}t) | median={2:N0} ({3:N1}t) | max={4:N0} ({5:N1}t) bei {6}" },
+                { "MG.Status.Log.NearWarning75", "Gebäude nahe Warnsymbol (mindestens {1:N0} Einheiten / {2:N1}t): {0:N0}" },
+                { "MG.Status.Log.FacilitiesSummary", "Anlagen: {0:N0} gesamt | {1:N0} Müllfahrzeuge | {2:N0} Kipper ({3:N0} unterwegs) | {4:N0} Arbeiter" },
+                { "MG.Status.Log.Trucks", "Müllfahrzeuge: {2:N0} unterwegs ({3:N0} Rückfahrt) | {1:N0} geparkt | {4:N0} deaktiviert | {0:N0} gesamt" },
                 { "MG.Status.Log.FacilitiesHeader", "Anlagenübersicht" },
-                { "MG.Status.Log.FacilityLine", "- Anlage {0}: garbage={1:N0} ({2:N0} unterwegs, {3:N0} geparkt) | dump={4:N0} ({5:N0} unterwegs) | max Arbeiter={6:N0}" },
+                { "MG.Status.Log.FacilityLine", "- Anlage {0}: Müllfahrzeuge={1:N0} ({2:N0} unterwegs, {3:N0} geparkt) | Kipper={4:N0} ({5:N0} unterwegs) | max. Arbeiter={6:N0}" },
+
+                { "MG.Status.Log.GarbageServiceRating.Excellent", "Exzellent" },
+                { "MG.Status.Log.GarbageServiceRating.Minor", "Kleine Anpassung nötig" },
+                { "MG.Status.Log.GarbageServiceRating.Stinky", "Etwas müffelig" },
+                { "MG.Status.Log.GarbageServiceRating.Problem", "Müllproblem" },
             };
         }
 
