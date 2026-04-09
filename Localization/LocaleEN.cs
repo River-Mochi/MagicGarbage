@@ -110,7 +110,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
                     "Optional Advanced Settings\n" +
                     "<Warning: NOT needed> for good service; provided for players who want to experiment or know more how systems work.\n" +
-                    "When **OFF**, all Power User settings **stay vanilla**.\n" +
+                    "When **OFF**, Power User items behave like normal **vanilla** game.\n" +
                     "When **ON**, the advanced **sliders appear**.\n\n" +
                     "<--- Happiness examples --->\n" +
                     " - <Vanilla> 100/65 = 1st penalty at <165>.\n" +
@@ -159,15 +159,16 @@ namespace MagicGarbage
                     "Balance threshold changes with happiness sliders or incur heavier than normal penalties."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "Garbage Accumulation Rate" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "Accumulation Rate" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
                     "**Scales supported building garbage source values.**\n" +
-                    "This is a strong lever and changing this rate affects many things.\n" +
+                    "Caution: this is a strong lever and changing the rate affects many things.\n" +
                     "It is possible to get a good system without using this.\n\n" +
-                    "**100% = vanilla** accumulation.\n" +
+                    "**100% = vanilla** accumulation rate.\n" +
                     "**20%** = much slower buildup.\n" +
                     "**200%** = double rate - a whole lot of garbage.\n" +
-                    "At 20%, all Cims are obviously composting, thus a lower garbage accumulation rate ;)"
+                    "At 20%, all Cims are obviously composting, thus a much lower garbage accumulation rate ;)\n\n" +
+                    "Tech note: game adds garbage gradually across the day, not all at once."
                 },
 
 
@@ -182,7 +183,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "Game Defaults" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
-                    "Set Power User values **back to vanilla**.\n" +
+                    "Sets all Power User values **back to vanilla**.\n" +
                     "Turns **Power User OFF**.\n"
                 },
 

@@ -212,6 +212,7 @@ namespace MagicGarbage
                 snap.FacilityMaxWorkers);
         }
 
+        // Simple player-facing comments based on rounded city garbage happiness factor.
         private static string BuildGarbageServiceRatingUi(int rounded)
         {
             if (rounded >= 0)
@@ -232,6 +233,7 @@ namespace MagicGarbage
             return Mod.LF("MG.Status.Row.GarbageServiceRating.Problem", rounded);
         }
 
+        // Same rating bands as Options UI, but returned as plain labels for detailed log button.
         private static string BuildGarbageServiceRatingLabel(int rounded)
         {
             if (rounded >= 0)
@@ -298,6 +300,7 @@ namespace MagicGarbage
                 snap.RequestPending,
                 snap.RequestDispatched));
 
+            // Show a plain "none" in user-facing log instead of raw ECS null text.
             if (snap.PendingMaxTargetGarbage <= 0 || snap.PendingMaxTargetEntity == Entity.Null)
             {
                 log.AppendLine(Mod.L("MG.Status.Log.PendingPeakNone"));

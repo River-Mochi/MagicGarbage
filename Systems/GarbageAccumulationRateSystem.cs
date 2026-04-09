@@ -76,6 +76,8 @@ namespace MagicGarbage
                 return;
             }
 
+            // Only touch prefab entities here.
+            // Live buildings keep using vanilla recalculation from these prefab source values.
             foreach ((RefRW<ConsumptionData> consumption, Entity entity) in
                      SystemAPI.Query<RefRW<ConsumptionData>>()
                          .WithAll<Game.Prefabs.PrefabData>()
@@ -83,6 +85,7 @@ namespace MagicGarbage
             {
                 ref ConsumptionData data = ref consumption.ValueRW;
 
+                // Cache baseline once per prefab entity so scaling stays stable and reversible to vanilla.
                 if (!m_Base.TryGetValue(entity, out float baseAccumulation))
                 {
                     if (!TryGetAuthoringBase(entity, out baseAccumulation))
@@ -91,6 +94,8 @@ namespace MagicGarbage
                         {
                             baseAccumulation = data.m_GarbageAccumulation;
                         }
+                        // Fallback: if authoring lookup fails, undo the last applied multiplier once
+                        // to approximate the original prefab source value before applying new multiplier.
                         else
                         {
                             float lastFactor = m_LastMultiplier / 100f;
@@ -112,6 +117,9 @@ namespace MagicGarbage
             Enabled = false;
         }
 
+        // Prefer authoring prefab values as true baseline.
+        // ServiceConsumption covers service/unique-style buildings.
+        // ZoneServiceConsumption covers zoned buildings source values.
         private bool TryGetAuthoringBase(Entity prefabEntity, out float baseline)
         {
             baseline = 0f;
