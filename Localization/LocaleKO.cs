@@ -289,16 +289,16 @@ namespace MagicGarbage
                 // Runtime status strings
                 { "MG.Status.NoCity", "아직 도시가 로드되지 않았습니다." },
 
-                { "MG.Status.Row.GarbageServiceRating.Excellent", "최고 ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Minor", "약간의 조정 필요 ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Stinky", "약간 냄새남 ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Problem", "쓰레기 문제 ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "아주 좋음 ({0:N0}) | 업데이트 {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "조금만 조정하면 됨 ({0:N0}) | 업데이트 {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "조금 냄새남 ({0:N0}) | 업데이트 {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Problem", "쓰레기 문제 ({0:N0}) | 업데이트 {1}" },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t 생산 | {1:N0} t 처리 | 업데이트 {2}" },
-                { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
-                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} 쓰레기 있음 | {2:N0} 요청 기준치 초과" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} 시설 | {1:N0} 쓰레기 트럭 | {2:N0} 덤프트럭 | {3:N0} 최대 작업자 수" },
-                { "MG.Status.Row.Trucks", "{1:N0} 이동 중 ({3:N0} 복귀 중) | {2:N0} 주차 중 | {0:N0} total" },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t 생성 | {1:N0} t 처리" },
+                { "MG.Status.Row.Requests", "{1:N0} 대기 중 | {2:N0} 배정됨 | {0:N0} 전체" },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} 쓰레기 있음 | {2:N0} 요청 임계값 초과" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} 시설 | {1:N0}/{2:N0} 쓰레기/Dump 트럭 | {3:N0} 작업자" },
+                { "MG.Status.Row.Trucks", "{1:N0} 이동 중 ({3:N0} 복귀 중) | {2:N0} 주차됨 | {0:N0} 전체" },
                 { "MG.Status.Row.FacilitiesNone", "아직 시설 데이터가 없습니다." },
 
                 // Log strings

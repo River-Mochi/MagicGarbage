@@ -287,19 +287,19 @@ namespace MagicGarbage
                 },
 
                 // Runtime status strings
-                { "MG.Status.NoCity", "Aucune ville chargée pour l'instant." },
+                { "MG.Status.NoCity", "Aucune ville chargée pour le moment." },
 
-                { "MG.Status.Row.GarbageServiceRating.Excellent", "Excellent ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Minor", "Petit ajustement utile ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Stinky", "Un peu nauséabond ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Problem", "Problème de déchets ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "Excellent ({0:N0}) | maj {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "Petit ajustement conseillé ({0:N0}) | maj {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "Un peu nauséabond ({0:N0}) | maj {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Problem", "Problème de déchets ({0:N0}) | maj {1}" },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t produites | {1:N0} t traitées | maj {2}" },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t produites | {1:N0} t traitées" },
                 { "MG.Status.Row.Requests", "{1:N0} en attente | {2:N0} envoyées | {0:N0} total" },
-                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} ont des déchets | {2:N0} au-dessus du seuil de demande" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} installations | {1:N0} camions poubelles | {2:N0} camions-bennes | {3:N0} travailleurs max" },
-                { "MG.Status.Row.Trucks", "{1:N0} en mouvement ({3:N0} retour) | {2:N0} garés | {0:N0} total" },
-                { "MG.Status.Row.FacilitiesNone", "Pas encore de données d'installation." },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} ont des déchets | {2:N0} au-dessus du seuil" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} installations | {1:N0}/{2:N0} ordures/Dump camions | {3:N0} travailleurs" },
+                { "MG.Status.Row.Trucks", "{1:N0} en route ({3:N0} retour) | {2:N0} garés | {0:N0} total" },
+                { "MG.Status.Row.FacilitiesNone", "Pas encore de données sur les installations." },
 
                 // Log strings
                 { "MG.Status.Log.Title", "Statut des déchets ({0})" },

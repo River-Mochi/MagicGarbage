@@ -289,16 +289,16 @@ namespace MagicGarbage
                 // Runtime status strings
                 { "MG.Status.NoCity", "Nie wczytano jeszcze miasta." },
 
-                { "MG.Status.Row.GarbageServiceRating.Excellent", "Doskonale ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Minor", "Wymaga drobnej poprawki ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Stinky", "Lekko śmierdzi ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Problem", "Problem z odpadami ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "Świetnie ({0:N0}) | aktualizacja {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "Przyda się mała korekta ({0:N0}) | aktualizacja {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "Trochę śmierdzi ({0:N0}) | aktualizacja {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Problem", "Problem ze śmieciami ({0:N0}) | aktualizacja {1}" },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Processed | aktualizacja {2}" },
-                { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
-                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} ma odpady | {2:N0} powyżej progu zgłoszenia" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} obiektów | {1:N0} garbage trucks | {2:N0} dump trucks | {3:N0} max workers" },
-                { "MG.Status.Row.Trucks", "{1:N0} moving ({3:N0} returning) | {2:N0} parked | {0:N0} total" },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t wyprodukowano | {1:N0} t przetworzono" },
+                { "MG.Status.Row.Requests", "{1:N0} oczekujące | {2:N0} wysłane | {0:N0} łącznie" },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} ma śmieci | {2:N0} ponad próg zgłoszenia" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} obiektów | {1:N0}/{2:N0} śmieci/Dump ciężarówki | {3:N0} pracownicy" },
+                { "MG.Status.Row.Trucks", "{1:N0} w ruchu ({3:N0} wraca) | {2:N0} zaparkowane | {0:N0} łącznie" },
                 { "MG.Status.Row.FacilitiesNone", "Brak jeszcze danych o obiektach." },
 
                 // Log strings

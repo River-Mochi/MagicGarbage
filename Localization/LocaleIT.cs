@@ -287,19 +287,19 @@ namespace MagicGarbage
                 },
 
                 // Runtime status strings
-                { "MG.Status.NoCity", "Nessuna città caricata ancora." },
+                { "MG.Status.NoCity", "Nessuna città caricata." },
 
-                { "MG.Status.Row.GarbageServiceRating.Excellent", "Eccellente ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Minor", "Serve un piccolo ritocco ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Stinky", "Un po' puzzolente ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Problem", "Problema rifiuti ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "Eccellente ({0:N0}) | aggiornato {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "Serve un piccolo ritocco ({0:N0}) | aggiornato {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "Un po' puzzolente ({0:N0}) | aggiornato {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Problem", "Problema di rifiuti ({0:N0}) | aggiornato {1}" },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t prodotte | {1:N0} t elaborate | aggiornato {2}" },
-                { "MG.Status.Row.Requests", "{1:N0} in attesa | {2:N0} inviate | {0:N0} totale" },
-                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} hanno rifiuti | {2:N0} sopra soglia richiesta" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} strutture | {1:N0} camion rifiuti | {2:N0} dump truck | {3:N0} lavoratori max" },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t prodotte | {1:N0} t lavorate" },
+                { "MG.Status.Row.Requests", "{1:N0} in attesa | {2:N0} assegnate | {0:N0} totale" },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} hanno rifiuti | {2:N0} sopra la soglia" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} impianti | {1:N0}/{2:N0} rifiuti/Dump camion | {3:N0} lavoratori" },
                 { "MG.Status.Row.Trucks", "{1:N0} in movimento ({3:N0} rientro) | {2:N0} parcheggiati | {0:N0} totale" },
-                { "MG.Status.Row.FacilitiesNone", "Nessun dato struttura ancora." },
+                { "MG.Status.Row.FacilitiesNone", "Nessun dato sugli impianti per ora." },
 
                 // Log strings
                 { "MG.Status.Log.Title", "Stato rifiuti ({0})" },

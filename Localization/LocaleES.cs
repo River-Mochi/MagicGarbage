@@ -289,15 +289,15 @@ namespace MagicGarbage
                 // Runtime status strings
                 { "MG.Status.NoCity", "Todavía no hay ninguna ciudad cargada." },
 
-                { "MG.Status.Row.GarbageServiceRating.Excellent", "Excelente ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Minor", "Necesita un retoque menor ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Stinky", "Un poco pestilente ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Problem", "Problema de basura ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "Excelente ({0:N0}) | act. {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "Necesita pequeño ajuste ({0:N0}) | act. {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "Un poco pestilente ({0:N0}) | act. {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Problem", "Problema de basura ({0:N0}) | act. {1}" },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t producidas | {1:N0} t procesadas | act. {2}" },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t producidas | {1:N0} t procesadas" },
                 { "MG.Status.Row.Requests", "{1:N0} pendientes | {2:N0} despachadas | {0:N0} total" },
-                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} tienen basura | {2:N0} por encima del umbral de solicitud" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} instalaciones | {1:N0} camiones de basura | {2:N0} camiones volquete | {3:N0} trabajadores máx." },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} tienen basura | {2:N0} sobre el umbral" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} instalaciones | {1:N0}/{2:N0} basura/Dump camiones | {3:N0} trabajadores" },
                 { "MG.Status.Row.Trucks", "{1:N0} en movimiento ({3:N0} regresando) | {2:N0} aparcados | {0:N0} total" },
                 { "MG.Status.Row.FacilitiesNone", "Todavía no hay datos de instalaciones." },
 

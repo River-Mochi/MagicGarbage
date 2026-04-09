@@ -289,16 +289,16 @@ namespace MagicGarbage
                 // Runtime status strings
                 { "MG.Status.NoCity", "還沒有載入城市。" },
 
-                { "MG.Status.Row.GarbageServiceRating.Excellent", "優秀 ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Minor", "需要小調整 ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Stinky", "有點臭 ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Problem", "垃圾問題嚴重 ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "優秀 ({0:N0}) | 更新於 {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "稍微調一下會更好 ({0:N0}) | 更新於 {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "有點臭 ({0:N0}) | 更新於 {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Problem", "垃圾問題 ({0:N0}) | 更新於 {1}" },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Processed | 更新於 {2}" },
-                { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
-                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} 有垃圾 | {2:N0} 高於請求閾值" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} 個設施 | {1:N0} garbage trucks | {2:N0} dump trucks | {3:N0} max workers" },
-                { "MG.Status.Row.Trucks", "{1:N0} moving ({3:N0} returning) | {2:N0} parked | {0:N0} total" },
+                { "MG.Status.Row.GarbageProcessing", "已產生 {0:N0} t | 已處理 {1:N0} t" },
+                { "MG.Status.Row.Requests", "{1:N0} 待處理 | {2:N0} 已派出 | {0:N0} 總計" },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} 有垃圾 | {2:N0} 高於請求門檻" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} 個設施 | {1:N0}/{2:N0} 垃圾/Dump卡車 | {3:N0} 工人" },
+                { "MG.Status.Row.Trucks", "{1:N0} 行駛中 ({3:N0} 返回中) | {2:N0} 停放 | {0:N0} 總計" },
                 { "MG.Status.Row.FacilitiesNone", "還沒有設施資料。" },
 
                 // Log strings

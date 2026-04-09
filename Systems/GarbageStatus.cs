@@ -167,13 +167,14 @@ namespace MagicGarbage
         {
             string updatedAt = DateTime.Now.ToString("HH:mm:ss");
 
-            s_UiGarbageServiceRating = BuildGarbageServiceRatingUi(snap.GarbageServiceRatingRounded);
+            s_UiGarbageServiceRating = BuildGarbageServiceRatingUi(
+                snap.GarbageServiceRatingRounded,
+                updatedAt);
 
             s_UiGarbageProcessing = Mod.LF(
                 "MG.Status.Row.GarbageProcessing",
                 snap.GarbageTonsPerMonth,
-                snap.ProcessingTonsPerMonth,
-                updatedAt);
+                snap.ProcessingTonsPerMonth);
 
             s_UiRequests = Mod.LF(
                 "MG.Status.Row.Requests",
@@ -213,24 +214,24 @@ namespace MagicGarbage
         }
 
         // Simple player-facing comments based on rounded city garbage happiness factor.
-        private static string BuildGarbageServiceRatingUi(int rounded)
+        private static string BuildGarbageServiceRatingUi(int rounded, string updatedAt)
         {
             if (rounded >= 0)
             {
-                return Mod.LF("MG.Status.Row.GarbageServiceRating.Excellent", rounded);
+                return Mod.LF("MG.Status.Row.GarbageServiceRating.Excellent", rounded, updatedAt);
             }
 
             if (rounded == -1)
             {
-                return Mod.LF("MG.Status.Row.GarbageServiceRating.Minor", rounded);
+                return Mod.LF("MG.Status.Row.GarbageServiceRating.Minor", rounded, updatedAt);
             }
 
             if (rounded >= -4)
             {
-                return Mod.LF("MG.Status.Row.GarbageServiceRating.Stinky", rounded);
+                return Mod.LF("MG.Status.Row.GarbageServiceRating.Stinky", rounded, updatedAt);
             }
 
-            return Mod.LF("MG.Status.Row.GarbageServiceRating.Problem", rounded);
+            return Mod.LF("MG.Status.Row.GarbageServiceRating.Problem", rounded, updatedAt);
         }
 
         // Same rating bands as Options UI, but returned as plain labels for detailed log button.

@@ -290,15 +290,15 @@ namespace MagicGarbage
                 // Runtime status strings
                 { "MG.Status.NoCity", "No city loaded yet." },
 
-                { "MG.Status.Row.GarbageServiceRating.Excellent", "Excellent ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Minor", "Needs minor tweak ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Stinky", "Slightly stinky ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Problem", "Garbage problem ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "Excellent ({0:N0}) | updated {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "Needs minor tweak ({0:N0}) | updated {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "Slightly stinky ({0:N0}) | updated {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Problem", "Garbage problem ({0:N0}) | updated {1}" },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Processed | updated {2}" },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Processed" },
                 { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} has garbage | {2:N0} above request threshold" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} facilities | {1:N0} garbage trucks | {2:N0} dump trucks | {3:N0} max workers" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} facilities | {1:N0}/{2:N0} garbage/dump trucks | {3:N0} workers" },
                 { "MG.Status.Row.Trucks", "{1:N0} moving ({3:N0} returning) | {2:N0} parked | {0:N0} total" },
                 { "MG.Status.Row.FacilitiesNone", "No facility data yet." },
 

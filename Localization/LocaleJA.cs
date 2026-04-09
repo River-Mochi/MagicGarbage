@@ -289,17 +289,17 @@ namespace MagicGarbage
                 // Runtime status strings
                 { "MG.Status.NoCity", "まだ都市が読み込まれていません。" },
 
-                { "MG.Status.Row.GarbageServiceRating.Excellent", "最高 ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Minor", "軽い調整が必要 ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Stinky", "少し臭い ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Problem", "ごみ問題 ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "優秀 ({0:N0}) | 更新 {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "少し調整推奨 ({0:N0}) | 更新 {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "やや臭い ({0:N0}) | 更新 {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Problem", "ごみ問題 ({0:N0}) | 更新 {1}" },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t 生産 | {1:N0} t 処理 | 更新 {2}" },
-                { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
-                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} がごみあり | {2:N0} が要求しきい値超え" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} 施設 | {1:N0} ごみトラック | {2:N0} ダンプトラック | {3:N0} 最大作業員数" },
-                { "MG.Status.Row.Trucks", "{1:N0} 移動中 ({3:N0} 帰還中) | {2:N0} 駐車中 | {0:N0} total" },
-                { "MG.Status.Row.FacilitiesNone", "まだ施設データがありません。" },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t 生成 | {1:N0} t 処理" },
+                { "MG.Status.Row.Requests", "{1:N0} 保留中 | {2:N0} 派遣済み | {0:N0} 合計" },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} がごみあり | {2:N0} が依頼しきい値超え" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} 施設 | {1:N0}/{2:N0} ごみ/Dumpトラック | {3:N0} 作業員" },
+                { "MG.Status.Row.Trucks", "{1:N0} 移動中 ({3:N0} 帰還中) | {2:N0} 駐車中 | {0:N0} 合計" },
+                { "MG.Status.Row.FacilitiesNone", "まだ施設データはありません。" },
 
                 // Log strings
                 { "MG.Status.Log.Title", "ごみ状態 ({0})" },

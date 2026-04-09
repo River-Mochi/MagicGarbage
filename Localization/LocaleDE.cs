@@ -289,15 +289,15 @@ namespace MagicGarbage
                 // Runtime status strings
                 { "MG.Status.NoCity", "Noch keine Stadt geladen." },
 
-                { "MG.Status.Row.GarbageServiceRating.Excellent", "Exzellent ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Minor", "Kleine Anpassung nötig ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Stinky", "Etwas müffelig ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Problem", "Müllproblem ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "Ausgezeichnet ({0:N0}) | aktualisiert {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "Kleine Anpassung empfohlen ({0:N0}) | aktualisiert {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "Etwas müffelig ({0:N0}) | aktualisiert {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Problem", "Müllproblem ({0:N0}) | aktualisiert {1}" },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t produziert | {1:N0} t verarbeitet | aktualisiert {2}" },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t produziert | {1:N0} t verarbeitet" },
                 { "MG.Status.Row.Requests", "{1:N0} ausstehend | {2:N0} zugewiesen | {0:N0} gesamt" },
-                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} haben Müll | {2:N0} über Anfrage-Schwellenwert" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} Anlagen | {1:N0} Müllfahrzeuge | {2:N0} Kipper | {3:N0} max. Arbeiter" },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} haben Müll | {2:N0} über Anforderungsschwelle" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} Anlagen | {1:N0}/{2:N0} Müll/Dump-Lkw | {3:N0} Arbeiter" },
                 { "MG.Status.Row.Trucks", "{1:N0} unterwegs ({3:N0} Rückfahrt) | {2:N0} geparkt | {0:N0} gesamt" },
                 { "MG.Status.Row.FacilitiesNone", "Noch keine Anlagendaten." },
 

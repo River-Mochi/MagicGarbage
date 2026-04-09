@@ -287,19 +287,19 @@ namespace MagicGarbage
                 },
 
                 // Runtime status strings
-                { "MG.Status.NoCity", "Nenhuma cidade carregada ainda." },
+                { "MG.Status.NoCity", "Ainda não há cidade carregada." },
 
-                { "MG.Status.Row.GarbageServiceRating.Excellent", "Excelente ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Minor", "Precisa de pequeno ajuste ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Stinky", "Meio fedido ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Problem", "Problema de lixo ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "Excelente ({0:N0}) | atualizado {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "Precisa de pequeno ajuste ({0:N0}) | atualizado {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "Um pouco fedido ({0:N0}) | atualizado {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Problem", "Problema de lixo ({0:N0}) | atualizado {1}" },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Processed | atualizado {2}" },
-                { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
-                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} têm lixo | {2:N0} acima do threshold de pedido" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} instalações | {1:N0} garbage trucks | {2:N0} dump trucks | {3:N0} max workers" },
-                { "MG.Status.Row.Trucks", "{1:N0} moving ({3:N0} returning) | {2:N0} parked | {0:N0} total" },
-                { "MG.Status.Row.FacilitiesNone", "Ainda não há dados de instalação." },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t produzidas | {1:N0} t processadas" },
+                { "MG.Status.Row.Requests", "{1:N0} pendentes | {2:N0} despachadas | {0:N0} total" },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} têm lixo | {2:N0} acima do limite" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} instalações | {1:N0}/{2:N0} lixo/Dump caminhões | {3:N0} trabalhadores" },
+                { "MG.Status.Row.Trucks", "{1:N0} em movimento ({3:N0} retornando) | {2:N0} estacionados | {0:N0} total" },
+                { "MG.Status.Row.FacilitiesNone", "Ainda não há dados das instalações." },
 
                 // Log strings
                 { "MG.Status.Log.Title", "Status do lixo ({0})" },

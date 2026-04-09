@@ -289,16 +289,16 @@ namespace MagicGarbage
                 // Runtime status strings
                 { "MG.Status.NoCity", "还没有加载城市。" },
 
-                { "MG.Status.Row.GarbageServiceRating.Excellent", "优秀 ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Minor", "需要小调整 ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Stinky", "有点臭 ({0:N0})" },
-                { "MG.Status.Row.GarbageServiceRating.Problem", "垃圾问题严重 ({0:N0})" },
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "优秀 ({0:N0}) | 更新于 {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "稍微调一下更好 ({0:N0}) | 更新于 {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "有点臭 ({0:N0}) | 更新于 {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Problem", "垃圾问题 ({0:N0}) | 更新于 {1}" },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Processed | 更新于 {2}" },
-                { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
+                { "MG.Status.Row.GarbageProcessing", "已产生 {0:N0} t | 已处理 {1:N0} t" },
+                { "MG.Status.Row.Requests", "{1:N0} 待处理 | {2:N0} 已派出 | {0:N0} 总计" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} 有垃圾 | {2:N0} 高于请求阈值" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} 个设施 | {1:N0} garbage trucks | {2:N0} dump trucks | {3:N0} max workers" },
-                { "MG.Status.Row.Trucks", "{1:N0} moving ({3:N0} returning) | {2:N0} parked | {0:N0} total" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} 个设施 | {1:N0}/{2:N0} 垃圾/Dump卡车 | {3:N0} 工人" },
+                { "MG.Status.Row.Trucks", "{1:N0} 行驶中 ({3:N0} 返回中) | {2:N0} 停放 | {0:N0} 总计" },
                 { "MG.Status.Row.FacilitiesNone", "还没有设施数据。" },
 
                 // Log strings
