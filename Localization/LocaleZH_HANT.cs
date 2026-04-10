@@ -87,8 +87,39 @@ namespace MagicGarbage
                     "**100% = vanilla** 卡車數量。\n"
                 },
 
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "進階模式選項" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
+                    "**可選的進階門檻 + 垃圾滿意度 + 累積率調整。**\n" +
+                    "當 **關閉** 時，收集/請求門檻、垃圾滿意度和垃圾累積速率都會保持 **vanilla**。\n" +
+                    "當 **開啟** 時，會顯示進階 **滑桿**。\n\n" +
+                    "<--- 垃圾滿意度範例 --->\n" +
+                    " - <Vanilla> 100/65 = 第 1 次懲罰在 <165>。\n" +
+                    " - <推薦> 550/150 = 第 1 次懲罰在 <700>。\n" +
+                    " - <非常寬鬆> 950/200 = 第 1 次垃圾懲罰在 <1150>。\n" +
+                    "方便：即使此項關閉，最後使用的滑桿數值也會被保存（以後想啟用時還能用）。"
+                },
 
-                // Trash Boss Presets
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "派車請求門檻" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
+                    "**建築在建立或保留卡車派車請求之前所需的垃圾量。**\n" +
+                    "Vanilla = **100** 垃圾單位。\n" +
+                    "**100 垃圾單位 = 0.1t**\n" +
+                    "**1,000 垃圾單位 = 1t**\n" +
+                    "請把它保持在不低於收集門檻。\n" +
+                    "通常這會讓使用中的卡車變多，停著的卡車變少。"
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "收集門檻" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
+                    "**卡車可以從建築收集垃圾之前所需的最小垃圾量。**\n" +
+                    "Vanilla = **20** 垃圾單位。\n" +
+                    "回收不能高於派車請求，超出時會被限制。\n" +
+                    "請讓派車請求保持在可回收門檻或更高，以避免邏輯問題；" +
+                    " 如果卡車已派往某建築而回收值更高，卡車可能無法回收該建築的垃圾（累積速率也會影響）。\n"
+                },
+
+                // Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "推薦" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
                     "套用 **垃圾管理** 的標準**推薦**數值。\n" +
@@ -97,93 +128,62 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "遊戲預設" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "將 **垃圾管理** 的滑桿恢復為 **vanilla 數值**。\n" +
-                    "<不會> 改動 **進階模式** 設定。\n" +
-                    "**Vanilla：**\n" +
-                    "- 百分比滑桿會回到 **100%**。\n" +
-                    "- Dispatch Request Threshold 會回到 **100 units**。\n" +
-                    "- Pickup Threshold 會回到 **20 units**。\n"
-                },
-
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "進階模式選項" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
-                    "可選進階設定\n" +
-                    "<警告：並非必需>，照樣可以獲得良好服務；這是給想要試驗或更了解系統運作方式的玩家準備的。\n" +
-                    "當 **OFF** 時，所有 **進階模式** 設定都會**保持 vanilla**。\n" +
-                    "當 **ON** 時，會出現**進階滑桿**。\n\n" +
-                    "<--- 滿意度範例 --->\n" +
-                    " - <Vanilla> 100/65 = 第一次懲罰在 <165>。\n" +
-                    " - 點擊 <推薦> 可使用 550/150 = 第一次懲罰在 <700>。\n" +
-                    " - <非常寬鬆> 950/200 = 第一次垃圾懲罰在 <1150>。\n" +
-                    "方便之處：當此選項為 OFF 時，滑桿上次的數值會被保存（以後想啟用時還能繼續用）。"
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Dispatch Request Threshold" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
-                    "**建築在建立或保留卡車調度請求前所需的垃圾量。**\n" +
-                    "Vanilla = **100** units garbage.\n" +
-                    "**100 units garbage = 0.1t**\n" +
-                    "**1,000 units garbage = 1t**\n" +
-                    "請保持此值等於或高於 Pickup Threshold。\n" +
-                    "這通常會讓更多卡車處於使用中，而不是停放中。"
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "Pickup Threshold" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
-                    "**卡車可從建築收集垃圾前，建築至少需要達到的垃圾量。**\n" +
-                    "Vanilla = **20** units garbage.\n" +
-                    "拾取滑桿 <不能> 高於 Dispatch Request (DR)；系統會自動限制，以防邏輯出錯。\n" +
-                    "如果卡車已經被派往某建築，而拾取值又高於 DR，那麼這輛卡車有時可能無法從該建築收集垃圾（垃圾累積速率也會影響這一點）。\n"
+                    "把 Trash Boss 滑桿恢復到 **vanilla 數值**。\n" +
+                    "不會<改變>進階模式設定。\n" +
+                    "**Vanilla:**\n" +
+                    "- 百分比滑桿恢復到 **100%**。\n" +
+                    "- 派車請求門檻恢復到 **100 單位**。\n" +
+                    "- 收集門檻恢復到 **20 單位**。\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "垃圾滿意度基線" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
-                    "**建築垃圾量在開始造成健康 + 滿意度懲罰前的基準值。**\n" +
-                    "**Vanilla = 100** units garbage.\n" +
-                    "基線越高 = 建築在懲罰開始前能容納更多垃圾。\n" +
-                    "100 units garbage = 0.1t\n" +
-                    "概覽：\n" +
-                    "- <Threshold> = 系統行為觸發點\n" +
-                    "- <Baseline> = 懲罰公式的起點\n" +
-                    "- <Step> = 公式中的增量大小，也就是懲罰開始後成長得有多快"
+                    "**建築開始受到健康 + 滿意度懲罰之前的垃圾水準。**\n" +
+                    "**Vanilla = 100** 垃圾單位。\n" +
+                    "基線越高 = 建築在懲罰開始前能容忍更多垃圾。\n" +
+                    "100 垃圾單位 = 0.1t\n" +
+                    "說明：\n" +
+                    "- <門檻> = 觸發系統行為的點\n" +
+                    "- <基線> = 懲罰公式的起點\n" +
+                    "- <步長> = 公式中的增量大小，也就是懲罰開始後成長得有多快"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "垃圾滿意度步進" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "垃圾滿意度步長" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
-                    "**超過基線後，開始觸發 -1 懲罰所需的額外垃圾量。**\n" +
-                    "Vanilla = **65** units garbage.\n" +
-                    "步進越高 = 懲罰成長越慢。\n" +
-                    "遊戲會將垃圾懲罰上限限制為 **-10**。\n" +
-                    "Vanilla 的第一次 <-1 penalty> 出現在 **165 garbage**（100 baseline + 65 step）\n" +
-                    "調整閾值時，最好也一起平衡滿意度滑桿，否則懲罰可能會比正常更重。"
+                    "**超過基線後，觸發 -1 懲罰所需的額外垃圾量。**\n" +
+                    "Vanilla = **65** 垃圾單位。\n" +
+                    "步長越高 = 懲罰成長越慢。\n" +
+                    "遊戲把垃圾懲罰上限設為 **-10**。\n" +
+                    "vanilla 的第一次 <-1 懲罰> 出現在 **165 垃圾**（基線 100 + 步長 65）\n" +
+                    "如果修改門檻，也要配合調整滿意度滑桿，否則懲罰可能會比正常更重。"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "垃圾累積速率" },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "累積速率" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
                     "**縮放受支援建築的垃圾來源數值。**\n" +
-                    "這是個很強的槓桿，改動這個速率會影響很多東西。\n" +
-                    "就算不用它，也可以得到一個不錯的系統。\n\n" +
-                    "**100% = vanilla** 累積速率。\n" +
-                    "**20%** = 累積得慢很多。\n" +
-                    "**200%** = 雙倍速率 - 垃圾會非常多。\n" +
-                    "在 20% 下，所有 Cims 顯然都在堆肥，所以垃圾累積自然更低；)"
+                    "注意：這是個影響很強的調整項，改動這個速率會影響很多東西。\n" +
+                    "即使不用它，也可以做出一個不錯的系統。\n\n" +
+                    "**100% = vanilla** 累積率。\n" +
+                    "**20%** = 累積慢很多。\n" +
+                    "**200%** = 雙倍速度——垃圾會非常多。\n" +
+                    "在 20% 時，市民顯然都在認真堆肥，所以垃圾累積率也低得多 ;)"
                 },
 
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "推薦" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
-                    "套用 **進階模式** 的**推薦**數值。\n" +
-                    "會將 **進階模式** 設為 ON。\n" +
-                    "第一次垃圾懲罰會從 **700** garbage 開始（550 baseline + 150 step）。\n" +
-                    "除非手動更改，否則垃圾累積速率會保持 **100%** vanilla。"
+                    "套用 **推薦** 的進階模式數值。\n" +
+                    "會開啟進階模式。\n" +
+                    "第一次垃圾懲罰會在 **700** 垃圾時開始（基線 550 + 步長 150）。\n" +
+                    "除非手動修改，否則累積速率會保持 **100%** vanilla。"
                 },
 
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "遊戲預設" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
-                    "將 **進階模式** 的數值恢復為 **vanilla**。\n" +
-                    "會將 **進階模式** 設為 **OFF**。\n"
+                    "把所有進階模式數值都恢復為 **vanilla**。\n" +
+                    "會關閉 **進階模式**。\n"
                 },
 
                 // About
@@ -222,57 +222,58 @@ namespace MagicGarbage
                 // Status
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageServiceRating)), "垃圾服務評分" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageServiceRating)),
-                    "遊戲中的全城垃圾滿意度簡易評分。\n" +
+                    "遊戲裡的簡單城市垃圾滿意度評級。\n" +
                     "**0 = 優秀**\n" +
-                    "**-1 = 需要小調整** 遊戲經常會在 0 到 -1 之間波動，可以忽略。\n" +
+                    "**-1 = 需要稍微調一下** 遊戲經常會在 0 到 -1 之間波動，可以忽略。\n" +
                     "**-2 到 -4 = 有點臭**\n" +
-                    "**-5 到 -10 = 垃圾問題嚴重**\n" +
-                    "**間接調整：** 卡車/設施/閾值滑桿可以隨時間推移減少實際垃圾堆積，從而改善這個評分。\n" +
-                    "**直接調整：** <垃圾滿意度基線> + <垃圾滿意度步進> 會改變市民在不滿前能容忍多少垃圾。\n" +
-                    "**來源速率調整：** <垃圾累積速率> 會改變受支援建築產生垃圾的速度。"
+                    "**-5 到 -10 = 垃圾問題**\n" +
+                    "**間接調整：** 卡車/設施/門檻滑桿可以隨時間改善這一點，因為它們會減少實際垃圾堆積。\n" +
+                    "**直接調整：** <垃圾滿意度基線> + <垃圾滿意度步長> 會改變市民在不高興之前能容忍多少垃圾。\n" +
+                    "**來源速率調整：** <累積率> 會改變受支援建築產生垃圾的速度。"
                 },
+
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "垃圾/月" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
-                    "顯示目前全城垃圾量與總垃圾處理速率。\n" +
+                    "顯示目前全城垃圾量與總處理速率。\n" +
                     "如果每月產生的垃圾遠高於處理量，就該提高處理能力。\n" +
-                    "**Produced** 和 **Processed** 以每月噸數顯示。\n" +
-                    "<更新時間 = 上次重新整理時間。>"
+                    "**已產生** 和 **已處理** 使用每月噸數。\n" +
+                    "<更新時間 = 上次重新整理。>"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "收集請求" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
-                    "**Pending** = 目前尚未分配給卡車或路徑的活動收集請求。\n" +
-                    "**Dispatched** = 已經分配出去的活動收集請求。\n" +
-                    "**Total** = 目前 **active** 請求實體的數量（在 garbage 流程中）。\n\n" +
-                    "技術說明：這和 <高於請求閾值> 不一樣。這裡統計的是 <請求>，不是建築。\n" +
-                    "有些待處理請求稍後會被分配；如果 vanilla 重新驗證後認為目標已不再需要服務，有些請求也會在之後被清掉。"
+                    "**待處理** = 目前尚未分配給卡車或路徑的活動收集請求。\n" +
+                    "**已派出** = 已經分配出去的活動收集請求。\n" +
+                    "**總計** = 目前 **活動** 請求實體的數量（在垃圾流程中）。\n\n" +
+                    "技術說明：這和 <高於請求門檻> 不一樣。這裡統計的是 <請求>，不是建築。\n" +
+                    "有些待處理請求會在之後被分配；如果 vanilla 重新驗證後認為目標已不需要服務，它們也可能會被清掉。"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusProducers)), "建築" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusProducers)),
-                    "**有垃圾** = 目前持有任意垃圾的建築。\n" +
-                    "**Total** = 城市中所有產生垃圾的建築。\n" +
-                    "**高於請求閾值** = 目前擁有足夠垃圾、可產生收集請求的**建築**數量。\n" +
-                    "在 vanilla 中，請求閾值是 **100** internal units garbage。\n" +
-                    "**進階模式選項** 可以覆蓋請求閾值和拾取閾值。\n"
+                    "**有垃圾** = 目前持有垃圾的建築。\n" +
+                    "**總計** = 城市中所有產生垃圾的建築。\n" +
+                    "**高於請求門檻** = 目前擁有足夠垃圾、可以建立收集請求的 **建築** 數量。\n" +
+                    "在 vanilla 中，請求門檻是 **100** 內部垃圾單位。\n" +
+                    "進階模式選項可以覆蓋請求門檻與收集門檻。\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "設施" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacilities)),
-                    "已統計垃圾設施的彙總。\n" +
+                    "已統計垃圾設施的摘要。\n" +
                     "**設施** = 已統計的垃圾建築。\n" +
-                    "**Garbage trucks** = 普通收集卡車。在工業廢棄物設施中，它們收集的是工業廢棄物，而不是普通垃圾。\n" +
-                    "**Dump trucks** = 垃圾在設施之間的轉運卡車。\n" +
-                    "**Max workers** = 這些設施的總工人容量。"
+                    "**垃圾卡車** = 普通收集卡車。在工業廢棄物設施中，它們收集的是工業廢棄物，而不是普通垃圾。\n" +
+                    "**Dump 卡車** = 設施之間轉運垃圾的卡車。\n" +
+                    "**最大工人** = 這些設施的總工人容量。"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "垃圾卡車" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusTrucks)),
-                    "**Moving** = 目前正在城裡行駛的卡車。\n" +
-                    "**Returning** = 正在移動、且被標記為返回設施的那部分卡車。\n" +
-                    "**Parked** = 停在設施內的卡車。\n" +
-                    "**Total** = 全部 garbage trucks 的數量。"
+                    "**移動中** = 目前正在城裡行駛的卡車。\n" +
+                    "**返回中** = 正在移動、且被標記為返回設施的那部分卡車。\n" +
+                    "**停放中** = 停在設施內的卡車。\n" +
+                    "**總計** = 全部垃圾卡車的數量。"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "將詳細狀態寫入日誌" },
@@ -298,7 +299,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.Requests", "{1:N0} 待處理 | {2:N0} 已派出 | {0:N0} 總計" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} 有垃圾 | {2:N0} 高於請求門檻" },
                 { "MG.Status.Row.FacilitiesSummary", "{0:N0} 個設施 | {1:N0}/{2:N0} 垃圾/Dump卡車 | {3:N0} 工人" },
-                { "MG.Status.Row.Trucks", "{1:N0} 行駛中 ({3:N0} 返回中) | {2:N0} 停放 | {0:N0} 總計" },
+                { "MG.Status.Row.Trucks", "{1:N0} 移動中 ({3:N0} 返回中) | {2:N0} 停放中 | {0:N0} 總計" },
                 { "MG.Status.Row.FacilitiesNone", "還沒有設施資料。" },
 
                 // Log strings
@@ -307,55 +308,55 @@ namespace MagicGarbage
                 { "MG.Status.Log.Mode", "模式：終極魔法={0}，垃圾管理={1}" },
                 { "MG.Status.Log.SettingsHeader", "目前模組設定" },
                 { "MG.Status.Log.SettingsTrashBoss",
-                    "垃圾管理滑桿（已保存）：卡車載量={0:N0}% | 設施儲存量={1:N0}% | 設施處理速度={2:N0}% | 設施車隊={3:N0}%"
+                    "Trash Boss 滑桿（已保存）：卡車載量={0:N0}% | 設施儲量={1:N0}% | 設施處理={2:N0}% | 設施車隊={3:N0}%"
                 },
-
+                
                 { "MG.Status.Log.SettingsPowerUser",
-                    "進階模式（已保存）：enabled={0} | request={1:N0} | pickup={2:N0} | 滿意度基線={3:N0} | 滿意度步進={4:N0} | 累積速率={5:N0}%"
+                    "進階模式選項（已保存）：啟用={0} | 請求={1:N0} | 收集={2:N0} | 滿意度基線={3:N0} | 滿意度步長={4:N0} | 累積速率={5:N0}%"
                 },
 
                 { "MG.Status.Log.Legend",
-                    "圖例：\n" +
-                    "- Produced/Processed 使用每月噸數。\n" +
-                    "- 下方閾值使用的是 internal units garbage，不是噸。\n" +
-                    "- 對玩家顯示時，遊戲會把 100 units = 0.1t，1,000 units = 1t。\n" +
-                    "- 垃圾服務評分 = 遊戲中的城市垃圾滿意度係數。\n" +
+                    "說明：\n" +
+                    "- 已產生/已處理 使用每月噸數。\n" +
+                    "- 下方門檻使用的是內部垃圾單位，不是噸。\n" +
+                    "- 對玩家顯示時，遊戲會把 100 單位換算為 0.1t，把 1,000 單位換算為 1t。\n" +
+                    "- 垃圾服務評級 = 遊戲中的城市垃圾滿意度係數。\n" +
                     "  - 0 = 優秀\n" +
-                    "  - -1 = 需要小調整，或者也可以忽略\n" +
+                    "  - -1 = 需要稍微調一下，或者可以忽略\n" +
                     "  - -2 到 -4 = 有點臭\n" +
-                    "  - -5 到 -10 = 垃圾問題嚴重\n" +
-                    "閾值滑桿：\n" +
-                    "  - Pickup threshold = 卡車可從建築收集前所需的最小垃圾量。\n" +
-                    "  - Request threshold = 遊戲建立或保留收集請求前所需的最小垃圾量。\n" +
-                    "- Warning icon = 會讓建築上方出現警告圖示的垃圾量。\n" +
-                    "- Hard cap = 建築可累積的最大垃圾量。\n" +
-                    "- Pending = 目前尚未分配給卡車或路徑的活動請求。\n" +
-                    "- 有些待處理請求稍後會被分配；如果 vanilla 重驗證認為目標已不再需要服務，有些請求也會在之後被清掉。\n" +
+                    "  - -5 到 -10 = 垃圾問題\n" +
+                    "門檻滑桿：\n" +
+                    "  - 回收門檻 = 卡車能從建築回收垃圾之前所需的最小垃圾量。\n" +
+                    "  - 請求門檻 = 遊戲建立或保留回收請求之前所需的最小垃圾量。\n" +
+                    "- 警告圖示 = 會讓建築上方出現警告圖示的垃圾量。\n" +
+                    "- 上限 = 建築可累積的最大垃圾量。\n" +
+                    "- 待處理 = 目前尚未分配給卡車或路徑的活動請求。\n" +
+                    "- 有些待處理請求會在之後被分配；如果 vanilla 重新驗證後認為目標已不需要服務，它們也可能會被清掉。\n" +
                     "-----------------------------------------------------------------------------\n"
                 },
 
                 { "MG.Status.Log.Thresholds",
-                    "遊戲閾值（internal units garbage）：pickup={1:N0}, request={0:N0}, warning icon={2:N0}, hard cap={3:N0}"
+                    "遊戲門檻（內部垃圾單位）：收集={1:N0}，請求={0:N0}，警告圖示={2:N0}，上限={3:N0}"
                 },
 
-                { "MG.Status.Log.ThresholdsMissing", "閾值：<GarbageParameterData 不可用>" },
-                { "MG.Status.Log.GarbageProcessing", "Garbage：{0:N0} t/月 | Processing：{1:N0} t/月" },
-                { "MG.Status.Log.GarbageServiceRating", "垃圾服務評分：{0} | raw={1:N2} | rounded={2:N0}" },
-                { "MG.Status.Log.Requests", "收集請求：pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
-                { "MG.Status.Log.PendingPeak", "待處理目標中的最高垃圾量：{0:N0} ({1:N1}t) 於 {2}" },
+                { "MG.Status.Log.ThresholdsMissing", "門檻：<GarbageParameterData 不可用>" },
+                { "MG.Status.Log.GarbageProcessing", "垃圾：{0:N0} t/月 | 處理：{1:N0} t/月" },
+                { "MG.Status.Log.GarbageServiceRating", "垃圾服務評級：{0} | 原始值={1:N2} | 四捨五入={2:N0}" },
+                { "MG.Status.Log.Requests", "收集請求：待處理={1:N0}，已派出={2:N0}，總計={0:N0}" },
+                { "MG.Status.Log.PendingPeak", "待處理目標中的最高垃圾量：{0:N0} ({1:N1}t) 位於 {2}" },
                 { "MG.Status.Log.PendingPeakNone", "待處理目標中的最高垃圾量：無" },
-                { "MG.Status.Log.Producers", "建築：{0:N0} warning icons | {1:N0} total | {2:N0} 有垃圾 | {3:N0} 高於請求閾值 " },
-                { "MG.Status.Log.ProducerGarbageStats", "建築垃圾（僅非零）：avg={0:N0} ({1:N1}t) | median={2:N0} ({3:N1}t) | max={4:N0} ({5:N1}t) 於 {6}" },
-                { "MG.Status.Log.NearWarning75", "接近 warning icon 的建築（至少 {1:N0} units / {2:N1}t）：{0:N0}" },
-                { "MG.Status.Log.FacilitiesSummary", "設施：{0:N0} total | {1:N0} garbage trucks | {2:N0} dump trucks ({3:N0} moving) | {4:N0} workers" },
-                { "MG.Status.Log.Trucks", "Garbage trucks：{2:N0} moving ({3:N0} returning) | {1:N0} parked | {4:N0} disabled | {0:N0} total" },
-                { "MG.Status.Log.FacilitiesHeader", "設施彙總" },
-                { "MG.Status.Log.FacilityLine", "- 設施 {0}：garbage trucks={1:N0} ({2:N0} moving, {3:N0} parked) | dump trucks={4:N0} ({5:N0} moving) | max workers={6:N0}" },
+                { "MG.Status.Log.Producers", "建築：{0:N0} 警告圖示 | {1:N0} 總計 | {2:N0} 有垃圾 | {3:N0} 高於請求門檻 " },
+                { "MG.Status.Log.ProducerGarbageStats", "建築垃圾（僅非零值）：平均={0:N0} ({1:N1}t) | 中位數={2:N0} ({3:N1}t) | 最大={4:N0} ({5:N1}t) 位於 {6}" },
+                { "MG.Status.Log.NearWarning75", "接近警告圖示的建築（至少 {1:N0} 單位 / {2:N1}t）：{0:N0}" },
+                { "MG.Status.Log.FacilitiesSummary", "設施：{0:N0} 總計 | {1:N0} 垃圾卡車 | {2:N0} Dump卡車 ({3:N0} 移動中) | {4:N0} 工人" },
+                { "MG.Status.Log.Trucks", "垃圾卡車：{2:N0} 移動中 ({3:N0} 返回中) | {1:N0} 停放中 | {4:N0} 已停用 | {0:N0} 總計" },
+                { "MG.Status.Log.FacilitiesHeader", "設施摘要" },
+                { "MG.Status.Log.FacilityLine", "- 設施 {0}：垃圾卡車={1:N0} ({2:N0} 移動中，{3:N0} 停放中) | Dump卡車={4:N0} ({5:N0} 移動中) | 工人={6:N0}" },
 
                 { "MG.Status.Log.GarbageServiceRating.Excellent", "優秀" },
-                { "MG.Status.Log.GarbageServiceRating.Minor", "需要小調整" },
+                { "MG.Status.Log.GarbageServiceRating.Minor", "稍微調一下會更好" },
                 { "MG.Status.Log.GarbageServiceRating.Stinky", "有點臭" },
-                { "MG.Status.Log.GarbageServiceRating.Problem", "垃圾問題嚴重" },
+                { "MG.Status.Log.GarbageServiceRating.Problem", "垃圾問題" },
             };
         }
 

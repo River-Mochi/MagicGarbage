@@ -97,93 +97,94 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "ゲーム既定値" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "ごみ管理のスライダーを **vanilla 値** に戻します。\n" +
+                    "ごみ管理スライダーを **vanilla 値** に戻します。\n" +
                     "上級者設定は <変更しません>。\n" +
                     "**Vanilla:**\n" +
-                    "- パーセント系スライダーは **100%** に戻ります。\n" +
-                    "- Dispatch Request Threshold は **100 units** に戻ります。\n" +
-                    "- Pickup Threshold は **20 units** に戻ります。\n"
+                    "- パーセントスライダーは **100%** に戻ります。\n" +
+                    "- 配車要求しきい値は **100 単位** に戻ります。\n" +
+                    "- 回収しきい値は **20 単位** に戻ります。\n"
                 },
 
-
+                // Power User Options
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "上級者オプション" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
                     "任意の上級設定\n" +
-                    "<注意: 必須ではありません>。良いサービスのために必要ではなく、試したい人や仕組みをもっと知りたい人向けです。\n" +
-                    "**OFF** のとき、上級者設定はすべて **vanilla のまま** です。\n" +
-                    "**ON** にすると、上級 **スライダーが表示** されます。\n\n" +
+                    "<警告: 必須ではありません>。良いサービスのために必要ではなく、試したい人や仕組みを知りたい人向けです。\n" +
+                    "**オフ** のとき、上級者項目は通常の **vanilla** ゲームのように動作します。\n" +
+                    "**オン** にすると、上級 **スライダーが表示** されます。\n\n" +
                     "<--- 幸福度の例 --->\n" +
                     " - <Vanilla> 100/65 = 1回目のペナルティは <165>。\n" +
                     " - <おすすめ> を押すと 550/150 = 1回目のペナルティは <700>。\n" +
                     " - <かなり緩い> 950/200 = 1回目のごみペナルティは <1150>。\n" +
-                    "便利機能: このオプションが OFF でも最後のスライダー値は保存されます（あとで有効にしたい場合のため）。"
+                    "便利: この項目がオフでも最後のスライダー値は保存されます（後で有効にしたい場合のため）。"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "配車要求しきい値" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
-                    "**トラックの配車要求が作成または維持される前に、建物に必要なごみ量です。**\n" +
-                    "Vanilla = **100** ごみ units。\n" +
-                    "**100 garbage units = 0.1t**\n" +
-                    "**1,000 garbage units = 1t**\n" +
-                    "これは Pickup Threshold 以上にしてください。\n" +
-                    "通常、これを上げると駐車中より出動中のトラックが増えます。"
+                    "**建物でトラックの配車要求が作成または維持される前に必要なごみ量です。**\n" +
+                    "Vanilla = **100** ごみ単位。\n" +
+                    "**100 ごみ単位 = 0.1t**\n" +
+                    "**1,000 ごみ単位 = 1t**\n" +
+                    "回収しきい値以上に保ってください。\n" +
+                    "通常、これを上げると駐車中より使用中のトラックが増えます。"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "回収しきい値" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
-                    "**トラックが回収できるようになる前に建物に必要な最低ごみ量です。**\n" +
-                    "Vanilla = **20** ごみ units。\n" +
-                    "回収スライダーは Dispatch Request (DR) より <高くできません>。ロジック不整合を防ぐため自動で制限されます。\n" +
-                    "トラックが建物へ dispatch されても回収値が DR より高いと、建物から回収できないことがあります（蓄積率も影響します）。\n"
+                    "**トラックが建物から回収できるようになる前に必要な最小ごみ量です。**\n" +
+                    "Vanilla = **20** ごみ単位。\n" +
+                    "回収スライダーは配車要求 (DR) より <高くできません>。ロジック不整合を防ぐため自動で制限されます。\n" +
+                    "トラックが建物に派遣されても回収値が DR より高いと、建物から回収できないことがあります（蓄積率も影響します）。\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "ごみ幸福度ベース" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "ごみ幸福度基準値" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
                     "**建物のごみ量が健康 + 幸福度ペナルティを起こし始める前の基準値です。**\n" +
-                    "**Vanilla = 100** ごみ units。\n" +
-                    "ベースが高いほど、ペナルティが始まる前に建物がより多くのごみを抱えられます。\n" +
-                    "100 garbage units = 0.1t\n" +
+                    "**Vanilla = 100** ごみ単位。\n" +
+                    "基準値が高いほど、ペナルティが始まる前に建物がより多くのごみを抱えられます。\n" +
+                    "100 ごみ単位 = 0.1t\n" +
                     "概要:\n" +
-                    "- <Threshold> = システム動作の発動地点\n" +
-                    "- <Baseline> = ペナルティ計算式の開始地点\n" +
-                    "- <Step> = 計算式の増分サイズ、つまり開始後にペナルティがどれだけ速く増えるか"
+                    "- <しきい値> = システム動作の発動地点\n" +
+                    "- <基準値> = ペナルティ計算式の開始地点\n" +
+                    "- <刻み> = 計算式の増分サイズ、つまり開始後にペナルティがどれだけ速く増えるか"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "ごみ幸福度ステップ" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "ごみ幸福度刻み" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
-                    "**ベースを超えた追加ごみ量で -1 ペナルティが始まります。**\n" +
-                    "Vanilla = **65** ごみ units。\n" +
-                    "ステップが高いほどペナルティの増え方は遅くなります。\n" +
+                    "**基準値を超えた追加ごみ量で -1 ペナルティが始まります。**\n" +
+                    "Vanilla = **65** ごみ単位。\n" +
+                    "刻みが高いほどペナルティの増え方は遅くなります。\n" +
                     "ゲームではごみペナルティは **-10** で上限です。\n" +
-                    "vanilla の最初の <-1 penalty> は **165 garbage** で発生します（ベース 100 + ステップ 65）\n" +
+                    "vanilla の最初の <-1 penalty> は **165 ごみ** で発生します（基準値 100 + 刻み 65）\n" +
                     "しきい値を変えるなら幸福度スライダーも合わせて調整しないと、通常より重いペナルティになることがあります。"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "ごみ蓄積率" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "蓄積率" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
                     "**対応している建物のごみ発生値をスケーリングします。**\n" +
-                    "これは強いレバーで、この率を変えると多くのものに影響します。\n" +
+                    "注意: これは強いレバーで、率を変えると多くのものに影響します。\n" +
                     "これを使わなくても良いシステムにすることは可能です。\n\n" +
-                    "**100% = vanilla の** 蓄積。\n" +
+                    "**100% = vanilla** の蓄積率。\n" +
                     "**20%** = かなりゆっくり蓄積。\n" +
-                    "**200%** = 2倍の速度 - ごみがかなり多くなります。\n" +
-                    "20% なら、Cims 全員が明らかにコンポストしているので、ごみ蓄積率も低いわけです ;)"
+                    "**200%** = 2倍の速度 - ごみがかなり増えます。\n" +
+                    "20% なら、市民全員が明らかにコンポストしているので、ごみ蓄積率もかなり低いわけです ;)\n\n" +
+                    "技術メモ: ゲームは1日の中で少しずつごみを追加し、一度に全部は追加しません。"
                 },
 
-
+                // Power User Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "おすすめ" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
                     "**おすすめ** の上級者値を適用します。\n" +
-                    "上級者を ON にします。\n" +
-                    "最初のごみペナルティは **700** ごみで始まります（ベース 550 + ステップ 150）。\n" +
-                    "ごみ蓄積率は手動で変えない限り **100%** vanilla のままです。"
+                    "上級者をオンにします。\n" +
+                    "最初のごみペナルティは **700** ごみで始まります（基準値 550 + 刻み 150）。\n" +
+                    "蓄積率は手動で変えない限り **100%** vanilla のままです。"
                 },
 
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "ゲーム既定値" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
-                    "上級者の値を **vanilla** に戻します。\n" +
-                    "**上級者を OFF** にします。\n"
+                    "上級者の値をすべて **vanilla** に戻します。\n" +
+                    "上級者を **オフ** にします。\n"
                 },
 
                 // About
@@ -222,57 +223,57 @@ namespace MagicGarbage
                 // Status
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageServiceRating)), "ごみサービス評価" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageServiceRating)),
-                    "ゲーム内の都市全体のごみ幸福度のシンプルな評価です。\n" +
-                    "**0 = 最高**\n" +
-                    "**-1 = 軽い調整が必要** ゲームでは 0 と -1 を行き来しやすく、無視してもよい場合があります。\n" +
-                    "**-2 ～ -4 = 少し臭い**\n" +
-                    "**-5 ～ -10 = ごみ問題**\n" +
-                    "**間接的な調整:** トラック/施設/しきい値スライダーで実際のごみ蓄積を減らし、時間とともに改善できます。\n" +
-                    "**直接的な調整:** <ごみ幸福度ベース> + <ごみ幸福度ステップ> で cims が不満になる前にどこまで耐えるかを変えます。\n" +
-                    "**発生率の調整:** <ごみ蓄積率> で対応建物がどれだけ速くごみを出すかを変えます。"
+                    "ゲームのシンプルなごみ幸福度評価です。\n" +
+                    "**0 = 優秀**\n" +
+                    "**-1** = 少し調整推奨。ゲームでは 0 と -1 を行き来することが多く、無視してよい場合もあります（数値は丸め表示です）。\n" +
+                    "**-2 ～ -4** = やや臭い\n" +
+                    "**-5 ～ -10** = ごみ問題\n" +
+                    "**間接的な調整:** Trash Boss の <スライダー> を使い、実際のごみ蓄積を減らして時間とともに改善します。\n" +
+                    "**直接的な調整:** <ごみ幸福度基準値> + <ごみ幸福度刻み> は、市民が不満になる前にどこまで耐えるかを変えます。\n" +
+                    "**蓄積率**: 対応建物がどれだけ速くごみを出すかを変えます。バランスが大事なので注意して使ってください。ほとんどのプレイヤーは調整不要です。\n" +
+                    "<更新時刻 = 最終更新。>"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "ごみ/月" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
                     "都市全体の現在のごみ量と総処理率を表示します。\n" +
-                    "月間のごみ生産量がかなり高いなら処理能力を上げてください。\n" +
-                    "**Produced** と **Processed** は月あたりトンです。\n" +
-                    "<更新時刻 = 最終更新。>"
+                    "月間のごみ生産量がかなり多いなら処理能力を上げてください。\n" +
+                    "**生産量** と **処理量** は月あたりトンです。"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "回収リクエスト" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
-                    "**Pending** = 現在トラックや経路に割り当てられていない有効な回収リクエスト。\n" +
-                    "**Dispatched** = すでに割り当て済みの有効な回収リクエスト。\n" +
-                    "**Total** = 現在の **active** なリクエスト entity 数（ごみパイプライン内）。\n\n" +
-                    "技術メモ: これは <要求しきい値超え> とは別です。ここで数えるのは建物ではなく <リクエスト> です。\n" +
-                    "Pending の一部は後で割り当てられますし、vanilla の再検証で対象にサービスが不要と判断されれば消えることもあります。"
+                    "**保留中** = 現在トラックや経路に割り当てられていない有効な回収要求。\n" +
+                    "**派遣済み** = すでに割り当て済みの有効な回収要求。\n" +
+                    "**合計** = 現在の **有効な** 要求エンティティ数（ごみパイプライン内）。\n\n" +
+                    "技術メモ: これは <要求しきい値超え> とは別です。ここで数えるのは <要求> であって、建物ではありません。\n" +
+                    "保留中の一部は後で割り当てられます。vanilla の再検証で対象にサービスが不要と判断されれば消えることもあります。"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusProducers)), "建物" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusProducers)),
                     "**ごみあり** = 現在ごみを保持している建物。\n" +
-                    "**Total** = 都市内のすべてのごみ発生建物。\n" +
-                    "**要求しきい値超え** = 回収リクエストを作るのに十分なごみを持つ **建物** の現在数。\n" +
-                    "vanilla では要求しきい値は **100** internal garbage units です。\n" +
+                    "**合計** = 都市内のすべてのごみ発生建物。\n" +
+                    "**要求しきい値超え** = 回収要求を作るのに十分なごみを持つ **建物** の現在数。\n" +
+                    "vanilla では要求しきい値は **100** 内部ごみ単位です。\n" +
                     "上級者オプションで要求しきい値と回収しきい値を上書きできます。\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "施設" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacilities)),
                     "集計されたごみ施設の概要です。\n" +
-                    "**施設** = 集計されたごみ建物。\n" +
-                    "**ごみトラック** = 通常の回収トラック。産業廃棄物施設では通常のごみではなく産業廃棄物を回収します。\n" +
-                    "**ダンプトラック** = 施設間のごみ移送。\n" +
-                    "**最大作業員数** = それら施設の総作業員容量。"
+                    "**施設数** = 集計されたごみ建物。\n" +
+                    "**ごみトラック** = 通常の回収トラック。産業廃棄物施設では通常ごみではなく産業廃棄物を回収します。\n" +
+                    "**Dump トラック** = 施設間でごみを移送するトラック。\n" +
+                    "**最大作業員数** = 同じ施設群の総作業員容量。"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "ごみトラック" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusTrucks)),
-                    "**移動中** = 現在街に出ているトラック。\n" +
-                    "**帰還中** = 施設へ戻るフラグが立った移動中トラックの一部。\n" +
+                    "**移動中** = 現在都市内を走っているトラック。\n" +
+                    "**戻り中** = 移動中のうち施設へ戻るフラグが付いたトラック。\n" +
                     "**駐車中** = 施設に駐車しているトラック。\n" +
-                    "**Total** = すべてのごみトラック数。"
+                    "**合計** = すべてのごみトラック数。"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "詳細状態をログへ" },
@@ -282,9 +283,7 @@ namespace MagicGarbage
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "ログを開く" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)),
-                    "ゲームの Logs/.. フォルダーを開きます。"
-                },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)), "ゲームの Logs/.. フォルダーを開きます。" },
 
                 // Runtime status strings
                 { "MG.Status.NoCity", "まだ都市が読み込まれていません。" },
@@ -294,11 +293,11 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "やや臭い ({0:N0}) | 更新 {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "ごみ問題 ({0:N0}) | 更新 {1}" },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t 生成 | {1:N0} t 処理" },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t 生産 | {1:N0} t 処理" },
                 { "MG.Status.Row.Requests", "{1:N0} 保留中 | {2:N0} 派遣済み | {0:N0} 合計" },
-                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} がごみあり | {2:N0} が依頼しきい値超え" },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} ごみあり | {2:N0} 要求しきい値超え" },
                 { "MG.Status.Row.FacilitiesSummary", "{0:N0} 施設 | {1:N0}/{2:N0} ごみ/Dumpトラック | {3:N0} 作業員" },
-                { "MG.Status.Row.Trucks", "{1:N0} 移動中 ({3:N0} 帰還中) | {2:N0} 駐車中 | {0:N0} 合計" },
+                { "MG.Status.Row.Trucks", "{1:N0} 移動中 ({3:N0} 戻り中) | {2:N0} 駐車中 | {0:N0} 合計" },
                 { "MG.Status.Row.FacilitiesNone", "まだ施設データはありません。" },
 
                 // Log strings
@@ -307,54 +306,55 @@ namespace MagicGarbage
                 { "MG.Status.Log.Mode", "モード: 完全クリーン={0}, ごみ管理={1}" },
                 { "MG.Status.Log.SettingsHeader", "現在の mod 設定" },
                 { "MG.Status.Log.SettingsTrashBoss",
-                    "ごみ管理スライダー（保存値）: トラック積載量={0:N0}% | 施設保管量={1:N0}% | 施設処理速度={2:N0}% | 施設車両数={3:N0}%"
+                    "ごみ管理スライダー (保存値): トラック積載={0:N0}% | 施設保管={1:N0}% | 施設処理={2:N0}% | 施設台数={3:N0}%"
                 },
-
+                
                 { "MG.Status.Log.SettingsPowerUser",
-                    "上級者（保存値）: 有効={0} | 要求={1:N0} | 回収={2:N0} | 幸福度ベース={3:N0} | 幸福度ステップ={4:N0} | 蓄積率={5:N0}%"
+                    "上級者オプション (保存値): 有効={0} | 要求={1:N0} | 回収={2:N0} | 幸福度基準値={3:N0} | 幸福度刻み={4:N0} | 蓄積率={5:N0}%"
                 },
 
                 { "MG.Status.Log.Legend",
                     "凡例:\n" +
-                    "- Produced/Processed は月あたりトンです。\n" +
-                    "- 以下のしきい値はトンではなく internal garbage units を使います。\n" +
-                    "- プレイヤー向け表示では、ゲームは 100 units = 0.1t、1,000 units = 1t に変換します。\n" +
-                    "- ごみサービス評価 = ゲーム内の都市ごみ幸福度係数。\n" +
-                    "  - 0 = 最高\n" +
-                    "  - -1 = 軽い調整が必要、または無視でも可\n" +
-                    "  - -2 ～ -4 = 少し臭い\n" +
+                    "- 生産量/処理量 は月あたりトンです。\n" +
+                    "- 下のしきい値はトンではなく内部ごみ単位です。\n" +
+                    "- プレイヤー向け表示では、ゲームは 100 単位 = " +
+                    "0.1t、1,000 単位 = 1t に変換します。\n" +
+                    "- ごみサービス評価 = ゲームの都市ごみ幸福度係数。\n" +
+                    "  - 0 = 優秀\n" +
+                    "  - -1 = 少し調整推奨、または無視可\n" +
+                    "  - -2 ～ -4 = やや臭い\n" +
                     "  - -5 ～ -10 = ごみ問題\n" +
                     "しきい値スライダー:\n" +
                     "  - 回収しきい値 = トラックが建物から回収する前に必要な最小ごみ量。\n" +
-                    "  - 要求しきい値 = ゲームが回収リクエストを作成または維持する前に必要な最小ごみ量。\n" +
-                    "- 警告アイコン = 建物の上に警告アイコンが表示されるごみ量。\n" +
+                    "  - 要求しきい値 = ゲームが回収要求を作成または維持する前に必要な最小ごみ量。\n" +
+                    "- 警告アイコン = 建物の上に警告アイコンが出るごみ量。\n" +
                     "- 上限 = 建物が蓄積できる最大ごみ量。\n" +
-                    "- Pending = 現在トラックや経路に割り当てられていない active なリクエスト。\n" +
-                    "- Pending の一部は後で割り当てられ、vanilla の再検証で不要になれば消えることもあります。\n" +
+                    "- 保留中 = 現在トラックや経路に割り当てられていない有効な要求。\n" +
+                    "- 保留中の一部は後で割り当てられます。vanilla の再検証で不要になれば消えることもあります。\n" +
                     "-----------------------------------------------------------------------------\n"
                 },
 
                 { "MG.Status.Log.Thresholds",
-                    "ゲームしきい値（internal garbage units）: 回収={1:N0}, 要求={0:N0}, 警告アイコン={2:N0}, 上限={3:N0}"
+                    "ゲームしきい値 (内部ごみ単位): 回収={1:N0}, 要求={0:N0}, 警告アイコン={2:N0}, 上限={3:N0}"
                 },
 
-                { "MG.Status.Log.ThresholdsMissing", "しきい値: <GarbageParameterData がありません>" },
+                { "MG.Status.Log.ThresholdsMissing", "しきい値: <GarbageParameterData を利用できません>" },
                 { "MG.Status.Log.GarbageProcessing", "ごみ: {0:N0} t/月 | 処理: {1:N0} t/月" },
-                { "MG.Status.Log.GarbageServiceRating", "ごみサービス評価: {0} | raw={1:N2} | rounded={2:N0}" },
-                { "MG.Status.Log.Requests", "回収リクエスト: pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
-                { "MG.Status.Log.PendingPeak", "最も多い pending 対象ごみ: {0:N0} ({1:N1}t) at {2}" },
-                { "MG.Status.Log.PendingPeakNone", "最も多い pending 対象ごみ: なし" },
-                { "MG.Status.Log.Producers", "建物: {0:N0} 警告アイコン | {1:N0} total | {2:N0} ごみあり | {3:N0} 要求しきい値超え " },
-                { "MG.Status.Log.ProducerGarbageStats", "建物ごみ（0 以外のみ）: 平均={0:N0} ({1:N1}t) | 中央値={2:N0} ({3:N1}t) | 最大={4:N0} ({5:N1}t) at {6}" },
-                { "MG.Status.Log.NearWarning75", "警告アイコンに近い建物（少なくとも {1:N0} units / {2:N1}t）: {0:N0}" },
-                { "MG.Status.Log.FacilitiesSummary", "施設: {0:N0} total | {1:N0} ごみトラック | {2:N0} ダンプトラック ({3:N0} moving) | {4:N0} 作業員" },
-                { "MG.Status.Log.Trucks", "ごみトラック: {2:N0} moving ({3:N0} returning) | {1:N0} parked | {4:N0} disabled | {0:N0} total" },
+                { "MG.Status.Log.GarbageServiceRating", "ごみサービス評価: {0} | 生値={1:N2} | 丸め={2:N0}" },
+                { "MG.Status.Log.Requests", "回収要求: 保留中={1:N0}, 派遣済み={2:N0}, 合計={0:N0}" },
+                { "MG.Status.Log.PendingPeak", "保留中で最も高い対象ごみ: {0:N0} ({1:N1}t) 場所 {2}" },
+                { "MG.Status.Log.PendingPeakNone", "保留中で最も高い対象ごみ: なし" },
+                { "MG.Status.Log.Producers", "建物: {0:N0} 警告アイコン | {1:N0} 合計 | {2:N0} ごみあり | {3:N0} 要求しきい値超え " },
+                { "MG.Status.Log.ProducerGarbageStats", "建物ごみ (0以外のみ): 平均={0:N0} ({1:N1}t) | 中央値={2:N0} ({3:N1}t) | 最大={4:N0} ({5:N1}t) 場所 {6}" },
+                { "MG.Status.Log.NearWarning75", "警告アイコンに近い建物 (少なくとも {1:N0} 単位 / {2:N1}t): {0:N0}" },
+                { "MG.Status.Log.FacilitiesSummary", "施設: {0:N0} 合計 | {1:N0} ごみトラック | {2:N0} Dumpトラック ({3:N0} 移動中) | {4:N0} 作業員" },
+                { "MG.Status.Log.Trucks", "ごみトラック: {2:N0} 移動中 ({3:N0} 戻り中) | {1:N0} 駐車中 | {4:N0} 無効 | {0:N0} 合計" },
                 { "MG.Status.Log.FacilitiesHeader", "施設概要" },
-                { "MG.Status.Log.FacilityLine", "- 施設 {0}: ごみトラック={1:N0} ({2:N0} moving, {3:N0} parked) | ダンプトラック={4:N0} ({5:N0} moving) | 最大作業員数={6:N0}" },
+                { "MG.Status.Log.FacilityLine", "- 施設 {0}: ごみトラック={1:N0} ({2:N0} 移動中, {3:N0} 駐車中) | Dumpトラック={4:N0} ({5:N0} 移動中) | 作業員={6:N0}" },
 
-                { "MG.Status.Log.GarbageServiceRating.Excellent", "最高" },
-                { "MG.Status.Log.GarbageServiceRating.Minor", "軽い調整が必要" },
-                { "MG.Status.Log.GarbageServiceRating.Stinky", "少し臭い" },
+                { "MG.Status.Log.GarbageServiceRating.Excellent", "優秀" },
+                { "MG.Status.Log.GarbageServiceRating.Minor", "少し調整推奨" },
+                { "MG.Status.Log.GarbageServiceRating.Stinky", "やや臭い" },
                 { "MG.Status.Log.GarbageServiceRating.Problem", "ごみ問題" },
             };
         }

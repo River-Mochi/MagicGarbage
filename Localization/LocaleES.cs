@@ -229,15 +229,15 @@ namespace MagicGarbage
                     "**-5 a -10 = Problema de basura**\n" +
                     "**Ajustes indirectos:** los deslizadores de camiones/instalaciones/umbrales pueden mejorar esto con el tiempo reduciendo la acumulación real de basura.\n" +
                     "**Ajustes directos:** <Base de felicidad por basura> + <Paso de felicidad por basura> cambian lo que los cims toleran antes de enfadarse.\n" +
-                    "**Ajuste del ritmo fuente:** <Tasa de acumulación de basura> cambia la velocidad a la que los edificios compatibles producen basura."
+                    "**Ajuste del ritmo fuente:** <Tasa de acumulación de basura> cambia la velocidad a la que los edificios compatibles producen basura.\n" +
+                    "<Hora de actualización = última actualización.>"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Basura/mes" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
                     "Muestra la cantidad actual de basura en toda la ciudad y la tasa total de procesamiento.\n" +
                     "Aumenta el procesamiento si la basura producida al mes es mucho mayor.\n" +
-                    "**Producido** y **Procesado** usan toneladas por mes.\n" +
-                    "<Hora de actualización = última actualización.>"
+                    "**Producido** y **Procesado** usan toneladas por mes.\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Solicitudes de recogida" },

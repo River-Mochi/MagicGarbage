@@ -229,15 +229,15 @@ namespace MagicGarbage
                     "**-5 à -10 = Problème de déchets**\n" +
                     "**Réglages indirects :** les curseurs camions/sites/seuils peuvent améliorer cela avec le temps en réduisant l'accumulation réelle des déchets.\n" +
                     "**Réglages directs :** <Base du bonheur déchets> + <Palier du bonheur déchets> changent ce que les cims tolèrent avant d'être mécontents.\n" +
-                    "**Réglage du rythme source :** <Taux d'accumulation des déchets> change la vitesse à laquelle les bâtiments pris en charge produisent des déchets."
+                    "**Réglage du rythme source :** <Taux d'accumulation des déchets> change la vitesse à laquelle les bâtiments pris en charge produisent des déchets.\n" +
+                    "<Heure de mise à jour = dernier rafraîchissement.>"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Déchets/mois" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
                     "Affiche la quantité actuelle de déchets dans toute la ville et le taux total de traitement.\n" +
                     "Augmentez le traitement si la quantité de déchets produite par mois est bien plus élevée.\n" +
-                    "**Produit** et **Traité** utilisent des tonnes par mois.\n" +
-                    "<Heure de mise à jour = dernier rafraîchissement.>"
+                    "**Produit** et **Traité** utilisent des tonnes par mois.\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Demandes de collecte" },

@@ -229,15 +229,15 @@ namespace MagicGarbage
                     "**-5 a -10 = Problema rifiuti**\n" +
                     "**Leve indirette:** i cursori di camion/strutture/soglie possono migliorarlo nel tempo riducendo il reale accumulo di rifiuti.\n" +
                     "**Leve dirette:** <Base felicità rifiuti> + <Passo felicità rifiuti> cambiano quanto i cims tollerano prima di diventare infelici.\n" +
-                    "**Leva tasso fonte:** <Tasso accumulo rifiuti> cambia quanto velocemente gli edifici supportati producono rifiuti."
+                    "**Leva tasso fonte:** <Tasso accumulo rifiuti> cambia quanto velocemente gli edifici supportati producono rifiuti.\n" +
+                    "<Ora aggiornamento = ultimo aggiornamento.>"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Rifiuti/mese" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
                     "Mostra la quantità attuale di rifiuti in tutta la città e il tasso totale di elaborazione.\n" +
                     "Aumenta l'elaborazione se i rifiuti prodotti al mese sono molto più alti.\n" +
-                    "**Prodotti** e **Elaborati** usano tonnellate al mese.\n" +
-                    "<Ora aggiornamento = ultimo aggiornamento.>"
+                    "**Prodotti** e **Elaborati** usano tonnellate al mese.\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Richieste raccolta" },

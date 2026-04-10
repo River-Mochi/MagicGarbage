@@ -79,9 +79,11 @@ Balance advised: use status log button to check details while tweaking this. All
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/thumbnail-garbageTruck.jpg" />
 	<!--Screenshot, can be set multiple times-->
-    <Screenshot Value="Properties/10-image-TotalMagic.jpg" />
+    <Screenshot Value="Properties/10-image-Senryu.jpg" />
+    <Screenshot Value="Properties/20-image-TotalMagic.jpg" />
     <Screenshot Value="Properties/30-image-TrashBoss.jpg" />
 	<Screenshot Value="Properties/40-image-Status.jpg" />
+    <Screenshot Value="Properties/50-image-PowerUser01.jpg" />
 	<Screenshot Value="Properties/60-image-UsageEN.jpg" />
 	<Screenshot Value="Properties/70-image-Before.jpg" />
 	<Screenshot Value="Properties/80-image-After.jpg" />

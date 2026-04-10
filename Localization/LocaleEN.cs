@@ -105,7 +105,7 @@ namespace MagicGarbage
                     "- Pickup Threshold returns to **20 units**.\n"
                 },
 
-
+                // Power User Options
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Power User Options" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
                     "Optional Advanced Settings\n" +
@@ -171,7 +171,7 @@ namespace MagicGarbage
                     "Tech note: game adds garbage gradually across the day, not all at once."
                 },
 
-
+                // Power User Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "Recommended" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
                     "Apply **recommended** Power User values.\n" +
@@ -223,22 +223,22 @@ namespace MagicGarbage
                 // Status
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageServiceRating)), "Garbage Service Rating" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageServiceRating)),
-                    "Simple citywide garbage happiness rating from the game.\n" +
+                    "Simple garbage Happiness rating from the game.\n" +
                     "**0 = Excellent**\n" +
-                    "**-1 = Needs minor tweak** game might go between 0 to -1 often and could be ignored.\n" +
-                    "**-2 to -4 = Slightly stinky**\n" +
-                    "**-5 to -10 = Garbage problem**\n" +
-                    "**Indirect knobs:** truck/facility/threshold sliders can improve this over time by reducing actual garbage buildup.\n" +
+                    "**-1 **= Needs minor tweak. Game goes between 0 to -1 often and could be ignored (number is rounded).\n" +
+                    "**-2 to -4** = Slightly stinky\n" +
+                    "**-5 to -10** = Garbage problem\n" +
+                    "**Indirect knobs:** Use trash <sliders> to improve this over time by reducing actual garbage buildup.\n" +
                     "**Direct knobs:** <Garbage Happiness Baseline> + <Garbage Happiness Step> change what cims tolerate before they are unhappy.\n" +
-                    "**Source-rate knob:** <Garbage Accumulation Rate> changes how fast supported buildings produce garbage."
+                    "**Garbage Accumulation Rate**: changes how fast supported buildings produce garbage. Use with caution as balance is important. Most players never need to tweak this.\n" +
+                    "<Update time = last refreshed.>"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Garbage/mo." },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
                     "Shows the current citywide garbage amount and the total garbage processing rate.\n" +
                     "Increase processing if the monthly garbage produced is much higher.\n" +
-                    "**Produced** and **Processed** use tons per month.\n" +
-                    "<Update time = last refreshed.>"
+                    "**Produced** and **Processed** use tons per month."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Collect requests" },

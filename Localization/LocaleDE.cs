@@ -229,15 +229,15 @@ namespace MagicGarbage
                     "**-5 bis -10 = Müllproblem**\n" +
                     "**Indirekte Regler:** Fahrzeug-/Anlagen-/Schwellenwertregler können das mit der Zeit verbessern, indem sie den tatsächlichen Müllaufbau senken.\n" +
                     "**Direkte Regler:** <Müll-Glücklichkeitsbasis> + <Müll-Glücklichkeitsschritt> ändern, was Cims tolerieren, bevor sie unglücklich werden.\n" +
-                    "**Quellen-Regler:** <Müll-Akkumulationsrate> ändert, wie schnell unterstützte Gebäude Müll produzieren."
+                    "**Quellen-Regler:** <Müll-Akkumulationsrate> ändert, wie schnell unterstützte Gebäude Müll produzieren.\n" +
+                    "<Aktualisierungszeit = zuletzt aktualisiert.>"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Müll/Monat" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
                     "Zeigt die aktuelle stadtweite Müllmenge und die gesamte Verarbeitungsrate.\n" +
                     "Verarbeitung erhöhen, wenn der monatlich produzierte Müll deutlich höher ist.\n" +
-                    "**Produziert** und **Verarbeitet** verwenden Tonnen pro Monat.\n" +
-                    "<Aktualisierungszeit = zuletzt aktualisiert.>"
+                    "**Produziert** und **Verarbeitet** verwenden Tonnen pro Monat.\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Abholanfragen" },
