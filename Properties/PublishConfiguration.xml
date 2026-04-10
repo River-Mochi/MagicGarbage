@@ -79,7 +79,6 @@ Balance advised: use status log button to check details while tweaking this. All
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/thumbnail-garbageTruck.jpg" />
 	<!--Screenshot, can be set multiple times-->
-    <Screenshot Value="Properties/10-image-Senryu.jpg" />
     <Screenshot Value="Properties/20-image-TotalMagic.jpg" />
     <Screenshot Value="Properties/30-image-TrashBoss.jpg" />
 	<Screenshot Value="Properties/40-image-Status.jpg" />
@@ -87,6 +86,7 @@ Balance advised: use status log button to check details while tweaking this. All
 	<Screenshot Value="Properties/60-image-UsageEN.jpg" />
 	<Screenshot Value="Properties/70-image-Before.jpg" />
 	<Screenshot Value="Properties/80-image-After.jpg" />
+    <Screenshot Value="Properties/90-image-Senryu.jpg" />
 	<!--Tag, can be set multiple times-->
 	<Tag Value="Code Mod" />
 	<!--Link to the forum post where the mod can be discussed-->
@@ -104,7 +104,7 @@ Balance advised: use status log button to check details while tweaking this. All
 * added optional Building threshold slider; triggers when a truck is dispatched
 * added more detailed Status log info to mod Options menu.
 * updated all locale files.
-
+* update images.
 </ChangeLog>
 <!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 <ExternalLink Type="discord" Url="https://discord.gg/HTav7ARPs2" />
