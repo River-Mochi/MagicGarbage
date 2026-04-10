@@ -12,7 +12,7 @@
 		<PublishConfigurationPath>Properties\PublishConfiguration.xml</PublishConfigurationPath>
 
   <!-- Single source of truth for version number -->
-	  <Version>1.2.6</Version>
+	  <Version>1.2.7</Version>
 	<AssemblyVersion>$(Version).0</AssemblyVersion>
 	<FileVersion>$(Version).0</FileVersion>  <!-- for file properties -->
 
@@ -84,7 +84,7 @@
 		<Reference Update="System.Data"><Private>false</Private></Reference>
 	</ItemGroup>
 
-	<!-- make CS2 toolchain files visable in Properties/ for easier viewing -->
+	<!-- make CS2 toolchain files visible in Properties/ for easier viewing -->
 	<ItemGroup>
 		<None Include="$(ModPropsFile)" Link="Properties\Mod.props" />
 		<None Include="$(ModTargetsFile)" Link="Properties\Mod.targets" />
@@ -100,11 +100,9 @@
     </None>
 </ItemGroup>
 
-<!-- AUTO UPDATE PublishConfiguration ModVersion using csproj Version
+<!-- AUTO UPDATE on Release and Debug build, PublishConfiguration ModVersion using csproj Version
      remove BOM, make EOL=CRLF, and left-align text -->
-<Target Name="UpdatePublishConfigVersion"
-        BeforeTargets="Build"
-        Condition="Exists('$(MSBuildProjectDirectory)\Scripts\Update-PublishConfig.ps1') AND Exists('$(MSBuildProjectDirectory)\$(PublishConfigurationPath)')">
+<Target Name="UpdatePublishConfigVersion" BeforeTargets="Build" Condition="Exists('$(MSBuildProjectDirectory)\Scripts\Update-PublishConfig.ps1') AND Exists('$(MSBuildProjectDirectory)\$(PublishConfigurationPath)')">
 
     <Message Text="MagicGarbage PublishConfig: syncing ModVersion + normalizing EOL/BOM + left-align blocks..." Importance="high" />
 

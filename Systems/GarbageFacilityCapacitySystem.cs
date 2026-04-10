@@ -15,27 +15,27 @@ namespace MagicGarbage
     /// Adjusts GarbageFacilityData (vehicle count, processing speed, storage)
     /// according to Trash Boss sliders. When Total Magic is enabled (or Trash Boss disabled),
     /// it reverts to vanilla (100%) once.
-    /// Uses cached base values to avoid rounding drift.
+    /// Uses authoring prefab values as the true baseline, with cache fallback if authoring lookup fails.
     /// </summary>
     public partial class GarbageFacilityCapacitySystem : GameSystemBase
     {
-        // Last applied multipliers (percent). 100 = vanilla.
         private int m_LastVehicleMultiplier = 100;
         private int m_LastProcessingMultiplier = 100;
         private int m_LastStorageMultiplier = 100;
 
-        // Cache base values per prefab entity so scaling is exact (no drift).
         private readonly Dictionary<Entity, (int VehicleCap, int ProcessingSpeed, int StorageCap)> m_Base =
             new Dictionary<Entity, (int VehicleCap, int ProcessingSpeed, int StorageCap)>();
+
+        private PrefabSystem m_PrefabSystem = null!;
 
         protected override void OnCreate()
         {
             base.OnCreate();
 
-            // Only run if there are any garbage facilities.
+            m_PrefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
+
             RequireForUpdate<GarbageFacilityData>();
 
-            // Wake on city load + UI changes only.
             Enabled = false;
         }
 
@@ -59,13 +59,9 @@ namespace MagicGarbage
         {
             if (!Mod.TryGetSetting(out Setting setting))
             {
-                return; // allow a later tick to catch
+                return;
             }
 
-            // Effective targets:
-            // - Total Magic ON => behave like vanilla 100% (but keep user's saved Semi sliders).
-            // - Trash Boss OFF => also behave like vanilla 100%.
-            // - Trash Boss ON  => use sliders.
             int targetVehicle = 100;
             int targetProcessing = 100;
             int targetStorage = 100;
@@ -77,7 +73,6 @@ namespace MagicGarbage
                 targetVehicle = math.clamp(setting.GarbageFacilityVehicleMultiplier, 100, 400);
             }
 
-            // If nothing changed since last application, bail out.
             if (targetVehicle == m_LastVehicleMultiplier &&
                 targetProcessing == m_LastProcessingMultiplier &&
                 targetStorage == m_LastStorageMultiplier)
@@ -96,25 +91,25 @@ namespace MagicGarbage
 
                 if (!m_Base.TryGetValue(entity, out (int VehicleCap, int ProcessingSpeed, int StorageCap) b))
                 {
-                    // Capture base values the first time we touch this prefab entity.
-                    // If we were already scaled in-session, reverse last multipliers once (best-effort).
-                    if (m_LastVehicleMultiplier == 100 &&
-                        m_LastProcessingMultiplier == 100 &&
-                        m_LastStorageMultiplier == 100)
+                    if (!TryGetAuthoringBase(entity, out b))
                     {
-                        b = (data.m_VehicleCapacity, data.m_ProcessingSpeed, data.m_GarbageCapacity);
-                    }
-                    else
-                    {
-                        float v = m_LastVehicleMultiplier / 100f;
-                        float p = m_LastProcessingMultiplier / 100f;
-                        float s = m_LastStorageMultiplier / 100f;
+                        if (m_LastVehicleMultiplier == 100 &&
+                            m_LastProcessingMultiplier == 100 &&
+                            m_LastStorageMultiplier == 100)
+                        {
+                            b = (data.m_VehicleCapacity, data.m_ProcessingSpeed, data.m_GarbageCapacity);
+                        }
+                        else
+                        {
+                            float v = m_LastVehicleMultiplier / 100f;
+                            float p = m_LastProcessingMultiplier / 100f;
+                            float s = m_LastStorageMultiplier / 100f;
 
-                        b = (
-                            (int)math.round(data.m_VehicleCapacity / v),
-                            (int)math.round(data.m_ProcessingSpeed / p),
-                            (int)math.round(data.m_GarbageCapacity / s)
-                        );
+                            b = (
+                                (int)math.round(data.m_VehicleCapacity / v),
+                                (int)math.round(data.m_ProcessingSpeed / p),
+                                (int)math.round(data.m_GarbageCapacity / s));
+                        }
                     }
 
                     m_Base[entity] = b;
@@ -136,7 +131,36 @@ namespace MagicGarbage
             m_LastProcessingMultiplier = targetProcessing;
             m_LastStorageMultiplier = targetStorage;
 
-            Enabled = false; // Go back to sleep until settings change again.
+            Enabled = false;
+        }
+
+        private bool TryGetAuthoringBase(
+            Entity prefabEntity,
+            out (int VehicleCap, int ProcessingSpeed, int StorageCap) baseline)
+        {
+            baseline = default;
+
+            if (m_PrefabSystem == null)
+            {
+                return false;
+            }
+
+            if (!m_PrefabSystem.TryGetPrefab(prefabEntity, out PrefabBase prefabBase) || prefabBase == null)
+            {
+                return false;
+            }
+
+            if (!prefabBase.TryGet(out Game.Prefabs.GarbageFacility authoring))
+            {
+                return false;
+            }
+
+            baseline = (
+                authoring.m_VehicleCapacity,
+                authoring.m_ProcessingSpeed,
+                authoring.m_GarbageCapacity);
+
+            return true;
         }
     }
 }

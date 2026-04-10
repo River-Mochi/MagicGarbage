@@ -19,27 +19,41 @@ namespace MagicGarbage
     using System;
     using System.Collections.Generic;
     using Unity.Entities;
+    using UnityEngine;
 
     public sealed partial class GarbageStatusSystem : GameSystemBase
     {
+        // Per-facility summary used by the detailed log.
         public readonly struct FacilityEntry
         {
             public readonly Entity Facility;
-            public readonly int Total;
-            public readonly int Moving;
-            public readonly int Parked;
+            public readonly int GarbageTruckTotal;
+            public readonly int GarbageTruckMoving;
+            public readonly int GarbageTruckParked;
+            public readonly int DumpTruckTotal;
+            public readonly int DumpTruckMoving;
             public readonly int MaxWorkers;
 
-            public FacilityEntry(Entity facility, int total, int moving, int parked, int maxWorkers)
+            public FacilityEntry(
+                Entity facility,
+                int garbageTruckTotal,
+                int garbageTruckMoving,
+                int garbageTruckParked,
+                int dumpTruckTotal,
+                int dumpTruckMoving,
+                int maxWorkers)
             {
                 Facility = facility;
-                Total = total;
-                Moving = moving;
-                Parked = parked;
+                GarbageTruckTotal = garbageTruckTotal;
+                GarbageTruckMoving = garbageTruckMoving;
+                GarbageTruckParked = garbageTruckParked;
+                DumpTruckTotal = dumpTruckTotal;
+                DumpTruckMoving = dumpTruckMoving;
                 MaxWorkers = maxWorkers;
             }
         }
 
+        // Full snapshot consumed by GarbageStatus.cs for UI + log output.
         public readonly struct Snapshot
         {
             public readonly bool InGame;
@@ -53,9 +67,14 @@ namespace MagicGarbage
             public readonly int CollectLimit;
             public readonly int WarningLimit;
             public readonly int MaxAccumulation;
+            public readonly int HappinessBaseline;
+            public readonly int HappinessStep;
 
             public readonly long GarbageTonsPerMonth;
             public readonly long ProcessingTonsPerMonth;
+
+            public readonly double GarbageServiceRatingRaw;
+            public readonly int GarbageServiceRatingRounded;
 
             public readonly int ProducerTotal;
             public readonly int ProducerGarbageGt0;
@@ -80,7 +99,9 @@ namespace MagicGarbage
             public readonly int TruckDisabled;
 
             public readonly int FacilityTotal;
-            public readonly int FacilityTruckTotal;
+            public readonly int FacilityGarbageTruckTotal;
+            public readonly int FacilityDumpTruckTotal;
+            public readonly int FacilityDumpTruckMoving;
             public readonly int FacilityMaxWorkers;
 
             public readonly FacilityEntry[] Facilities;
@@ -95,8 +116,12 @@ namespace MagicGarbage
                 int collectLimit,
                 int warningLimit,
                 int maxAccumulation,
+                int happinessBaseline,
+                int happinessStep,
                 long garbageTonsPerMonth,
                 long processingTonsPerMonth,
+                double garbageServiceRatingRaw,
+                int garbageServiceRatingRounded,
                 int producerTotal,
                 int producerGarbageGt0,
                 int producerOverRequest,
@@ -117,7 +142,9 @@ namespace MagicGarbage
                 int truckReturning,
                 int truckDisabled,
                 int facilityTotal,
-                int facilityTruckTotal,
+                int facilityGarbageTruckTotal,
+                int facilityDumpTruckTotal,
+                int facilityDumpTruckMoving,
                 int facilityMaxWorkers,
                 FacilityEntry[] facilities)
             {
@@ -132,9 +159,14 @@ namespace MagicGarbage
                 CollectLimit = collectLimit;
                 WarningLimit = warningLimit;
                 MaxAccumulation = maxAccumulation;
+                HappinessBaseline = happinessBaseline;
+                HappinessStep = happinessStep;
 
                 GarbageTonsPerMonth = garbageTonsPerMonth;
                 ProcessingTonsPerMonth = processingTonsPerMonth;
+
+                GarbageServiceRatingRaw = garbageServiceRatingRaw;
+                GarbageServiceRatingRounded = garbageServiceRatingRounded;
 
                 ProducerTotal = producerTotal;
                 ProducerGarbageGt0 = producerGarbageGt0;
@@ -159,33 +191,23 @@ namespace MagicGarbage
                 TruckDisabled = truckDisabled;
 
                 FacilityTotal = facilityTotal;
-                FacilityTruckTotal = facilityTruckTotal;
+                FacilityGarbageTruckTotal = facilityGarbageTruckTotal;
+                FacilityDumpTruckTotal = facilityDumpTruckTotal;
+                FacilityDumpTruckMoving = facilityDumpTruckMoving;
                 FacilityMaxWorkers = facilityMaxWorkers;
 
                 Facilities = facilities;
             }
         }
 
-        private readonly struct FacilityCounts
-        {
-            public readonly int Total;
-            public readonly int Moving;
-            public readonly int Parked;
-
-            public FacilityCounts(int total, int moving, int parked)
-            {
-                Total = total;
-                Moving = moving;
-                Parked = parked;
-            }
-        }
-
         private CitySystem m_CitySystem = null!;
         private GarbageAccumulationSystem m_GarbageAccumulationSystem = null!;
+        private CitizenHappinessSystem m_CitizenHappinessSystem = null!;
 
         private EntityQuery m_ProducerQuery;
         private EntityQuery m_RequestQuery;
         private EntityQuery m_TruckQuery;
+        private EntityQuery m_HappinessFactorParameterQuery;
 
         protected override void OnCreate()
         {
@@ -193,7 +215,9 @@ namespace MagicGarbage
 
             m_CitySystem = World.GetOrCreateSystemManaged<CitySystem>();
             m_GarbageAccumulationSystem = World.GetOrCreateSystemManaged<GarbageAccumulationSystem>();
+            m_CitizenHappinessSystem = World.GetOrCreateSystemManaged<CitizenHappinessSystem>();
 
+            // Buildings that currently hold garbage.
             m_ProducerQuery = GetEntityQuery(new EntityQueryDesc
             {
                 All = new[]
@@ -208,6 +232,7 @@ namespace MagicGarbage
                 },
             });
 
+            // Active garbage collection requests in the current city.
             m_RequestQuery = GetEntityQuery(new EntityQueryDesc
             {
                 All = new[]
@@ -222,6 +247,7 @@ namespace MagicGarbage
                 },
             });
 
+            // Normal curbside garbage trucks only.
             m_TruckQuery = GetEntityQuery(new EntityQueryDesc
             {
                 All = new[]
@@ -235,9 +261,14 @@ namespace MagicGarbage
                 },
             });
 
+            // Buffer used by the game's city happiness factor calculation.
+            m_HappinessFactorParameterQuery = GetEntityQuery(
+                ComponentType.ReadOnly<HappinessFactorParameterData>());
+
             Enabled = false;
         }
 
+        // Snapshot system only in Options UI, no auto sim work needed on purpose, does not affect city performance.
         protected override void OnUpdate()
         {
         }
@@ -256,12 +287,15 @@ namespace MagicGarbage
                 trashBoss = setting.TrashBossEnabled;
             }
 
+            // Read current live garbage parameters from the singleton.
             bool haveParams = SystemAPI.TryGetSingleton(out GarbageParameterData gp);
 
             int requestLimit = 0;
             int collectLimit = 0;
             int warningLimit = 0;
             int maxAccumulation = 0;
+            int happinessBaseline = 0;
+            int happinessStep = 0;
 
             if (haveParams)
             {
@@ -269,8 +303,11 @@ namespace MagicGarbage
                 collectLimit = gp.m_CollectionGarbageLimit;
                 warningLimit = gp.m_WarningGarbageLimit;
                 maxAccumulation = gp.m_MaxGarbageAccumulation;
+                happinessBaseline = gp.m_HappinessEffectBaseline;
+                happinessStep = gp.m_HappinessEffectStep;
             }
 
+            // Early empty snapshot when no city is loaded.
             if (!inGame)
             {
                 return new Snapshot(
@@ -283,8 +320,12 @@ namespace MagicGarbage
                     collectLimit: collectLimit,
                     warningLimit: warningLimit,
                     maxAccumulation: maxAccumulation,
+                    happinessBaseline: happinessBaseline,
+                    happinessStep: happinessStep,
                     garbageTonsPerMonth: 0,
                     processingTonsPerMonth: 0,
+                    garbageServiceRatingRaw: 0.0,
+                    garbageServiceRatingRounded: 0,
                     producerTotal: 0,
                     producerGarbageGt0: 0,
                     producerOverRequest: 0,
@@ -305,16 +346,46 @@ namespace MagicGarbage
                     truckReturning: 0,
                     truckDisabled: 0,
                     facilityTotal: 0,
-                    facilityTruckTotal: 0,
+                    facilityGarbageTruckTotal: 0,
+                    facilityDumpTruckTotal: 0,
+                    facilityDumpTruckMoving: 0,
                     facilityMaxWorkers: 0,
                     facilities: Array.Empty<FacilityEntry>());
             }
 
             ComponentLookup<WorkProvider> workProviderLookup = GetComponentLookup<WorkProvider>(true);
+            BufferLookup<OwnedVehicle> ownedVehicleLookup = GetBufferLookup<OwnedVehicle>(true);
 
+            // Citywide production-style number exposed by GarbageAccumulationSystem.
             long garbageRaw = m_GarbageAccumulationSystem != null
                 ? m_GarbageAccumulationSystem.garbageAccumulation
                 : 0L;
+
+            double garbageServiceRatingRaw = 0.0;
+            int garbageServiceRatingRounded = 0;
+
+            // Pull the city's current Garbage happiness factor directly from the game.
+            if (m_CitizenHappinessSystem != null && !m_HappinessFactorParameterQuery.IsEmptyIgnoreFilter)
+            {
+                Entity happinessParamEntity = m_HappinessFactorParameterQuery.GetSingletonEntity();
+                BufferLookup<HappinessFactorParameterData> happinessFactorLookup =
+                    GetBufferLookup<HappinessFactorParameterData>(true);
+                ComponentLookup<Locked> lockedLookup = GetComponentLookup<Locked>(true);
+
+                if (happinessFactorLookup.HasBuffer(happinessParamEntity))
+                {
+                    DynamicBuffer<HappinessFactorParameterData> parameters =
+                        happinessFactorLookup[happinessParamEntity];
+
+                    Unity.Mathematics.float3 factor = m_CitizenHappinessSystem.GetHappinessFactor(
+                        CitizenHappinessSystem.HappinessFactor.Garbage,
+                        parameters,
+                        ref lockedLookup);
+
+                    garbageServiceRatingRaw = factor.x;
+                    garbageServiceRatingRounded = Mathf.RoundToInt(factor.x);
+                }
+            }
 
             int producerTotal = m_ProducerQuery.CalculateEntityCount();
             int producerGarbageGt0 = 0;
@@ -335,6 +406,7 @@ namespace MagicGarbage
             long garbageSum = 0L;
             List<int> garbageValues = new List<int>(producerTotal > 0 ? producerTotal : 16);
 
+            // Scan all garbage-producing buildings to build summary stats.
             foreach ((RefRO<GarbageProducer> producer, Entity producerEntity) in SystemAPI
                          .Query<RefRO<GarbageProducer>>()
                          .WithEntityAccess()
@@ -360,7 +432,7 @@ namespace MagicGarbage
                     producerOverRequest++;
                 }
 
-                if (haveParams && garbage > warningLimit)
+                if (haveParams && garbage >= warningLimit)
                 {
                     producerOverWarning++;
                 }
@@ -398,6 +470,7 @@ namespace MagicGarbage
             int pendingMaxTargetGarbage = 0;
             Entity pendingMaxTargetEntity = Entity.Null;
 
+            // Separate pending requests from already-assigned/dispatched requests.
             foreach ((RefRO<GarbageCollectionRequest> request, Entity requestEntity) in SystemAPI
                          .Query<RefRO<GarbageCollectionRequest>>()
                          .WithEntityAccess()
@@ -419,6 +492,7 @@ namespace MagicGarbage
                 {
                     requestPending++;
 
+                    // Track the worst currently pending target for easier troubleshooting.
                     Entity target = request.ValueRO.m_Target;
                     if (target != Entity.Null && SystemAPI.HasComponent<GarbageProducer>(target))
                     {
@@ -437,9 +511,7 @@ namespace MagicGarbage
             int truckReturning = 0;
             int truckDisabled = 0;
 
-            Dictionary<Entity, FacilityCounts> facilityStats =
-                new Dictionary<Entity, FacilityCounts>(32);
-
+            // Scan normal garbage trucks only for global truck-state totals.
             foreach ((RefRO<Game.Vehicles.GarbageTruck> truckRef, Entity truckEntity) in SystemAPI
                          .Query<RefRO<Game.Vehicles.GarbageTruck>>()
                          .WithEntityAccess()
@@ -462,44 +534,18 @@ namespace MagicGarbage
                 {
                     truckDisabled++;
                 }
-
-                if (!SystemAPI.HasComponent<Owner>(truckEntity))
-                {
-                    continue;
-                }
-
-                Entity owner = SystemAPI.GetComponent<Owner>(truckEntity).m_Owner;
-                if (owner == Entity.Null)
-                {
-                    continue;
-                }
-
-                if (!SystemAPI.HasComponent<Game.Buildings.GarbageFacility>(owner))
-                {
-                    continue;
-                }
-
-                FacilityCounts counts;
-                if (!facilityStats.TryGetValue(owner, out counts))
-                {
-                    counts = new FacilityCounts(0, 0, 0);
-                }
-
-                int nextTotal = counts.Total + 1;
-                int nextMoving = counts.Moving + (isParked ? 0 : 1);
-                int nextParked = counts.Parked + (isParked ? 1 : 0);
-
-                facilityStats[owner] = new FacilityCounts(nextTotal, nextMoving, nextParked);
             }
 
             long processingRaw = 0L;
             int facilityTotal = 0;
-            int facilityTruckTotal = 0;
+            int facilityGarbageTruckTotal = 0;
+            int facilityDumpTruckTotal = 0;
+            int facilityDumpTruckMoving = 0;
             int facilityMaxWorkers = 0;
 
-            List<FacilityEntry> facilityEntries =
-                new List<FacilityEntry>(facilityStats.Count > 0 ? facilityStats.Count : 8);
+            List<FacilityEntry> facilityEntries = new List<FacilityEntry>(16);
 
+            // Build per-facility summaries by scanning each facility's owned vehicles.
             foreach ((RefRO<Game.Buildings.GarbageFacility> facility, Entity facilityEntity) in SystemAPI
                          .Query<RefRO<Game.Buildings.GarbageFacility>>()
                          .WithEntityAccess()
@@ -516,14 +562,75 @@ namespace MagicGarbage
                     maxWorkers = workProviderLookup[facilityEntity].m_MaxWorkers;
                 }
 
-                FacilityCounts counts;
-                if (!facilityStats.TryGetValue(facilityEntity, out counts))
+                int garbageTruckTotal = 0;
+                int garbageTruckMoving = 0;
+                int garbageTruckParked = 0;
+                int dumpTruckTotal = 0;
+                int dumpTruckMoving = 0;
+
+                if (ownedVehicleLookup.HasBuffer(facilityEntity))
                 {
-                    counts = new FacilityCounts(0, 0, 0);
+                    DynamicBuffer<OwnedVehicle> ownedVehicles = ownedVehicleLookup[facilityEntity];
+
+                    for (int i = 0; i < ownedVehicles.Length; i++)
+                    {
+                        Entity vehicle = ownedVehicles[i].m_Vehicle;
+                        if (vehicle == Entity.Null || !EntityManager.Exists(vehicle))
+                        {
+                            continue;
+                        }
+
+                        if (SystemAPI.HasComponent<Deleted>(vehicle) || SystemAPI.HasComponent<Temp>(vehicle))
+                        {
+                            continue;
+                        }
+
+                        // Normal curbside garbage trucks.
+                        if (SystemAPI.HasComponent<Game.Vehicles.GarbageTruck>(vehicle))
+                        {
+                            bool isParked = SystemAPI.HasComponent<ParkedCar>(vehicle);
+                            garbageTruckTotal++;
+
+                            if (isParked)
+                            {
+                                garbageTruckParked++;
+                            }
+                            else
+                            {
+                                garbageTruckMoving++;
+                            }
+
+                            continue;
+                        }
+
+                        // Hazardous-waste / transfer dump trucks use the DeliveryTruck path.
+                        if (SystemAPI.HasComponent<Game.Vehicles.DeliveryTruck>(vehicle))
+                        {
+                            Game.Vehicles.DeliveryTruck deliveryTruck =
+                                SystemAPI.GetComponent<Game.Vehicles.DeliveryTruck>(vehicle);
+
+                            // Ignore dummy traffic so only real owned trucks are counted.
+                            if ((deliveryTruck.m_State & DeliveryTruckFlags.DummyTraffic) != 0)
+                            {
+                                continue;
+                            }
+
+                            bool isParked = SystemAPI.HasComponent<ParkedCar>(vehicle);
+
+                            dumpTruckTotal++;
+
+                            if (!isParked)
+                            {
+                                dumpTruckMoving++;
+                            }
+                        }
+                    }
                 }
 
+                // Skip facilities that currently contribute nothing useful to the report.
                 if (facility.ValueRO.m_ProcessingRate <= 0 &&
-                    counts.Total <= 0 &&
+                    garbageTruckTotal <= 0 &&
+                    dumpTruckTotal <= 0 &&
                     maxWorkers <= 0)
                 {
                     continue;
@@ -531,17 +638,22 @@ namespace MagicGarbage
 
                 processingRaw += facility.ValueRO.m_ProcessingRate;
                 facilityTotal++;
-                facilityTruckTotal += counts.Total;
+                facilityGarbageTruckTotal += garbageTruckTotal;
+                facilityDumpTruckTotal += dumpTruckTotal;
+                facilityDumpTruckMoving += dumpTruckMoving;
                 facilityMaxWorkers += maxWorkers;
 
                 facilityEntries.Add(new FacilityEntry(
                     facilityEntity,
-                    counts.Total,
-                    counts.Moving,
-                    counts.Parked,
+                    garbageTruckTotal,
+                    garbageTruckMoving,
+                    garbageTruckParked,
+                    dumpTruckTotal,
+                    dumpTruckMoving,
                     maxWorkers));
             }
 
+            // Sort busiest facilities first for the log.
             facilityEntries.Sort(CompareFacilityEntries);
 
             int truckMoving = truckTotal - truckParked;
@@ -558,8 +670,12 @@ namespace MagicGarbage
                 collectLimit: collectLimit,
                 warningLimit: warningLimit,
                 maxAccumulation: maxAccumulation,
+                happinessBaseline: happinessBaseline,
+                happinessStep: happinessStep,
                 garbageTonsPerMonth: garbageTonsPerMonth,
                 processingTonsPerMonth: processingTonsPerMonth,
+                garbageServiceRatingRaw: garbageServiceRatingRaw,
+                garbageServiceRatingRounded: garbageServiceRatingRounded,
                 producerTotal: producerTotal,
                 producerGarbageGt0: producerGarbageGt0,
                 producerOverRequest: producerOverRequest,
@@ -580,20 +696,29 @@ namespace MagicGarbage
                 truckReturning: truckReturning,
                 truckDisabled: truckDisabled,
                 facilityTotal: facilityTotal,
-                facilityTruckTotal: facilityTruckTotal,
+                facilityGarbageTruckTotal: facilityGarbageTruckTotal,
+                facilityDumpTruckTotal: facilityDumpTruckTotal,
+                facilityDumpTruckMoving: facilityDumpTruckMoving,
                 facilityMaxWorkers: facilityMaxWorkers,
                 facilities: facilityEntries.ToArray());
         }
 
+        // Sort by activity first, then total fleet, then stable entity order.
         private static int CompareFacilityEntries(FacilityEntry a, FacilityEntry b)
         {
-            int cmp = b.Moving.CompareTo(a.Moving);
+            int aActivity = a.GarbageTruckMoving + a.DumpTruckMoving;
+            int bActivity = b.GarbageTruckMoving + b.DumpTruckMoving;
+
+            int cmp = bActivity.CompareTo(aActivity);
             if (cmp != 0)
             {
                 return cmp;
             }
 
-            cmp = b.Total.CompareTo(a.Total);
+            int aTotal = a.GarbageTruckTotal + a.DumpTruckTotal;
+            int bTotal = b.GarbageTruckTotal + b.DumpTruckTotal;
+
+            cmp = bTotal.CompareTo(aTotal);
             if (cmp != 0)
             {
                 return cmp;
@@ -602,6 +727,7 @@ namespace MagicGarbage
             return a.Facility.Index.CompareTo(b.Facility.Index);
         }
 
+        // Convert internal raw garbage totals to the player-facing tons-per-month style output.
         private static long ToTonsPerMonth(long raw)
         {
             if (raw <= 0L)

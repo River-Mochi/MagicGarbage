@@ -22,11 +22,12 @@ namespace MagicGarbage
         private static long s_LastRefreshUtcTicks;
         private static bool s_WasInGame;
 
+        private static string s_UiGarbageServiceRating = "-";
         private static string s_UiGarbageProcessing = "-";
         private static string s_UiProducers = "-";
         private static string s_UiRequests = "-";
-        private static string s_UiTrucks = "-";
         private static string s_UiFacilities = "-";
+        private static string s_UiTrucks = "-";
 
         public static void ResetUi()
         {
@@ -34,6 +35,7 @@ namespace MagicGarbage
             s_LastRefreshUtcTicks = 0;
             s_WasInGame = false;
 
+            s_UiGarbageServiceRating = "-";
             s_UiGarbageProcessing = "-";
             s_UiProducers = "-";
             s_UiRequests = "-";
@@ -131,6 +133,11 @@ namespace MagicGarbage
             }
         }
 
+        public static string GetUiGarbageServiceRating()
+        {
+            return string.IsNullOrEmpty(s_UiGarbageServiceRating) ? "-" : s_UiGarbageServiceRating;
+        }
+
         public static string GetUiGarbageProcessing()
         {
             return string.IsNullOrEmpty(s_UiGarbageProcessing) ? "-" : s_UiGarbageProcessing;
@@ -160,11 +167,14 @@ namespace MagicGarbage
         {
             string updatedAt = DateTime.Now.ToString("HH:mm:ss");
 
+            s_UiGarbageServiceRating = BuildGarbageServiceRatingUi(
+                snap.GarbageServiceRatingRounded,
+                updatedAt);
+
             s_UiGarbageProcessing = Mod.LF(
                 "MG.Status.Row.GarbageProcessing",
                 snap.GarbageTonsPerMonth,
-                snap.ProcessingTonsPerMonth,
-                updatedAt);
+                snap.ProcessingTonsPerMonth);
 
             s_UiRequests = Mod.LF(
                 "MG.Status.Row.Requests",
@@ -198,19 +208,63 @@ namespace MagicGarbage
             return Mod.LF(
                 "MG.Status.Row.FacilitiesSummary",
                 snap.FacilityTotal,
-                snap.FacilityTruckTotal,
+                snap.FacilityGarbageTruckTotal,
+                snap.FacilityDumpTruckTotal,
                 snap.FacilityMaxWorkers);
+        }
+
+        // Simple player-facing comments based on rounded city garbage happiness factor.
+        private static string BuildGarbageServiceRatingUi(int rounded, string updatedAt)
+        {
+            if (rounded >= 0)
+            {
+                return Mod.LF("MG.Status.Row.GarbageServiceRating.Excellent", rounded, updatedAt);
+            }
+
+            if (rounded == -1)
+            {
+                return Mod.LF("MG.Status.Row.GarbageServiceRating.Minor", rounded, updatedAt);
+            }
+
+            if (rounded >= -4)
+            {
+                return Mod.LF("MG.Status.Row.GarbageServiceRating.Stinky", rounded, updatedAt);
+            }
+
+            return Mod.LF("MG.Status.Row.GarbageServiceRating.Problem", rounded, updatedAt);
+        }
+
+        // Same rating bands as Options UI, but returned as plain labels for detailed log button.
+        private static string BuildGarbageServiceRatingLabel(int rounded)
+        {
+            if (rounded >= 0)
+            {
+                return Mod.L("MG.Status.Log.GarbageServiceRating.Excellent");
+            }
+
+            if (rounded == -1)
+            {
+                return Mod.L("MG.Status.Log.GarbageServiceRating.Minor");
+            }
+
+            if (rounded >= -4)
+            {
+                return Mod.L("MG.Status.Log.GarbageServiceRating.Stinky");
+            }
+
+            return Mod.L("MG.Status.Log.GarbageServiceRating.Problem");
         }
 
         private static string BuildLogText(GarbageStatusSystem.Snapshot snap)
         {
             string nowText = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            StringBuilder log = new StringBuilder(1400);
+            StringBuilder log = new StringBuilder(2800);
 
             log.AppendLine(Mod.LF("MG.Status.Log.Title", nowText));
             log.AppendLine(Mod.LF("MG.Status.Log.City", Fmt(snap.City)));
             log.AppendLine(Mod.LF("MG.Status.Log.Mode", snap.TotalMagic, snap.TrashBoss));
+            AppendSettingsBlock(log);
             log.AppendLine(Mod.L("MG.Status.Log.Legend"));
             log.AppendLine();
 
@@ -234,6 +288,12 @@ namespace MagicGarbage
                 snap.GarbageTonsPerMonth,
                 snap.ProcessingTonsPerMonth));
 
+            log.AppendLine(Mod.LF(
+                "MG.Status.Log.GarbageServiceRating",
+                BuildGarbageServiceRatingLabel(snap.GarbageServiceRatingRounded),
+                snap.GarbageServiceRatingRaw,
+                snap.GarbageServiceRatingRounded));
+
             log.AppendLine();
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.Requests",
@@ -241,18 +301,26 @@ namespace MagicGarbage
                 snap.RequestPending,
                 snap.RequestDispatched));
 
-            log.AppendLine(Mod.LF(
-                "MG.Status.Log.PendingPeak",
-                snap.PendingMaxTargetGarbage,
-                ToTons(snap.PendingMaxTargetGarbage),
-                Fmt(snap.PendingMaxTargetEntity)));
+            // Show a plain "none" in user-facing log instead of raw ECS null text.
+            if (snap.PendingMaxTargetGarbage <= 0 || snap.PendingMaxTargetEntity == Entity.Null)
+            {
+                log.AppendLine(Mod.L("MG.Status.Log.PendingPeakNone"));
+            }
+            else
+            {
+                log.AppendLine(Mod.LF(
+                    "MG.Status.Log.PendingPeak",
+                    snap.PendingMaxTargetGarbage,
+                    ToTons(snap.PendingMaxTargetGarbage),
+                    Fmt(snap.PendingMaxTargetEntity)));
+            }
 
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.Producers",
+                snap.ProducerOverWarning,
                 snap.ProducerTotal,
                 snap.ProducerGarbageGt0,
-                snap.ProducerOverRequest,
-                snap.ProducerOverWarning));
+                snap.ProducerOverRequest));
 
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.ProducerGarbageStats",
@@ -264,16 +332,20 @@ namespace MagicGarbage
                 ToTons(snap.ProducerMaxGarbage),
                 Fmt(snap.ProducerMaxGarbageEntity)));
 
+            int nearWarningUnits = snap.HaveParams ? (int)Math.Ceiling(snap.WarningLimit * 0.75d) : 0;
+
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.NearWarning75",
                 snap.ProducerNearWarning75,
-                snap.HaveParams ? (int)Math.Ceiling(snap.WarningLimit * 0.75d) : 0,
-                ToTons(snap.HaveParams ? (int)Math.Ceiling(snap.WarningLimit * 0.75d) : 0)));
+                nearWarningUnits,
+                ToTons(nearWarningUnits)));
 
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.FacilitiesSummary",
                 snap.FacilityTotal,
-                snap.FacilityTruckTotal,
+                snap.FacilityGarbageTruckTotal,
+                snap.FacilityDumpTruckTotal,
+                snap.FacilityDumpTruckMoving,
                 snap.FacilityMaxWorkers));
 
             log.AppendLine(Mod.LF(
@@ -295,9 +367,11 @@ namespace MagicGarbage
                     log.AppendLine(Mod.LF(
                         "MG.Status.Log.FacilityLine",
                         Fmt(f.Facility),
-                        f.Total,
-                        f.Moving,
-                        f.Parked,
+                        f.GarbageTruckTotal,
+                        f.GarbageTruckMoving,
+                        f.GarbageTruckParked,
+                        f.DumpTruckTotal,
+                        f.DumpTruckMoving,
                         f.MaxWorkers));
                 }
             }
@@ -305,10 +379,37 @@ namespace MagicGarbage
             return log.ToString().TrimEnd();
         }
 
+        private static void AppendSettingsBlock(StringBuilder log)
+        {
+            if (!Mod.TryGetSetting(out Setting setting))
+            {
+                return;
+            }
+
+            log.AppendLine();
+            log.AppendLine(Mod.L("MG.Status.Log.SettingsHeader"));
+            log.AppendLine(Mod.LF(
+                "MG.Status.Log.SettingsTrashBoss",
+                setting.GarbageTruckCapacityMultiplier,
+                setting.GarbageFacilityStorageMultiplier,
+                setting.GarbageFacilityProcessingMultiplier,
+                setting.GarbageFacilityVehicleMultiplier));
+            log.AppendLine(Mod.LF(
+                "MG.Status.Log.SettingsPowerUser",
+                setting.PowerUserOptions,
+                setting.GarbageDispatchRequestThreshold,
+                setting.GarbagePickupThreshold,
+                setting.GarbageHappinessBaseline,
+                setting.GarbageHappinessStep,
+                setting.GarbageAccumulationRate));
+            log.AppendLine();
+        }
+
         private static void SetNoCityUi()
         {
             string msg = Mod.L("MG.Status.NoCity");
 
+            s_UiGarbageServiceRating = "-";
             s_UiGarbageProcessing = msg;
             s_UiProducers = "-";
             s_UiRequests = "-";

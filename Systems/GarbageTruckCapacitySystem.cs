@@ -14,31 +14,27 @@ namespace MagicGarbage
     /// <summary>
     /// Scales garbage truck capacity and unload rate according to the Trash Boss slider.
     /// When Total Magic is enabled (or Trash Boss disabled), it reverts to vanilla (100%) once.
-    /// Uses cached base values to avoid rounding drift.
+    /// Uses authoring prefab values as the true baseline, with cache fallback if authoring lookup fails.
     /// </summary>
     public partial class GarbageTruckCapacitySystem : GameSystemBase
     {
-        // Last applied multiplier percent. 100 = vanilla.
         private int m_LastMultiplier = 100;
 
-        // Cache the "base" (vanilla) values per prefab entity so we can apply exact scaling (no drift).
         private readonly Dictionary<Entity, (int Capacity, int UnloadRate)> m_Base = new();
+
+        private PrefabSystem m_PrefabSystem = null!;
 
         protected override void OnCreate()
         {
             base.OnCreate();
 
-            // Do not run at all unless garbage truck prefabs exist.
+            m_PrefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
+
             RequireForUpdate<GarbageTruckData>();
 
-            // Stay asleep most of the time; OnGameLoadingComplete and Setting.Apply() wake it.
             Enabled = false;
         }
 
-        /// <summary>
-        /// City load completed (new game/load save/switch city).
-        /// Clear base cache so we always capture fresh prefab base values for this session.
-        /// </summary>
         protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
         {
             base.OnGameLoadingComplete(purpose, mode);
@@ -57,14 +53,9 @@ namespace MagicGarbage
         {
             if (!Mod.TryGetSetting(out Setting setting))
             {
-                // Don't force-disable if not ready; a later tick can catch.
                 return;
             }
 
-            // Decide what the effective multiplier should be right now.
-            // - Total Magic ON => behave like vanilla 100% (but keep user's saved Self-manage sliders).
-            // - Trash Boss OFF => also behave like vanilla 100%.
-            // - Trash Boss ON  => use slider.
             int targetMult = 100;
 
             if (!setting.TotalMagic && setting.TrashBossEnabled)
@@ -72,7 +63,6 @@ namespace MagicGarbage
                 targetMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500);
             }
 
-            // Nothing to do.
             if (targetMult == m_LastMultiplier)
             {
 #if DEBUG
@@ -82,7 +72,6 @@ namespace MagicGarbage
                 return;
             }
 
-            // Apply exact scaling from cached base (no rounding drift).
             foreach ((RefRW<GarbageTruckData> truck, Entity entity) in
                      SystemAPI.Query<RefRW<GarbageTruckData>>().WithEntityAccess())
             {
@@ -90,19 +79,19 @@ namespace MagicGarbage
 
                 if (!m_Base.TryGetValue(entity, out (int Capacity, int UnloadRate) b))
                 {
-                    // Capture base values the first time we touch this prefab entity.
-                    // If we were already scaled in-session, approximate base by reversing last multiplier once.
-                    if (m_LastMultiplier == 100)
+                    if (!TryGetAuthoringBase(entity, out b))
                     {
-                        b = (data.m_GarbageCapacity, data.m_UnloadRate);
-                    }
-                    else
-                    {
-                        float lastFactor = m_LastMultiplier / 100f;
-                        b = (
-                            (int)math.round(data.m_GarbageCapacity / lastFactor),
-                            (int)math.round(data.m_UnloadRate / lastFactor)
-                        );
+                        if (m_LastMultiplier == 100)
+                        {
+                            b = (data.m_GarbageCapacity, data.m_UnloadRate);
+                        }
+                        else
+                        {
+                            float lastFactor = m_LastMultiplier / 100f;
+                            b = (
+                                (int)math.round(data.m_GarbageCapacity / lastFactor),
+                                (int)math.round(data.m_UnloadRate / lastFactor));
+                        }
                     }
 
                     m_Base[entity] = b;
@@ -117,7 +106,30 @@ namespace MagicGarbage
 #endif
 
             m_LastMultiplier = targetMult;
-            Enabled = false; // Back to sleep until next OptionsUI change or city load.
+            Enabled = false;
+        }
+
+        private bool TryGetAuthoringBase(Entity prefabEntity, out (int Capacity, int UnloadRate) baseline)
+        {
+            baseline = default;
+
+            if (m_PrefabSystem == null)
+            {
+                return false;
+            }
+
+            if (!m_PrefabSystem.TryGetPrefab(prefabEntity, out PrefabBase prefabBase) || prefabBase == null)
+            {
+                return false;
+            }
+
+            if (!prefabBase.TryGet(out Game.Prefabs.GarbageTruck authoring))
+            {
+                return false;
+            }
+
+            baseline = (authoring.m_GarbageCapacity, authoring.m_UnloadRate);
+            return true;
         }
     }
 }

@@ -8,68 +8,82 @@
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
 	<LongDescription>
-        **Magic Garbage + Trash Boss**
+**Magic Garbage + Trash Boss**
 
-        Two ways to handle garbage.
-        ---
+Two ways to handle garbage, a Status Report option, and all new POWER Users section for experiments.
+---
 
-        ### OPTION 1  AUTO CLEAN
-        - ✅ **Total Magic On**
-        - Removes all garbage automatically.
-        - Garbage icons clear.
-        - Trucks and facilities become mostly cosmetic.
-        - Mod does not stop Garbage system; cleanup is just very fast.
+### OPTION 1  AUTO CLEAN
+- ✅ **Total Magic On**
+- Removes all garbage automatically.
+- Garbage warning icons cleared
+- Trucks and facilities become mostly cosmetic.
+- Mod does not stop Garbage system; cleanup is just very fast.
 
-        ### OPTION 2  SELF MANAGE
-        - ✅ **Trash Boss On**
-        - Keep vanilla garbage gameplay, but tune key garbage values.
-        - Adjust garbage trucks and facilities to reduce traffic and service strain.
-        - 🚚 Great for players who still want to see trucks driving around, with fewer problems.
+### OPTION 2  SELF MANAGE
+- ✅ **Trash Boss On**
+- Keep vanilla garbage gameplay, and allows adjustable garbage values.
+- Adjust garbage trucks, facilities, other factors to reduce traffic and service strain.
+- 🚚 Great for players who still want to see trucks driving around, with fewer problems.
 
-        **Threshold slider**
-        - Advanced option (mod worked fine before this slider; it's bonus for power users)
-        - Increase means garbage levels can be much higher before the building calls for a truck (reduce truck dispatches). May need higher truck capacity.
-        Balance advised: use status log button to check details while tweaking this. Allow city to run a few hours between threshold changes to get better analysis.
+**Threshold slider**
+- Advanced option (mod worked fine before this slider; it's bonus for power users)
+- Increase means garbage levels can be much higher before the building calls for a truck (reduce truck dispatches). May need higher truck capacity.
+Balance advised: use status log button to check details while tweaking this. Allow city to run a few hours between threshold changes to get better analysis.
 
-        **Helper buttons**
-        - [Game Defaults] = reset all sliders to 100% (pure vanilla).
-        - [Recommended]	  = suggested preset values for easy management.
+**Helper buttons**
+- [Game Defaults] = reset all sliders to 100% (pure vanilla).
+- [Recommended]	  = suggested preset values for easy management.
+- Standard Trash Boss buttons do not change Power User section.
 
-        ### NEW STATUS Report
-        - Real garbage stats help a Trash Boss figure out what is happening.
-        - Lean: status does not run in-city per frame; runs in Options menu for best performance to not affect gameplay.
+### NEW STATUS Report
+- Real garbage stats help a Trash Boss figure out what is happening.
+- Lean: status does not run in-city per frame; runs in Options menu for best performance to not affect gameplay.
 
-        #### Support and feedback
-        - If the mod helps you, give it a Like, it's free + easy :)
-        - Feedback on: Github, Discord, etc., links on this page.
 
-        ---
+### NEW OPTIONAL POWER USER
+- Not needed for most players; allows advanced tuning and experimentation.
+- Most cities get good results just using the Trash Boss Options and not touching Power User settings.
+- Extra controls:
+- Dispatch Request Threshold + Pickup Threshold
+- **Pickup** cannot be higher than **Dispatch Request**.
+- Garbage Happiness Baseline + Garbage Happiness Step
+- Garbage Accumulation Rate (not needed for most cities, this is a powerful adjustment, use with caution)
+- Higher thresholds can reduce truck traffic, but too high can slow pickups too much.
 
-        ### Compatibility
-        - Works with new and existing cities. Enable/Disable any time, safe to remove any time.
-        - Does not use Harmony patch, lightweight.
+#### Support and feedback
+- If the mod helps you, give it a Like, it's free + easy :)
+- Feedback on: Github, Discord, etc., links on this page.
 
-        ---
+---
 
-        ### Credits
-        - RiverMochi - author
-        - Thanks to Wayz for inspiration on the original Magical Garbage mod
-        - yenyang - code review, tech advice
-        - Necko1996 - testing and screenshots
-        - gagaxm - truck image
+### Compatibility
+- Works with new and existing cities. Safe to remove any time.
+- Does not use Harmony patch, lightweight; anything with sliders is done in options menu, not in-game, for best performance.
 
-        #### 11 languages
-        - English, Français French, Deutsch German, Español Spanish, Italiano Italian
-        - 日本語 Japanese, 한국어 Korean, Português Brasil, Polski Polish
-        - 简体中文 Simplified Chinese, 繁體中文 Traditional Chinese
+---
 
-    </LongDescription>
+### Credits
+- RiverMochi - author
+- Thanks to Wayz for inspiration on the original Magical Garbage mod
+- yenyang - code review, tech advice
+- Necko1996 - testing, screenshots
+- gagaxm - truck image
+
+#### 11 languages
+- English, Français French, Deutsch German, Español Spanish, Italiano Italian
+- 日本語 Japanese, 한국어 Korean, Português Brasil, Polski Polish
+- 简体中文 Simplified Chinese, 繁體中文 Traditional Chinese
+
+</LongDescription>
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/thumbnail-garbageTruck.jpg" />
 	<!--Screenshot, can be set multiple times-->
-    <Screenshot Value="Properties/10-image-TotalMagic.jpg" />
+    <Screenshot Value="Properties/10-image-Senryu.jpg" />
+    <Screenshot Value="Properties/20-image-TotalMagic.jpg" />
     <Screenshot Value="Properties/30-image-TrashBoss.jpg" />
 	<Screenshot Value="Properties/40-image-Status.jpg" />
+    <Screenshot Value="Properties/50-image-PowerUser01.jpg" />
 	<Screenshot Value="Properties/60-image-UsageEN.jpg" />
 	<Screenshot Value="Properties/70-image-Before.jpg" />
 	<Screenshot Value="Properties/80-image-After.jpg" />
@@ -78,18 +92,21 @@
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.2.6" />
+	<ModVersion Value="1.2.7" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.5.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-* added optional Building threshold slider; triggers when a truck is dispatched 
+* added optional Power User advanced settings for garbage tuning
+* added Garbage Accumulation Rate for power users to tinker with; not needed for most cities.
+* added optional Building threshold slider; triggers when a truck is dispatched
 * added more detailed Status log info to mod Options menu.
-</ChangeLog>
+* updated all locale files.
 
-	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
+</ChangeLog>
+<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 <ExternalLink Type="discord" Url="https://discord.gg/HTav7ARPs2" />
 <ExternalLink Type="github" Url="https://github.com/River-Mochi/MagicGarbage" />
 

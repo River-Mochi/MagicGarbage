@@ -32,98 +32,166 @@ namespace MagicGarbage
 
                 // Tabs
                 { m_Setting.GetOptionTabLocaleID(Setting.ActionsTab), "Akcje" },
-                { m_Setting.GetOptionTabLocaleID(Setting.AboutTab), "Informacje" },
+                { m_Setting.GetOptionTabLocaleID(Setting.AboutTab), "O modzie" },
 
                 // Groups
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Auto czyszczenie" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "Zarządzanie ręczne" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "Ręczne zarządzanie" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.PowerUserGrp), "Ekspert" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "Status" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "Info o modzie" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Linki" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "UŻYCIE" },
 
                 // Total Magic
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Totalna magia" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
                     "**Włączone [ ✓ ]** utrzymuje całe miasto w czystości.\n\n" +
-                    "Gdy **Total Magic** jest ON:\n" +
-                    "- Trash Boss jest wymuszony na OFF.\n" +
-                    "- Suwaki Trash Boss nie są stosowane (wartości zostają zapisane na później).\n" +
-                    "- Kilka ciężarówek może nadal się poruszać z powodu timingu dispatchu vanilla."
+                    "Gdy **Totalna magia** jest WŁ.:\n" +
+                    "- Sterowanie odpadami jest wymuszone na WYŁ..\n" +
+                    "- Suwaki Sterowania odpadami nie są stosowane (wartości zostają zapisane na później).\n" +
+                    "- Kilka ciężarówek może nadal jeździć przez timing logiki vanilla."
                 },
 
                 // Trash Boss
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Sterowanie odpadami" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
-                    "Bezpośrednio zarządza systemami śmieci; logika vanilla nadal działa.\n\n" +
-                    "- Gdy **Trash Boss jest ON [ ✓ ]**, Total Magic jest wymuszony na OFF.\n" +
-                    "- Suwaki działają tylko, gdy Trash Boss jest włączony.\n"
+                    "Bezpośrednio zarządza systemami odpadów; logika garbage vanilla nadal działa.\n\n" +
+                    "- Gdy **Sterowanie odpadami jest WŁ. [ ✓ ]**, Totalna magia jest wymuszona na WYŁ..\n" +
+                    "- Suwaki działają tylko wtedy, gdy Sterowanie odpadami jest włączone.\n" +
+                    "- Zarówno Totalna magia, jak i Sterowanie odpadami mogą być **WYŁ.**, jeśli potrzebny jest tylko **raport statusu**.\n"
                 },
 
                 // Sliders
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "Ładowność ciężarówek" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "Ładowność ciężarówki" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "**Ile śmieci może przewieźć każda ciężarówka.**\n" +
-                    "100% = normal game default.\n"
+                    "**Ile odpadów może zabrać każda ciężarówka.**\n" +
+                    "**100% = normalna** domyślna wartość gry.\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)), "Magazyn obiektu" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
-                    "**Ile śmieci może przechować obiekt.**\n" +
-                    "100% = vanilla storage.\n"
+                    "**Ile odpadów może przechować obiekt.**\n" +
+                    "**100% = magazyn vanilla**.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)), "Szybkość przetwarzania" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)), "Szybkość przetwarzania obiektu" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
-                    "**Jak szybko obiekty przetwarzają napływające śmieci.**\n" +
-                    "100% = vanilla processing speed.\n"
+                    "**Jak szybko obiekty przetwarzają napływające odpady.**\n" +
+                    "**100% = szybkość przetwarzania vanilla**.\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)), "Flota obiektu" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
                     "**Ile ciężarówek może wysłać każdy obiekt.**\n" +
-                    "100% = vanilla number of trucks.\n"
+                    "**100% = vanilla** liczba ciężarówek.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchThresholdScale)), "Progi budynków" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchThresholdScale)),
-                    "Opcjonalne: podnosi **progi**, które budynek musi osiągnąć, aby dostać odbiór śmieci. \n" +
-                    "Zwiększenie tego może pomóc zmniejszyć ruch śmieciarek; ale zbyt wysoka wartość ograniczy kursy odbioru.\n" +
-                    "Większość osób <nie> musi tego ruszać. Mod działał dobrze, zanim dodano tę opcję; to tylko bonus do eksperymentów.\n"+
-                    "--------------------------------\n" +
-                    "- **Próg żądania dispatchu (R)** = ilość śmieci w budynku potrzebna, by wywołać <żądanie wysłania ciężarówki>.\n" +
-                    "- **Próg odbioru (P)** = minimalna ilość śmieci, zanim ciężarówka może je odebrać.\n" +
-                    "**1x** = vanilla (100 R, 20 P). Uwaga: **1 000** jednostek śmieci to zwykle **1t**.\n" +
-                    "<---------- Example ------------------------------------------>\n\n" +
-                    "Przy suwaku **20x** wartość **R** budynku musi osiągnąć >= **2 000 (2t)** jednostek, zanim ciężarówka dostanie <żądanie dispatchu>;\n" +
-                    "Gra vanilla pozwala też ciężarówkom zatrzymywać się przy budynkach w drodze do/z budynku <dispatch>, jeśli ciężarówka nie jest pusta; przy 20x budynki na trasie muszą mieć ponad **400 śmieci** (20 x vanilla P = 20).\n" +
-                    "Rada balansu: często sprawdzaj przycisk szczegółowego raportu w logu podczas regulacji.\n" +
-                    "Może być potrzebne zwiększenie pojemności ciężarówek, jeśli mocno podniesiesz próg, bo domy będą trzymać śmieci dużo dłużej, zanim wezwą ciężarówkę."
-                },
 
-                // Presets
+                // Trash Boss Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Zalecane" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "Zastosuj zalecane wartości Trash Boss:\n" +
-                    "- Ładowność ciężarówek: **200%**\n" +
-                    "- Próg dispatchu: **5x**\n" +
-                    "- Szybkość przetwarzania: **200%**\n" +
-                    "- Pojemność magazynu: **150%**\n" +
-                    "- Liczba ciężarówek obiektu: **140%**"
+                    "Zastosuj standardowe **zalecane** wartości Sterowania odpadami.\n" +
+                    "Nie zmienia ustawień Eksperta (osobne)."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Domyślne gry" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Przywraca wszystkie suwaki Trash Boss do wartości vanilla.\n" +
+                    "Przywraca suwaki Sterowania odpadami do **wartości vanilla**.\n" +
+                    "Nie <zmienia> ustawień eksperta.\n" +
+                    "**Vanilla:**\n" +
                     "- Suwaki procentowe wracają do **100%**.\n" +
-                    "- Próg dispatchu wraca do **1x**."
+                    "- Próg wezwania odbioru wraca do **100 jednostek**.\n" +
+                    "- Próg odbioru wraca do **20 jednostek**.\n"
+                },
+
+                // Power User Options
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Opcje eksperta" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
+                    "Opcjonalne ustawienia zaawansowane\n" +
+                    "<Uwaga: NIE są potrzebne> do dobrej obsługi; są dla graczy, którzy chcą eksperymentować albo lepiej rozumieć działanie systemu.\n" +
+                    "Gdy opcja jest **WYŁ.**, elementy eksperta działają jak normalna gra **vanilla**.\n" +
+                    "Gdy opcja jest **WŁ.**, pojawiają się zaawansowane **suwaki**.\n\n" +
+                    "<--- Przykłady zadowolenia --->\n" +
+                    " - <Vanilla> 100/65 = 1. kara przy <165>.\n" +
+                    " - Kliknij <Zalecane>, aby ustawić 550/150 = 1. kara przy <700>.\n" +
+                    " - <Bardzo łagodne> 950/200 = 1. kara za odpady przy <1150>.\n" +
+                    "Wygoda: ostatnie wartości suwaków są zapisywane, gdy ta opcja jest WYŁ. (na wypadek późniejszego włączenia)."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Próg wezwania odbioru" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
+                    "**Ilość odpadów w budynku potrzebna, zanim zostanie utworzone lub utrzymane wezwanie ciężarówki.**\n" +
+                    "Vanilla = **100** jednostek odpadów.\n" +
+                    "**100 jednostek odpadów = 0.1t**\n" +
+                    "**1 000 jednostek odpadów = 1t**\n" +
+                    "Trzymaj tę wartość na poziomie lub powyżej Progu odbioru.\n" +
+                    "Zwykle zwiększa to liczbę używanych ciężarówek zamiast zaparkowanych."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "Próg odbioru" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
+                    "**Minimalna ilość odpadów w budynku, zanim ciężarówka będzie mogła je odebrać.**\n" +
+                    "Vanilla = **20** jednostek odpadów.\n" +
+                    "Suwak odbioru <nie może> być wyższy niż Próg wezwania (DR); jest ograniczany, żeby uniknąć problemów logiki.\n" +
+                    "Jeśli ciężarówka zostanie wysłana do budynku, a wartość odbioru będzie wyższa niż DR, czasem nie będzie mogła odebrać odpadów z budynku (wpływa na to też tempo narastania).\n"
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "Bazowy poziom zadowolenia z odpadów" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
+                    "**Poziom odpadów w budynku, od którego zaczyna się kara do zdrowia i zadowolenia.**\n" +
+                    "**Vanilla = 100** jednostek odpadów.\n" +
+                    "Wyższa baza = budynki mogą utrzymać więcej odpadów, zanim zacznie się kara.\n" +
+                    "100 jednostek odpadów = 0.1t\n" +
+                    "Przegląd:\n" +
+                    "- <Próg> = punkt uruchomienia zachowania systemu\n" +
+                    "- <Baza> = punkt startowy wzoru kary\n" +
+                    "- <Krok> = wielkość kroku we wzorze, czyli jak szybko kara narasta po starcie"
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "Krok zadowolenia z odpadów" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
+                    "**Dodatkowa ilość odpadów ponad bazę, od której zaczyna się kara -1.**\n" +
+                    "Vanilla = **65** jednostek odpadów.\n" +
+                    "Wyższy krok = wolniejszy wzrost kary.\n" +
+                    "Gra ogranicza karę za odpady do **-10**.\n" +
+                    "Pierwsza kara vanilla <-1> pojawia się przy **165 odpadów** (baza 100 + krok 65)\n" +
+                    "Zmieniając progi, warto też zrównoważyć suwaki zadowolenia, inaczej kary mogą być mocniejsze niż normalnie."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "Tempo narastania" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
+                    "**Skaluje wartości źródła odpadów w obsługiwanych budynkach.**\n" +
+                    "Uwaga: to mocny suwak i zmiana tempa wpływa na wiele rzeczy.\n" +
+                    "Dobry system można mieć także bez używania tego ustawienia.\n\n" +
+                    "**100% = vanilla** tempo narastania.\n" +
+                    "**20%** = dużo wolniejsze narastanie.\n" +
+                    "**200%** = podwójne tempo - naprawdę dużo odpadów.\n" +
+                    "Przy 20% wszyscy mieszkańcy najwyraźniej kompostują, więc tempo narastania odpadów jest dużo niższe ;)\n\n" +
+                    "Uwaga techniczna: gra dodaje odpady stopniowo w ciągu dnia, a nie wszystko naraz."
+                },
+
+                // Power User Presets
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "Zalecane" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
+                    "Zastosuj **zalecane** wartości eksperta.\n" +
+                    "Włącza tryb eksperta.\n" +
+                    "Pierwsza kara za odpady zaczyna się przy **700** odpadów (baza 550 + krok 150).\n" +
+                    "Tempo narastania odpadów zostaje na poziomie **100%** vanilla, chyba że zmienisz je ręcznie."
+                },
+
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "Domyślne gry" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
+                    "Przywraca wszystkie wartości eksperta do **vanilla**.\n" +
+                    "Wyłącza **tryb eksperta**.\n"
                 },
 
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "Wyświetlana nazwa tego moda." },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)), "Version" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)), "Wersja" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)), "Aktualna wersja moda." },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenParadoxPage)), "Paradox Mods" },
@@ -134,121 +202,160 @@ namespace MagicGarbage
 
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
-                    "<Stan Auto Clean>\n" +
-                    "  * Total Magic ON  = **[ ✓ ]**\n" +
-                    "  * Śmieci są usuwane automatycznie - Gotowe.\n" +
+                    "<Tryb auto czyszczenia>\n" +
+                    "  * Totalna magia WŁ. = **[ ✓ ]**\n" +
+                    "  * Odpady są usuwane automatycznie - gotowe.\n" +
                     " <-------------------------------------->\n\n" +
-                    "<Stan zarządzania ręcznego>\n" +
-                    "  * Trash Boss = **[ ✓ ]**\n" +
+                    "<Tryb ręcznego zarządzania>\n" +
+                    "  * Sterowanie odpadami = **[ ✓ ]**\n" +
                     "  * Ustaw suwaki według uznania.\n" +
-                    "  * Te same śmieci w grze; lepsze samodzielnie zarządzane ciężarówki/obiekty.\n" +
+                    "  * Opcjonalnie: włącz zaawansowane suwaki (nie jest wymagane).\n" +
+                    "  * Te same odpady w grze; lepiej zarządzane ciężarówki/obiekty.\n" +
                     " <-------------------------------------->\n\n" +
-                    "<Normalna gra vanilla>\n" +
-                    "  * Trash Boss = **[ ✓ ]**\n" +
-                    "  * Click **[Game Defaults]**\n" +
-                    "  * Wszystkie suwaki na wartościach vanilla\n"
+                    "<Tryb statusu / vanilla>\n" +
+                    "  * Totalna magia = WYŁ.\n" +
+                    "  * Sterowanie odpadami = WYŁ.\n" +
+                    "  * Tylko raport statusu.\n" +
+                    "  * Garbage vanilla w grze bez zmian."
                 },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), "Użycie" },
 
                 // Status
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Śmieci/mies." },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
-                    "Pokazuje aktualną ilość śmieci w całym mieście i całkowite tempo przetwarzania.\n" +
-                    "Zwiększ przetwarzanie, jeśli miesięcznie produkowane śmieci są znacznie wyższe.\n" +
-                    "**Produced** i **Processed** używają ton na miesiąc.\n" +
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageServiceRating)), "Ocena usług odpadów" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageServiceRating)),
+                    "Prosta ocena zadowolenia z odpadów z gry.\n" +
+                    "**0 = Świetnie**\n" +
+                    "**-1** = Przyda się mała korekta. Gra często skacze między 0 a -1, więc można to zignorować (liczba jest zaokrąglona).\n" +
+                    "**-2 do -4** = Trochę śmierdzi\n" +
+                    "**-5 do -10** = Problem ze śmieciami\n" +
+                    "**Pośrednie suwaki:** użyj <suwaków> Trash Boss, aby z czasem poprawić ten wynik przez zmniejszenie rzeczywistego nagromadzenia śmieci.\n" +
+                    "**Bezpośrednie suwaki:** <Bazowy poziom zadowolenia z odpadów> + <Krok zadowolenia z odpadów> zmieniają, ile mieszkańcy tolerują, zanim staną się niezadowoleni.\n" +
+                    "**Tempo narastania**: zmienia, jak szybko obsługiwane budynki produkują odpady. Używaj ostrożnie, bo balans jest ważny. Większość graczy nigdy nie musi tego ruszać.\n" +
                     "<Czas aktualizacji = ostatnie odświeżenie.>"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Żądania odbioru" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Odpady/mies." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
+                    "Pokazuje bieżącą ilość odpadów w całym mieście i łączne tempo przetwarzania.\n" +
+                    "Zwiększ przetwarzanie, jeśli miesięczna produkcja odpadów jest znacznie wyższa.\n" +
+                    "**Wyprodukowano** i **Przetworzono** są podawane w tonach na miesiąc."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Zgłoszenia odbioru" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
-                    "**Pending** = aktywne żądania odbioru, które obecnie nie są przypisane do ciężarówki ani trasy.\n" +
-                    "**Dispatched** = aktywne żądania odbioru już przypisane.\n" +
-                    "**Total** = liczy bieżące **aktywne** encje żądań (w pipeline śmieci).\n\n" +
-                    "Uwaga techniczna: to co innego niż <Powyżej progu żądania>. Tutaj liczone są <żądania>, a nie budynki.\n" +
-                    "Część żądań Pending zostanie przypisana później; część może też później zniknąć, jeśli vanilla po ponownej weryfikacji uzna, że cel nie potrzebuje już obsługi."
+                    "**Oczekujące** = aktywne zgłoszenia odbioru, które nie są jeszcze przypisane do ciężarówki ani trasy.\n" +
+                    "**Przydzielone** = aktywne zgłoszenia odbioru już przypisane.\n" +
+                    "**Łącznie** = liczba bieżących **aktywnych** encji zgłoszeń (w łańcuchu odpadów).\n\n" +
+                    "Uwaga techniczna: to coś innego niż <Powyżej progu zgłoszenia>. Tu liczone są <zgłoszenia>, a nie budynki.\n" +
+                    "Część oczekujących zgłoszeń zostanie przydzielona później; część może też zniknąć, jeśli vanilla uzna przy ponownej weryfikacji, że cel nie potrzebuje już usługi."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusProducers)), "Budynki" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusProducers)),
-                    "**Ma śmieci** = budynki, które obecnie mają śmieci.\n" +
-                    "**Total** = wszystkie budynki produkujące śmieci w mieście.\n" +
-                    "**Powyżej progu żądania** = bieżąca liczba **budynków** z wystarczającą ilością śmieci, aby utworzyć żądanie odbioru.\n" +
-                    "W vanilla próg żądania to **100** wewnętrznych jednostek śmieci.\n" +
-                    "**Próg dispatchu** Trash Boss podnosi razem próg odbioru i próg żądania.\n" +
-                    "To zmniejsza ruch śmieciarek, bo obniża liczbę budynków <powyżej progu żądania> i sumę <dispatched>."
+                    "**Ma odpady** = budynki, które obecnie trzymają jakiekolwiek odpady.\n" +
+                    "**Łącznie** = wszystkie budynki produkujące odpady w mieście.\n" +
+                    "**Powyżej progu zgłoszenia** = bieżąca liczba **budynków** z ilością odpadów wystarczającą do utworzenia zgłoszenia odbioru.\n" +
+                    "W vanilla próg zgłoszenia wynosi **100** wewnętrznych jednostek odpadów.\n" +
+                    "Opcje eksperta mogą nadpisać próg zgłoszenia i próg odbioru.\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "Obiekty" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacilities)),
-                    "Podsumowanie policzonych obiektów śmieciowych.\n" +
-                    "**Facilities** = policzone budynki śmieciowe.\n" +
-                    "**Trucks total** = śmieciarki należące do tych obiektów.\n" +
-                    "**Max workers** = łączna maksymalna liczba pracowników tych samych obiektów."
+                    "Podsumowanie policzonych obiektów odpadów.\n" +
+                    "**Obiekty** = policzone budynki odpadów.\n" +
+                    "**Śmieciarki** = zwykłe ciężarówki odbioru. W obiektach odpadów przemysłowych zbierają odpady przemysłowe zamiast zwykłych śmieci.\n" +
+                    "**Ciężarówki Dump** = przewozy odpadów między obiektami.\n" +
+                    "**Maks. pracownicy** = łączna pojemność pracowników w tych samych obiektach."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "Ciężarówki" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "Ciężarówki odpadów" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusTrucks)),
-                    "**Moving** = ciężarówki aktualnie w mieście.\n" +
-                    "**Returning** = podzbiór jadących ciężarówek oznaczonych do powrotu do obiektu.\n" +
-                    "**Parked** = ciężarówki zaparkowane przy obiekcie.\n" +
-                    "**Total** = liczba wszystkich śmieciarek."
+                    "**W ruchu** = ciężarówki aktualnie na mieście.\n" +
+                    "**Wracają** = część jadących ciężarówek oznaczona do powrotu do obiektu.\n" +
+                    "**Zaparkowane** = ciężarówki zaparkowane przy obiekcie.\n" +
+                    "**Łącznie** = liczba wszystkich śmieciarek."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Szczegółowy status do logu" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageStatusLog)),
-                    "Wysyła bardziej szczegółowy raport o śmieciach do **Logs/MagicGarbage.log**.\n" +
-                    "Zawiera krótką legendę, wartości referencyjne vanilla i dużo dodatkowych statystyk o aktualnych śmieciach w mieście."
+                    "Wyślij bardziej szczegółowy raport garbage do **Logs/MagicGarbage.log**.\n" +
+                    "Zawiera krótką legendę, wartości referencyjne vanilla i wiele dodatkowych realnych statystyk odpadów z miasta."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Otwórz log" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)),
-                    "Otwórz folder gry Logs/.."
-                },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)), "Otwórz folder gry Logs/.." },
 
                 // Runtime status strings
-                { "MG.Status.NoCity", "Żadne miasto nie jest jeszcze wczytane." },
+                { "MG.Status.NoCity", "Nie wczytano jeszcze miasta." },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t wyprodukowane | {1:N0} t przetworzone | aktualizacja {2}" },
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "Świetnie ({0:N0}) | aktualizacja {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "Przyda się mała korekta ({0:N0}) | aktualizacja {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "Trochę śmierdzi ({0:N0}) | aktualizacja {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Problem", "Problem ze śmieciami ({0:N0}) | aktualizacja {1}" },
+
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t wyprodukowano | {1:N0} t przetworzono" },
                 { "MG.Status.Row.Requests", "{1:N0} oczekujące | {2:N0} przydzielone | {0:N0} łącznie" },
-                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} ma śmieci | {2:N0} powyżej progu zgłoszenia" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} obiekty | {1:N0} ciężarówek łącznie | max pracowników {2:N0}" },
-                { "MG.Status.Row.Trucks", "{1:N0} w ruchu ({3:N0} wraca) | {2:N0} zaparkowane | {0:N0} łącznie" },
-                { "MG.Status.Row.FacilitiesNone", "Brak danych o obiektach." },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} ma odpady | {2:N0} powyżej progu zgłoszenia" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} obiektów | {1:N0}/{2:N0} śmieci/Dump ciężarówki | {3:N0} pracownicy" },
+                { "MG.Status.Row.Trucks", "{1:N0} w ruchu ({3:N0} wracają) | {2:N0} zaparkowane | {0:N0} łącznie" },
+                { "MG.Status.Row.FacilitiesNone", "Brak jeszcze danych o obiektach." },
 
                 // Log strings
-                { "MG.Status.Log.Title", "Stan śmieci ({0})" },
+                { "MG.Status.Log.Title", "Status odpadów ({0})" },
                 { "MG.Status.Log.City", "Miasto: {0}" },
-                { "MG.Status.Log.Mode", "Tryb: Total Magic={0}, Trash Boss={1}" },
+                { "MG.Status.Log.Mode", "Tryb: Totalna magia={0}, Sterowanie odpadami={1}" },
+                { "MG.Status.Log.SettingsHeader", "Bieżące ustawienia moda" },
+                { "MG.Status.Log.SettingsTrashBoss",
+                    "Suwaki Trash Boss (zapisane): ładowność ciężarówki={0:N0}% | magazyn obiektu={1:N0}% | przetwarzanie obiektu={2:N0}% | flota obiektu={3:N0}%"
+                },
+                
+                { "MG.Status.Log.SettingsPowerUser",
+                    "Opcje eksperta (zapisane): włączone={0} | zgłoszenie={1:N0} | odbiór={2:N0} | baza zadowolenia={3:N0} | krok zadowolenia={4:N0} | tempo narastania={5:N0}%"
+                },
+
                 { "MG.Status.Log.Legend",
                     "Legenda:\n" +
-                    "- Wyprodukowane/Przetworzone używa ton na miesiąc.\n" +
-                    "- Poniższe wartości progowe używają wewnętrznych jednostek śmieci, a nie ton.\n" +
-                    "- Dla gracza gra przelicza 1 000 jednostek = 1t.\n" +
-                    "Suwak progu wysłania:\n" +
-                    "  - Próg odbioru = minimalna ilość śmieci, zanim ciężarówka odbierze je z budynku.\n" +
-                    "  - Próg zgłoszenia = minimalna ilość śmieci, zanim gra utworzy lub utrzyma zgłoszenie odbioru.\n" +
-                    "- Ikona ostrzeżenia = ilość śmieci, która powoduje pojawienie się ikony ostrzeżenia nad budynkiem.\n" +
-                    "- Twardy limit = maksymalna ilość śmieci, jaką budynek może zgromadzić.\n" +
-                    "- Oczekujące = aktywne zgłoszenia, które obecnie nie są przypisane do ciężarówki ani trasy.\n" +
-                    "- Część oczekujących zgłoszeń zostanie przypisana później; część może też zniknąć później, jeśli vanilla podczas ponownej walidacji uzna, że cel nie potrzebuje już usługi.\n" +
+                    "- Wyprodukowano/Przetworzono używa ton na miesiąc.\n" +
+                    "- Wartości progów poniżej używają wewnętrznych jednostek odpadów, a nie ton.\n" +
+                    "- Dla gracza gra przelicza" +
+                    " 100 jednostek = 0.1t oraz 1 000 jednostek = 1t.\n" +
+                    "- Ocena usług odpadów = miejski współczynnik zadowolenia z odpadów w grze.\n" +
+                    "  - 0 = Świetnie\n" +
+                    "  - -1 = Przyda się mała korekta lub można zignorować\n" +
+                    "  - -2 do -4 = Trochę śmierdzi\n" +
+                    "  - -5 do -10 = Problem ze śmieciami\n" +
+                    "Suwaki progów:\n" +
+                    "  - Próg odbioru = minimalna ilość odpadów, zanim ciężarówka odbierze je z budynku.\n" +
+                    "  - Próg zgłoszenia = minimalna ilość odpadów, zanim gra utworzy lub utrzyma zgłoszenie odbioru.\n" +
+                    "- Ikona ostrzeżenia = ilość odpadów, przy której nad budynkiem pojawia się ikona ostrzeżenia.\n" +
+                    "- Twardy limit = maksymalna ilość odpadów, jaką może zgromadzić budynek.\n" +
+                    "- Oczekujące = aktywne zgłoszenia, które nie są aktualnie przypisane do ciężarówki ani trasy.\n" +
+                    "- Część oczekujących zgłoszeń zostanie przydzielona później; część może też zniknąć, jeśli vanilla uzna przy ponownej weryfikacji, że cel nie potrzebuje już usługi.\n" +
                     "-----------------------------------------------------------------------------\n"
                 },
+
                 { "MG.Status.Log.Thresholds",
-                    "Progi gry (wewnętrzne jednostki śmieci): odbiór={1:N0}, zgłoszenie={0:N0}, ikona ostrzeżenia={2:N0}, twardy limit={3:N0}"
+                    "Progi gry (wewnętrzne jednostki odpadów): odbiór={1:N0}, zgłoszenie={0:N0}, ikona ostrzeżenia={2:N0}, twardy limit={3:N0}"
                 },
 
                 { "MG.Status.Log.ThresholdsMissing", "Progi: <GarbageParameterData niedostępne>" },
-                { "MG.Status.Log.GarbageProcessing", "Śmieci: {0:N0} t/mies. | Przetwarzanie: {1:N0} t/mies." },
+                { "MG.Status.Log.GarbageProcessing", "Odpady: {0:N0} t/mies. | Przetwarzanie: {1:N0} t/mies." },
+                { "MG.Status.Log.GarbageServiceRating", "Ocena usług odpadów: {0} | surowe={1:N2} | zaokrąglone={2:N0}" },
                 { "MG.Status.Log.Requests", "Zgłoszenia odbioru: oczekujące={1:N0}, przydzielone={2:N0}, łącznie={0:N0}" },
-                { "MG.Status.Log.PendingPeak", "Największy oczekujący cel śmieci: {0:N0} ({1:N1}t) przy {2}" },
-                { "MG.Status.Log.Producers", "Budynki: {0:N0} łącznie | {1:N0} ma śmieci | {2:N0} powyżej progu zgłoszenia | {3:N0} na poziomie ostrzeżenia" },
-                { "MG.Status.Log.ProducerGarbageStats", "Śmieci w budynkach (tylko niezerowe): średnia={0:N0} ({1:N1}t) | mediana={2:N0} ({3:N1}t) | max={4:N0} ({5:N1}t) przy {6}" },
-                { "MG.Status.Log.NearWarning75", "Budynki blisko ostrzeżenia (>= {1:N0} jednostek / {2:N1}t): {0:N0}" },
-                { "MG.Status.Log.FacilitiesSummary", "Obiekty: {0:N0} łącznie | {1:N0} ciężarówek łącznie | max pracowników {2:N0}" },
-                { "MG.Status.Log.Trucks", "Śmieciarki: {2:N0} w ruchu ({3:N0} wraca) | {1:N0} zaparkowane | {4:N0} wyłączone | {0:N0} łącznie" },
+                { "MG.Status.Log.PendingPeak", "Najwyższy oczekujący cel odpadów: {0:N0} ({1:N1}t) przy {2}" },
+                { "MG.Status.Log.PendingPeakNone", "Najwyższy oczekujący cel odpadów: brak" },
+                { "MG.Status.Log.Producers", "Budynki: {0:N0} ikon ostrzeżeń | {1:N0} łącznie | {2:N0} ma odpady | {3:N0} powyżej progu zgłoszenia " },
+                { "MG.Status.Log.ProducerGarbageStats", "Odpady w budynkach (tylko niezerowe): śr.={0:N0} ({1:N1}t) | mediana={2:N0} ({3:N1}t) | maks.={4:N0} ({5:N1}t) przy {6}" },
+                { "MG.Status.Log.NearWarning75", "Budynki blisko ikony ostrzeżenia (co najmniej {1:N0} jednostek / {2:N1}t): {0:N0}" },
+                { "MG.Status.Log.FacilitiesSummary", "Obiekty: {0:N0} łącznie | {1:N0} śmieciarki | {2:N0} ciężarówki Dump ({3:N0} w ruchu) | {4:N0} pracownicy" },
+                { "MG.Status.Log.Trucks", "Śmieciarki: {2:N0} w ruchu ({3:N0} wracają) | {1:N0} zaparkowane | {4:N0} wyłączone | {0:N0} łącznie" },
                 { "MG.Status.Log.FacilitiesHeader", "Podsumowanie obiektów" },
-                { "MG.Status.Log.FacilityLine", "- Obiekt {0}: w ruchu={2:N0}, zaparkowane={3:N0}, łącznie={1:N0}, max pracowników={4:N0}" },
+                { "MG.Status.Log.FacilityLine", "- Obiekt {0}: śmieciarki={1:N0} ({2:N0} w ruchu, {3:N0} zaparkowane) | ciężarówki Dump={4:N0} ({5:N0} w ruchu) | pracownicy={6:N0}" },
 
+                { "MG.Status.Log.GarbageServiceRating.Excellent", "Świetnie" },
+                { "MG.Status.Log.GarbageServiceRating.Minor", "Przyda się mała korekta" },
+                { "MG.Status.Log.GarbageServiceRating.Stinky", "Trochę śmierdzi" },
+                { "MG.Status.Log.GarbageServiceRating.Problem", "Problem ze śmieciami" },
             };
         }
 
