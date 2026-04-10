@@ -109,7 +109,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Power User Options" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
                     "Optional Advanced Settings\n" +
-                    "<Warning: NOT needed> for good service; provided for players who want to experiment or know more how systems work.\n" +
+                    "<Warning: NOT needed> for good service; provided for players who want to experiment or learn more how systems work.\n" +
                     "When **OFF**, Power User items behave like normal **vanilla** game.\n" +
                     "When **ON**, the advanced **sliders appear**.\n\n" +
                     "<--- Happiness examples --->\n" +
