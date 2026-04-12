@@ -228,8 +228,8 @@ namespace MagicGarbage
                     "**-1 **= Needs minor tweak. Game goes between 0 to -1 often and could be ignored (number is rounded).\n" +
                     "**-2 to -4** = Slightly stinky\n" +
                     "**-5 to -10** = Garbage problem\n" +
-                    "**Indirect knobs:** Use trash <sliders> to improve this over time by reducing garbage buildup.\n" +
-                    "**Direct knobs:** <Garbage Happiness Baseline> + <Garbage Happiness Step> change what cims tolerate before they are unhappy.\n" +
+                    "**Indirect knobs:** Use <trash sliders> to improve this over time by reducing garbage buildup.\n" +
+                    "**Direct knobs:** Garbage Happiness Baseline + Garbage Happiness Step change <what cims tolerate> before they are unhappy.\n" +
                     "**Garbage Accumulation Rate**: changes how fast supported buildings produce garbage. Use with caution as balance is important. Most players never need to tweak this.\n" +
                     "<Update time = last refreshed.>"
                 },
