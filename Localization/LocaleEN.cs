@@ -66,7 +66,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "Truck load capacity" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
                     "**How much garbage each truck can carry.**\n" +
-                    "**100% = normal** game default.\n"
+                    "**100% = normal** game default (20t).\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)), "Facility storage" },
@@ -228,7 +228,7 @@ namespace MagicGarbage
                     "**-1 **= Needs minor tweak. Game goes between 0 to -1 often and could be ignored (number is rounded).\n" +
                     "**-2 to -4** = Slightly stinky\n" +
                     "**-5 to -10** = Garbage problem\n" +
-                    "**Indirect knobs:** Use trash <sliders> to improve this over time by reducing actual garbage buildup.\n" +
+                    "**Indirect knobs:** Use trash <sliders> to improve this over time by reducing garbage buildup.\n" +
                     "**Direct knobs:** <Garbage Happiness Baseline> + <Garbage Happiness Step> change what cims tolerate before they are unhappy.\n" +
                     "**Garbage Accumulation Rate**: changes how fast supported buildings produce garbage. Use with caution as balance is important. Most players never need to tweak this.\n" +
                     "<Update time = last refreshed.>"
