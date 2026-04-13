@@ -162,3 +162,37 @@ That approach caused severe `Player.log` spam:
 - Status should read the live `GarbageParameterData` singleton rather than relying on decompiled defaults
 - Invalid garbage requests are cleaned up by vanilla when target/handler validation fails
 - Status-only mode is valid: both Total Magic and Trash Boss can be OFF while Status reporting still works
+
+
+## Game logic
+- truck AI appends extra pickups from connected buildings along the path, and it tracks them through `ServiceDispatch` plus `m_RequestCount/m_EstimatedGarbage`.
+- there is no “save room" for the original requester (OR) rule, truck can absolutely fill from side pickups before it reaches the original requester.
+- dispatch request has one original target `GarbageCollectorDispatchSystem` works from a `GarbageCollectionRequest`, and that request has a single `m_Target` building.
+That is the original requester house. The request is only valid while that target is still **above** the request threshold (`m_RequestGarbageLimit`).
+- truck path gets decorated with extra pickups: Oonce the truck AI takes that request, `GarbageTruckAISystem` does more than just drive to the (OR).
+
+important path:
+
+    ```SelectNextDispatch(...)
+    PreAddCollectionRequests(...)
+    AddPathElement(...)
+    AddCollectionRequests(...)
+    ```
+
+Those functions walk the path and the road owners / sidewalks along it, then mark **connected** buildings for collection if they are **eligible**.
+Truck thinks: this request’s main target is OR house; while going there, also collect from eligible connected buildings on the traversed edges / sidewalks
+
+- outbound / active request route: opportunistically collects along the path
+- if it is not full and currently Returning, call `SelectNextDispatch(...)` and leave the return path for a new job before unloading
+- it can fill before reaching the original requester because collect action is just:
+take `min(remaining capacity, building garbage)`
+The code tracks:
+
+`m_Garbage` = actual truck load
+`m_EstimatedGarbage` = predicted route pickup load
+`EstimatedFull` flag when actual + estimated reaches capacity
+
+- `m_RequestCount` tracks number of queued dispatch requests associated with the truck. One request path can still involve many eligible buildings collected along the way.
+- one Request can still mean MANY side-building pickups.
+
+`GarbageAccumulationSystem` -> `GarbageCollectorDispatchSystem` -> `GarbageTruckAISystem` -> `AddCollectionRequests` / `TryCollectGarbage` / `ReturnToDepot`
