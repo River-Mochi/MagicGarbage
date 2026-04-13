@@ -28,6 +28,7 @@ namespace MagicGarbage
         private static string s_UiRequests = "-";
         private static string s_UiFacilities = "-";
         private static string s_UiTrucks = "-";
+        private static string s_UiCriticalBuildings = "-";
 
         public static void ResetUi()
         {
@@ -41,6 +42,8 @@ namespace MagicGarbage
             s_UiRequests = "-";
             s_UiTrucks = "-";
             s_UiFacilities = "-";
+            s_UiCriticalBuildings = "-";
+
         }
 
         public static void RefreshIfNeeded()
@@ -123,7 +126,10 @@ namespace MagicGarbage
                 return;
             }
 
-            ApplySnapshotToUi(snap);
+
+            int criticalBuildings = sys.CountCriticalBuildings();
+            ApplySnapshotToUi(snap, criticalBuildings);
+
             s_LastRefreshUtcTicks = DateTime.UtcNow.Ticks;
 
             if (writeToLog)
@@ -163,7 +169,13 @@ namespace MagicGarbage
             return string.IsNullOrEmpty(s_UiFacilities) ? "-" : s_UiFacilities;
         }
 
-        private static void ApplySnapshotToUi(GarbageStatusSystem.Snapshot snap)
+        public static string GetUiCriticalBuildings()
+        {
+            return string.IsNullOrEmpty(s_UiCriticalBuildings) ? "-" : s_UiCriticalBuildings;
+        }
+
+
+        private static void ApplySnapshotToUi(GarbageStatusSystem.Snapshot snap, int criticalBuildings)
         {
             string updatedAt = DateTime.Now.ToString("HH:mm:ss");
 
@@ -187,6 +199,10 @@ namespace MagicGarbage
                 snap.ProducerGarbageGt0,
                 snap.ProducerTotal,
                 snap.ProducerOverRequest);
+
+            s_UiCriticalBuildings = Mod.LF(
+                "MG.Status.Row.CriticalBuildings",
+                criticalBuildings);
 
             s_UiFacilities = BuildFacilitiesSummary(snap);
 
@@ -415,6 +431,7 @@ namespace MagicGarbage
             s_UiRequests = "-";
             s_UiTrucks = "-";
             s_UiFacilities = "-";
+            s_UiCriticalBuildings = "-";
         }
 
         private static bool IsGameMode()

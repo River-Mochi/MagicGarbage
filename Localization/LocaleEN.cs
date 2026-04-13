@@ -62,6 +62,14 @@ namespace MagicGarbage
                     "- Both Total Magic + Trash Boss can be **OFF** if only **Status report** is needed.\n"
                 },
 
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Priority System" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
+                    "Lightweight assist for badly overloaded garbage targets.\n" +
+                    "When **ON**, if any active request target reaches **7000** (7t) garbage, " +
+                    "Goal: reduce extra side-pickup jobs when needed so trucks reach bad targets sooner.\n" +
+                    "No Harmony patch. Not a full route override."
+                },
+
                 // Sliders
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "Truck load capacity" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
@@ -234,6 +242,12 @@ namespace MagicGarbage
                     "<Update time = last refreshed.>"
                 },
 
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Critical Buildings" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
+                    "Current count of garbage-producing buildings at or above **7000** garbage.\n" +
+                    "These are badly overloaded buildings, enable [x] Priority System if you want these prioritized better."
+                },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Garbage/mo." },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
                     "Shows the current citywide garbage amount and the total garbage processing rate.\n" +
@@ -294,6 +308,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "Needs minor tweak ({0:N0}) | updated {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "Slightly stinky ({0:N0}) | updated {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Garbage problem ({0:N0}) | updated {1}" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} over 7t" },
 
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Processed" },
                 { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },

@@ -737,5 +737,22 @@ namespace MagicGarbage
 
             return (long)Math.Round(raw / 1000.0, MidpointRounding.AwayFromZero);
         }
+
+        public int CountCriticalBuildings()
+        {
+            int count = 0;
+
+            foreach (RefRO<GarbageProducer> producer in SystemAPI
+                         .Query<RefRO<GarbageProducer>>()
+                         .WithNone<Deleted, Destroyed, Temp>())
+            {
+                if (producer.ValueRO.m_Garbage >= Setting.PriorityCriticalGarbage)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
     }
 }
