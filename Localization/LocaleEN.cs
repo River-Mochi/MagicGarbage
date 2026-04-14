@@ -65,8 +65,8 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Priority System" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
                     "Assist for badly overloaded garbage targets.\n" +
-                    "When **ON**, looks for active request target over **7000** (7t) garbage.\n" +
-                    "Goal: reduce extra side-pickup jobs as needed so trucks reach bad targets sooner.\n" +
+                    "When **ON**, checks if any active request target reaches **7000** (**7t**) garbage.\n" +
+                    "Goal: reduces extra side-pickup jobs as needed so trucks reach bad targets sooner.\n" +
                     "This is a nudge, not a hard, fully override vanilla route logic.\n" +
                     "Lightweight, no Harmony patch."
                 },
@@ -243,10 +243,11 @@ namespace MagicGarbage
                     "<Update time = last refreshed.>"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Critical Buildings" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "7t+ Buildings" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "Current count of garbage-producing buildings at or above **7000** garbage.\n" +
-                    "These are badly overloaded buildings, enable [x] Priority System if you want these prioritized better."
+                    "Count of garbage-producing buildings at or above **7t / 7000** garbage.\n" +
+                    "These are badly overloaded buildings, enable [x] Priority System to prioritize these better.\n" +
+                    "Use Status to log button if you want the Entity ID numbers to inspect."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Garbage/mo." },
@@ -373,6 +374,21 @@ namespace MagicGarbage
                 { "MG.Status.Log.GarbageServiceRating.Minor", "Needs minor tweak" },
                 { "MG.Status.Log.GarbageServiceRating.Stinky", "Slightly stinky" },
                 { "MG.Status.Log.GarbageServiceRating.Problem", "Garbage problem" },
+
+                { "MG.Status.Log.ThresholdsHeader", "Thresholds + Service" },
+                { "MG.Status.Log.RequestsHeader", "Requests" },
+                { "MG.Status.Log.BuildingsHeader", "Buildings" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "Critical Buildings over 7t" },
+                { "MG.Status.Log.TrucksHeader", "Trucks" },
+
+                { "MG.Status.Log.SettingsPriority",
+                    "Priority System (saved): enabled={0} | trigger={1:N0} ({2:N1}t)"
+                },
+
+                { "MG.Status.Log.CriticalBuildingsNone", "none" },
+                { "MG.Status.Log.CriticalBuildingLine", "- {0} | {1:N0} ({2:N1}t)" },
+
+
             };
         }
 

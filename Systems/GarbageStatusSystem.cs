@@ -53,6 +53,19 @@ namespace MagicGarbage
             }
         }
 
+
+        public readonly struct CriticalBuildingEntry
+        {
+            public readonly Entity Building;
+            public readonly int Garbage;
+
+            public CriticalBuildingEntry(Entity building, int garbage)
+            {
+                Building = building;
+                Garbage = garbage;
+            }
+        }
+
         // Full snapshot consumed by GarbageStatus.cs for UI + log output.
         public readonly struct Snapshot
         {
@@ -738,21 +751,38 @@ namespace MagicGarbage
             return (long)Math.Round(raw / 1000.0, MidpointRounding.AwayFromZero);
         }
 
-        public int CountCriticalBuildings()
-        {
-            int count = 0;
+        // ----------- HELPERS -----------
 
-            foreach (RefRO<GarbageProducer> producer in SystemAPI
+        public CriticalBuildingEntry[] GetCriticalBuildings()
+        {
+            List<CriticalBuildingEntry> entries = new List<CriticalBuildingEntry>(16);
+
+            foreach ((RefRO<GarbageProducer> producer, Entity buildingEntity) in SystemAPI
                          .Query<RefRO<GarbageProducer>>()
+                         .WithEntityAccess()
                          .WithNone<Deleted, Destroyed, Temp>())
             {
-                if (producer.ValueRO.m_Garbage >= Setting.PriorityCriticalGarbage)
+                int garbage = producer.ValueRO.m_Garbage;
+                if (garbage >= Setting.PriorityCriticalGarbage)
                 {
-                    count++;
+                    entries.Add(new CriticalBuildingEntry(buildingEntity, garbage));
                 }
             }
 
-            return count;
+            entries.Sort(CompareCriticalBuildingEntries);
+            return entries.ToArray();
         }
+
+        private static int CompareCriticalBuildingEntries(CriticalBuildingEntry a, CriticalBuildingEntry b)
+        {
+            int cmp = b.Garbage.CompareTo(a.Garbage);
+            if (cmp != 0)
+            {
+                return cmp;
+            }
+
+            return a.Building.Index.CompareTo(b.Building.Index);
+        }
+
     }
 }
