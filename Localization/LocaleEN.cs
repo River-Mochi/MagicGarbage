@@ -59,7 +59,8 @@ namespace MagicGarbage
                     "Directly manage garbage systems; leaves vanilla garbage logic running.\n\n" +
                     "- When **Trash Boss is ON [ ✓ ]**, Total Magic is forced OFF.\n" +
                     "- Sliders only apply when Trash Boss is enabled.\n" +
-                    "- Both Total Magic + Trash Boss can be **OFF** if only **Status report** is needed.\n"
+                    "- Both Total Magic + Trash Boss can be **OFF** to get vanilla settings,\n" +
+                    "  and you can still see **Status report** which updates only when you enter Options menu (lightweight)."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Priority System" },
