@@ -67,7 +67,8 @@ namespace MagicGarbage
                     "Assist for badly overloaded garbage targets.\n" +
                     "When **ON**, looks for active request target over **7000** (7t) garbage.\n" +
                     "Goal: reduce extra side-pickup jobs as needed so trucks reach bad targets sooner.\n" +
-                    "Lightweight, no Harmony patch. This is a nudge, not a full route override."
+                    "This is a nudge, not a hard, fully override vanilla route logic.\n" +
+                    "Lightweight, no Harmony patch."
                 },
 
                 // Sliders
