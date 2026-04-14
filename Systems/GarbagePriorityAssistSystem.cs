@@ -15,6 +15,14 @@ namespace MagicGarbage
     using Game.Tools;
     using Unity.Entities;
     using Unity.Mathematics;
+    using System.Diagnostics;
+
+
+
+#if DEBUG
+private int m_DebugPassCount;
+private int m_DebugLastCriticalCount = -1;
+#endif
 
     public sealed partial class GarbagePriorityAssistSystem : GameSystemBase
     {
@@ -56,6 +64,13 @@ namespace MagicGarbage
 
         protected override void OnUpdate()
         {
+
+#if DEBUG
+Stopwatch sw = Stopwatch.StartNew();
+int scannedRequests = 0;
+#endif
+
+
             if (!Mod.TryGetSetting(out Setting setting))
             {
                 return;

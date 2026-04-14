@@ -603,6 +603,13 @@ namespace MagicGarbage
             {
                 sys.Enabled = true;
             }
+
+            GarbagePriorityAssistSystem prioritySys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
+            if (prioritySys != null)
+            {
+                prioritySys.Enabled = true;
+            }
+
         }
 
         private void OnAccumulationSliderChanged(int _)

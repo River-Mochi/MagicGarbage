@@ -58,11 +58,13 @@ namespace MagicGarbage
         {
             public readonly Entity Building;
             public readonly int Garbage;
+            public readonly string PrefabName;
 
-            public CriticalBuildingEntry(Entity building, int garbage)
+            public CriticalBuildingEntry(Entity building, int garbage, string prefabName)
             {
                 Building = building;
                 Garbage = garbage;
+                PrefabName = prefabName;
             }
         }
 
@@ -221,11 +223,13 @@ namespace MagicGarbage
         private EntityQuery m_RequestQuery;
         private EntityQuery m_TruckQuery;
         private EntityQuery m_HappinessFactorParameterQuery;
+        private PrefabSystem m_PrefabSystem = null!;
 
         protected override void OnCreate()
         {
             base.OnCreate();
 
+            m_PrefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
             m_CitySystem = World.GetOrCreateSystemManaged<CitySystem>();
             m_GarbageAccumulationSystem = World.GetOrCreateSystemManaged<GarbageAccumulationSystem>();
             m_CitizenHappinessSystem = World.GetOrCreateSystemManaged<CitizenHappinessSystem>();

@@ -67,7 +67,7 @@ namespace MagicGarbage
                     "Assist for badly overloaded garbage targets.\n" +
                     "When **ON**, checks if any active request target reaches **7000** (**7t**) garbage.\n" +
                     "Goal: reduces extra side-pickup jobs as needed so trucks reach bad targets sooner.\n" +
-                    "This is a nudge, not a hard, fully override vanilla route logic.\n" +
+                    "This is a nudge, not a hard, full override vanilla route logic.\n" +
                     "Lightweight, no Harmony patch."
                 },
 
@@ -386,7 +386,7 @@ namespace MagicGarbage
                 },
 
                 { "MG.Status.Log.CriticalBuildingsNone", "none" },
-                { "MG.Status.Log.CriticalBuildingLine", "- {0} | {1:N0} ({2:N1}t)" },
+                { "MG.Status.Log.CriticalBuildingLine", "- {0,-20} | {1,7:N0} ({2,4:N1}t) | {3}" },
 
 
             };
