@@ -10,28 +10,54 @@ namespace MagicGarbage
     using Game;
     using Game.Buildings;
     using Game.Common;
+    using Game.Pathfind;
     using Game.Prefabs;
     using Game.Simulation;
     using Game.Tools;
+    using System.Collections.Generic;
+#if DEBUG
+    using System.Diagnostics;
+#endif
     using Unity.Entities;
     using Unity.Mathematics;
-    using System.Diagnostics;
-
-
-
-#if DEBUG
-private int m_DebugPassCount;
-private int m_DebugLastCriticalCount = -1;
-#endif
 
     public sealed partial class GarbagePriorityAssistSystem : GameSystemBase
     {
+        public const int UpdateIntervalFrames = 128;
+
         private bool m_HaveBase;
         private int m_BaseCollectLimit;
 
+        private int m_RaisedPassCount;
+        private int m_NormalPassCount;
+
+        private int m_LastScannedRequests;
+        private int m_LastCriticalRequestTargets;
+        private int m_HighestCriticalTargetGarbage;
+        private Entity m_HighestCriticalTargetEntity;
+        private bool m_HighestCriticalTargetDispatched;
+        private bool m_IsPriorityAssistLive;
+
+#if DEBUG
+        private double m_LastElapsedMs;
+#endif
+
+        public int RaisedPassCount => m_RaisedPassCount;
+        public int NormalPassCount => m_NormalPassCount;
+        public int LastScannedRequests => m_LastScannedRequests;
+        public int LastCriticalRequestTargets => m_LastCriticalRequestTargets;
+        public int HighestCriticalTargetGarbage => m_HighestCriticalTargetGarbage;
+        public Entity HighestCriticalTargetEntity => m_HighestCriticalTargetEntity;
+        public bool HighestCriticalTargetDispatched => m_HighestCriticalTargetDispatched;
+        public bool IsPriorityAssistLive => m_IsPriorityAssistLive;
+
+#if DEBUG
+        public double LastElapsedMs => m_LastElapsedMs;
+#endif
+
         public override int GetUpdateInterval(SystemUpdatePhase phase)
         {
-            return 128;
+            return UpdateIntervalFrames;
         }
 
         protected override void OnCreate()
@@ -49,6 +75,19 @@ private int m_DebugLastCriticalCount = -1;
             m_HaveBase = false;
             m_BaseCollectLimit = 0;
 
+            m_RaisedPassCount = 0;
+            m_NormalPassCount = 0;
+            m_LastScannedRequests = 0;
+            m_LastCriticalRequestTargets = 0;
+            m_HighestCriticalTargetGarbage = 0;
+            m_HighestCriticalTargetEntity = Entity.Null;
+            m_HighestCriticalTargetDispatched = false;
+            m_IsPriorityAssistLive = false;
+
+#if DEBUG
+            m_LastElapsedMs = 0.0;
+#endif
+
             if (Mod.TryGetSetting(out Setting setting))
             {
                 Enabled =
@@ -64,20 +103,25 @@ private int m_DebugLastCriticalCount = -1;
 
         protected override void OnUpdate()
         {
-
 #if DEBUG
-Stopwatch sw = Stopwatch.StartNew();
-int scannedRequests = 0;
+            Stopwatch sw = Stopwatch.StartNew();
 #endif
-
 
             if (!Mod.TryGetSetting(out Setting setting))
             {
+#if DEBUG
+                sw.Stop();
+                m_LastElapsedMs = sw.Elapsed.TotalMilliseconds;
+#endif
                 return;
             }
 
             if (!SystemAPI.TryGetSingletonRW<GarbageParameterData>(out RefRW<GarbageParameterData> parameters))
             {
+#if DEBUG
+                sw.Stop();
+                m_LastElapsedMs = sw.Elapsed.TotalMilliseconds;
+#endif
                 return;
             }
 
@@ -114,16 +158,24 @@ int scannedRequests = 0;
                 setting.TrashBossEnabled &&
                 setting.PrioritySystemEnabled;
 
+            int scannedRequests = 0;
             int criticalTargetCount = 0;
+            int highestCriticalTargetGarbage = 0;
+            Entity highestCriticalTargetEntity = Entity.Null;
+            bool highestCriticalTargetDispatched = false;
 
             if (assistAllowed)
             {
                 ComponentLookup<GarbageProducer> producerLookup = SystemAPI.GetComponentLookup<GarbageProducer>(true);
+                HashSet<Entity> uniqueCriticalTargets = new HashSet<Entity>();
 
-                foreach ((RefRO<GarbageCollectionRequest> request, RefRO<ServiceRequest> serviceRequest) in SystemAPI
+                foreach ((RefRO<GarbageCollectionRequest> request, RefRO<ServiceRequest> serviceRequest, Entity requestEntity) in SystemAPI
                              .Query<RefRO<GarbageCollectionRequest>, RefRO<ServiceRequest>>()
+                             .WithEntityAccess()
                              .WithNone<Deleted, Temp>())
                 {
+                    scannedRequests++;
+
                     if ((serviceRequest.ValueRO.m_Flags & ServiceRequestFlags.Reversed) != 0)
                     {
                         continue;
@@ -140,38 +192,66 @@ int scannedRequests = 0;
                         continue;
                     }
 
-                    if (producer.m_Garbage >= Setting.PriorityCriticalGarbage)
+                    int garbage = producer.m_Garbage;
+                    if (garbage < Setting.PriorityCriticalGarbage)
                     {
-                        criticalTargetCount++;
+                        continue;
+                    }
+
+                    uniqueCriticalTargets.Add(target);
+
+                    bool dispatched =
+                        SystemAPI.HasComponent<Dispatched>(requestEntity) ||
+                        SystemAPI.HasComponent<PathInformation>(requestEntity);
+
+                    if (garbage > highestCriticalTargetGarbage)
+                    {
+                        highestCriticalTargetGarbage = garbage;
+                        highestCriticalTargetEntity = target;
+                        highestCriticalTargetDispatched = dispatched;
                     }
                 }
+
+                criticalTargetCount = uniqueCriticalTargets.Count;
             }
 
             int targetCollect = normalCollect;
+            bool assistLive = assistAllowed && criticalTargetCount > 0;
 
             // Safe first pass:
             // temporarily lift pickup threshold to the current request threshold.
             // This keeps pickup <= request and narrows extra side pickups.
-            if (assistAllowed && criticalTargetCount > 0)
+            if (assistLive)
             {
                 targetCollect = math.max(normalCollect, data.m_RequestGarbageLimit);
+                m_RaisedPassCount++;
             }
+            else
+            {
+                m_NormalPassCount++;
+            }
+
+            m_LastScannedRequests = scannedRequests;
+            m_LastCriticalRequestTargets = criticalTargetCount;
+            m_HighestCriticalTargetGarbage = highestCriticalTargetGarbage;
+            m_HighestCriticalTargetEntity = highestCriticalTargetEntity;
+            m_HighestCriticalTargetDispatched = highestCriticalTargetDispatched;
+            m_IsPriorityAssistLive = assistLive;
 
             if (data.m_CollectionGarbageLimit != targetCollect)
             {
-                int oldCollect = data.m_CollectionGarbageLimit;
                 data.m_CollectionGarbageLimit = targetCollect;
-
-#if DEBUG
-                Mod.Log.Info(
-                    $"[MG] Priority assist: critical targets={criticalTargetCount}, pickup {oldCollect}->{targetCollect}");
-#endif
             }
 
             if (!assistAllowed && data.m_CollectionGarbageLimit == normalCollect)
             {
                 Enabled = false;
             }
+
+#if DEBUG
+            sw.Stop();
+            m_LastElapsedMs = sw.Elapsed.TotalMilliseconds;
+#endif
         }
     }
 }

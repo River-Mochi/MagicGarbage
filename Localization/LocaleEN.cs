@@ -64,10 +64,10 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Priority System" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
-                    "Assist for badly overloaded garbage targets.\n" +
+                    "Assist for badly overloaded garbage targets (buildings).\n" +
                     "When **ON**, checks if any active request target reaches **7000** (**7t**) garbage.\n" +
                     "Goal: reduces extra side-pickup jobs as needed so trucks reach bad targets sooner.\n" +
-                    "This is a nudge, not a hard, full override vanilla route logic.\n" +
+                    "This is a nudge, not a hard, full override of vanilla route logic.\n" +
                     "Lightweight, no Harmony patch."
                 },
 
@@ -295,7 +295,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Detailed Status to Log" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageStatusLog)),
                     "Send a more detailed garbage report into **Logs/MagicGarbage.log**.\n" +
-                    "Includes a short legend, vanilla reference values, and many extra real city current garbage statistics."
+                    "Includes organized city garbage statistics"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Open Log" },
@@ -384,6 +384,25 @@ namespace MagicGarbage
                 { "MG.Status.Log.SettingsPriority",
                     "Priority System (saved): enabled={0} | trigger={1:N0} ({2:N1}t)"
                 },
+
+                { "MG.Status.Log.PriorityHeader", "Priority Assist" },
+                { "MG.Status.Log.PriorityState",
+                    "Priority assist live={0} | interval={1:N0} frames | last scanned requests={2:N0} | active critical request targets={3:N0}"
+                },
+                { "MG.Status.Log.PriorityPasses",
+                    "Priority passes: raised={0:N0} | normal={1:N0}"
+                },
+                { "MG.Status.Log.PriorityPeakNone", "Highest active critical target: none" },
+                { "MG.Status.Log.PriorityPeak",
+                    "Highest active critical target: {0:N0} ({1:N1}t) | {2} | {3}"
+                },
+                { "MG.Status.Log.PriorityPeakState.Pending", "pending" },
+                { "MG.Status.Log.PriorityPeakState.Dispatched", "dispatched" },
+
+#if DEBUG
+{ "MG.Status.Log.PriorityPerf", "Priority assist last scan time={0:N3} ms" },
+#endif
+
 
                 { "MG.Status.Log.CriticalBuildingsNone", "none" },
                 { "MG.Status.Log.CriticalBuildingLine", "- {0,-20} | {1,7:N0} ({2,4:N1}t) | {3}" },

@@ -43,7 +43,6 @@ namespace MagicGarbage
             s_UiTrucks = "-";
             s_UiFacilities = "-";
             s_UiCriticalBuildings = "-";
-
         }
 
         public static void RefreshIfNeeded()
@@ -136,7 +135,6 @@ namespace MagicGarbage
                 string logText = BuildLogText(snap, criticalBuildings);
                 Mod.Log.Info($"{Mod.ModTag} {logText}");
             }
-
         }
 
         public static string GetUiGarbageServiceRating()
@@ -173,7 +171,6 @@ namespace MagicGarbage
         {
             return string.IsNullOrEmpty(s_UiCriticalBuildings) ? "-" : s_UiCriticalBuildings;
         }
-
 
         private static void ApplySnapshotToUi(GarbageStatusSystem.Snapshot snap, int criticalBuildings)
         {
@@ -277,7 +274,7 @@ namespace MagicGarbage
         {
             string nowText = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            StringBuilder log = new StringBuilder(4200);
+            StringBuilder log = new StringBuilder(5200);
 
             log.AppendLine(Mod.LF("MG.Status.Log.Title", nowText));
             log.AppendLine(Mod.LF("MG.Status.Log.City", Fmt(snap.City)));
@@ -334,6 +331,8 @@ namespace MagicGarbage
                     Fmt(snap.PendingMaxTargetEntity)));
             }
 
+            AppendPriorityAssistBlock(log);
+
             AppendSectionHeader(log, Mod.L("MG.Status.Log.BuildingsHeader"));
 
             log.AppendLine(Mod.LF(
@@ -377,7 +376,8 @@ namespace MagicGarbage
                         "MG.Status.Log.CriticalBuildingLine",
                         Fmt(entry.Building),
                         entry.Garbage,
-                        ToTons(entry.Garbage)));
+                        ToTons(entry.Garbage),
+                        entry.PrefabName));
                 }
             }
 
@@ -421,9 +421,59 @@ namespace MagicGarbage
             return log.ToString().TrimEnd();
         }
 
-
         // -------- Helpers --------
 
+        private static void AppendPriorityAssistBlock(StringBuilder log)
+        {
+            if (!TryGetWorld(out World world))
+            {
+                return;
+            }
+
+            GarbagePriorityAssistSystem sys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
+            if (sys == null)
+            {
+                return;
+            }
+
+            AppendSectionHeader(log, Mod.L("MG.Status.Log.PriorityHeader"));
+
+            log.AppendLine(Mod.LF(
+                "MG.Status.Log.PriorityState",
+                sys.IsPriorityAssistLive,
+                GarbagePriorityAssistSystem.UpdateIntervalFrames,
+                sys.LastScannedRequests,
+                sys.LastCriticalRequestTargets));
+
+            log.AppendLine(Mod.LF(
+                "MG.Status.Log.PriorityPasses",
+                sys.RaisedPassCount,
+                sys.NormalPassCount));
+
+            if (sys.HighestCriticalTargetGarbage <= 0 || sys.HighestCriticalTargetEntity == Entity.Null)
+            {
+                log.AppendLine(Mod.L("MG.Status.Log.PriorityPeakNone"));
+            }
+            else
+            {
+                string state = sys.HighestCriticalTargetDispatched
+                    ? Mod.L("MG.Status.Log.PriorityPeakState.Dispatched")
+                    : Mod.L("MG.Status.Log.PriorityPeakState.Pending");
+
+                log.AppendLine(Mod.LF(
+                    "MG.Status.Log.PriorityPeak",
+                    sys.HighestCriticalTargetGarbage,
+                    ToTons(sys.HighestCriticalTargetGarbage),
+                    Fmt(sys.HighestCriticalTargetEntity),
+                    state));
+            }
+
+#if DEBUG
+            log.AppendLine(Mod.LF(
+                "MG.Status.Log.PriorityPerf",
+                sys.LastElapsedMs));
+#endif
+        }
 
         private static void AppendSettingsBlock(StringBuilder log)
         {
@@ -500,6 +550,5 @@ namespace MagicGarbage
             log.AppendLine(title);
             log.AppendLine("================================");
         }
-
     }
 }
