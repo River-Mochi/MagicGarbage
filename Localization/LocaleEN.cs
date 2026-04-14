@@ -64,10 +64,10 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Priority System" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
-                    "Lightweight assist for badly overloaded garbage targets.\n" +
-                    "When **ON**, if any active request target reaches **7000** (7t) garbage, " +
-                    "Goal: reduce extra side-pickup jobs when needed so trucks reach bad targets sooner.\n" +
-                    "No Harmony patch. Not a full route override."
+                    "Assist for badly overloaded garbage targets.\n" +
+                    "When **ON**, looks for active request target over **7000** (7t) garbage.\n" +
+                    "Goal: reduce extra side-pickup jobs as needed so trucks reach bad targets sooner.\n" +
+                    "Lightweight, no Harmony patch. This is a nudge, not a full route override."
                 },
 
                 // Sliders
