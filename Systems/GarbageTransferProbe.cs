@@ -7,13 +7,7 @@
 
 namespace MagicGarbage
 {
-    using Game.Common;
-    using Game.Economy;
-    using Game.Objects;
-    using Game.Pathfind;
-    using Game.Prefabs;
-    using Game.Simulation;
-    using Game.Tools;
+    using Game.Tools;       // Temp
     using System.Collections.Generic;
     using Unity.Entities;
 
@@ -96,30 +90,42 @@ namespace MagicGarbage
         {
             List<GarbageTransferProbeEntry> entries = new List<GarbageTransferProbeEntry>(16);
 
-            ComponentLookup<Game.Objects.OutsideConnection> outsideConnectionLookup = GetComponentLookup<Game.Objects.OutsideConnection>(true);
-            BufferLookup<Game.Economy.Resources> resourcesLookup = GetBufferLookup<Game.Economy.Resources>(true);
+            ComponentLookup<Game.Objects.OutsideConnection> outsideConnectionLookup =
+                GetComponentLookup<Game.Objects.OutsideConnection>(true);
 
-            ComponentLookup<GarbageTransferRequest> garbageTransferRequestLookup = GetComponentLookup<GarbageTransferRequest>(true);
-            ComponentLookup<Dispatched> dispatchedLookup = GetComponentLookup<Dispatched>(true);
-            ComponentLookup<PathInformation> pathInformationLookup = GetComponentLookup<PathInformation>(true);
+            BufferLookup<Game.Economy.Resources> resourcesLookup =
+                GetBufferLookup<Game.Economy.Resources>(true);
 
-            foreach ((RefRO<Game.Buildings.GarbageFacility> facility, RefRO<PrefabRef> prefabRef, Entity facilityEntity) in SystemAPI
-                         .Query<RefRO<Game.Buildings.GarbageFacility>, RefRO<PrefabRef>>()
+            ComponentLookup<Game.Simulation.GarbageTransferRequest> garbageTransferRequestLookup =
+                GetComponentLookup<Game.Simulation.GarbageTransferRequest>(true);
+
+            ComponentLookup<Game.Simulation.Dispatched> dispatchedLookup =
+                GetComponentLookup<Game.Simulation.Dispatched>(true);
+
+            ComponentLookup<Game.Pathfind.PathInformation> pathInformationLookup =
+                GetComponentLookup<Game.Pathfind.PathInformation>(true);
+
+            foreach ((RefRO<Game.Buildings.GarbageFacility> facility, RefRO<Game.Prefabs.PrefabRef> prefabRef, Entity facilityEntity) in SystemAPI
+                         .Query<RefRO<Game.Buildings.GarbageFacility>, RefRO<Game.Prefabs.PrefabRef>>()
                          .WithEntityAccess()
-                         .WithNone<Deleted, Destroyed, Temp>())
+                         .WithNone<Game.Common.Deleted, Game.Common.Destroyed, Temp>())
             {
                 Entity prefabEntity = prefabRef.ValueRO.m_Prefab;
-                if (!SystemAPI.HasComponent<GarbageFacilityData>(prefabEntity))
+
+                if (!SystemAPI.HasComponent<Game.Prefabs.GarbageFacilityData>(prefabEntity))
                 {
                     continue;
                 }
 
-                GarbageFacilityData prefabData = SystemAPI.GetComponent<GarbageFacilityData>(prefabEntity);
+                Game.Prefabs.GarbageFacilityData prefabData =
+                    SystemAPI.GetComponent<Game.Prefabs.GarbageFacilityData>(prefabEntity);
 
                 int storedGarbage = 0;
                 if (resourcesLookup.HasBuffer(facilityEntity))
                 {
-                    storedGarbage = Game.Economy.EconomyUtils.GetResources(Game.Economy.Resource.Garbage, resourcesLookup[facilityEntity]);
+                    storedGarbage = Game.Economy.EconomyUtils.GetResources(
+                        Game.Economy.Resource.Garbage,
+                        resourcesLookup[facilityEntity]);
                 }
 
                 bool isOutsideConnection = outsideConnectionLookup.HasComponent(facilityEntity);
@@ -134,12 +140,15 @@ namespace MagicGarbage
 
                 if (acceptRequestEntity != Entity.Null && garbageTransferRequestLookup.HasComponent(acceptRequestEntity))
                 {
-                    GarbageTransferRequest request = garbageTransferRequestLookup[acceptRequestEntity];
+                    Game.Simulation.GarbageTransferRequest request = garbageTransferRequestLookup[acceptRequestEntity];
                     acceptRequestExists = true;
                     acceptRequestAmount = request.m_Amount;
                     acceptRequestPriority = request.m_Priority;
-                    acceptRequestRequireTransport = (request.m_Flags & GarbageTransferRequestFlags.RequireTransport) != 0;
-                    acceptRequestAssigned = dispatchedLookup.HasComponent(acceptRequestEntity) || pathInformationLookup.HasComponent(acceptRequestEntity);
+                    acceptRequestRequireTransport =
+                        (request.m_Flags & Game.Simulation.GarbageTransferRequestFlags.RequireTransport) != 0;
+                    acceptRequestAssigned =
+                        dispatchedLookup.HasComponent(acceptRequestEntity) ||
+                        pathInformationLookup.HasComponent(acceptRequestEntity);
                 }
 
                 Entity sendRequestEntity = facility.ValueRO.m_GarbageReceiveRequest;
@@ -151,12 +160,15 @@ namespace MagicGarbage
 
                 if (sendRequestEntity != Entity.Null && garbageTransferRequestLookup.HasComponent(sendRequestEntity))
                 {
-                    GarbageTransferRequest request = garbageTransferRequestLookup[sendRequestEntity];
+                    Game.Simulation.GarbageTransferRequest request = garbageTransferRequestLookup[sendRequestEntity];
                     sendRequestExists = true;
                     sendRequestAmount = request.m_Amount;
                     sendRequestPriority = request.m_Priority;
-                    sendRequestRequireTransport = (request.m_Flags & GarbageTransferRequestFlags.RequireTransport) != 0;
-                    sendRequestAssigned = dispatchedLookup.HasComponent(sendRequestEntity) || pathInformationLookup.HasComponent(sendRequestEntity);
+                    sendRequestRequireTransport =
+                        (request.m_Flags & Game.Simulation.GarbageTransferRequestFlags.RequireTransport) != 0;
+                    sendRequestAssigned =
+                        dispatchedLookup.HasComponent(sendRequestEntity) ||
+                        pathInformationLookup.HasComponent(sendRequestEntity);
                 }
 
                 entries.Add(new GarbageTransferProbeEntry(
