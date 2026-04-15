@@ -90,7 +90,7 @@ namespace MagicGarbage
         private int m_GarbageHappinessStep = VanillaGarbageHappinessStep;
         private int m_GarbageAccumulationRate = VanillaGarbageAccumulationRate;
 
-        private bool m_PrioritySystemEnabled = true;
+        private bool m_PriorityAssistEnabled;
 
         // Power User sliders only show when both Trash Boss and Power User are enabled.
         private bool ShowPowerUsers => m_TrashBossEnabled && m_PowerUserOptions;
@@ -148,6 +148,17 @@ namespace MagicGarbage
                     m_TotalMagic = false;
                 }
 
+
+                // One-time convenience default:
+                // on fresh install, Priority starts OFF because Total Magic is the startup mode.
+                // The first time Trash Boss is enabled, auto-enable Priority toggle once.
+                // After that, respect the player's own Priority choice.
+                if (!PriorityAssistInitialized)
+                {
+                    m_PriorityAssistEnabled = true;
+                    PriorityAssistInitialized = true;
+                }
+
                 Apply();
             }
         }
@@ -184,20 +195,26 @@ namespace MagicGarbage
         [SettingsUISection(ActionsTab, TrashBossGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
         [SettingsUISetter(typeof(Setting), nameof(OnPrioritySystemChanged))]
-        public bool PrioritySystemEnabled
+        public bool PriorityAssistEnabled
         {
-            get => m_PrioritySystemEnabled;
+            get => m_PriorityAssistEnabled;
             set
             {
-                if (m_PrioritySystemEnabled == value)
+                if (m_PriorityAssistEnabled == value)
                 {
                     return;
                 }
 
-                m_PrioritySystemEnabled = value;
+                m_PriorityAssistEnabled = value;
+                PriorityAssistInitialized = true;
                 Apply();
             }
         }
+
+
+        [SettingsUIHidden]
+        public bool PriorityAssistInitialized { get; set; }
+
 
         // -----------------------------------------
         // TRASH BOSS STANDARD PRESET BUTTONS
@@ -481,8 +498,12 @@ namespace MagicGarbage
         {
             m_TotalMagic = true;
             m_TrashBossEnabled = false;
+            m_PriorityAssistEnabled = true;
             m_PowerUserOptions = false;
-            m_PrioritySystemEnabled = true;
+
+            m_PriorityAssistEnabled = false;
+            PriorityAssistInitialized = false;
+  
 
             GarbageTruckCapacityMultiplier = 100;
             GarbageFacilityVehicleMultiplier = 100;

@@ -629,7 +629,7 @@ namespace MagicGarbage
 
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.SettingsPriority",
-                setting.PrioritySystemEnabled,
+                setting.PriorityAssistEnabled,
                 Setting.PriorityCriticalGarbage,
                 ToTons(Setting.PriorityCriticalGarbage)));
 

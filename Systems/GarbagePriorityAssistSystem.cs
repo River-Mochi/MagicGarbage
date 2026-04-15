@@ -99,7 +99,7 @@ namespace MagicGarbage
                 Enabled =
                     !setting.TotalMagic &&
                     setting.TrashBossEnabled &&
-                    setting.PrioritySystemEnabled;
+                    setting.PriorityAssistEnabled;
             }
             else
             {
@@ -166,7 +166,7 @@ namespace MagicGarbage
             bool assistAllowed =
                 !setting.TotalMagic &&
                 setting.TrashBossEnabled &&
-                setting.PrioritySystemEnabled;
+                setting.PriorityAssistEnabled;
 
             int scannedBuildings = 0;
             int criticalBuildings = 0;

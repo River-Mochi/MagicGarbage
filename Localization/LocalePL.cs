@@ -64,8 +64,8 @@ namespace MagicGarbage
                     "- Zarówno Totalna magia, jak i Sterowanie odpadami mogą być **WYŁ.**, jeśli potrzebny jest tylko **raport statusu**.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Asysta priorytetu" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "Asysta priorytetu" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
                     "Pomoc dla mocno przeciążonych celów odpadów (budynków).\n" +
                     "Gdy jest **ON**, sprawdza, czy jakiś aktywny cel zgłoszenia osiąga **7000+** (**7t**) odpadów.\n" +
                     "Cel: w razie potrzeby ogranicza dodatkowe poboczne odbiory, aby ciężarówki szybciej docierały do najgorszych celów.\n" +

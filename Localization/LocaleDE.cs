@@ -63,8 +63,8 @@ namespace MagicGarbage
                     "  und der **Statusbericht** bleibt weiterhin sichtbar und aktualisiert sich nur beim Öffnen des Optionsmenüs (leichtgewichtig)."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Prioritätshilfe" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "Prioritätshilfe" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
                     "Hilfe für stark überlastete Müllziele (Gebäude).\n" +
                     "Wenn **ON**, wird geprüft, ob ein aktives Anforderungsziel **7000+** (**7t**) Müll erreicht.\n" +
                     "Ziel: reduziert bei Bedarf zusätzliche Nebenabholungen, damit Lkw problematische Ziele schneller erreichen.\n" +

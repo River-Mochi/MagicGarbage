@@ -64,8 +64,8 @@ namespace MagicGarbage
                     "- **상태 보고서** 만 필요하다면 완전 정리와 쓰레기 관리 둘 다 **OFF** 로 둘 수 있습니다.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "우선순위 보조" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "우선순위 보조" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
                                         "심하게 과부하된 쓰레기 대상(건물)을 돕는 기능입니다.\n" +
                     "**ON** 일 때 활성 요청 대상이 **7000+** (**7t**) 쓰레기에 도달했는지 확인합니다.\n" +
                     "목표: 필요할 때 추가 옆길 수거를 줄여 트럭이 심각한 대상에 더 빨리 도달하게 합니다.\n" +

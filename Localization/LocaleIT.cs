@@ -63,8 +63,8 @@ namespace MagicGarbage
                     "  continuando comunque a vedere il **report di stato**, che si aggiorna solo entrando nel menu Opzioni (leggero)."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Assistenza priorità" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "Assistenza priorità" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
                     "Aiuto per bersagli dei rifiuti (edifici) gravemente sovraccarichi.\n" +
                     "Quando è **ON**, controlla se un bersaglio di richiesta attivo raggiunge **7000+** (**7t**) di rifiuti.\n" +
                     "Obiettivo: riduce, quando serve, i lavori extra di raccolta laterale così i camion raggiungono prima i bersagli peggiori.\n" +

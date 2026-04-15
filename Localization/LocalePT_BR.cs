@@ -63,8 +63,8 @@ namespace MagicGarbage
                 },
 
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Assistência de prioridade" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "Assistência de prioridade" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
                     "Ajuda para alvos de lixo (prédios) muito sobrecarregados.\n" +
                     "Quando estiver **ON**, verifica se algum alvo de pedido ativo atingiu **7000+** (**7t**) de lixo.\n" +
                     "Objetivo: reduz coletas laterais extras quando necessário para que os caminhões cheguem mais rápido aos piores alvos.\n" +

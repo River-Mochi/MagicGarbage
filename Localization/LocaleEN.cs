@@ -63,8 +63,8 @@ namespace MagicGarbage
                     "  and you can still see **Status report** which updates only when you enter Options menu (lightweight)."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Priority Assist" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "Priority Assist" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
                     "Assist for badly overloaded garbage targets (buildings).\n" +
                     "When **ON**, checks if any active request target reaches **7000+** (**7t**) garbage.\n" +
                     "Goal: reduces extra side-pickup jobs as needed so trucks reach bad targets sooner.\n" +

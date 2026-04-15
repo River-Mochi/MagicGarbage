@@ -64,8 +64,8 @@ namespace MagicGarbage
                     "- **状態レポート** だけ欲しい場合は、完全クリーンとごみ管理の両方を **OFF** にできます。\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "優先アシスト" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "優先アシスト" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
                                         "深刻に過負荷なごみ対象（建物）を補助します。\n" +
                     "**ON** のとき、アクティブなリクエスト対象が **7000+**（**7t**）のごみに達しているか確認します。\n" +
                     "目的: 必要に応じて余計な横道回収を減らし、トラックが深刻な対象へより早く到達できるようにします。\n" +

@@ -63,8 +63,8 @@ namespace MagicGarbage
                 },
 
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "优先协助" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "优先协助" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
                     "用于帮助严重过载的垃圾目标（建筑）。\n" +
                     "**ON** 时，会检查是否有活动请求目标达到 **7000+**（**7t**）垃圾。\n" +
                     "目标：在需要时减少额外的顺路收集，让卡车更快到达严重目标。\n" +

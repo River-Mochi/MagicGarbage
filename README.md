@@ -47,7 +47,7 @@ There is no in-city UI panel.
 
 ## Priority System (lightweight)
 
-When **Trash Boss** is enabled, **Priority System** is also available.
+When **Trash Boss** is enabled, **Priority Assist** is also available.
 
 - Watches for buildings over **7t** garbage
 - Temporarily raises **Pickup Threshold** to the current **Dispatch Request Threshold**
@@ -55,7 +55,7 @@ When **Trash Boss** is enabled, **Priority System** is also available.
 
 This is a **lightweight assist**, not a hard route override.
 
-For most cities, **Trash Boss + Priority System** is enough.  
+For most cities, **Trash Boss + Priority Assist** is enough.  
 Let the city run for about **1 in-game month** before deciding whether more tuning is needed.
 
 ---
@@ -98,7 +98,7 @@ Usually, **no**.
 
 Most cities work well with:
 - **Trash Boss**
-- **Priority System**
+- **Priority Assist**
 - standard slider tuning only
 
 Power User is best for:
@@ -107,11 +107,9 @@ Power User is best for:
 - learning how the garbage systems behave
 
 Let the city run for about **1 in-game month** before judging results.  
-Changing Power User too aggressively can make garbage behavior worse instead of better.
+Changing Power User too aggressively can make garbage behavior/traffic worse instead of better.
 
-As a rough conversion:
-
-- **100 garbage units = 0.1t**
+rough conversion:
 - **1,000 garbage units = 1t**
 
 ---

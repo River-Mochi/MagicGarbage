@@ -63,8 +63,8 @@ namespace MagicGarbage
                     "  y aun así se puede ver el **informe de estado**, que se actualiza solo al abrir el menú de Opciones (ligero)."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Asistencia de prioridad" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "Asistencia de prioridad" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
                     "Ayuda para objetivos de basura (edificios) muy sobrecargados.\n" +
                     "Cuando está **ON**, comprueba si algún objetivo de solicitud activo alcanza **7000+** (**7t**) de basura.\n" +
                     "Objetivo: reduce trabajos extra de recogida lateral cuando hace falta, para que los camiones lleguen antes a los peores objetivos.\n" +

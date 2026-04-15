@@ -63,8 +63,8 @@ namespace MagicGarbage
                     "  tout en gardant le **rapport de statut** qui se met à jour seulement à l'ouverture du menu Options (léger)."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Assistance prioritaire" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "Assistance prioritaire" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
                     "Aide pour les cibles déchets (bâtiments) très surchargées.\n" +
                     "Quand **ON**, vérifie si une cible de demande active atteint **7000+** (**7t**) de déchets.\n" +
                     "But : réduit si nécessaire les collectes secondaires en plus, pour que les camions atteignent plus vite les mauvaises cibles.\n" +

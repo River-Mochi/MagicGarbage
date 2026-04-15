@@ -23,7 +23,7 @@ Keep this short, factual, and easy to scan.
 |---|---|
 | Total Magic | **ON** |
 | Trash Boss | **OFF** |
-| Priority System | **ON** |
+| Priority Assist | **OFF** |
 | Power User | **OFF** |
 
 ### Standard recommended preset
