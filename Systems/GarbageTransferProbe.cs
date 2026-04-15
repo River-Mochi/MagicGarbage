@@ -1,17 +1,19 @@
 // File: Systems/GarbageTransferProbe.cs
 // Transfer probe helpers for detailed status log.
 // Purpose:
-// - Probe garbage storage-transfer behavior used by dump trucks.
+// - Probe garbage transfer behavior used by dump trucks.
+// - Split local garbage facilities from outside connections.
 // - Keep logic in a separate file so removal is easy later.
 
 namespace MagicGarbage
 {
     using Game.Common;
-    using Game.Companies;
+    using Game.Economy;
+    using Game.Objects;
     using Game.Pathfind;
     using Game.Prefabs;
+    using Game.Simulation;
     using Game.Tools;
-    using System;
     using System.Collections.Generic;
     using Unity.Entities;
 
@@ -21,43 +23,72 @@ namespace MagicGarbage
         {
             public readonly Entity Facility;
             public readonly string PrefabName;
+            public readonly bool IsOutsideConnection;
+
             public readonly int StoredGarbage;
-            public readonly int PerResourceCapacity;
-            public readonly int ExportStartThreshold;
-            public readonly int LowStockThreshold;
-            public readonly int MinTransferAmount;
-            public readonly int OutgoingGarbageRequests;
-            public readonly int IncomingGarbageRequests;
-            public readonly int ActiveTransferAmount;
-            public readonly bool HasTransferPath;
-            public readonly bool IsStationStyle;
+            public readonly int GarbageCapacity;
+
+            public readonly float AcceptPriority;
+            public readonly float DeliverPriority;
+
+            public readonly Entity AcceptRequestEntity;   // others deliver garbage here
+            public readonly bool AcceptRequestExists;
+            public readonly int AcceptRequestAmount;
+            public readonly float AcceptRequestPriority;
+            public readonly bool AcceptRequestRequireTransport;
+            public readonly bool AcceptRequestAssigned;
+
+            public readonly Entity SendRequestEntity;     // this facility sends garbage away
+            public readonly bool SendRequestExists;
+            public readonly int SendRequestAmount;
+            public readonly float SendRequestPriority;
+            public readonly bool SendRequestRequireTransport;
+            public readonly bool SendRequestAssigned;
 
             public GarbageTransferProbeEntry(
                 Entity facility,
                 string prefabName,
+                bool isOutsideConnection,
                 int storedGarbage,
-                int perResourceCapacity,
-                int exportStartThreshold,
-                int lowStockThreshold,
-                int minTransferAmount,
-                int outgoingGarbageRequests,
-                int incomingGarbageRequests,
-                int activeTransferAmount,
-                bool hasTransferPath,
-                bool isStationStyle)
+                int garbageCapacity,
+                float acceptPriority,
+                float deliverPriority,
+                Entity acceptRequestEntity,
+                bool acceptRequestExists,
+                int acceptRequestAmount,
+                float acceptRequestPriority,
+                bool acceptRequestRequireTransport,
+                bool acceptRequestAssigned,
+                Entity sendRequestEntity,
+                bool sendRequestExists,
+                int sendRequestAmount,
+                float sendRequestPriority,
+                bool sendRequestRequireTransport,
+                bool sendRequestAssigned)
             {
                 Facility = facility;
                 PrefabName = prefabName;
+                IsOutsideConnection = isOutsideConnection;
+
                 StoredGarbage = storedGarbage;
-                PerResourceCapacity = perResourceCapacity;
-                ExportStartThreshold = exportStartThreshold;
-                LowStockThreshold = lowStockThreshold;
-                MinTransferAmount = minTransferAmount;
-                OutgoingGarbageRequests = outgoingGarbageRequests;
-                IncomingGarbageRequests = incomingGarbageRequests;
-                ActiveTransferAmount = activeTransferAmount;
-                HasTransferPath = hasTransferPath;
-                IsStationStyle = isStationStyle;
+                GarbageCapacity = garbageCapacity;
+
+                AcceptPriority = acceptPriority;
+                DeliverPriority = deliverPriority;
+
+                AcceptRequestEntity = acceptRequestEntity;
+                AcceptRequestExists = acceptRequestExists;
+                AcceptRequestAmount = acceptRequestAmount;
+                AcceptRequestPriority = acceptRequestPriority;
+                AcceptRequestRequireTransport = acceptRequestRequireTransport;
+                AcceptRequestAssigned = acceptRequestAssigned;
+
+                SendRequestEntity = sendRequestEntity;
+                SendRequestExists = sendRequestExists;
+                SendRequestAmount = sendRequestAmount;
+                SendRequestPriority = sendRequestPriority;
+                SendRequestRequireTransport = sendRequestRequireTransport;
+                SendRequestAssigned = sendRequestAssigned;
             }
         }
 
@@ -65,117 +96,89 @@ namespace MagicGarbage
         {
             List<GarbageTransferProbeEntry> entries = new List<GarbageTransferProbeEntry>(16);
 
-            BufferLookup<StorageTransferRequest> storageTransferRequestLookup = GetBufferLookup<StorageTransferRequest>(true);
-            ComponentLookup<StorageTransfer> storageTransferLookup = GetComponentLookup<StorageTransfer>(true);
-            ComponentLookup<PathInformation> pathInformationLookup = GetComponentLookup<PathInformation>(true);
-            ComponentLookup<CompanyData> companyDataLookup = GetComponentLookup<CompanyData>(true);
+            ComponentLookup<Game.Objects.OutsideConnection> outsideConnectionLookup = GetComponentLookup<Game.Objects.OutsideConnection>(true);
+            BufferLookup<Game.Economy.Resources> resourcesLookup = GetBufferLookup<Game.Economy.Resources>(true);
 
-            foreach ((RefRO<Game.Buildings.GarbageFacility> _facility, RefRO<Game.Companies.StorageCompany> _storageCompany, RefRO<PrefabRef> prefabRef, DynamicBuffer<Game.Economy.Resources> resources, Entity facilityEntity) in SystemAPI
-                         .Query<RefRO<Game.Buildings.GarbageFacility>, RefRO<Game.Companies.StorageCompany>, RefRO<PrefabRef>, DynamicBuffer<Game.Economy.Resources>>()
+            ComponentLookup<GarbageTransferRequest> garbageTransferRequestLookup = GetComponentLookup<GarbageTransferRequest>(true);
+            ComponentLookup<Dispatched> dispatchedLookup = GetComponentLookup<Dispatched>(true);
+            ComponentLookup<PathInformation> pathInformationLookup = GetComponentLookup<PathInformation>(true);
+
+            foreach ((RefRO<Game.Buildings.GarbageFacility> facility, RefRO<PrefabRef> prefabRef, Entity facilityEntity) in SystemAPI
+                         .Query<RefRO<Game.Buildings.GarbageFacility>, RefRO<PrefabRef>>()
                          .WithEntityAccess()
                          .WithNone<Deleted, Destroyed, Temp>())
             {
                 Entity prefabEntity = prefabRef.ValueRO.m_Prefab;
-
-                if (!SystemAPI.HasComponent<StorageCompanyData>(prefabEntity) ||
-                    !SystemAPI.HasComponent<StorageLimitData>(prefabEntity))
+                if (!SystemAPI.HasComponent<GarbageFacilityData>(prefabEntity))
                 {
                     continue;
                 }
 
-                StorageCompanyData storageCompanyData = SystemAPI.GetComponent<StorageCompanyData>(prefabEntity);
-                if ((storageCompanyData.m_StoredResources & Game.Economy.Resource.Garbage) == Game.Economy.Resource.NoResource)
+                GarbageFacilityData prefabData = SystemAPI.GetComponent<GarbageFacilityData>(prefabEntity);
+
+                int storedGarbage = 0;
+                if (resourcesLookup.HasBuffer(facilityEntity))
                 {
-                    continue;
+                    storedGarbage = Game.Economy.EconomyUtils.GetResources(Game.Economy.Resource.Garbage, resourcesLookup[facilityEntity]);
                 }
 
-                int storedKinds = Game.Economy.EconomyUtils.CountResources(storageCompanyData.m_StoredResources);
-                if (storedKinds <= 0)
-                {
-                    continue;
-                }
-
-                StorageLimitData limitData = SystemAPI.GetComponent<StorageLimitData>(prefabEntity);
-
-                SpawnableBuildingData spawnableData = SystemAPI.HasComponent<SpawnableBuildingData>(prefabEntity)
-                    ? SystemAPI.GetComponent<SpawnableBuildingData>(prefabEntity)
-                    : new SpawnableBuildingData { m_Level = 1 };
-
-                BuildingData buildingData = SystemAPI.HasComponent<BuildingData>(prefabEntity)
-                    ? SystemAPI.GetComponent<BuildingData>(prefabEntity)
-                    : new BuildingData { m_LotSize = new Unity.Mathematics.int2(1, 1) };
-
-                int totalEffectiveCapacity = limitData.GetAdjustedLimitForWarehouse(spawnableData, buildingData);
-                int perResourceCapacity = storedKinds > 0 ? totalEffectiveCapacity / storedKinds : 0;
-
-                // Probe-only approximation:
-                // StorageCompanySystem uses CompanyData for company-style storage and excludes it for station-style storage.
-                bool isStationStyle = !companyDataLookup.HasComponent(facilityEntity);
-
-                int exportStartCap = isStationStyle ? 200000 : 100000;
-                int lowStockCap = isStationStyle ? 100000 : 25000;
-                int minTransferCap = isStationStyle ? 30000 : 10000;
-
-                int exportStartThreshold = ClampThresholdFromCapacity(perResourceCapacity, 0.8d, exportStartCap);
-                int lowStockThreshold = ClampThresholdFromCapacity(perResourceCapacity, 0.5d, lowStockCap);
-                int minTransferAmount = ClampThresholdFromCapacity(perResourceCapacity, 0.5d, minTransferCap);
-
-                int storedGarbage = Game.Economy.EconomyUtils.GetResources(Game.Economy.Resource.Garbage, resources);
-
-                int outgoingGarbageRequests = 0;
-                int incomingGarbageRequests = 0;
-
-                if (storageTransferRequestLookup.HasBuffer(facilityEntity))
-                {
-                    DynamicBuffer<StorageTransferRequest> requests = storageTransferRequestLookup[facilityEntity];
-
-                    for (int i = 0; i < requests.Length; i++)
-                    {
-                        StorageTransferRequest request = requests[i];
-                        if (request.m_Resource != Game.Economy.Resource.Garbage)
-                        {
-                            continue;
-                        }
-
-                        if ((request.m_Flags & StorageTransferFlags.Incoming) != 0)
-                        {
-                            incomingGarbageRequests += request.m_Amount;
-                        }
-                        else
-                        {
-                            outgoingGarbageRequests += request.m_Amount;
-                        }
-                    }
-                }
-
-                int activeTransferAmount = 0;
-                bool hasTransferPath = false;
-
-                if (storageTransferLookup.HasComponent(facilityEntity))
-                {
-                    StorageTransfer transfer = storageTransferLookup[facilityEntity];
-                    if (transfer.m_Resource == Game.Economy.Resource.Garbage)
-                    {
-                        activeTransferAmount = transfer.m_Amount;
-                        hasTransferPath = pathInformationLookup.HasComponent(facilityEntity);
-                    }
-                }
-
+                bool isOutsideConnection = outsideConnectionLookup.HasComponent(facilityEntity);
                 string prefabName = m_GamePrefabSystem.GetPrefabName(prefabEntity);
+
+                Entity acceptRequestEntity = facility.ValueRO.m_GarbageDeliverRequest;
+                bool acceptRequestExists = false;
+                int acceptRequestAmount = 0;
+                float acceptRequestPriority = 0f;
+                bool acceptRequestRequireTransport = false;
+                bool acceptRequestAssigned = false;
+
+                if (acceptRequestEntity != Entity.Null && garbageTransferRequestLookup.HasComponent(acceptRequestEntity))
+                {
+                    GarbageTransferRequest request = garbageTransferRequestLookup[acceptRequestEntity];
+                    acceptRequestExists = true;
+                    acceptRequestAmount = request.m_Amount;
+                    acceptRequestPriority = request.m_Priority;
+                    acceptRequestRequireTransport = (request.m_Flags & GarbageTransferRequestFlags.RequireTransport) != 0;
+                    acceptRequestAssigned = dispatchedLookup.HasComponent(acceptRequestEntity) || pathInformationLookup.HasComponent(acceptRequestEntity);
+                }
+
+                Entity sendRequestEntity = facility.ValueRO.m_GarbageReceiveRequest;
+                bool sendRequestExists = false;
+                int sendRequestAmount = 0;
+                float sendRequestPriority = 0f;
+                bool sendRequestRequireTransport = false;
+                bool sendRequestAssigned = false;
+
+                if (sendRequestEntity != Entity.Null && garbageTransferRequestLookup.HasComponent(sendRequestEntity))
+                {
+                    GarbageTransferRequest request = garbageTransferRequestLookup[sendRequestEntity];
+                    sendRequestExists = true;
+                    sendRequestAmount = request.m_Amount;
+                    sendRequestPriority = request.m_Priority;
+                    sendRequestRequireTransport = (request.m_Flags & GarbageTransferRequestFlags.RequireTransport) != 0;
+                    sendRequestAssigned = dispatchedLookup.HasComponent(sendRequestEntity) || pathInformationLookup.HasComponent(sendRequestEntity);
+                }
 
                 entries.Add(new GarbageTransferProbeEntry(
                     facilityEntity,
                     prefabName,
+                    isOutsideConnection,
                     storedGarbage,
-                    perResourceCapacity,
-                    exportStartThreshold,
-                    lowStockThreshold,
-                    minTransferAmount,
-                    outgoingGarbageRequests,
-                    incomingGarbageRequests,
-                    activeTransferAmount,
-                    hasTransferPath,
-                    isStationStyle));
+                    prefabData.m_GarbageCapacity,
+                    facility.ValueRO.m_AcceptGarbagePriority,
+                    facility.ValueRO.m_DeliverGarbagePriority,
+                    acceptRequestEntity,
+                    acceptRequestExists,
+                    acceptRequestAmount,
+                    acceptRequestPriority,
+                    acceptRequestRequireTransport,
+                    acceptRequestAssigned,
+                    sendRequestEntity,
+                    sendRequestExists,
+                    sendRequestAmount,
+                    sendRequestPriority,
+                    sendRequestRequireTransport,
+                    sendRequestAssigned));
             }
 
             entries.Sort(CompareGarbageTransferProbeEntries);
@@ -184,10 +187,22 @@ namespace MagicGarbage
 
         private static int CompareGarbageTransferProbeEntries(GarbageTransferProbeEntry a, GarbageTransferProbeEntry b)
         {
-            int aActivity = ((a.ActiveTransferAmount != 0) ? 2 : 0) + (((a.OutgoingGarbageRequests + a.IncomingGarbageRequests) > 0) ? 1 : 0);
-            int bActivity = ((b.ActiveTransferAmount != 0) ? 2 : 0) + (((b.OutgoingGarbageRequests + b.IncomingGarbageRequests) > 0) ? 1 : 0);
+            // Local facilities first, outside connections second.
+            int cmp = a.IsOutsideConnection.CompareTo(b.IsOutsideConnection);
+            if (cmp != 0)
+            {
+                return cmp;
+            }
 
-            int cmp = bActivity.CompareTo(aActivity);
+            int aActivity =
+                ((a.AcceptRequestExists || a.SendRequestExists) ? 2 : 0) +
+                (((a.AcceptPriority > 0f) || (a.DeliverPriority > 0f)) ? 1 : 0);
+
+            int bActivity =
+                ((b.AcceptRequestExists || b.SendRequestExists) ? 2 : 0) +
+                (((b.AcceptPriority > 0f) || (b.DeliverPriority > 0f)) ? 1 : 0);
+
+            cmp = bActivity.CompareTo(aActivity);
             if (cmp != 0)
             {
                 return cmp;
@@ -200,17 +215,6 @@ namespace MagicGarbage
             }
 
             return a.Facility.Index.CompareTo(b.Facility.Index);
-        }
-
-        private static int ClampThresholdFromCapacity(int perResourceCapacity, double factor, int cap)
-        {
-            if (perResourceCapacity <= 0)
-            {
-                return 0;
-            }
-
-            double scaled = Math.Ceiling((perResourceCapacity * factor) / 10000.0) * 10000.0;
-            return (int)Math.Min(scaled, cap);
         }
     }
 }

@@ -381,11 +381,16 @@ namespace MagicGarbage
                 { "MG.Status.Log.BuildingsHeader", "Buildings" },
 
                 { "MG.Status.Log.CriticalBuildingsHeader", "Critical Buildings over 7t" },
+                { "MG.Status.Log.LocalTransferProbeHeader", "Local Garbage Transfer Probe" },
+                { "MG.Status.Log.LocalTransferProbeNone", "No local garbage facilities found." },
+                { "MG.Status.Log.OutsideTransferProbeHeader", "Outside Connection Garbage Transfer Probe" },
+                { "MG.Status.Log.OutsideTransferProbeNone", "No outside-connection garbage facilities found." },
 
                 { "MG.Status.Log.TransferProbeHeader", "Garbage Transfer Probe" },
                 { "MG.Status.Log.TransferProbeNone", "No garbage storage-transfer facilities found." },
+
                 { "MG.Status.Log.TransferProbeLine",
-                    "- {0,-20} | stored={1,7:N0} ({2,4:N1}t) | cap={3,7:N0} ({4,4:N1}t) | export={5,7:N0} ({6,4:N1}t) | low={7,7:N0} ({8,4:N1}t) | min={9,7:N0} ({10,4:N1}t) | out/in={11,6:N0}/{12,6:N0} | active={13} | {14}"
+                    "- {0,-20} | stored={1,7:N0} ({2,4:N1}t) / cap={3,7:N0} ({4,4:N1}t) | accept={5:N2} | send={6:N2} | inReq={7} | outReq={8} | {9}"
                 },
 
                 { "MG.Status.Log.TrucksHeader", "Trucks" },
@@ -394,17 +399,20 @@ namespace MagicGarbage
                     "Priority System (saved): enabled={0} | trigger={1:N0} ({2:N1}t)"
                 },
 
-                { "MG.Status.Log.PriorityHeader", "Priority Assist" },
                 { "MG.Status.Log.PriorityState",
-                    "Priority assist live={0} | interval={1:N0} frames | last scanned requests={2:N0} | active critical request targets={3:N0}"
+                    "Priority assist live={0} | interval={1:N0} frames | last scanned buildings={2:N0} | critical buildings={3:N0}"
                 },
+                { "MG.Status.Log.PriorityPeak",
+                    "Highest critical building: {0:N0} ({1:N1}t) | {2} | request={3}"
+                },
+
+                { "MG.Status.Log.PriorityHeader", "Priority Assist" },
+
                 { "MG.Status.Log.PriorityPasses",
                     "Priority passes: raised={0:N0} | normal={1:N0}"
                 },
                 { "MG.Status.Log.PriorityPeakNone", "Highest active critical target: none" },
-                { "MG.Status.Log.PriorityPeak",
-                    "Highest active critical target: {0:N0} ({1:N1}t) | {2} | {3}"
-                },
+
                 { "MG.Status.Log.PriorityPeakState.Pending", "pending" },
                 { "MG.Status.Log.PriorityPeakState.Dispatched", "dispatched" },
 

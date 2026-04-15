@@ -1,8 +1,8 @@
 // File: Systems/GarbagePriorityAssistSystem.cs
 // Trash Boss optional assist.
-// When any active garbage request target is critically overloaded,
+// When any garbage-producing building is critically overloaded,
 // temporarily raise pickup threshold to the live request threshold.
-// Goal: reduce extra side pickups and help badly overloaded targets get reached sooner.
+// Goal: reduce extra side pickups and help badly overloaded buildings get reached sooner.
 
 namespace MagicGarbage
 {
@@ -10,11 +10,9 @@ namespace MagicGarbage
     using Game;
     using Game.Buildings;
     using Game.Common;
-    using Game.Pathfind;
     using Game.Prefabs;
     using Game.Simulation;
     using Game.Tools;
-    using System.Collections.Generic;
 #if DEBUG
     using System.Diagnostics;
 #endif
@@ -31,11 +29,12 @@ namespace MagicGarbage
         private int m_RaisedPassCount;
         private int m_NormalPassCount;
 
-        private int m_LastScannedRequests;
-        private int m_LastCriticalRequestTargets;
-        private int m_HighestCriticalTargetGarbage;
-        private Entity m_HighestCriticalTargetEntity;
-        private bool m_HighestCriticalTargetDispatched;
+        private int m_LastScannedBuildings;
+        private int m_LastCriticalBuildings;
+        private int m_HighestCriticalBuildingGarbage;
+        private Entity m_HighestCriticalBuildingEntity;
+        private bool m_HighestCriticalBuildingHasRequest;
+        private bool m_HighestCriticalBuildingDispatched;
         private bool m_IsPriorityAssistLive;
 
 #if DEBUG
@@ -44,11 +43,15 @@ namespace MagicGarbage
 
         public int RaisedPassCount => m_RaisedPassCount;
         public int NormalPassCount => m_NormalPassCount;
-        public int LastScannedRequests => m_LastScannedRequests;
-        public int LastCriticalRequestTargets => m_LastCriticalRequestTargets;
-        public int HighestCriticalTargetGarbage => m_HighestCriticalTargetGarbage;
-        public Entity HighestCriticalTargetEntity => m_HighestCriticalTargetEntity;
-        public bool HighestCriticalTargetDispatched => m_HighestCriticalTargetDispatched;
+
+        public int LastScannedBuildings => m_LastScannedBuildings;
+        public int LastCriticalBuildings => m_LastCriticalBuildings;
+
+        public int HighestCriticalBuildingGarbage => m_HighestCriticalBuildingGarbage;
+        public Entity HighestCriticalBuildingEntity => m_HighestCriticalBuildingEntity;
+        public bool HighestCriticalBuildingHasRequest => m_HighestCriticalBuildingHasRequest;
+        public bool HighestCriticalBuildingDispatched => m_HighestCriticalBuildingDispatched;
+
         public bool IsPriorityAssistLive => m_IsPriorityAssistLive;
 
 #if DEBUG
@@ -77,11 +80,14 @@ namespace MagicGarbage
 
             m_RaisedPassCount = 0;
             m_NormalPassCount = 0;
-            m_LastScannedRequests = 0;
-            m_LastCriticalRequestTargets = 0;
-            m_HighestCriticalTargetGarbage = 0;
-            m_HighestCriticalTargetEntity = Entity.Null;
-            m_HighestCriticalTargetDispatched = false;
+
+            m_LastScannedBuildings = 0;
+            m_LastCriticalBuildings = 0;
+
+            m_HighestCriticalBuildingGarbage = 0;
+            m_HighestCriticalBuildingEntity = Entity.Null;
+            m_HighestCriticalBuildingHasRequest = false;
+            m_HighestCriticalBuildingDispatched = false;
             m_IsPriorityAssistLive = false;
 
 #if DEBUG
@@ -133,7 +139,7 @@ namespace MagicGarbage
                 m_HaveBase = true;
             }
 
-            int normalCollect = m_BaseCollectLimit;
+            int normalCollect = Setting.VanillaPickupThreshold;
 
             if (!setting.TotalMagic && setting.TrashBossEnabled && setting.PowerUserOptions)
             {
@@ -152,75 +158,79 @@ namespace MagicGarbage
                     normalCollect = requestLimit;
                 }
             }
+            else if (!setting.TotalMagic && !setting.TrashBossEnabled)
+            {
+                normalCollect = math.max(Setting.VanillaPickupThreshold, m_BaseCollectLimit);
+            }
 
             bool assistAllowed =
                 !setting.TotalMagic &&
                 setting.TrashBossEnabled &&
                 setting.PrioritySystemEnabled;
 
-            int scannedRequests = 0;
-            int criticalTargetCount = 0;
-            int highestCriticalTargetGarbage = 0;
-            Entity highestCriticalTargetEntity = Entity.Null;
-            bool highestCriticalTargetDispatched = false;
+            int scannedBuildings = 0;
+            int criticalBuildings = 0;
+            int highestCriticalGarbage = 0;
+            Entity highestCriticalEntity = Entity.Null;
 
             if (assistAllowed)
             {
-                ComponentLookup<GarbageProducer> producerLookup = SystemAPI.GetComponentLookup<GarbageProducer>(true);
-                HashSet<Entity> uniqueCriticalTargets = new HashSet<Entity>();
-
-                foreach ((RefRO<GarbageCollectionRequest> request, RefRO<ServiceRequest> serviceRequest, Entity requestEntity) in SystemAPI
-                             .Query<RefRO<GarbageCollectionRequest>, RefRO<ServiceRequest>>()
+                foreach ((RefRO<GarbageProducer> producer, Entity buildingEntity) in SystemAPI
+                             .Query<RefRO<GarbageProducer>>()
                              .WithEntityAccess()
-                             .WithNone<Deleted, Temp>())
+                             .WithNone<Deleted, Destroyed, Temp>())
                 {
-                    scannedRequests++;
+                    scannedBuildings++;
 
-                    if ((serviceRequest.ValueRO.m_Flags & ServiceRequestFlags.Reversed) != 0)
-                    {
-                        continue;
-                    }
-
-                    Entity target = request.ValueRO.m_Target;
-                    if (target == Entity.Null)
-                    {
-                        continue;
-                    }
-
-                    if (!producerLookup.TryGetComponent(target, out GarbageProducer producer))
-                    {
-                        continue;
-                    }
-
-                    int garbage = producer.m_Garbage;
+                    int garbage = producer.ValueRO.m_Garbage;
                     if (garbage < Setting.PriorityCriticalGarbage)
                     {
                         continue;
                     }
 
-                    uniqueCriticalTargets.Add(target);
+                    criticalBuildings++;
 
-                    bool dispatched =
-                        SystemAPI.HasComponent<Dispatched>(requestEntity) ||
-                        SystemAPI.HasComponent<PathInformation>(requestEntity);
-
-                    if (garbage > highestCriticalTargetGarbage)
+                    if (garbage > highestCriticalGarbage)
                     {
-                        highestCriticalTargetGarbage = garbage;
-                        highestCriticalTargetEntity = target;
-                        highestCriticalTargetDispatched = dispatched;
+                        highestCriticalGarbage = garbage;
+                        highestCriticalEntity = buildingEntity;
                     }
                 }
-
-                criticalTargetCount = uniqueCriticalTargets.Count;
             }
 
-            int targetCollect = normalCollect;
-            bool assistLive = assistAllowed && criticalTargetCount > 0;
+            bool highestHasRequest = false;
+            bool highestDispatched = false;
 
-            // Safe first pass:
-            // temporarily lift pickup threshold to the current request threshold.
-            // This keeps pickup <= request and narrows extra side pickups.
+            if (assistAllowed && highestCriticalEntity != Entity.Null)
+            {
+                foreach ((RefRO<GarbageCollectionRequest> request, RefRO<ServiceRequest> serviceRequest, Entity requestEntity) in SystemAPI
+                             .Query<RefRO<GarbageCollectionRequest>, RefRO<ServiceRequest>>()
+                             .WithEntityAccess()
+                             .WithNone<Deleted, Temp>())
+                {
+                    if ((serviceRequest.ValueRO.m_Flags & ServiceRequestFlags.Reversed) != 0)
+                    {
+                        continue;
+                    }
+
+                    if (request.ValueRO.m_Target != highestCriticalEntity)
+                    {
+                        continue;
+                    }
+
+                    highestHasRequest = true;
+
+                    if (SystemAPI.HasComponent<Dispatched>(requestEntity) || SystemAPI.HasComponent<Game.Pathfind.PathInformation>(requestEntity))
+                    {
+                        highestDispatched = true;
+                        break;
+                    }
+                }
+            }
+
+            bool assistLive = assistAllowed && criticalBuildings > 0;
+            int targetCollect = normalCollect;
+
             if (assistLive)
             {
                 targetCollect = math.max(normalCollect, data.m_RequestGarbageLimit);
@@ -231,11 +241,14 @@ namespace MagicGarbage
                 m_NormalPassCount++;
             }
 
-            m_LastScannedRequests = scannedRequests;
-            m_LastCriticalRequestTargets = criticalTargetCount;
-            m_HighestCriticalTargetGarbage = highestCriticalTargetGarbage;
-            m_HighestCriticalTargetEntity = highestCriticalTargetEntity;
-            m_HighestCriticalTargetDispatched = highestCriticalTargetDispatched;
+            m_LastScannedBuildings = scannedBuildings;
+            m_LastCriticalBuildings = criticalBuildings;
+
+            m_HighestCriticalBuildingGarbage = highestCriticalGarbage;
+            m_HighestCriticalBuildingEntity = highestCriticalEntity;
+            m_HighestCriticalBuildingHasRequest = highestHasRequest;
+            m_HighestCriticalBuildingDispatched = highestDispatched;
+
             m_IsPriorityAssistLive = assistLive;
 
             if (data.m_CollectionGarbageLimit != targetCollect)

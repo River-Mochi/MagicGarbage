@@ -226,7 +226,6 @@ namespace MagicGarbage
                 snap.FacilityMaxWorkers);
         }
 
-        // Simple player-facing comments based on rounded city garbage happiness factor.
         private static string BuildGarbageServiceRatingUi(int rounded, string updatedAt)
         {
             if (rounded >= 0)
@@ -247,7 +246,6 @@ namespace MagicGarbage
             return Mod.LF("MG.Status.Row.GarbageServiceRating.Problem", rounded, updatedAt);
         }
 
-        // Same rating bands as Options UI, but returned as plain labels for detailed log button.
         private static string BuildGarbageServiceRatingLabel(int rounded)
         {
             if (rounded >= 0)
@@ -274,7 +272,7 @@ namespace MagicGarbage
         {
             string nowText = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            StringBuilder log = new StringBuilder(7000);
+            StringBuilder log = new StringBuilder(9000);
 
             log.AppendLine(Mod.LF("MG.Status.Log.Title", nowText));
             log.AppendLine(Mod.LF("MG.Status.Log.City", Fmt(snap.City)));
@@ -444,30 +442,26 @@ namespace MagicGarbage
                 "MG.Status.Log.PriorityState",
                 sys.IsPriorityAssistLive,
                 GarbagePriorityAssistSystem.UpdateIntervalFrames,
-                sys.LastScannedRequests,
-                sys.LastCriticalRequestTargets));
+                sys.LastScannedBuildings,
+                sys.LastCriticalBuildings));
 
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.PriorityPasses",
                 sys.RaisedPassCount,
                 sys.NormalPassCount));
 
-            if (sys.HighestCriticalTargetGarbage <= 0 || sys.HighestCriticalTargetEntity == Entity.Null)
+            if (sys.HighestCriticalBuildingGarbage <= 0 || sys.HighestCriticalBuildingEntity == Entity.Null)
             {
                 log.AppendLine(Mod.L("MG.Status.Log.PriorityPeakNone"));
             }
             else
             {
-                string state = sys.HighestCriticalTargetDispatched
-                    ? Mod.L("MG.Status.Log.PriorityPeakState.Dispatched")
-                    : Mod.L("MG.Status.Log.PriorityPeakState.Pending");
-
                 log.AppendLine(Mod.LF(
                     "MG.Status.Log.PriorityPeak",
-                    sys.HighestCriticalTargetGarbage,
-                    ToTons(sys.HighestCriticalTargetGarbage),
-                    Fmt(sys.HighestCriticalTargetEntity),
-                    state));
+                    sys.HighestCriticalBuildingGarbage,
+                    ToTons(sys.HighestCriticalBuildingGarbage),
+                    Fmt(sys.HighestCriticalBuildingEntity),
+                    BuildPriorityRequestState(sys.HighestCriticalBuildingHasRequest, sys.HighestCriticalBuildingDispatched)));
             }
 
 #if DEBUG
@@ -475,6 +469,16 @@ namespace MagicGarbage
                 "MG.Status.Log.PriorityPerf",
                 sys.LastElapsedMs));
 #endif
+        }
+
+        private static string BuildPriorityRequestState(bool hasRequest, bool dispatched)
+        {
+            if (!hasRequest)
+            {
+                return "no request";
+            }
+
+            return dispatched ? "dispatched" : "pending";
         }
 
         private static void AppendGarbageTransferProbeBlock(StringBuilder log)
@@ -487,60 +491,115 @@ namespace MagicGarbage
             GarbageStatusSystem sys = world.GetOrCreateSystemManaged<GarbageStatusSystem>();
             GarbageStatusSystem.GarbageTransferProbeEntry[] entries = sys.GetGarbageTransferProbeEntries();
 
-            AppendSectionHeader(log, Mod.L("MG.Status.Log.TransferProbeHeader"));
+            AppendSectionHeader(log, Mod.L("MG.Status.Log.LocalTransferProbeHeader"));
 
-            if (entries == null || entries.Length == 0)
-            {
-                log.AppendLine(Mod.L("MG.Status.Log.TransferProbeNone"));
-                return;
-            }
-
+            bool anyLocal = false;
             for (int i = 0; i < entries.Length; i++)
             {
                 GarbageStatusSystem.GarbageTransferProbeEntry entry = entries[i];
+                if (entry.IsOutsideConnection)
+                {
+                    continue;
+                }
 
+                anyLocal = true;
                 log.AppendLine(Mod.LF(
                     "MG.Status.Log.TransferProbeLine",
                     Fmt(entry.Facility),
                     entry.StoredGarbage,
                     ToTons(entry.StoredGarbage),
-                    entry.PerResourceCapacity,
-                    ToTons(entry.PerResourceCapacity),
-                    entry.ExportStartThreshold,
-                    ToTons(entry.ExportStartThreshold),
-                    entry.LowStockThreshold,
-                    ToTons(entry.LowStockThreshold),
-                    entry.MinTransferAmount,
-                    ToTons(entry.MinTransferAmount),
-                    entry.OutgoingGarbageRequests,
-                    entry.IncomingGarbageRequests,
-                    BuildTransferProbeState(entry),
+                    entry.GarbageCapacity,
+                    ToTons(entry.GarbageCapacity),
+                    entry.AcceptPriority,
+                    entry.DeliverPriority,
+                    BuildTransferRequestSummary(
+                        entry.AcceptRequestEntity,
+                        entry.AcceptRequestExists,
+                        entry.AcceptRequestAmount,
+                        entry.AcceptRequestPriority,
+                        entry.AcceptRequestRequireTransport,
+                        entry.AcceptRequestAssigned),
+                    BuildTransferRequestSummary(
+                        entry.SendRequestEntity,
+                        entry.SendRequestExists,
+                        entry.SendRequestAmount,
+                        entry.SendRequestPriority,
+                        entry.SendRequestRequireTransport,
+                        entry.SendRequestAssigned),
                     entry.PrefabName));
+            }
+
+            if (!anyLocal)
+            {
+                log.AppendLine(Mod.L("MG.Status.Log.LocalTransferProbeNone"));
+            }
+
+            AppendSectionHeader(log, Mod.L("MG.Status.Log.OutsideTransferProbeHeader"));
+
+            bool anyOutside = false;
+            for (int i = 0; i < entries.Length; i++)
+            {
+                GarbageStatusSystem.GarbageTransferProbeEntry entry = entries[i];
+                if (!entry.IsOutsideConnection)
+                {
+                    continue;
+                }
+
+                anyOutside = true;
+                log.AppendLine(Mod.LF(
+                    "MG.Status.Log.TransferProbeLine",
+                    Fmt(entry.Facility),
+                    entry.StoredGarbage,
+                    ToTons(entry.StoredGarbage),
+                    entry.GarbageCapacity,
+                    ToTons(entry.GarbageCapacity),
+                    entry.AcceptPriority,
+                    entry.DeliverPriority,
+                    BuildTransferRequestSummary(
+                        entry.AcceptRequestEntity,
+                        entry.AcceptRequestExists,
+                        entry.AcceptRequestAmount,
+                        entry.AcceptRequestPriority,
+                        entry.AcceptRequestRequireTransport,
+                        entry.AcceptRequestAssigned),
+                    BuildTransferRequestSummary(
+                        entry.SendRequestEntity,
+                        entry.SendRequestExists,
+                        entry.SendRequestAmount,
+                        entry.SendRequestPriority,
+                        entry.SendRequestRequireTransport,
+                        entry.SendRequestAssigned),
+                    entry.PrefabName));
+            }
+
+            if (!anyOutside)
+            {
+                log.AppendLine(Mod.L("MG.Status.Log.OutsideTransferProbeNone"));
             }
         }
 
-        private static string BuildTransferProbeState(GarbageStatusSystem.GarbageTransferProbeEntry entry)
+        private static string BuildTransferRequestSummary(
+            Entity requestEntity,
+            bool exists,
+            int amount,
+            float priority,
+            bool requireTransport,
+            bool assigned)
         {
-            if (entry.ActiveTransferAmount > 0)
+            if (requestEntity == Entity.Null)
             {
-                return entry.HasTransferPath
-                    ? $"export {entry.ActiveTransferAmount:N0} + path"
-                    : $"export {entry.ActiveTransferAmount:N0}";
+                return "none";
             }
 
-            if (entry.ActiveTransferAmount < 0)
+            if (!exists)
             {
-                return entry.HasTransferPath
-                    ? $"import {Math.Abs(entry.ActiveTransferAmount):N0} + path"
-                    : $"import {Math.Abs(entry.ActiveTransferAmount):N0}";
+                return $"stale {Fmt(requestEntity)}";
             }
 
-            if (entry.OutgoingGarbageRequests > 0 || entry.IncomingGarbageRequests > 0)
-            {
-                return "requests only";
-            }
+            string state = assigned ? "dispatched" : "pending";
+            string mode = requireTransport ? "transport" : "local";
 
-            return "none";
+            return $"{Fmt(requestEntity)} {state} {amount:N0} p={priority:N2} {mode}";
         }
 
         private static void AppendSettingsBlock(StringBuilder log)
