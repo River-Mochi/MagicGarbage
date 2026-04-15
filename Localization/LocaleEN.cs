@@ -247,7 +247,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "7t+ Buildings" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
                     "Count of garbage-producing buildings at or above **7t / 7000** garbage.\n" +
-                    "These are badly overloaded buildings, enable [x] Priority System to prioritize these better.\n" +
+                    "These are badly overloaded buildings, enable [x] Priority Assist to prioritize these better.\n" +
                     "Use Status to log button if you want the Entity ID numbers to inspect."
                 },
 

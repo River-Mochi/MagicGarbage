@@ -6,7 +6,6 @@
 
 namespace MagicGarbage
 {
-    using Game.Buildings;
     using Game.Common;
     using Game.Companies;
     using Game.Pathfind;
