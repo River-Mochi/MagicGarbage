@@ -105,7 +105,7 @@ Power User is useful for experimenting and digging into how the game garbage sys
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-* added Priority Assist option (lightweight) which helps change priorities when there are buildings with high garbage levels; reduce traffic and improve service efficiency.
+* added Priority Assist option (lightweight); reduce traffic and improve service efficiency.
 * added more detailed Status log info to mod Options menu.
 * updated all locale files.
 * update images.
