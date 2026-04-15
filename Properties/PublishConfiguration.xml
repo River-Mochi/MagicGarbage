@@ -28,7 +28,6 @@ Two ways to handle garbage, a Status Report option, and all new POWER Users sect
 **Priority Assist (lightweight)**
 - Watches for buildings over **7t** garbage.
 - Helps badly overloaded buildings get reached sooner.
-- This is a nudge that works over time, not a hard route override.
 
 **Helper buttons**
 - [Game Defaults] = reset all sliders to 100% (pure vanilla).
