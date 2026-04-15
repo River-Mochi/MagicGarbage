@@ -412,7 +412,6 @@ namespace MagicGarbage
 { "MG.Status.Log.PriorityPerf", "Priority assist last scan time={0:N3} ms" },
 #endif
 
-
                 { "MG.Status.Log.CriticalBuildingsNone", "none" },
                 { "MG.Status.Log.CriticalBuildingLine", "- {0,-20} | {1,7:N0} ({2,4:N1}t) | {3}" },
 

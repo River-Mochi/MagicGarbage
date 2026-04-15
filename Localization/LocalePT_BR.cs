@@ -56,10 +56,20 @@ namespace MagicGarbage
                 // Trash Boss
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Controle do lixo" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
-                    "Gerencia diretamente os sistemas de lixo; a lógica de garbage vanilla continua rodando.\n\n" +
+                    "Gerencia diretamente os sistemas de lixo; a lógica vanilla de lixo continua rodando.\n\n" +
                     "- Quando **Controle do lixo está ON [ ✓ ]**, Magia total fica forçada para OFF.\n" +
                     "- Os sliders só se aplicam quando Controle do lixo está ativado.\n" +
                     "- Tanto Magia total quanto Controle do lixo podem ficar **OFF** se só for preciso o **relatório de status**.\n"
+                },
+
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Assistência de prioridade" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
+                    "Ajuda para alvos de lixo (prédios) muito sobrecarregados.\n" +
+                    "Quando estiver **ON**, verifica se algum alvo de pedido ativo atingiu **7000+** (**7t**) de lixo.\n" +
+                    "Objetivo: reduz coletas laterais extras quando necessário para que os caminhões cheguem mais rápido aos piores alvos.\n" +
+                    "Isto é uma ajuda, não uma substituição rígida e completa da lógica vanilla de rotas.\n" +
+                    "Leve, sem patch Harmony."
                 },
 
                 // Sliders
@@ -216,7 +226,7 @@ namespace MagicGarbage
                     "  * Magia total = OFF\n" +
                     "  * Controle do lixo = OFF\n" +
                     "  * Só relatório de status.\n" +
-                    "  * O garbage vanilla do jogo não muda."
+                    "  * O lixo vanilla do jogo não muda."
                 },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), "Uso" },
 
@@ -231,7 +241,15 @@ namespace MagicGarbage
                     "**Ajustes indiretos:** use os <sliders> do Trash Boss para melhorar isso com o tempo reduzindo o acúmulo real de lixo.\n" +
                     "**Ajustes diretos:** <Base de felicidade do lixo> + <Passo de felicidade do lixo> mudam o quanto os cidadãos toleram antes de ficarem infelizes.\n" +
                     "**Taxa de acúmulo**: muda a velocidade com que os prédios compatíveis produzem lixo. Use com cuidado, porque o equilíbrio é importante. A maioria dos jogadores nunca precisa mexer nisso.\n" +
-                    "<Hora da atualização = último refresh.>"
+                    "<Hora da atualização = última atualização.>"
+                },
+
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Prédios 7t+" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
+                    "Contagem de prédios produtores de lixo com **7t / 7000** de lixo ou mais.\n" +
+                    "Esses prédios estão muito sobrecarregados; ative [x] Assistência de prioridade para priorizá-los melhor.\n" +
+                    "Use o botão de status no log se quiser ver os números de ID de entidade para inspeção."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Lixo/mês" },
@@ -278,7 +296,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Status detalhado no log" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageStatusLog)),
-                    "Envia um relatório de garbage mais detalhado para **Logs/MagicGarbage.log**.\n" +
+                    "Envia um relatório de lixo mais detalhado para **Logs/MagicGarbage.log**.\n" +
                     "Inclui uma legenda curta, valores de referência vanilla e muitas estatísticas extras reais de lixo da cidade."
                 },
 
@@ -292,6 +310,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "Precisa de pequeno ajuste ({0:N0}) | atualizado {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "Um pouco fedido ({0:N0}) | atualizado {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Problema de lixo ({0:N0}) | atualizado {1}" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} acima de 7t" },
 
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t produzidas | {1:N0} t processadas" },
                 { "MG.Status.Row.Requests", "{1:N0} pendentes | {2:N0} despachados | {0:N0} total" },
@@ -352,10 +371,50 @@ namespace MagicGarbage
                 { "MG.Status.Log.FacilitiesHeader", "Resumo das instalações" },
                 { "MG.Status.Log.FacilityLine", "- Instalação {0}: caminhões de lixo={1:N0} ({2:N0} em movimento, {3:N0} estacionados) | caminhões Dump={4:N0} ({5:N0} em movimento) | trabalhadores={6:N0}" },
 
+
                 { "MG.Status.Log.GarbageServiceRating.Excellent", "Excelente" },
                 { "MG.Status.Log.GarbageServiceRating.Minor", "Precisa de pequeno ajuste" },
                 { "MG.Status.Log.GarbageServiceRating.Stinky", "Um pouco fedido" },
                 { "MG.Status.Log.GarbageServiceRating.Problem", "Problema de lixo" },
+
+                { "MG.Status.Log.ThresholdsHeader", "Limites + serviço" },
+                { "MG.Status.Log.RequestsHeader", "Pedidos" },
+                { "MG.Status.Log.BuildingsHeader", "Prédios" },
+
+                { "MG.Status.Log.CriticalBuildingsHeader", "Prédios críticos acima de 7t" },
+
+                { "MG.Status.Log.TransferProbeHeader", "Sonda de transferência de lixo" },
+                { "MG.Status.Log.TransferProbeNone", "Nenhuma instalação de transferência/armazenamento de lixo encontrada." },
+                { "MG.Status.Log.TransferProbeLine",
+                    "- {0,-20} | armazenado={1,7:N0} ({2,4:N1}t) | cap={3,7:N0} ({4,4:N1}t) | export={5,7:N0} ({6,4:N1}t) | baixo={7,7:N0} ({8,4:N1}t) | mín={9,7:N0} ({10,4:N1}t) | saída/entrada={11,6:N0}/{12,6:N0} | ativo={13} | {14}"
+                },
+
+                { "MG.Status.Log.TrucksHeader", "Caminhões" },
+
+                { "MG.Status.Log.SettingsPriority",
+                    "Assistência de prioridade (salva): ativado={0} | gatilho={1:N0} ({2:N1}t)"
+                },
+
+                { "MG.Status.Log.PriorityHeader", "Assistência de prioridade" },
+                { "MG.Status.Log.PriorityState",
+                    "Assistência de prioridade ativa={0} | intervalo={1:N0} quadros | últimos pedidos verificados={2:N0} | alvos críticos de pedido ativos={3:N0}"
+                },
+                { "MG.Status.Log.PriorityPasses",
+                    "Passes de prioridade: elevados={0:N0} | normais={1:N0}"
+                },
+                { "MG.Status.Log.PriorityPeakNone", "Maior alvo crítico ativo: nenhum" },
+                { "MG.Status.Log.PriorityPeak",
+                    "Maior alvo crítico ativo: {0:N0} ({1:N1}t) | {2} | {3}"
+                },
+                { "MG.Status.Log.PriorityPeakState.Pending", "pendente" },
+                { "MG.Status.Log.PriorityPeakState.Dispatched", "despachado" },
+
+#if DEBUG
+                { "MG.Status.Log.PriorityPerf", "Tempo da última verificação da assistência de prioridade={0:N3} ms" },
+#endif
+
+                { "MG.Status.Log.CriticalBuildingsNone", "nenhum" },
+                { "MG.Status.Log.CriticalBuildingLine", "- {0,-20} | {1,7:N0} ({2,4:N1}t) | {3}" },
             };
         }
 

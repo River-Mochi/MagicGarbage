@@ -62,6 +62,16 @@ namespace MagicGarbage
                     "- 如果只想看 **状态报告**，**终极魔法** 和 **垃圾管理** 都可以保持 **OFF**。\n"
                 },
 
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "优先协助" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
+                    "用于帮助严重过载的垃圾目标（建筑）。\n" +
+                    "**ON** 时，会检查是否有活动请求目标达到 **7000+**（**7t**）垃圾。\n" +
+                    "目标：在需要时减少额外的顺路收集，让卡车更快到达严重目标。\n" +
+                    "这是辅助，不是对 vanilla 路线逻辑的强制完全覆盖。\n" +
+                    "轻量，无 Harmony 补丁。"
+                },
+
                 // Sliders
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "卡车载量" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
@@ -233,6 +243,14 @@ namespace MagicGarbage
                 },
 
 
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "7t+ 建筑" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
+                    "达到或超过 **7t / 7000** 垃圾的产垃圾建筑数量。\n" +
+                    "这些建筑已经严重过载，启用 [x] 优先协助 可更好地优先处理它们。\n" +
+                    "如果要查看实体 ID 编号进行检查，请使用“将详细状态写入日志”按钮。"
+                },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "垃圾/月" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
                     "显示当前全城垃圾量和总处理速率。\n" +
@@ -294,6 +312,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "稍微调一下更好 ({0:N0}) | 更新于 {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "有点臭 ({0:N0}) | 更新于 {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "垃圾问题 ({0:N0}) | 更新于 {1}" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} 超过 7t" },
 
                 { "MG.Status.Row.GarbageProcessing", "已产生 {0:N0} t | 已处理 {1:N0} t" },
                 { "MG.Status.Row.Requests", "{1:N0} 待处理 | {2:N0} 已派出 | {0:N0} 总计" },
@@ -357,6 +376,45 @@ namespace MagicGarbage
                 { "MG.Status.Log.GarbageServiceRating.Minor", "稍微调一下更好" },
                 { "MG.Status.Log.GarbageServiceRating.Stinky", "有点臭" },
                 { "MG.Status.Log.GarbageServiceRating.Problem", "垃圾问题" },
+
+                { "MG.Status.Log.ThresholdsHeader", "阈值 + 服务" },
+                { "MG.Status.Log.RequestsHeader", "请求" },
+                { "MG.Status.Log.BuildingsHeader", "建筑" },
+
+                { "MG.Status.Log.CriticalBuildingsHeader", "超过 7t 的严重建筑" },
+
+                { "MG.Status.Log.TransferProbeHeader", "垃圾转运探针" },
+                { "MG.Status.Log.TransferProbeNone", "未找到垃圾存储转运设施。" },
+                { "MG.Status.Log.TransferProbeLine",
+                    "- {0,-20} | 已存={1,7:N0} ({2,4:N1}t) | 容量={3,7:N0} ({4,4:N1}t) | 导出={5,7:N0} ({6,4:N1}t) | 低位={7,7:N0} ({8,4:N1}t) | 最小={9,7:N0} ({10,4:N1}t) | 出/入={11,6:N0}/{12,6:N0} | 活动={13} | {14}"
+                },
+
+                { "MG.Status.Log.TrucksHeader", "卡车" },
+
+                { "MG.Status.Log.SettingsPriority",
+                    "优先协助（已保存）：启用={0} | 触发值={1:N0} ({2:N1}t)"
+                },
+
+                { "MG.Status.Log.PriorityHeader", "优先协助" },
+                { "MG.Status.Log.PriorityState",
+                    "优先协助实时={0} | 间隔={1:N0} 帧 | 上次扫描请求数={2:N0} | 活动严重请求目标={3:N0}"
+                },
+                { "MG.Status.Log.PriorityPasses",
+                    "优先处理轮次：提升={0:N0} | 普通={1:N0}"
+                },
+                { "MG.Status.Log.PriorityPeakNone", "最高的活动严重目标：无" },
+                { "MG.Status.Log.PriorityPeak",
+                    "最高的活动严重目标：{0:N0} ({1:N1}t) | {2} | {3}"
+                },
+                { "MG.Status.Log.PriorityPeakState.Pending", "待处理" },
+                { "MG.Status.Log.PriorityPeakState.Dispatched", "已派出" },
+
+#if DEBUG
+                { "MG.Status.Log.PriorityPerf", "优先协助上次扫描耗时={0:N3} ms" },
+#endif
+
+                { "MG.Status.Log.CriticalBuildingsNone", "无" },
+                { "MG.Status.Log.CriticalBuildingLine", "- {0,-20} | {1,7:N0} ({2,4:N1}t) | {3}" },
             };
         }
 
