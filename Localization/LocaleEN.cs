@@ -63,10 +63,10 @@ namespace MagicGarbage
                     "  and you can still see **Status report** which updates only when you enter Options menu (lightweight)."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Priority System" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Priority Assist" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
                     "Assist for badly overloaded garbage targets (buildings).\n" +
-                    "When **ON**, checks if any active request target reaches **7000** (**7t**) garbage.\n" +
+                    "When **ON**, checks if any active request target reaches **7000+** (**7t**) garbage.\n" +
                     "Goal: reduces extra side-pickup jobs as needed so trucks reach bad targets sooner.\n" +
                     "This is a nudge, not a hard, full override of vanilla route logic.\n" +
                     "Lightweight, no Harmony patch."
@@ -379,7 +379,15 @@ namespace MagicGarbage
                 { "MG.Status.Log.ThresholdsHeader", "Thresholds + Service" },
                 { "MG.Status.Log.RequestsHeader", "Requests" },
                 { "MG.Status.Log.BuildingsHeader", "Buildings" },
+
                 { "MG.Status.Log.CriticalBuildingsHeader", "Critical Buildings over 7t" },
+
+                { "MG.Status.Log.TransferProbeHeader", "Garbage Transfer Probe" },
+                { "MG.Status.Log.TransferProbeNone", "No garbage storage-transfer facilities found." },
+                { "MG.Status.Log.TransferProbeLine",
+                    "- {0,-20} | stored={1,7:N0} ({2,4:N1}t) | cap={3,7:N0} ({4,4:N1}t) | export={5,7:N0} ({6,4:N1}t) | low={7,7:N0} ({8,4:N1}t) | min={9,7:N0} ({10,4:N1}t) | out/in={11,6:N0}/{12,6:N0} | active={13} | {14}"
+                },
+
                 { "MG.Status.Log.TrucksHeader", "Trucks" },
 
                 { "MG.Status.Log.SettingsPriority",

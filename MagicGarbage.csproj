@@ -41,9 +41,7 @@
 
 	<!-- Core game + Colossal / Unity references used by this mod -->
 	<ItemGroup>
-		<Reference Include="Game">
-			<Private>false</Private>
-		</Reference>
+		<Reference Include="Game"><Private>false</Private></Reference>
 
 		<Reference Include="Colossal.Core">
 			<Private>false</Private>

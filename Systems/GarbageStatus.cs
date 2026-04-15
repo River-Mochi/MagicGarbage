@@ -274,7 +274,7 @@ namespace MagicGarbage
         {
             string nowText = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            StringBuilder log = new StringBuilder(5200);
+            StringBuilder log = new StringBuilder(7000);
 
             log.AppendLine(Mod.LF("MG.Status.Log.Title", nowText));
             log.AppendLine(Mod.LF("MG.Status.Log.City", Fmt(snap.City)));
@@ -408,6 +408,8 @@ namespace MagicGarbage
                 }
             }
 
+            AppendGarbageTransferProbeBlock(log);
+
             AppendSectionHeader(log, Mod.L("MG.Status.Log.TrucksHeader"));
 
             log.AppendLine(Mod.LF(
@@ -473,6 +475,72 @@ namespace MagicGarbage
                 "MG.Status.Log.PriorityPerf",
                 sys.LastElapsedMs));
 #endif
+        }
+
+        private static void AppendGarbageTransferProbeBlock(StringBuilder log)
+        {
+            if (!TryGetWorld(out World world))
+            {
+                return;
+            }
+
+            GarbageStatusSystem sys = world.GetOrCreateSystemManaged<GarbageStatusSystem>();
+            GarbageStatusSystem.GarbageTransferProbeEntry[] entries = sys.GetGarbageTransferProbeEntries();
+
+            AppendSectionHeader(log, Mod.L("MG.Status.Log.TransferProbeHeader"));
+
+            if (entries == null || entries.Length == 0)
+            {
+                log.AppendLine(Mod.L("MG.Status.Log.TransferProbeNone"));
+                return;
+            }
+
+            for (int i = 0; i < entries.Length; i++)
+            {
+                GarbageStatusSystem.GarbageTransferProbeEntry entry = entries[i];
+
+                log.AppendLine(Mod.LF(
+                    "MG.Status.Log.TransferProbeLine",
+                    Fmt(entry.Facility),
+                    entry.StoredGarbage,
+                    ToTons(entry.StoredGarbage),
+                    entry.PerResourceCapacity,
+                    ToTons(entry.PerResourceCapacity),
+                    entry.ExportStartThreshold,
+                    ToTons(entry.ExportStartThreshold),
+                    entry.LowStockThreshold,
+                    ToTons(entry.LowStockThreshold),
+                    entry.MinTransferAmount,
+                    ToTons(entry.MinTransferAmount),
+                    entry.OutgoingGarbageRequests,
+                    entry.IncomingGarbageRequests,
+                    BuildTransferProbeState(entry),
+                    entry.PrefabName));
+            }
+        }
+
+        private static string BuildTransferProbeState(GarbageStatusSystem.GarbageTransferProbeEntry entry)
+        {
+            if (entry.ActiveTransferAmount > 0)
+            {
+                return entry.HasTransferPath
+                    ? $"export {entry.ActiveTransferAmount:N0} + path"
+                    : $"export {entry.ActiveTransferAmount:N0}";
+            }
+
+            if (entry.ActiveTransferAmount < 0)
+            {
+                return entry.HasTransferPath
+                    ? $"import {Math.Abs(entry.ActiveTransferAmount):N0} + path"
+                    : $"import {Math.Abs(entry.ActiveTransferAmount):N0}";
+            }
+
+            if (entry.OutgoingGarbageRequests > 0 || entry.IncomingGarbageRequests > 0)
+            {
+                return "requests only";
+            }
+
+            return "none";
         }
 
         private static void AppendSettingsBlock(StringBuilder log)
