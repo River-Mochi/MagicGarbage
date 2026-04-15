@@ -3,17 +3,17 @@
 Two main ways to handle garbage in **Cities: Skylines II**, plus a **Status-only** option.
 
 All controls are in the **Options** menu.  
-There is **no in-city UI panel** and **no Harmony**.
+There is no in-city UI panel.
 
 ---
 
 ## Option 1 – Total Magic (Auto Clean)
 
 - ✅ **Total Magic ON**
-- All city garbage is removed automatically.
+- Removes all city garbage automatically.
 - Garbage warning icons clear because there is no garbage.
 - Garbage trucks and garbage buildings become mostly cosmetic.
-- A few trucks may still move due to vanilla dispatch timing.
+- Vanilla garbage logic still exists; cleanup is just very fast.
 
 ---
 
@@ -21,26 +21,42 @@ There is **no in-city UI panel** and **no Harmony**.
 
 - ✅ **Trash Boss ON**
 - **Total Magic OFF**
-- Vanilla garbage simulation stays active, but these standard values can be tuned:
+- Keeps vanilla garbage simulation running, but lets key garbage values be tuned.
 
-  - **Truck load capacity** (**100–500%**)
-  - **Facility storage** (**100–500%**)
-  - **Facility processing speed** (**100–500%**)
-  - **Facility fleet** (**100–400%**)
+### Standard Trash Boss sliders
+
+- **Truck load capacity** (**100–500%**)
+- **Facility storage** (**100–500%**)
+- **Facility processing speed** (**100–500%**)
+- **Facility fleet** (**100–400%**)
 
 ### Standard preset buttons
 
-- **Recommended**
-  - Truck load capacity: **200%**
-  - Facility processing speed: **200%**
-  - Facility storage: **150%**
-  - Facility fleet: **140%**
+**Recommended**
+- Truck load capacity: **250%**
+- Facility storage: **150%**
+- Facility processing speed: **250%**
+- Facility fleet: **100%**
 
-- **Game Defaults**
-  - Returns the standard Trash Boss sliders to vanilla values
-  - Percent sliders back to **100%**
+**Game Defaults**
+- Returns the standard Trash Boss sliders to vanilla values.
 
-> These standard buttons do **not** change Power User settings.
+> Standard Trash Boss buttons do **not** change Power User settings.
+
+---
+
+## Priority System (lightweight)
+
+When **Trash Boss** is enabled, **Priority System** is also available.
+
+- Watches for buildings over **7t** garbage
+- Temporarily raises **Pickup Threshold** to the current **Dispatch Request Threshold**
+- Helps reduce extra side pickups so badly overloaded buildings get reached sooner
+
+This is a **lightweight assist**, not a hard route override.
+
+For most cities, **Trash Boss + Priority System** is enough.  
+Let the city run for about **1 in-game month** before deciding whether more tuning is needed.
 
 ---
 
@@ -50,64 +66,53 @@ Power User is a separate advanced section inside **Trash Boss**.
 
 When **Power User** is enabled, these extra sliders appear:
 
-- **Dispatch Request Threshold** (**100–3000**)
+- **Dispatch Request Threshold** (**100–2000**)
 - **Pickup Threshold** (**20–1000**)
-- **Garbage Happiness Baseline** (**100–3000**)
-- **Garbage Happiness Step** (**65–500**)
-- **Garbage Accumulation Rate**
-
-### What they do
-
-- **Dispatch Request Threshold**  
-  Building garbage needed before a truck dispatch request is created or kept.
-
-- **Pickup Threshold**  
-  Minimum building garbage before a truck can collect from it.
-
-- **Garbage Happiness Baseline**  
-  Building garbage level before it starts causing health + happiness penalty.
-
-- **Garbage Happiness Step**  
-  Extra garbage over baseline amount that causes each additional `-1` garbage penalty.
-
-- **Garbage Accumulation Rate**  
-  Scales supported building garbage source values.
+- **Garbage Happiness Baseline** (**100–2000**)
+- **Garbage Happiness Step** (**65–1000**)
+- **Garbage Accumulation Rate** (**20–200%**)
 
 ### Power User rules
 
 - **Pickup** cannot be higher than **Dispatch Request**
-- Power User values are saved even when **Power User** is turned off
+- Power User values stay saved even when **Power User** is turned off
 - Standard Trash Boss buttons do not overwrite Power User values
 
 ### Power User preset buttons
 
-- **Recommended**
-  - Turns **Power User ON**
-  - Garbage Happiness Baseline: **550**
-  - Garbage Happiness Step: **150**
-  - First garbage penalty starts at **700**
-  - **Garbage Accumulation Rate** stays at **100%** unless changed manually
+**Recommended**
+- Turns **Power User ON**
+- Dispatch Request Threshold: **500**
+- Pickup Threshold: **300**
+- Garbage Happiness Baseline: **550**
+- Garbage Happiness Step: **150**
+- Garbage Accumulation Rate: **100%**
 
-- **Game Defaults**
-  - Returns Power User values to vanilla
-  - Turns **Power User OFF**
+**Game Defaults**
+- Returns Power User values to vanilla
+- Turns **Power User OFF**
 
-### Why use Power User?
+### Should most players use Power User?
 
-Most players do **not** need Power User.
+Usually, **no**.
 
-It is there for players who want to experiment with advanced garbage tuning, reduce truck traffic further, or better understand how the garbage systems behave.
+Most cities work well with:
+- **Trash Boss**
+- **Priority System**
+- standard slider tuning only
 
-As a rough player-facing conversion:
+Power User is best for:
+- advanced tuning
+- experiments
+- learning how the garbage systems behave
+
+Let the city run for about **1 in-game month** before judging results.  
+Changing Power User too aggressively can make garbage behavior worse instead of better.
+
+As a rough conversion:
 
 - **100 garbage units = 0.1t**
 - **1,000 garbage units = 1t**
-
-### Happiness examples
-
-- **Vanilla:** `100 / 65` → first penalty at **165**
-- **Recommended button:** `550 / 150` → first penalty at **700**
-- **Very soft:** `950 / 200` → first penalty at **1150**
 
 ---
 
@@ -127,7 +132,7 @@ The **Status** section in Options shows a live garbage snapshot while the menu i
 - citywide garbage produced vs processed
 - active collect requests
 - buildings with garbage
-- buildings above request threshold
+- critical buildings over **7t**
 - garbage facilities
 - garbage trucks and dump trucks
 - max workers
@@ -139,17 +144,18 @@ The **Detailed Status to Log** button writes a larger report into:
 
 `Logs/MagicGarbage.log`
 
-This includes things like:
+This includes:
 
-- live game garbage thresholds
-- current mod settings
+- current mode + settings
+- live garbage thresholds
 - garbage service rating
 - pending vs dispatched requests
 - building garbage stats
-- highest pending target garbage
-- near-warning building counts
+- critical buildings over **7t**
+- priority assist summary
 - truck summary
 - per-facility summary
+- garbage transfer probe info
 
 ### Open Log
 
@@ -163,7 +169,7 @@ This includes things like:
 - Safe to disable or remove
 - **No Harmony**
 - Designed to be lightweight
-- Status refresh happens in the **Options** menu instead of running as a constant in-city panel
+- Status refresh happens in the **Options** menu instead of a constant in-city panel
 
 ---
 
@@ -179,20 +185,12 @@ This includes things like:
 
 ## Languages
 
-- English
-- Français
-- Deutsch
-- Español
-- Italiano
-- 日本語
-- 한국어
-- Português do Brasil
-- Polski
-- 简体中文
-- 繁體中文
+English, Français, Deutsch, Español, Italiano, 日本語, 한국어, Português do Brasil, Polski, 简体中文, 繁體中文
 
+---
 
 ## Links
-Discord https://discord.gg/HTav7ARPs2
-Github https://github.com/River-Mochi/MagicGarbage
+
+Discord: https://discord.gg/HTav7ARPs2  
+Github: https://github.com/River-Mochi/MagicGarbage  
 Forum: https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/

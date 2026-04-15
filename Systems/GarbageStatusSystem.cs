@@ -53,6 +53,21 @@ namespace MagicGarbage
             }
         }
 
+        // Critical building entry used by the detailed log.
+        public readonly struct CriticalBuildingEntry
+        {
+            public readonly Entity Building;
+            public readonly int Garbage;
+            public readonly string PrefabName;
+
+            public CriticalBuildingEntry(Entity building, int garbage, string prefabName)
+            {
+                Building = building;
+                Garbage = garbage;
+                PrefabName = prefabName;
+            }
+        }
+
         // Full snapshot consumed by GarbageStatus.cs for UI + log output.
         public readonly struct Snapshot
         {
@@ -203,6 +218,7 @@ namespace MagicGarbage
         private CitySystem m_CitySystem = null!;
         private GarbageAccumulationSystem m_GarbageAccumulationSystem = null!;
         private CitizenHappinessSystem m_CitizenHappinessSystem = null!;
+        private PrefabSystem m_GamePrefabSystem = null!;
 
         private EntityQuery m_ProducerQuery;
         private EntityQuery m_RequestQuery;
@@ -216,6 +232,7 @@ namespace MagicGarbage
             m_CitySystem = World.GetOrCreateSystemManaged<CitySystem>();
             m_GarbageAccumulationSystem = World.GetOrCreateSystemManaged<GarbageAccumulationSystem>();
             m_CitizenHappinessSystem = World.GetOrCreateSystemManaged<CitizenHappinessSystem>();
+            m_GamePrefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 
             // Buildings that currently hold garbage.
             m_ProducerQuery = GetEntityQuery(new EntityQueryDesc
@@ -727,6 +744,17 @@ namespace MagicGarbage
             return a.Facility.Index.CompareTo(b.Facility.Index);
         }
 
+        private static int CompareCriticalBuildingEntries(CriticalBuildingEntry a, CriticalBuildingEntry b)
+        {
+            int cmp = b.Garbage.CompareTo(a.Garbage);
+            if (cmp != 0)
+            {
+                return cmp;
+            }
+
+            return a.Building.Index.CompareTo(b.Building.Index);
+        }
+
         // Convert internal raw garbage totals to the player-facing tons-per-month style output.
         private static long ToTonsPerMonth(long raw)
         {
@@ -736,6 +764,38 @@ namespace MagicGarbage
             }
 
             return (long)Math.Round(raw / 1000.0, MidpointRounding.AwayFromZero);
+        }
+
+        // ----------- HELPERS -----------
+
+        public CriticalBuildingEntry[] GetCriticalBuildings()
+        {
+            List<CriticalBuildingEntry> entries = new List<CriticalBuildingEntry>(16);
+
+            foreach ((RefRO<GarbageProducer> producer, Entity buildingEntity) in SystemAPI
+                         .Query<RefRO<GarbageProducer>>()
+                         .WithEntityAccess()
+                         .WithNone<Deleted, Destroyed, Temp>())
+            {
+                int garbage = producer.ValueRO.m_Garbage;
+                if (garbage < Setting.PriorityCriticalGarbage)
+                {
+                    continue;
+                }
+
+                string prefabName = "UnknownPrefab";
+
+                if (SystemAPI.HasComponent<PrefabRef>(buildingEntity))
+                {
+                    PrefabRef prefabRef = SystemAPI.GetComponent<PrefabRef>(buildingEntity);
+                    prefabName = m_GamePrefabSystem.GetPrefabName(prefabRef.m_Prefab);
+                }
+
+                entries.Add(new CriticalBuildingEntry(buildingEntity, garbage, prefabName));
+            }
+
+            entries.Sort(CompareCriticalBuildingEntries);
+            return entries.ToArray();
         }
     }
 }

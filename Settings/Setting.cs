@@ -56,6 +56,8 @@ namespace MagicGarbage
         internal const int MinGarbageHappinessStep = 65;
         internal const int MaxGarbageHappinessStep = 1000;
 
+        internal const int PriorityCriticalGarbage = 7000;
+
         // ---- RECOMMENDED VALUES ----
         internal const int RecommendedTruckCapacityMultiplier = 250;
         internal const int RecommendedFacilityStorageMultiplier = 150;
@@ -87,6 +89,8 @@ namespace MagicGarbage
         private int m_GarbageHappinessBaseline = VanillaGarbageHappinessBaseline;
         private int m_GarbageHappinessStep = VanillaGarbageHappinessStep;
         private int m_GarbageAccumulationRate = VanillaGarbageAccumulationRate;
+
+        private bool m_PrioritySystemEnabled = true;
 
         // Power User sliders only show when both Trash Boss and Power User are enabled.
         private bool ShowPowerUsers => m_TrashBossEnabled && m_PowerUserOptions;
@@ -175,6 +179,25 @@ namespace MagicGarbage
         [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
         [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
         public int GarbageFacilityVehicleMultiplier { get; set; } = 100;
+
+
+        [SettingsUISection(ActionsTab, TrashBossGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnPrioritySystemChanged))]
+        public bool PrioritySystemEnabled
+        {
+            get => m_PrioritySystemEnabled;
+            set
+            {
+                if (m_PrioritySystemEnabled == value)
+                {
+                    return;
+                }
+
+                m_PrioritySystemEnabled = value;
+                Apply();
+            }
+        }
 
         // -----------------------------------------
         // TRASH BOSS STANDARD PRESET BUTTONS
@@ -459,6 +482,7 @@ namespace MagicGarbage
             m_TotalMagic = true;
             m_TrashBossEnabled = false;
             m_PowerUserOptions = false;
+            m_PrioritySystemEnabled = true;
 
             GarbageTruckCapacityMultiplier = 100;
             GarbageFacilityVehicleMultiplier = 100;
@@ -509,13 +533,18 @@ namespace MagicGarbage
                 facSys.Enabled = true;
             }
 
-
             GarbageAccumulationRateSystem accumulationSys = world.GetExistingSystemManaged<GarbageAccumulationRateSystem>();
             if (accumulationSys != null)
             {
                 accumulationSys.Enabled = true;
             }
 
+
+            GarbagePriorityAssistSystem prioritySys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
+            if (prioritySys != null)
+            {
+                prioritySys.Enabled = true;
+            }
 
         }
 
@@ -552,6 +581,13 @@ namespace MagicGarbage
             {
                 accumulationSys.Enabled = true;
             }
+
+            GarbagePriorityAssistSystem prioritySys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
+            if (prioritySys != null)
+            {
+                prioritySys.Enabled = true;
+            }
+
         }
 
 
@@ -567,6 +603,13 @@ namespace MagicGarbage
             {
                 sys.Enabled = true;
             }
+
+            GarbagePriorityAssistSystem prioritySys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
+            if (prioritySys != null)
+            {
+                prioritySys.Enabled = true;
+            }
+
         }
 
         private void OnAccumulationSliderChanged(int _)
@@ -581,6 +624,13 @@ namespace MagicGarbage
             {
                 sys.Enabled = true;
             }
+
+            GarbagePriorityAssistSystem prioritySys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
+            if (prioritySys != null)
+            {
+                prioritySys.Enabled = true;
+            }
+
         }
 
         private void OnFacilitySliderChanged(int _)
@@ -591,6 +641,20 @@ namespace MagicGarbage
             }
 
             GarbageFacilityCapacitySystem sys = world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
+            if (sys != null)
+            {
+                sys.Enabled = true;
+            }
+        }
+
+        private void OnPrioritySystemChanged(bool _)
+        {
+            if (!TryGetWorld(out World world))
+            {
+                return;
+            }
+
+            GarbagePriorityAssistSystem sys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
             if (sys != null)
             {
                 sys.Enabled = true;
@@ -631,6 +695,12 @@ namespace MagicGarbage
             if (accumulationSys != null)
             {
                 accumulationSys.Enabled = true;
+            }
+
+            GarbagePriorityAssistSystem prioritySys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
+            if (prioritySys != null)
+            {
+                prioritySys.Enabled = true;
             }
 
         }

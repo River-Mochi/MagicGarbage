@@ -6,7 +6,7 @@
 
 namespace MagicGarbage
 {
-    using Colossal.Serialization.Entities; // Purpose
+    using Colossal.Serialization.Entities;  // Purpose - Debug build
     using Game;                            // GameMode
     using Game.Buildings;                  // GarbageProducer, GarbageProducerFlags
     using Game.Common;                     // Deleted, Destroyed

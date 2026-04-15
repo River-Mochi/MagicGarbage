@@ -53,6 +53,17 @@ namespace MagicGarbage
         }
 
         [SettingsUISection(ActionsTab, StatusGrp)]
+        public string StatusCriticalBuildings
+        {
+            get
+            {
+                GarbageStatus.RefreshIfNeeded();
+                return GarbageStatus.GetUiCriticalBuildings();
+            }
+        }
+
+
+        [SettingsUISection(ActionsTab, StatusGrp)]
         public string StatusFacilities
         {
             get

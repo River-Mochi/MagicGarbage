@@ -28,6 +28,7 @@ namespace MagicGarbage
         private static string s_UiRequests = "-";
         private static string s_UiFacilities = "-";
         private static string s_UiTrucks = "-";
+        private static string s_UiCriticalBuildings = "-";
 
         public static void ResetUi()
         {
@@ -41,6 +42,7 @@ namespace MagicGarbage
             s_UiRequests = "-";
             s_UiTrucks = "-";
             s_UiFacilities = "-";
+            s_UiCriticalBuildings = "-";
         }
 
         public static void RefreshIfNeeded()
@@ -123,12 +125,14 @@ namespace MagicGarbage
                 return;
             }
 
-            ApplySnapshotToUi(snap);
+            GarbageStatusSystem.CriticalBuildingEntry[] criticalBuildings = sys.GetCriticalBuildings();
+            ApplySnapshotToUi(snap, criticalBuildings.Length);
+
             s_LastRefreshUtcTicks = DateTime.UtcNow.Ticks;
 
             if (writeToLog)
             {
-                string logText = BuildLogText(snap);
+                string logText = BuildLogText(snap, criticalBuildings);
                 Mod.Log.Info($"{Mod.ModTag} {logText}");
             }
         }
@@ -163,7 +167,12 @@ namespace MagicGarbage
             return string.IsNullOrEmpty(s_UiFacilities) ? "-" : s_UiFacilities;
         }
 
-        private static void ApplySnapshotToUi(GarbageStatusSystem.Snapshot snap)
+        public static string GetUiCriticalBuildings()
+        {
+            return string.IsNullOrEmpty(s_UiCriticalBuildings) ? "-" : s_UiCriticalBuildings;
+        }
+
+        private static void ApplySnapshotToUi(GarbageStatusSystem.Snapshot snap, int criticalBuildings)
         {
             string updatedAt = DateTime.Now.ToString("HH:mm:ss");
 
@@ -187,6 +196,10 @@ namespace MagicGarbage
                 snap.ProducerGarbageGt0,
                 snap.ProducerTotal,
                 snap.ProducerOverRequest);
+
+            s_UiCriticalBuildings = Mod.LF(
+                "MG.Status.Row.CriticalBuildings",
+                criticalBuildings);
 
             s_UiFacilities = BuildFacilitiesSummary(snap);
 
@@ -213,7 +226,6 @@ namespace MagicGarbage
                 snap.FacilityMaxWorkers);
         }
 
-        // Simple player-facing comments based on rounded city garbage happiness factor.
         private static string BuildGarbageServiceRatingUi(int rounded, string updatedAt)
         {
             if (rounded >= 0)
@@ -234,7 +246,6 @@ namespace MagicGarbage
             return Mod.LF("MG.Status.Row.GarbageServiceRating.Problem", rounded, updatedAt);
         }
 
-        // Same rating bands as Options UI, but returned as plain labels for detailed log button.
         private static string BuildGarbageServiceRatingLabel(int rounded)
         {
             if (rounded >= 0)
@@ -255,18 +266,22 @@ namespace MagicGarbage
             return Mod.L("MG.Status.Log.GarbageServiceRating.Problem");
         }
 
-        private static string BuildLogText(GarbageStatusSystem.Snapshot snap)
+        private static string BuildLogText(
+            GarbageStatusSystem.Snapshot snap,
+            GarbageStatusSystem.CriticalBuildingEntry[] criticalBuildings)
         {
             string nowText = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            StringBuilder log = new StringBuilder(2800);
+            StringBuilder log = new StringBuilder(9000);
 
             log.AppendLine(Mod.LF("MG.Status.Log.Title", nowText));
             log.AppendLine(Mod.LF("MG.Status.Log.City", Fmt(snap.City)));
             log.AppendLine(Mod.LF("MG.Status.Log.Mode", snap.TotalMagic, snap.TrashBoss));
-            AppendSettingsBlock(log);
-            log.AppendLine(Mod.L("MG.Status.Log.Legend"));
             log.AppendLine();
+
+            AppendSettingsBlock(log);
+
+            AppendSectionHeader(log, Mod.L("MG.Status.Log.ThresholdsHeader"));
 
             if (snap.HaveParams)
             {
@@ -282,7 +297,6 @@ namespace MagicGarbage
                 log.AppendLine(Mod.L("MG.Status.Log.ThresholdsMissing"));
             }
 
-            log.AppendLine();
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.GarbageProcessing",
                 snap.GarbageTonsPerMonth,
@@ -294,14 +308,14 @@ namespace MagicGarbage
                 snap.GarbageServiceRatingRaw,
                 snap.GarbageServiceRatingRounded));
 
-            log.AppendLine();
+            AppendSectionHeader(log, Mod.L("MG.Status.Log.RequestsHeader"));
+
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.Requests",
                 snap.RequestTotal,
                 snap.RequestPending,
                 snap.RequestDispatched));
 
-            // Show a plain "none" in user-facing log instead of raw ECS null text.
             if (snap.PendingMaxTargetGarbage <= 0 || snap.PendingMaxTargetEntity == Entity.Null)
             {
                 log.AppendLine(Mod.L("MG.Status.Log.PendingPeakNone"));
@@ -314,6 +328,10 @@ namespace MagicGarbage
                     ToTons(snap.PendingMaxTargetGarbage),
                     Fmt(snap.PendingMaxTargetEntity)));
             }
+
+            AppendPriorityAssistBlock(log);
+
+            AppendSectionHeader(log, Mod.L("MG.Status.Log.BuildingsHeader"));
 
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.Producers",
@@ -340,6 +358,29 @@ namespace MagicGarbage
                 nearWarningUnits,
                 ToTons(nearWarningUnits)));
 
+            AppendSectionHeader(log, Mod.L("MG.Status.Log.CriticalBuildingsHeader"));
+
+            if (criticalBuildings == null || criticalBuildings.Length == 0)
+            {
+                log.AppendLine(Mod.L("MG.Status.Log.CriticalBuildingsNone"));
+            }
+            else
+            {
+                for (int i = 0; i < criticalBuildings.Length; i++)
+                {
+                    GarbageStatusSystem.CriticalBuildingEntry entry = criticalBuildings[i];
+
+                    log.AppendLine(Mod.LF(
+                        "MG.Status.Log.CriticalBuildingLine",
+                        Fmt(entry.Building),
+                        entry.Garbage,
+                        ToTons(entry.Garbage),
+                        entry.PrefabName));
+                }
+            }
+
+            AppendSectionHeader(log, Mod.L("MG.Status.Log.FacilitiesHeader"));
+
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.FacilitiesSummary",
                 snap.FacilityTotal,
@@ -348,19 +389,8 @@ namespace MagicGarbage
                 snap.FacilityDumpTruckMoving,
                 snap.FacilityMaxWorkers));
 
-            log.AppendLine(Mod.LF(
-                "MG.Status.Log.Trucks",
-                snap.TruckTotal,
-                snap.TruckParked,
-                snap.TruckMoving,
-                snap.TruckReturning,
-                snap.TruckDisabled));
-
             if (snap.Facilities != null && snap.Facilities.Length > 0)
             {
-                log.AppendLine();
-                log.AppendLine(Mod.L("MG.Status.Log.FacilitiesHeader"));
-
                 for (int i = 0; i < snap.Facilities.Length; i++)
                 {
                     GarbageStatusSystem.FacilityEntry f = snap.Facilities[i];
@@ -376,7 +406,200 @@ namespace MagicGarbage
                 }
             }
 
+            AppendGarbageTransferProbeBlock(log);
+
+            AppendSectionHeader(log, Mod.L("MG.Status.Log.TrucksHeader"));
+
+            log.AppendLine(Mod.LF(
+                "MG.Status.Log.Trucks",
+                snap.TruckTotal,
+                snap.TruckParked,
+                snap.TruckMoving,
+                snap.TruckReturning,
+                snap.TruckDisabled));
+
             return log.ToString().TrimEnd();
+        }
+
+        // -------- Helpers --------
+
+        private static void AppendPriorityAssistBlock(StringBuilder log)
+        {
+            if (!TryGetWorld(out World world))
+            {
+                return;
+            }
+
+            GarbagePriorityAssistSystem sys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
+            if (sys == null)
+            {
+                return;
+            }
+
+            AppendSectionHeader(log, Mod.L("MG.Status.Log.PriorityHeader"));
+
+            log.AppendLine(Mod.LF(
+                "MG.Status.Log.PriorityState",
+                sys.IsPriorityAssistLive,
+                GarbagePriorityAssistSystem.UpdateIntervalFrames,
+                sys.LastScannedBuildings,
+                sys.LastCriticalBuildings));
+
+            log.AppendLine(Mod.LF(
+                "MG.Status.Log.PriorityPasses",
+                sys.RaisedPassCount,
+                sys.NormalPassCount));
+
+            if (sys.HighestCriticalBuildingGarbage <= 0 || sys.HighestCriticalBuildingEntity == Entity.Null)
+            {
+                log.AppendLine(Mod.L("MG.Status.Log.PriorityPeakNone"));
+            }
+            else
+            {
+                log.AppendLine(Mod.LF(
+                    "MG.Status.Log.PriorityPeak",
+                    sys.HighestCriticalBuildingGarbage,
+                    ToTons(sys.HighestCriticalBuildingGarbage),
+                    Fmt(sys.HighestCriticalBuildingEntity),
+                    BuildPriorityRequestState(sys.HighestCriticalBuildingHasRequest, sys.HighestCriticalBuildingDispatched)));
+            }
+
+#if DEBUG
+            log.AppendLine(Mod.LF(
+                "MG.Status.Log.PriorityPerf",
+                sys.LastElapsedMs));
+#endif
+        }
+
+        private static string BuildPriorityRequestState(bool hasRequest, bool dispatched)
+        {
+            if (!hasRequest)
+            {
+                return "no request";
+            }
+
+            return dispatched ? "dispatched" : "pending";
+        }
+
+        private static void AppendGarbageTransferProbeBlock(StringBuilder log)
+        {
+            if (!TryGetWorld(out World world))
+            {
+                return;
+            }
+
+            GarbageStatusSystem sys = world.GetOrCreateSystemManaged<GarbageStatusSystem>();
+            GarbageStatusSystem.GarbageTransferProbeEntry[] entries = sys.GetGarbageTransferProbeEntries();
+
+            AppendSectionHeader(log, Mod.L("MG.Status.Log.LocalTransferProbeHeader"));
+
+            bool anyLocal = false;
+            for (int i = 0; i < entries.Length; i++)
+            {
+                GarbageStatusSystem.GarbageTransferProbeEntry entry = entries[i];
+                if (entry.IsOutsideConnection)
+                {
+                    continue;
+                }
+
+                anyLocal = true;
+                log.AppendLine(Mod.LF(
+                    "MG.Status.Log.TransferProbeLine",
+                    Fmt(entry.Facility),
+                    entry.StoredGarbage,
+                    ToTons(entry.StoredGarbage),
+                    entry.GarbageCapacity,
+                    ToTons(entry.GarbageCapacity),
+                    entry.AcceptPriority,
+                    entry.DeliverPriority,
+                    BuildTransferRequestSummary(
+                        entry.AcceptRequestEntity,
+                        entry.AcceptRequestExists,
+                        entry.AcceptRequestAmount,
+                        entry.AcceptRequestPriority,
+                        entry.AcceptRequestRequireTransport,
+                        entry.AcceptRequestAssigned),
+                    BuildTransferRequestSummary(
+                        entry.SendRequestEntity,
+                        entry.SendRequestExists,
+                        entry.SendRequestAmount,
+                        entry.SendRequestPriority,
+                        entry.SendRequestRequireTransport,
+                        entry.SendRequestAssigned),
+                    entry.PrefabName));
+            }
+
+            if (!anyLocal)
+            {
+                log.AppendLine(Mod.L("MG.Status.Log.LocalTransferProbeNone"));
+            }
+
+            AppendSectionHeader(log, Mod.L("MG.Status.Log.OutsideTransferProbeHeader"));
+
+            bool anyOutside = false;
+            for (int i = 0; i < entries.Length; i++)
+            {
+                GarbageStatusSystem.GarbageTransferProbeEntry entry = entries[i];
+                if (!entry.IsOutsideConnection)
+                {
+                    continue;
+                }
+
+                anyOutside = true;
+                log.AppendLine(Mod.LF(
+                    "MG.Status.Log.TransferProbeLine",
+                    Fmt(entry.Facility),
+                    entry.StoredGarbage,
+                    ToTons(entry.StoredGarbage),
+                    entry.GarbageCapacity,
+                    ToTons(entry.GarbageCapacity),
+                    entry.AcceptPriority,
+                    entry.DeliverPriority,
+                    BuildTransferRequestSummary(
+                        entry.AcceptRequestEntity,
+                        entry.AcceptRequestExists,
+                        entry.AcceptRequestAmount,
+                        entry.AcceptRequestPriority,
+                        entry.AcceptRequestRequireTransport,
+                        entry.AcceptRequestAssigned),
+                    BuildTransferRequestSummary(
+                        entry.SendRequestEntity,
+                        entry.SendRequestExists,
+                        entry.SendRequestAmount,
+                        entry.SendRequestPriority,
+                        entry.SendRequestRequireTransport,
+                        entry.SendRequestAssigned),
+                    entry.PrefabName));
+            }
+
+            if (!anyOutside)
+            {
+                log.AppendLine(Mod.L("MG.Status.Log.OutsideTransferProbeNone"));
+            }
+        }
+
+        private static string BuildTransferRequestSummary(
+            Entity requestEntity,
+            bool exists,
+            int amount,
+            float priority,
+            bool requireTransport,
+            bool assigned)
+        {
+            if (requestEntity == Entity.Null)
+            {
+                return "none";
+            }
+
+            if (!exists)
+            {
+                return $"stale {Fmt(requestEntity)}";
+            }
+
+            string state = assigned ? "dispatched" : "pending";
+            string mode = requireTransport ? "transport" : "local";
+
+            return $"{Fmt(requestEntity)} {state} {amount:N0} p={priority:N2} {mode}";
         }
 
         private static void AppendSettingsBlock(StringBuilder log)
@@ -386,14 +609,15 @@ namespace MagicGarbage
                 return;
             }
 
-            log.AppendLine();
-            log.AppendLine(Mod.L("MG.Status.Log.SettingsHeader"));
+            AppendSectionHeader(log, Mod.L("MG.Status.Log.SettingsHeader"));
+
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.SettingsTrashBoss",
                 setting.GarbageTruckCapacityMultiplier,
                 setting.GarbageFacilityStorageMultiplier,
                 setting.GarbageFacilityProcessingMultiplier,
                 setting.GarbageFacilityVehicleMultiplier));
+
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.SettingsPowerUser",
                 setting.PowerUserOptions,
@@ -402,6 +626,13 @@ namespace MagicGarbage
                 setting.GarbageHappinessBaseline,
                 setting.GarbageHappinessStep,
                 setting.GarbageAccumulationRate));
+
+            log.AppendLine(Mod.LF(
+                "MG.Status.Log.SettingsPriority",
+                setting.PrioritySystemEnabled,
+                Setting.PriorityCriticalGarbage,
+                ToTons(Setting.PriorityCriticalGarbage)));
+
             log.AppendLine();
         }
 
@@ -415,6 +646,7 @@ namespace MagicGarbage
             s_UiRequests = "-";
             s_UiTrucks = "-";
             s_UiFacilities = "-";
+            s_UiCriticalBuildings = "-";
         }
 
         private static bool IsGameMode()
@@ -437,6 +669,13 @@ namespace MagicGarbage
         private static double ToTons(int garbageUnits)
         {
             return garbageUnits / 1000.0;
+        }
+
+        private static void AppendSectionHeader(StringBuilder log, string title)
+        {
+            log.AppendLine("================================");
+            log.AppendLine(title);
+            log.AppendLine("================================");
         }
     }
 }

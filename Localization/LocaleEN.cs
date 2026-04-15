@@ -59,7 +59,17 @@ namespace MagicGarbage
                     "Directly manage garbage systems; leaves vanilla garbage logic running.\n\n" +
                     "- When **Trash Boss is ON [ ✓ ]**, Total Magic is forced OFF.\n" +
                     "- Sliders only apply when Trash Boss is enabled.\n" +
-                    "- Both Total Magic + Trash Boss can be **OFF** if only **Status report** is needed.\n"
+                    "- Both Total Magic + Trash Boss can be **OFF** to get vanilla settings,\n" +
+                    "  and you can still see **Status report** which updates only when you enter Options menu (lightweight)."
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Priority Assist" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
+                    "Assist for badly overloaded garbage targets (buildings).\n" +
+                    "When **ON**, checks if any active request target reaches **7000+** (**7t**) garbage.\n" +
+                    "Goal: reduces extra side-pickup jobs as needed so trucks reach bad targets sooner.\n" +
+                    "This is a nudge, not a hard, full override of vanilla route logic.\n" +
+                    "Lightweight, no Harmony patch."
                 },
 
                 // Sliders
@@ -234,6 +244,13 @@ namespace MagicGarbage
                     "<Update time = last refreshed.>"
                 },
 
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "7t+ Buildings" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
+                    "Count of garbage-producing buildings at or above **7t / 7000** garbage.\n" +
+                    "These are badly overloaded buildings, enable [x] Priority Assist to prioritize these better.\n" +
+                    "Use Status to log button if you want the Entity ID numbers to inspect."
+                },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Garbage/mo." },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
                     "Shows the current citywide garbage amount and the total garbage processing rate.\n" +
@@ -279,7 +296,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Detailed Status to Log" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageStatusLog)),
                     "Send a more detailed garbage report into **Logs/MagicGarbage.log**.\n" +
-                    "Includes a short legend, vanilla reference values, and many extra real city current garbage statistics."
+                    "Includes organized city garbage statistics"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Open Log" },
@@ -294,6 +311,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "Needs minor tweak ({0:N0}) | updated {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "Slightly stinky ({0:N0}) | updated {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Garbage problem ({0:N0}) | updated {1}" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} over 7t" },
 
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Processed" },
                 { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
@@ -357,6 +375,55 @@ namespace MagicGarbage
                 { "MG.Status.Log.GarbageServiceRating.Minor", "Needs minor tweak" },
                 { "MG.Status.Log.GarbageServiceRating.Stinky", "Slightly stinky" },
                 { "MG.Status.Log.GarbageServiceRating.Problem", "Garbage problem" },
+
+                { "MG.Status.Log.ThresholdsHeader", "Thresholds + Service" },
+                { "MG.Status.Log.RequestsHeader", "Requests" },
+                { "MG.Status.Log.BuildingsHeader", "Buildings" },
+
+                { "MG.Status.Log.CriticalBuildingsHeader", "Critical Buildings over 7t" },
+                { "MG.Status.Log.LocalTransferProbeHeader", "Local Garbage Transfer Probe" },
+                { "MG.Status.Log.LocalTransferProbeNone", "No local garbage facilities found." },
+                { "MG.Status.Log.OutsideTransferProbeHeader", "Outside Connection Garbage Transfer Probe" },
+                { "MG.Status.Log.OutsideTransferProbeNone", "No outside-connection garbage facilities found." },
+
+                { "MG.Status.Log.TransferProbeHeader", "Garbage Transfer Probe" },
+                { "MG.Status.Log.TransferProbeNone", "No garbage storage-transfer facilities found." },
+
+                { "MG.Status.Log.TransferProbeLine",
+                    "- {0,-20} | stored={1,7:N0} ({2,4:N1}t) / cap={3,7:N0} ({4,4:N1}t) | accept={5:N2} | send={6:N2} | inReq={7} | outReq={8} | {9}"
+                },
+
+                { "MG.Status.Log.TrucksHeader", "Trucks" },
+
+                { "MG.Status.Log.SettingsPriority",
+                    "Priority System (saved): enabled={0} | trigger={1:N0} ({2:N1}t)"
+                },
+
+                { "MG.Status.Log.PriorityState",
+                    "Priority assist live={0} | interval={1:N0} frames | last scanned buildings={2:N0} | critical buildings={3:N0}"
+                },
+                { "MG.Status.Log.PriorityPeak",
+                    "Highest critical building: {0:N0} ({1:N1}t) | {2} | request={3}"
+                },
+
+                { "MG.Status.Log.PriorityHeader", "Priority Assist" },
+
+                { "MG.Status.Log.PriorityPasses",
+                    "Priority passes: raised={0:N0} | normal={1:N0}"
+                },
+                { "MG.Status.Log.PriorityPeakNone", "Highest active critical building: none" },
+
+                { "MG.Status.Log.PriorityPeakState.Pending", "pending" },
+                { "MG.Status.Log.PriorityPeakState.Dispatched", "dispatched" },
+
+#if DEBUG
+{ "MG.Status.Log.PriorityPerf", "Priority assist last scan time={0:N3} ms" },
+#endif
+
+                { "MG.Status.Log.CriticalBuildingsNone", "none" },
+                { "MG.Status.Log.CriticalBuildingLine", "- {0,-20} | {1,7:N0} ({2,4:N1}t) | {3}" },
+
+
             };
         }
 
