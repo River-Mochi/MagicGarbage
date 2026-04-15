@@ -8,74 +8,80 @@
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
 	<LongDescription>
-**Magic Garbage + Trash Boss**
+        **Magic Garbage + Trash Boss**
 
-Two ways to handle garbage, a Status Report option, and all new POWER Users section for experiments.
----
+        Two ways to handle garbage, a Status Report option, and all new POWER Users section for experiments.
+        ---
 
-### OPTION 1  AUTO CLEAN
-- ✅ **Total Magic On**
-- Removes all garbage automatically.
-- Garbage warning icons cleared
-- Trucks and facilities become mostly cosmetic.
-- Mod does not stop Garbage system; cleanup is just very fast.
+        ### OPTION 1  AUTO CLEAN
+        - ✅ **Total Magic On**
+        - Removes all garbage automatically.
+        - Garbage warning icons cleared.
+        - Mod does not stop Garbage system; cleanup is just very fast.
 
-### OPTION 2  SELF MANAGE
-- ✅ **Trash Boss On**
-- Keep vanilla garbage gameplay, and allows adjustable garbage values.
-- Adjust garbage trucks, facilities, other factors to reduce traffic and service strain.
-- 🚚 Great for players who still want to see trucks driving around, with fewer problems.
+        ### OPTION 2  SELF MANAGE
+        - ✅ **Trash Boss On**
+        - Keep vanilla garbage gameplay, and directly adjust garbage values.
+        - Adjust garbage trucks, facilities, etc., to reduce traffic and service strain.
+        - 🚚 Great for players who still want to see trucks driving around, with fewer problems.
 
-**Threshold slider**
-- Advanced option (mod worked fine before this slider; it's bonus for power users)
-- Increase means garbage levels can be much higher before the building calls for a truck (reduce truck dispatches). May need higher truck capacity.
-Balance advised: use status log button to check details while tweaking this. Allow city to run a few hours between threshold changes to get better analysis.
+        **Priority Assist (lightweight)**
+        - Watches for buildings over **7t** garbage.
+        - Helps badly overloaded buildings get reached sooner.
+        - This is a nudge that works over time, not a hard route override.
 
-**Helper buttons**
-- [Game Defaults] = reset all sliders to 100% (pure vanilla).
-- [Recommended]	  = suggested preset values for easy management.
-- Standard Trash Boss buttons do not change Power User section.
-
-### NEW STATUS Report
-- Real garbage stats help a Trash Boss figure out what is happening.
-- Lean: status does not run in-city per frame; runs in Options menu for best performance to not affect gameplay.
+        **Helper buttons**
+        - [Game Defaults] = reset all sliders to 100% (pure vanilla).
+        - [Recommended]	  = suggested preset values for easy management.
+        - Standard Trash Boss buttons do not change Power User section.
 
 
-### NEW OPTIONAL POWER USER
-- Not needed for most players; allows advanced tuning and experimentation.
-- Most cities get good results just using the Trash Boss Options and not touching Power User settings.
-- Extra controls:
-- Dispatch Request Threshold + Pickup Threshold
-- **Pickup** cannot be higher than **Dispatch Request**.
-- Garbage Happiness Baseline + Garbage Happiness Step
-- Garbage Accumulation Rate (not needed for most cities, this is a powerful adjustment, use with caution)
-- Higher thresholds can reduce truck traffic, but too high can slow pickups too much.
+        ### STATUS Report
+        - Real garbage stats help show what is happening.
+        - Lean: status does not run in-city per frame; runs in Options menu for best performance to not affect gameplay.
+        - Detailed log button writes even more detailed notes in the Log file for reference.
 
-#### Support and feedback
-- If the mod helps you, give it a Like, it's free + easy :)
-- Feedback on: Github, Discord, etc., links on this page.
+        ### OPTIONAL POWER USER
+        - Not needed for most players; allows advanced tuning and experimentation.
+        - Most cities work well just using **Trash Boss + Priority Assist**.
+        - Let the city run about **1 in-game month** before judging results.
+        - Only tweak Power User if the standard Trash Boss controls are not enough.
 
----
+        **Power User controls**
+        - Dispatch Request Threshold + Pickup Threshold
+        - **Pickup** cannot be higher than **Dispatch Request**.
+        - Garbage Happiness Baseline + Garbage Happiness Step
+        - Garbage Accumulation Rate (not needed for most cities, this is a powerful adjustment, use with caution)
 
-### Compatibility
-- Works with new and existing cities. Safe to remove any time.
-- Does not use Harmony patch, lightweight; anything with sliders is done in options menu, not in-game, for best performance.
+        Higher thresholds can reduce truck traffic, but too high can also lead to health and happiness issues from high garbage levels.
+        Power User is useful for experimenting and digging into how the game garbage systems behave.
 
----
 
-### Credits
-- RiverMochi - author
-- Thanks to Wayz for inspiration on the original Magical Garbage mod
-- yenyang - code review, tech advice
-- Necko1996 - testing, screenshots
-- gagaxm - truck image
+        #### Support and feedback
+        - If the mod helps you, give it a Like, it's free + easy :)
+        - Feedback on: Github, Discord, etc., links on this page.
 
-#### 11 languages
-- English, Français French, Deutsch German, Español Spanish, Italiano Italian
-- 日本語 Japanese, 한국어 Korean, Português Brasil, Polski Polish
-- 简体中文 Simplified Chinese, 繁體中文 Traditional Chinese
+        ---
 
-</LongDescription>
+        ### Compatibility
+        - Safe to remove any time.
+        - Does not use Harmony patch; designed to be lightweight for the best performance.
+
+        ---
+
+        ### Credits
+        - RiverMochi - author
+        - Thanks to Wayz for inspiration on the original Magical Garbage mod
+        - yenyang - code review, tech advice
+        - Necko1996 - testing, screenshots
+        - gagaxm - truck image
+
+        #### 11 languages
+        - English, Français French, Deutsch German, Español Spanish, Italiano Italian
+        - 日本語 Japanese, 한국어 Korean, Português Brasil, Polski Polish
+        - 简体中文 Simplified Chinese, 繁體中文 Traditional Chinese
+
+    </LongDescription>
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/thumbnail-garbageTruck.jpg" />
 	<!--Screenshot, can be set multiple times-->
@@ -99,12 +105,10 @@ Balance advised: use status log button to check details while tweaking this. All
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-* added optional Power User advanced settings for garbage tuning
-* added Garbage Accumulation Rate for power users to tinker with; not needed for most cities.
-* added optional Building threshold slider; triggers when a truck is dispatched
-* added more detailed Status log info to mod Options menu.
-* updated all locale files.
-* update images.
+    * added Priority Assist option (lightweight) which helps change priorities when there are buildings with high garbage levels; reduce traffic and improve service efficiency.
+    * added more detailed Status log info to mod Options menu.
+    * updated all locale files.
+    * update images.
 </ChangeLog>
 <!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 <ExternalLink Type="discord" Url="https://discord.gg/HTav7ARPs2" />
