@@ -90,7 +90,9 @@ namespace MagicGarbage
         private int m_GarbageHappinessStep = VanillaGarbageHappinessStep;
         private int m_GarbageAccumulationRate = VanillaGarbageAccumulationRate;
 
-        private bool m_PriorityAssistEnabled;
+        // Saved ON by default so Trash Boss has Priority Assist ready when later enabled.
+        // Runtime remains inactive while Total Magic is ON or Trash Boss is OFF.
+        private bool m_PriorityAssistEnabled = true;
 
         // Power User sliders only show when both Trash Boss and Power User are enabled.
         private bool ShowPowerUsers => m_TrashBossEnabled && m_PowerUserOptions;
@@ -148,17 +150,6 @@ namespace MagicGarbage
                     m_TotalMagic = false;
                 }
 
-
-                // One-time convenience default:
-                // on fresh install, Priority starts OFF because Total Magic is the startup mode.
-                // The first time Trash Boss is enabled, auto-enable Priority toggle once.
-                // After that, respect the player's own Priority choice.
-                if (!PriorityAssistInitialized)
-                {
-                    m_PriorityAssistEnabled = true;
-                    PriorityAssistInitialized = true;
-                }
-
                 Apply();
             }
         }
@@ -191,10 +182,9 @@ namespace MagicGarbage
         [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
         public int GarbageFacilityVehicleMultiplier { get; set; } = 100;
 
-
         [SettingsUISection(ActionsTab, TrashBossGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
-        [SettingsUISetter(typeof(Setting), nameof(OnPrioritySystemChanged))]
+        [SettingsUISetter(typeof(Setting), nameof(OnPriorityAssistChanged))]
         public bool PriorityAssistEnabled
         {
             get => m_PriorityAssistEnabled;
@@ -206,15 +196,9 @@ namespace MagicGarbage
                 }
 
                 m_PriorityAssistEnabled = value;
-                PriorityAssistInitialized = true;
                 Apply();
             }
         }
-
-
-        [SettingsUIHidden]
-        public bool PriorityAssistInitialized { get; set; }
-
 
         // -----------------------------------------
         // TRASH BOSS STANDARD PRESET BUTTONS
@@ -377,7 +361,6 @@ namespace MagicGarbage
             }
         }
 
-
         // -----------------------------------------
         // POWER USER PRESET BUTTONS
         // -----------------------------------------
@@ -501,10 +484,6 @@ namespace MagicGarbage
             m_PriorityAssistEnabled = true;
             m_PowerUserOptions = false;
 
-            m_PriorityAssistEnabled = false;
-            PriorityAssistInitialized = false;
-  
-
             GarbageTruckCapacityMultiplier = 100;
             GarbageFacilityVehicleMultiplier = 100;
             GarbageFacilityProcessingMultiplier = 100;
@@ -522,7 +501,7 @@ namespace MagicGarbage
         // SettingsUISetter callbacks
         // --------------------------------------------
 
-        // Callback to update Live city immediately when main toggles are flipped (wake/apply system now).
+        // Callback to update live city immediately when main toggles are flipped.
         private void OnModeToggleChanged(bool _)
         {
             if (!TryGetWorld(out World world))
@@ -560,13 +539,11 @@ namespace MagicGarbage
                 accumulationSys.Enabled = true;
             }
 
-
             GarbagePriorityAssistSystem prioritySys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
             if (prioritySys != null)
             {
                 prioritySys.Enabled = true;
             }
-
         }
 
         private void OnTruckSliderChanged(int _)
@@ -608,9 +585,7 @@ namespace MagicGarbage
             {
                 prioritySys.Enabled = true;
             }
-
         }
-
 
         private void OnThresholdSliderChanged(int _)
         {
@@ -630,7 +605,6 @@ namespace MagicGarbage
             {
                 prioritySys.Enabled = true;
             }
-
         }
 
         private void OnAccumulationSliderChanged(int _)
@@ -651,7 +625,6 @@ namespace MagicGarbage
             {
                 prioritySys.Enabled = true;
             }
-
         }
 
         private void OnFacilitySliderChanged(int _)
@@ -668,7 +641,7 @@ namespace MagicGarbage
             }
         }
 
-        private void OnPrioritySystemChanged(bool _)
+        private void OnPriorityAssistChanged(bool _)
         {
             if (!TryGetWorld(out World world))
             {
@@ -723,7 +696,6 @@ namespace MagicGarbage
             {
                 prioritySys.Enabled = true;
             }
-
         }
 
         private static void OpenLogFolder()
