@@ -46,7 +46,8 @@ namespace MagicGarbage
                 // Total Magic
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Totalna magia" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
-                    "**Włączone [ ✓ ]** utrzymuje całe miasto w czystości.\n\n" +
+                    "**Włączone [ ✓ ]** utrzymuje całe miasto w czystości.\n" +
+                    "\n" +
                     "Gdy **Totalna magia** jest WŁ.:\n" +
                     "- Sterowanie odpadami jest wymuszone na WYŁ..\n" +
                     "- Suwaki Sterowania odpadami nie są stosowane (wartości zostają zapisane na później).\n" +
@@ -56,10 +57,20 @@ namespace MagicGarbage
                 // Trash Boss
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Sterowanie odpadami" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
-                    "Bezpośrednio zarządza systemami odpadów; logika garbage vanilla nadal działa.\n\n" +
+                    "Bezpośrednio zarządza systemami odpadów; logika odpadów vanilla nadal działa.\n" +
+                    "\n" +
                     "- Gdy **Sterowanie odpadami jest WŁ. [ ✓ ]**, Totalna magia jest wymuszona na WYŁ..\n" +
                     "- Suwaki działają tylko wtedy, gdy Sterowanie odpadami jest włączone.\n" +
                     "- Zarówno Totalna magia, jak i Sterowanie odpadami mogą być **WYŁ.**, jeśli potrzebny jest tylko **raport statusu**.\n"
+                },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PrioritySystemEnabled)), "Asysta priorytetu" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PrioritySystemEnabled)),
+                    "Pomoc dla mocno przeciążonych celów odpadów (budynków).\n" +
+                    "Gdy jest **ON**, sprawdza, czy jakiś aktywny cel zgłoszenia osiąga **7000+** (**7t**) odpadów.\n" +
+                    "Cel: w razie potrzeby ogranicza dodatkowe poboczne odbiory, aby ciężarówki szybciej docierały do najgorszych celów.\n" +
+                    "To tylko lekkie wsparcie, a nie twarde, pełne nadpisanie logiki tras vanilla.\n" +
+                    "Lekkie, bez patcha Harmony."
                 },
 
                 // Sliders
@@ -111,7 +122,8 @@ namespace MagicGarbage
                     "Opcjonalne ustawienia zaawansowane\n" +
                     "<Uwaga: NIE są potrzebne> do dobrej obsługi; są dla graczy, którzy chcą eksperymentować albo lepiej rozumieć działanie systemu.\n" +
                     "Gdy opcja jest **WYŁ.**, elementy eksperta działają jak normalna gra **vanilla**.\n" +
-                    "Gdy opcja jest **WŁ.**, pojawiają się zaawansowane **suwaki**.\n\n" +
+                    "Gdy opcja jest **WŁ.**, pojawiają się zaawansowane **suwaki**.\n" +
+                    "\n" +
                     "<--- Przykłady zadowolenia --->\n" +
                     " - <Vanilla> 100/65 = 1. kara przy <165>.\n" +
                     " - Kliknij <Zalecane>, aby ustawić 550/150 = 1. kara przy <700>.\n" +
@@ -163,11 +175,13 @@ namespace MagicGarbage
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
                     "**Skaluje wartości źródła odpadów w obsługiwanych budynkach.**\n" +
                     "Uwaga: to mocny suwak i zmiana tempa wpływa na wiele rzeczy.\n" +
-                    "Dobry system można mieć także bez używania tego ustawienia.\n\n" +
+                    "Dobry system można mieć także bez używania tego ustawienia.\n" +
+                    "\n" +
                     "**100% = vanilla** tempo narastania.\n" +
                     "**20%** = dużo wolniejsze narastanie.\n" +
                     "**200%** = podwójne tempo - naprawdę dużo odpadów.\n" +
-                    "Przy 20% wszyscy mieszkańcy najwyraźniej kompostują, więc tempo narastania odpadów jest dużo niższe ;)\n\n" +
+                    "Przy 20% wszyscy mieszkańcy najwyraźniej kompostują, więc tempo narastania odpadów jest dużo niższe ;)\n" +
+                    "\n" +
                     "Uwaga techniczna: gra dodaje odpady stopniowo w ciągu dnia, a nie wszystko naraz."
                 },
 
@@ -205,13 +219,15 @@ namespace MagicGarbage
                     "<Tryb auto czyszczenia>\n" +
                     "  * Totalna magia WŁ. = **[ ✓ ]**\n" +
                     "  * Odpady są usuwane automatycznie - gotowe.\n" +
-                    " <-------------------------------------->\n\n" +
+                    " <-------------------------------------->\n" +
+                    "\n" +
                     "<Tryb ręcznego zarządzania>\n" +
                     "  * Sterowanie odpadami = **[ ✓ ]**\n" +
                     "  * Ustaw suwaki według uznania.\n" +
                     "  * Opcjonalnie: włącz zaawansowane suwaki (nie jest wymagane).\n" +
                     "  * Te same odpady w grze; lepiej zarządzane ciężarówki/obiekty.\n" +
-                    " <-------------------------------------->\n\n" +
+                    " <-------------------------------------->\n" +
+                    "\n" +
                     "<Tryb statusu / vanilla>\n" +
                     "  * Totalna magia = WYŁ.\n" +
                     "  * Sterowanie odpadami = WYŁ.\n" +
@@ -234,6 +250,13 @@ namespace MagicGarbage
                     "<Czas aktualizacji = ostatnie odświeżenie.>"
                 },
 
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Budynki 7t+" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
+                    "Liczba budynków produkujących odpady, które mają **7t / 7000** odpadów lub więcej.\n" +
+                    "To mocno przeciążone budynki — włącz [x] Asysta priorytetu, aby lepiej je uprzywilejować.\n" +
+                    "Użyj przycisku „Szczegółowy status do logu”, jeśli chcesz sprawdzić numery ID encji."
+                },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Odpady/mies." },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
                     "Pokazuje bieżącą ilość odpadów w całym mieście i łączne tempo przetwarzania.\n" +
@@ -245,7 +268,8 @@ namespace MagicGarbage
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
                     "**Oczekujące** = aktywne zgłoszenia odbioru, które nie są jeszcze przypisane do ciężarówki ani trasy.\n" +
                     "**Przydzielone** = aktywne zgłoszenia odbioru już przypisane.\n" +
-                    "**Łącznie** = liczba bieżących **aktywnych** encji zgłoszeń (w łańcuchu odpadów).\n\n" +
+                    "**Łącznie** = liczba bieżących **aktywnych** encji zgłoszeń (w łańcuchu odpadów).\n" +
+                    "\n" +
                     "Uwaga techniczna: to coś innego niż <Powyżej progu zgłoszenia>. Tu liczone są <zgłoszenia>, a nie budynki.\n" +
                     "Część oczekujących zgłoszeń zostanie przydzielona później; część może też zniknąć, jeśli vanilla uzna przy ponownej weryfikacji, że cel nie potrzebuje już usługi."
                 },
@@ -278,12 +302,14 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Szczegółowy status do logu" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageStatusLog)),
-                    "Wyślij bardziej szczegółowy raport garbage do **Logs/MagicGarbage.log**.\n" +
+                    "Wyślij bardziej szczegółowy raport odpadów do **Logs/MagicGarbage.log**.\n" +
                     "Zawiera krótką legendę, wartości referencyjne vanilla i wiele dodatkowych realnych statystyk odpadów z miasta."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Otwórz log" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)), "Otwórz folder gry Logs/.." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)),
+                    "Otwórz folder gry Logs/.."
+                },
 
                 // Runtime status strings
                 { "MG.Status.NoCity", "Nie wczytano jeszcze miasta." },
@@ -292,6 +318,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "Przyda się mała korekta ({0:N0}) | aktualizacja {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "Trochę śmierdzi ({0:N0}) | aktualizacja {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Problem ze śmieciami ({0:N0}) | aktualizacja {1}" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} ponad 7t" },
 
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t wyprodukowano | {1:N0} t przetworzono" },
                 { "MG.Status.Row.Requests", "{1:N0} oczekujące | {2:N0} przydzielone | {0:N0} łącznie" },
@@ -317,8 +344,7 @@ namespace MagicGarbage
                     "Legenda:\n" +
                     "- Wyprodukowano/Przetworzono używa ton na miesiąc.\n" +
                     "- Wartości progów poniżej używają wewnętrznych jednostek odpadów, a nie ton.\n" +
-                    "- Dla gracza gra przelicza" +
-                    " 100 jednostek = 0.1t oraz 1 000 jednostek = 1t.\n" +
+                    "- Dla gracza gra przelicza 100 jednostek = 0.1t oraz 1 000 jednostek = 1t.\n" +
                     "- Ocena usług odpadów = miejski współczynnik zadowolenia z odpadów w grze.\n" +
                     "  - 0 = Świetnie\n" +
                     "  - -1 = Przyda się mała korekta lub można zignorować\n" +
@@ -356,6 +382,42 @@ namespace MagicGarbage
                 { "MG.Status.Log.GarbageServiceRating.Minor", "Przyda się mała korekta" },
                 { "MG.Status.Log.GarbageServiceRating.Stinky", "Trochę śmierdzi" },
                 { "MG.Status.Log.GarbageServiceRating.Problem", "Problem ze śmieciami" },
+
+                { "MG.Status.Log.ThresholdsHeader", "Progi + usługa" },
+                { "MG.Status.Log.RequestsHeader", "Zgłoszenia" },
+                { "MG.Status.Log.BuildingsHeader", "Budynki" },
+
+                { "MG.Status.Log.CriticalBuildingsHeader", "Krytyczne budynki powyżej 7t" },
+
+                { "MG.Status.Log.TransferProbeHeader", "Sonda transferu odpadów" },
+                { "MG.Status.Log.TransferProbeNone", "Nie znaleziono obiektów magazynowo-transferowych odpadów." },
+                { "MG.Status.Log.TransferProbeLine",
+                    "- {0,-20} | magazyn={1,7:N0} ({2,4:N1}t) | poj={3,7:N0} ({4,4:N1}t) | eksport={5,7:N0} ({6,4:N1}t) | niski={7,7:N0} ({8,4:N1}t) | min={9,7:N0} ({10,4:N1}t) | wyj/wej={11,6:N0}/{12,6:N0} | aktywne={13} | {14}"
+                },
+
+                { "MG.Status.Log.TrucksHeader", "Ciężarówki" },
+
+                { "MG.Status.Log.SettingsPriority", "Asysta priorytetu (zapisane): włączone={0} | próg={1:N0} ({2:N1}t)"
+                },
+
+                { "MG.Status.Log.PriorityHeader", "Asysta priorytetu" },
+                { "MG.Status.Log.PriorityState", "Asysta priorytetu aktywna={0} | interwał={1:N0} klatek | ostatnio przeskanowane zgłoszenia={2:N0} | aktywne krytyczne cele zgłoszeń={3:N0}"
+                },
+                { "MG.Status.Log.PriorityPasses", "Przebiegi priorytetu: podniesione={0:N0} | normalne={1:N0}"
+                },
+                { "MG.Status.Log.PriorityPeakNone", "Najwyższy aktywny krytyczny cel: brak" },
+                { "MG.Status.Log.PriorityPeak", "Najwyższy aktywny krytyczny cel: {0:N0} ({1:N1}t) | {2} | {3}"
+                },
+                { "MG.Status.Log.PriorityPeakState.Pending", "oczekujące" },
+                { "MG.Status.Log.PriorityPeakState.Dispatched", "przydzielone" },
+
+#if DEBUG
+{ "MG.Status.Log.PriorityPerf", "Asysta priorytetu czas ostatniego skanu={0:N3} ms" },
+#endif
+
+                { "MG.Status.Log.CriticalBuildingsNone", "brak" },
+                { "MG.Status.Log.CriticalBuildingLine", "- {0,-20} | {1,7:N0} ({2,4:N1}t) | {3}" },
+
             };
         }
 
