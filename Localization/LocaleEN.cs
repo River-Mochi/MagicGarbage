@@ -411,7 +411,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.PriorityPasses",
                     "Priority passes: raised={0:N0} | normal={1:N0}"
                 },
-                { "MG.Status.Log.PriorityPeakNone", "Highest active critical target: none" },
+                { "MG.Status.Log.PriorityPeakNone", "Highest active critical building: none" },
 
                 { "MG.Status.Log.PriorityPeakState.Pending", "pending" },
                 { "MG.Status.Log.PriorityPeakState.Dispatched", "dispatched" },
