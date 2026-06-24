@@ -12,23 +12,23 @@
 
 namespace MagicGarbage
 {
-    using System.Collections.Generic;
     using Colossal.Serialization.Entities; // Purpose
     using CS2Shared.RiverMochi; // LogUtils
     using Game;
     using Game.Prefabs;
+    using Game.SceneFlow;
     using Unity.Entities;
     using Unity.Mathematics;
 
     /// <summary>
-    /// Scales garbage truck prefab capacity and unload rate from authoring prefab values.
-    /// Runs only on city load or when settings wake it, then disables itself.
+    /// One-shot prefab system that scales garbage truck capacity and unload rate
+    /// from PrefabBase authoring values. The system is enabled on city load or
+    /// by settings callbacks, applies once, then disables itself.
     /// </summary>
     public partial class GarbageTruckCapacitySystem : GameSystemBase
     {
-        private readonly Dictionary<Entity, (int Capacity, int UnloadRate)> m_Base = new();
-
         private PrefabSystem m_PrefabSystem = null!;
+        private EntityQuery m_GarbageTruckPrefabQuery;
 
         protected override void OnCreate()
         {
@@ -36,7 +36,12 @@ namespace MagicGarbage
 
             m_PrefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 
-            RequireForUpdate<GarbageTruckData>();
+            m_GarbageTruckPrefabQuery = SystemAPI.QueryBuilder()
+                .WithAll<PrefabData>()
+                .WithAllRW<GarbageTruckData>()
+                .Build();
+
+            RequireForUpdate(m_GarbageTruckPrefabQuery);
 
             Enabled = false;
         }
@@ -45,18 +50,36 @@ namespace MagicGarbage
         {
             base.OnGameLoadingComplete(purpose, mode);
 
-            // Clear per-city/session cache. Next update reapplies from PrefabBase authoring values.
-            m_Base.Clear();
+            bool isRealGame =
+                mode == GameMode.Game &&
+                (purpose == Purpose.NewGame || purpose == Purpose.LoadGame);
+
+            if (!isRealGame)
+            {
+                return;
+            }
 
             Enabled = true;
 
 #if DEBUG
-            LogUtils.Info("[MG] [Trash Boss] GarbageTruckCapacitySystem: OnGameLoadingComplete -> Enabled");
+            LogUtils.Info("[MG] [Trash Boss] GarbageTruckCapacitySystem: city load -> Enabled");
 #endif
+        }
+
+        public override int GetUpdateInterval(SystemUpdatePhase phase)
+        {
+            return 1;
         }
 
         protected override void OnUpdate()
         {
+            GameManager gameManager = GameManager.instance;
+            if (gameManager == null || !gameManager.gameMode.IsGame())
+            {
+                Enabled = false;
+                return;
+            }
+
             if (!Mod.TryGetSetting(out Setting setting))
             {
                 Enabled = false;
@@ -64,33 +87,25 @@ namespace MagicGarbage
             }
 
             int targetMult = 100;
-
             if (!setting.TotalMagic && setting.TrashBossEnabled)
             {
                 targetMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500);
             }
 
-            float factor = targetMult / 100f;
-
-            foreach ((RefRW<GarbageTruckData> truck, Entity prefabEntity) in
-                     SystemAPI.Query<RefRW<GarbageTruckData>>()
+            foreach ((RefRW<GarbageTruckData> truck, Entity prefabEntity) in SystemAPI
+                         .Query<RefRW<GarbageTruckData>>()
                          .WithAll<PrefabData>()
                          .WithEntityAccess())
             {
                 ref GarbageTruckData data = ref truck.ValueRW;
 
-                if (!m_Base.TryGetValue(prefabEntity, out (int Capacity, int UnloadRate) baseline))
+                if (!TryGetAuthoringBase(prefabEntity, out int baseCapacity, out int baseUnloadRate))
                 {
-                    if (!TryGetAuthoringBase(prefabEntity, out baseline))
-                    {
-                        baseline = (data.m_GarbageCapacity, data.m_UnloadRate);
-                    }
-
-                    m_Base[prefabEntity] = baseline;
+                    continue;
                 }
 
-                int targetCapacity = (int)math.round(baseline.Capacity * factor);
-                int targetUnloadRate = (int)math.round(baseline.UnloadRate * factor);
+                int targetCapacity = ScalePercentKeepZero(baseCapacity, targetMult);
+                int targetUnloadRate = ScalePercentKeepZero(baseUnloadRate, targetMult);
 
                 if (data.m_GarbageCapacity != targetCapacity)
                 {
@@ -110,14 +125,10 @@ namespace MagicGarbage
             Enabled = false;
         }
 
-        private bool TryGetAuthoringBase(Entity prefabEntity, out (int Capacity, int UnloadRate) baseline)
+        private bool TryGetAuthoringBase(Entity prefabEntity, out int capacity, out int unloadRate)
         {
-            baseline = default;
-
-            if (m_PrefabSystem == null)
-            {
-                return false;
-            }
+            capacity = 0;
+            unloadRate = 0;
 
             if (!m_PrefabSystem.TryGetPrefab(prefabEntity, out PrefabBase prefabBase) || prefabBase == null)
             {
@@ -129,8 +140,19 @@ namespace MagicGarbage
                 return false;
             }
 
-            baseline = (authoring.m_GarbageCapacity, authoring.m_UnloadRate);
+            capacity = authoring.m_GarbageCapacity;
+            unloadRate = authoring.m_UnloadRate;
             return true;
+        }
+
+        private static int ScalePercentKeepZero(int baseValue, int percent)
+        {
+            if (baseValue <= 0)
+            {
+                return 0;
+            }
+
+            return math.max(1, (int)math.round(baseValue * percent / 100f));
         }
     }
 }

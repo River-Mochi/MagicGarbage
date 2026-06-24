@@ -12,24 +12,23 @@
 
 namespace MagicGarbage
 {
-    using System.Collections.Generic;
     using Colossal.Serialization.Entities; // Purpose
     using CS2Shared.RiverMochi; // LogUtils
     using Game;
     using Game.Prefabs;
+    using Game.SceneFlow;
     using Unity.Entities;
     using Unity.Mathematics;
 
     /// <summary>
-    /// Adjusts GarbageFacilityData from authoring prefab values.
-    /// Runs only on city load or when settings wake it, then disables itself.
+    /// One-shot prefab system that adjusts GarbageFacilityData from PrefabBase
+    /// authoring values. The system is enabled on city load or by settings callbacks,
+    /// applies once, then disables itself.
     /// </summary>
     public partial class GarbageFacilityCapacitySystem : GameSystemBase
     {
-        private readonly Dictionary<Entity, (int VehicleCap, int ProcessingSpeed, int StorageCap)> m_Base =
-            new Dictionary<Entity, (int VehicleCap, int ProcessingSpeed, int StorageCap)>();
-
         private PrefabSystem m_PrefabSystem = null!;
+        private EntityQuery m_GarbageFacilityPrefabQuery;
 
         protected override void OnCreate()
         {
@@ -37,7 +36,12 @@ namespace MagicGarbage
 
             m_PrefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 
-            RequireForUpdate<GarbageFacilityData>();
+            m_GarbageFacilityPrefabQuery = SystemAPI.QueryBuilder()
+                .WithAll<PrefabData>()
+                .WithAllRW<GarbageFacilityData>()
+                .Build();
+
+            RequireForUpdate(m_GarbageFacilityPrefabQuery);
 
             Enabled = false;
         }
@@ -46,18 +50,36 @@ namespace MagicGarbage
         {
             base.OnGameLoadingComplete(purpose, mode);
 
-            // Clear per-city/session cache. Next update reapplies from PrefabBase authoring values.
-            m_Base.Clear();
+            bool isRealGame =
+                mode == GameMode.Game &&
+                (purpose == Purpose.NewGame || purpose == Purpose.LoadGame);
+
+            if (!isRealGame)
+            {
+                return;
+            }
 
             Enabled = true;
 
 #if DEBUG
-            LogUtils.Info("[MG] [Trash Boss] GarbageFacilityCapacitySystem: OnGameLoadingComplete -> Enabled");
+            LogUtils.Info("[MG] [Trash Boss] GarbageFacilityCapacitySystem: city load -> Enabled");
 #endif
+        }
+
+        public override int GetUpdateInterval(SystemUpdatePhase phase)
+        {
+            return 1;
         }
 
         protected override void OnUpdate()
         {
+            GameManager gameManager = GameManager.instance;
+            if (gameManager == null || !gameManager.gameMode.IsGame())
+            {
+                Enabled = false;
+                return;
+            }
+
             if (!Mod.TryGetSetting(out Setting setting))
             {
                 Enabled = false;
@@ -75,34 +97,29 @@ namespace MagicGarbage
                 targetVehicle = math.clamp(setting.GarbageFacilityVehicleMultiplier, 100, 400);
             }
 
-            float vehicleFactor = targetVehicle / 100f;
-            float processingFactor = targetProcessing / 100f;
-            float storageFactor = targetStorage / 100f;
-
-            foreach ((RefRW<GarbageFacilityData> facility, Entity prefabEntity) in
-                     SystemAPI.Query<RefRW<GarbageFacilityData>>()
+            foreach ((RefRW<GarbageFacilityData> facility, Entity prefabEntity) in SystemAPI
+                         .Query<RefRW<GarbageFacilityData>>()
                          .WithAll<PrefabData>()
                          .WithEntityAccess())
             {
                 ref GarbageFacilityData data = ref facility.ValueRW;
 
-                if (!m_Base.TryGetValue(prefabEntity, out (int VehicleCap, int ProcessingSpeed, int StorageCap) baseline))
+                if (!TryGetAuthoringBase(
+                        prefabEntity,
+                        out int baseVehicleCapacity,
+                        out int baseProcessingSpeed,
+                        out int baseGarbageCapacity))
                 {
-                    if (!TryGetAuthoringBase(prefabEntity, out baseline))
-                    {
-                        baseline = (data.m_VehicleCapacity, data.m_ProcessingSpeed, data.m_GarbageCapacity);
-                    }
-
-                    m_Base[prefabEntity] = baseline;
+                    continue;
                 }
 
-                int targetVehicleCap = (int)math.round(baseline.VehicleCap * vehicleFactor);
-                int targetProcessingSpeed = (int)math.round(baseline.ProcessingSpeed * processingFactor);
-                int targetStorageCap = (int)math.round(baseline.StorageCap * storageFactor);
+                int targetVehicleCapacity = ScalePercentKeepZero(baseVehicleCapacity, targetVehicle);
+                int targetProcessingSpeed = ScalePercentKeepZero(baseProcessingSpeed, targetProcessing);
+                int targetGarbageCapacity = ScalePercentKeepZero(baseGarbageCapacity, targetStorage);
 
-                if (data.m_VehicleCapacity != targetVehicleCap)
+                if (data.m_VehicleCapacity != targetVehicleCapacity)
                 {
-                    data.m_VehicleCapacity = targetVehicleCap;
+                    data.m_VehicleCapacity = targetVehicleCapacity;
                 }
 
                 if (data.m_ProcessingSpeed != targetProcessingSpeed)
@@ -110,9 +127,9 @@ namespace MagicGarbage
                     data.m_ProcessingSpeed = targetProcessingSpeed;
                 }
 
-                if (data.m_GarbageCapacity != targetStorageCap)
+                if (data.m_GarbageCapacity != targetGarbageCapacity)
                 {
-                    data.m_GarbageCapacity = targetStorageCap;
+                    data.m_GarbageCapacity = targetGarbageCapacity;
                 }
             }
 
@@ -127,14 +144,13 @@ namespace MagicGarbage
 
         private bool TryGetAuthoringBase(
             Entity prefabEntity,
-            out (int VehicleCap, int ProcessingSpeed, int StorageCap) baseline)
+            out int vehicleCapacity,
+            out int processingSpeed,
+            out int garbageCapacity)
         {
-            baseline = default;
-
-            if (m_PrefabSystem == null)
-            {
-                return false;
-            }
+            vehicleCapacity = 0;
+            processingSpeed = 0;
+            garbageCapacity = 0;
 
             if (!m_PrefabSystem.TryGetPrefab(prefabEntity, out PrefabBase prefabBase) || prefabBase == null)
             {
@@ -146,12 +162,20 @@ namespace MagicGarbage
                 return false;
             }
 
-            baseline = (
-                authoring.m_VehicleCapacity,
-                authoring.m_ProcessingSpeed,
-                authoring.m_GarbageCapacity);
-
+            vehicleCapacity = authoring.m_VehicleCapacity;
+            processingSpeed = authoring.m_ProcessingSpeed;
+            garbageCapacity = authoring.m_GarbageCapacity;
             return true;
+        }
+
+        private static int ScalePercentKeepZero(int baseValue, int percent)
+        {
+            if (baseValue <= 0)
+            {
+                return 0;
+            }
+
+            return math.max(1, (int)math.round(baseValue * percent / 100f));
         }
     }
 }

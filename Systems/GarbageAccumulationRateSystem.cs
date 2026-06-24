@@ -12,23 +12,23 @@
 
 namespace MagicGarbage
 {
-    using System.Collections.Generic;
     using Colossal.Serialization.Entities; // Purpose
     using CS2Shared.RiverMochi; // LogUtils
     using Game;
     using Game.Prefabs;
+    using Game.SceneFlow;
     using Unity.Entities;
+    using Unity.Mathematics;
 
     /// <summary>
-    /// Scales prefab ConsumptionData.m_GarbageAccumulation for supported prefab sources.
-    /// Runs only on city load or when settings wake it, then disables itself.
+    /// One-shot prefab system that scales ConsumptionData.m_GarbageAccumulation
+    /// from authoring values where available. The system is enabled on city load
+    /// or by settings callbacks, applies once, then disables itself.
     /// </summary>
     public partial class GarbageAccumulationRateSystem : GameSystemBase
     {
-        // Prefab entity -> baseline garbage accumulation source value.
-        private readonly Dictionary<Entity, float> m_Base = new Dictionary<Entity, float>();
-
         private PrefabSystem m_PrefabSystem = null!;
+        private EntityQuery m_ConsumptionPrefabQuery;
 
         protected override void OnCreate()
         {
@@ -36,7 +36,13 @@ namespace MagicGarbage
 
             m_PrefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 
-            RequireForUpdate<ConsumptionData>();
+            m_ConsumptionPrefabQuery = SystemAPI.QueryBuilder()
+                .WithAll<PrefabData>()
+                .WithAllRW<ConsumptionData>()
+                .Build();
+
+            RequireForUpdate(m_ConsumptionPrefabQuery);
+
             Enabled = false;
         }
 
@@ -44,18 +50,36 @@ namespace MagicGarbage
         {
             base.OnGameLoadingComplete(purpose, mode);
 
-            // Clear per-city/session cache. Next update reapplies from PrefabBase authoring values.
-            m_Base.Clear();
+            bool isRealGame =
+                mode == GameMode.Game &&
+                (purpose == Purpose.NewGame || purpose == Purpose.LoadGame);
+
+            if (!isRealGame)
+            {
+                return;
+            }
 
             Enabled = true;
 
 #if DEBUG
-            LogUtils.Info("[MG] [Power User] GarbageAccumulationRateSystem: OnGameLoadingComplete -> Enabled");
+            LogUtils.Info("[MG] [Power User] GarbageAccumulationRateSystem: city load -> Enabled");
 #endif
+        }
+
+        public override int GetUpdateInterval(SystemUpdatePhase phase)
+        {
+            return 1;
         }
 
         protected override void OnUpdate()
         {
+            GameManager gameManager = GameManager.instance;
+            if (gameManager == null || !gameManager.gameMode.IsGame())
+            {
+                Enabled = false;
+                return;
+            }
+
             if (!Mod.TryGetSetting(out Setting setting))
             {
                 Enabled = false;
@@ -63,38 +87,27 @@ namespace MagicGarbage
             }
 
             int targetMultiplier = 100;
-
             if (!setting.TotalMagic && setting.TrashBossEnabled && setting.PowerUserOptions)
             {
-                targetMultiplier = Unity.Mathematics.math.clamp(
+                targetMultiplier = math.clamp(
                     setting.GarbageAccumulationRate,
                     Setting.MinGarbageAccumulationRate,
                     Setting.MaxGarbageAccumulationRate);
             }
 
-            float factor = targetMultiplier / 100f;
-
-            // Only touch prefab entities here.
-            // Live buildings keep using vanilla recalculation from these prefab source values.
-            foreach ((RefRW<ConsumptionData> consumption, Entity prefabEntity) in
-                     SystemAPI.Query<RefRW<ConsumptionData>>()
+            foreach ((RefRW<ConsumptionData> consumption, Entity prefabEntity) in SystemAPI
+                         .Query<RefRW<ConsumptionData>>()
                          .WithAll<PrefabData>()
                          .WithEntityAccess())
             {
                 ref ConsumptionData data = ref consumption.ValueRW;
 
-                if (!m_Base.TryGetValue(prefabEntity, out float baseAccumulation))
+                if (!TryGetAuthoringBase(prefabEntity, out float baseAccumulation))
                 {
-                    if (!TryGetAuthoringBase(prefabEntity, out baseAccumulation))
-                    {
-                        baseAccumulation = data.m_GarbageAccumulation;
-                    }
-
-                    m_Base[prefabEntity] = baseAccumulation;
+                    continue;
                 }
 
-                float targetAccumulation = baseAccumulation * factor;
-
+                float targetAccumulation = baseAccumulation * targetMultiplier / 100f;
                 if (data.m_GarbageAccumulation != targetAccumulation)
                 {
                     data.m_GarbageAccumulation = targetAccumulation;
@@ -108,17 +121,9 @@ namespace MagicGarbage
             Enabled = false;
         }
 
-        // Prefer authoring prefab values as true baseline.
-        // ServiceConsumption covers service/unique-style buildings.
-        // ZoneServiceConsumption covers zoned buildings source values.
         private bool TryGetAuthoringBase(Entity prefabEntity, out float baseline)
         {
             baseline = 0f;
-
-            if (m_PrefabSystem == null)
-            {
-                return false;
-            }
 
             if (!m_PrefabSystem.TryGetPrefab(prefabEntity, out PrefabBase prefabBase) || prefabBase == null)
             {
