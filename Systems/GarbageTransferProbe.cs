@@ -15,9 +15,21 @@
 
 namespace MagicGarbage
 {
-    using Game.Tools;       // Temp
+    using System;
     using System.Collections.Generic;
+    using Game;
+    using Game.Buildings;
+    using Game.Common;
+    using Game.Companies;
+    using Game.Economy;
+    using Game.Objects;
+    using Game.Pathfind;
+    using Game.Prefabs;
+    using Game.Simulation;
+    using Game.Tools;
+    using Game.Vehicles;
     using Unity.Entities;
+    using UnityEngine;
 
     public sealed partial class GarbageStatusSystem
     {

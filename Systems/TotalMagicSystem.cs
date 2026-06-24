@@ -15,6 +15,7 @@
 namespace MagicGarbage
 {
     using Colossal.Serialization.Entities;  // Purpose - Debug build
+    using CS2Shared.RiverMochi;             // LogUtils
     using Game;                            // GameMode
     using Game.Buildings;                  // GarbageProducer, GarbageProducerFlags
     using Game.Common;                     // Deleted, Destroyed
