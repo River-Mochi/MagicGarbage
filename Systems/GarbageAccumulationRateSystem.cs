@@ -29,6 +29,7 @@ namespace MagicGarbage
     public partial class GarbageAccumulationRateSystem : GameSystemBase
     {
         private int m_LastMultiplier = 100;
+        private bool m_ForceApply;
 
         // Prefab entity -> baseline garbage accumulation source value.
         private readonly Dictionary<Entity, float> m_Base = new Dictionary<Entity, float>();
@@ -51,6 +52,7 @@ namespace MagicGarbage
 
             m_Base.Clear();
             m_LastMultiplier = 100;
+            m_ForceApply = true;
 
             Enabled = true;
 
@@ -76,7 +78,7 @@ namespace MagicGarbage
                     Setting.MaxGarbageAccumulationRate);
             }
 
-            if (targetMultiplier == m_LastMultiplier)
+            if (!m_ForceApply && targetMultiplier == m_LastMultiplier)
             {
 #if DEBUG
                 LogUtils.Info("[MG] [Power User] GarbageAccumulationRate sleep");
@@ -87,9 +89,9 @@ namespace MagicGarbage
 
             // Only touch prefab entities here.
             // Live buildings keep using vanilla recalculation from these prefab source values.
-            foreach ((RefRW<ConsumptionData> consumption, Entity entity) in
-                     SystemAPI.Query<RefRW<ConsumptionData>>()
-                         .WithAll<Game.Prefabs.PrefabData>()
+            foreach ((RefRW<ConsumptionData> consumption, Entity entity) in SystemAPI
+                         .Query<RefRW<ConsumptionData>>()
+                         .WithAll<PrefabData>()
                          .WithEntityAccess())
             {
                 ref ConsumptionData data = ref consumption.ValueRW;
@@ -123,6 +125,7 @@ namespace MagicGarbage
 #endif
 
             m_LastMultiplier = targetMultiplier;
+            m_ForceApply = false;
             Enabled = false;
         }
 

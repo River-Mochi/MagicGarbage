@@ -31,6 +31,7 @@ namespace MagicGarbage
         private int m_LastVehicleMultiplier = 100;
         private int m_LastProcessingMultiplier = 100;
         private int m_LastStorageMultiplier = 100;
+        private bool m_ForceApply;
 
         private readonly Dictionary<Entity, (int VehicleCap, int ProcessingSpeed, int StorageCap)> m_Base =
             new Dictionary<Entity, (int VehicleCap, int ProcessingSpeed, int StorageCap)>();
@@ -56,6 +57,7 @@ namespace MagicGarbage
             m_LastVehicleMultiplier = 100;
             m_LastProcessingMultiplier = 100;
             m_LastStorageMultiplier = 100;
+            m_ForceApply = true;
 
             Enabled = true;
 
@@ -82,7 +84,8 @@ namespace MagicGarbage
                 targetVehicle = math.clamp(setting.GarbageFacilityVehicleMultiplier, 100, 400);
             }
 
-            if (targetVehicle == m_LastVehicleMultiplier &&
+            if (!m_ForceApply &&
+                targetVehicle == m_LastVehicleMultiplier &&
                 targetProcessing == m_LastProcessingMultiplier &&
                 targetStorage == m_LastStorageMultiplier)
             {
@@ -93,11 +96,10 @@ namespace MagicGarbage
                 return;
             }
 
-            foreach ((RefRW<GarbageFacilityData> facility, Entity entity) in
-                SystemAPI.Query<RefRW<GarbageFacilityData>>()
-                 .WithAll<PrefabData>()
-                 .WithEntityAccess())
-
+            foreach ((RefRW<GarbageFacilityData> facility, Entity entity) in SystemAPI
+                         .Query<RefRW<GarbageFacilityData>>()
+                         .WithAll<PrefabData>()
+                         .WithEntityAccess())
             {
                 ref GarbageFacilityData data = ref facility.ValueRW;
 
@@ -142,6 +144,7 @@ namespace MagicGarbage
             m_LastVehicleMultiplier = targetVehicle;
             m_LastProcessingMultiplier = targetProcessing;
             m_LastStorageMultiplier = targetStorage;
+            m_ForceApply = false;
 
             Enabled = false;
         }

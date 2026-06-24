@@ -14,6 +14,7 @@ namespace MagicGarbage
 {
     using System.Collections.Generic;
     using Colossal.Serialization.Entities; // Purpose
+    using CS2Shared.RiverMochi; // LogUtils
     using Game;
     using Game.Prefabs;
     using Unity.Entities;
@@ -27,6 +28,7 @@ namespace MagicGarbage
     public partial class GarbageTruckCapacitySystem : GameSystemBase
     {
         private int m_LastMultiplier = 100;
+        private bool m_ForceApply;
 
         private readonly Dictionary<Entity, (int Capacity, int UnloadRate)> m_Base = new();
 
@@ -49,6 +51,7 @@ namespace MagicGarbage
 
             m_Base.Clear();
             m_LastMultiplier = 100;
+            m_ForceApply = true;
 
             Enabled = true;
 
@@ -71,7 +74,7 @@ namespace MagicGarbage
                 targetMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500);
             }
 
-            if (targetMult == m_LastMultiplier)
+            if (!m_ForceApply && targetMult == m_LastMultiplier)
             {
 #if DEBUG
                 LogUtils.Info("[MG] [Trash Boss] TruckCapacity sleep");
@@ -80,11 +83,10 @@ namespace MagicGarbage
                 return;
             }
 
-            foreach ((RefRW<GarbageTruckData> truck, Entity entity) in
-                SystemAPI.Query<RefRW<GarbageTruckData>>()
-                    .WithAll<PrefabData>()
-                    .WithEntityAccess())
-
+            foreach ((RefRW<GarbageTruckData> truck, Entity entity) in SystemAPI
+                         .Query<RefRW<GarbageTruckData>>()
+                         .WithAll<PrefabData>()
+                         .WithEntityAccess())
             {
                 ref GarbageTruckData data = ref truck.ValueRW;
 
@@ -117,6 +119,7 @@ namespace MagicGarbage
 #endif
 
             m_LastMultiplier = targetMult;
+            m_ForceApply = false;
             Enabled = false;
         }
 
