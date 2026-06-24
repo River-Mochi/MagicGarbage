@@ -87,13 +87,13 @@ namespace MagicGarbage
             if (!s_BannerLogged)
             {
                 s_BannerLogged = true;
-                Log.Info($"{ModTag} {ModName} v{ModVersion} OnLoad");
+                LogUtils.Info($"{ModTag} {ModName} v{ModVersion} OnLoad");
             }
 
             GameManager gameManager = GameManager.instance;
             if (gameManager == null)
             {
-                Log.Error("GameManager.instance is null in Mod.OnLoad.");
+                LogUtils.Error("GameManager.instance is null in Mod.OnLoad.");
                 return;
             }
 
@@ -135,7 +135,7 @@ namespace MagicGarbage
 
 
 #if DEBUG
-            Log.Info($"{ModTag} All systems are now hooked into the main GameSimulation phase.");
+            LogUtils.Info($"{ModTag} All systems are now hooked into the main GameSimulation phase.");
 #endif
         }
 
@@ -149,7 +149,7 @@ namespace MagicGarbage
             }
 
 #if DEBUG
-            Log.Info($"{ModTag} OnDispose");
+            LogUtils.Info($"{ModTag} OnDispose");
 #endif
         }
 
@@ -171,14 +171,14 @@ namespace MagicGarbage
             GameManager gm = GameManager.instance;
             if (gm == null)
             {
-                Log.Warn($"AddLocaleSource: No GameManager; cannot add source for '{localeId}'.");
+                LogUtils.Warn($"AddLocaleSource: No GameManager; cannot add source for '{localeId}'.");
                 return;
             }
 
             LocalizationManager lm = gm.localizationManager;
             if (lm == null)
             {
-                Log.Warn($"AddLocaleSource: No LocalizationManager; cannot add source for '{localeId}'.");
+                LogUtils.Warn($"AddLocaleSource: No LocalizationManager; cannot add source for '{localeId}'.");
                 return;
             }
 
@@ -188,7 +188,7 @@ namespace MagicGarbage
             }
             catch (Exception ex)
             {
-                Log.Warn(
+                LogUtils.Warn(
                     $"AddLocaleSource: AddSource for '{localeId}' failed: {ex.GetType().Name}: {ex.Message}");
             }
         }

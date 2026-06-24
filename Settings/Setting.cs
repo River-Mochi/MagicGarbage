@@ -15,7 +15,6 @@ namespace MagicGarbage
     using System;
     using System.IO;
     using Colossal.IO.AssetDatabase;
-    using CS2Shared.RiverMochi;           // LogUtils
     using Game.Modding;
     using Game.Settings;
     using Game.UI;
