@@ -11,16 +11,18 @@
 
 namespace MagicGarbage
 {
+    using System;                         // Exception
+    using System.Reflection;              // Assembly version number
     using Colossal;                       // IDictionarySource
     using Colossal.IO.AssetDatabase;      // AssetDatabase
     using Colossal.Localization;          // LocalizationManager
     using Colossal.Logging;               // ILog, LogManager
+    using CS2Shared.RiverMochi;           // LogUtils
     using Game;                           // UpdateSystem, SystemUpdatePhase
     using Game.Modding;                   // IMod
     using Game.SceneFlow;                 // GameManager
     using Game.Simulation;
-    using System;                         // Exception
-    using System.Reflection;              // Assembly version number
+
 
     public sealed class Mod : IMod
     {
@@ -79,6 +81,8 @@ namespace MagicGarbage
 
         public void OnLoad(UpdateSystem updateSystem)
         {
+            LogUtils.Configure(ModId, Log);
+
             // One-time load banner.
             if (!s_BannerLogged)
             {
