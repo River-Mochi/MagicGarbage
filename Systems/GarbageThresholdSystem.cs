@@ -13,6 +13,7 @@
 namespace MagicGarbage
 {
     using Colossal.Serialization.Entities; // Purpose
+    using CS2Shared.RiverMochi;
     using Game;
     using Game.Prefabs;
     using Unity.Entities;
