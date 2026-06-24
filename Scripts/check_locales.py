@@ -1,4 +1,13 @@
-# File: Scripts/check_locales.py
+# <copyright file="check_locales.py" company="River-Mochi">
+# Copyright (c) 2026 River-Mochi. All rights reserved.
+# Licensed under the MIT License. You may not use this file except in compliance with this License.
+# See LICENSE file in the project root for full license information.
+# This notice and the MIT License notice must be kept with
+# all copies or substantial portions of this code.
+# ================= </copyright> ======================
+
+# File: src/Scripts/check_locales.py
+# Version: 0.2.0
 # Purpose:
 #   Generic checker for C# Locale*.cs dictionary files.
 #
@@ -473,18 +482,14 @@ def _next_nonspace_same_line(s: str, i: int) -> str:
 
 def count_markup_angle_brackets(s: str) -> Tuple[int, int]:
     """
-    Count '<' and '>' intended as CS2 markup markers.
+    Count '<' and '>' intended as CS2 markup to highlight words.
 
     Important:
     - <some words> are valid markup CS2 shows as green highlighted text.
-    - Ignore true math/comparison operators:
-        1 < 2
-        10 > 3
-        >=
-        <=
-    - Still count real CS2 markup like:
-        <RMB cycles>
-        <dispatch request>
+    - Only ignore real numeric comparators where BOTH sides look numeric
+      on the same line, such as:
+          1 < 2
+          10 > 3
 
     Avoids false positives for numbered instructions like:
         4. <RMB cycles>
@@ -496,29 +501,31 @@ def count_markup_angle_brackets(s: str) -> Tuple[int, int]:
         if ch not in "<>":
             continue
 
+        # Ignore readable comparator text such as:
+        #   balance < threshold
+        #   balance > threshold
+        #
+        # CS2 green markup normally looks like <Highlight me>, without spaces
+        # directly inside the brackets. This rule intentionally ignores only
+        # angle brackets with spaces on both immediate sides.
+        if (
+            i > 0
+            and i + 1 < len(s)
+            and s[i - 1] in " \t"
+            and s[i + 1] in " \t"
+        ):
+            continue
+
         left = _prev_nonspace_same_line(s, i)
         right = _next_nonspace_same_line(s, i)
 
         left_digit = left.isdigit() if left else False
         right_digit = right.isdigit() if right else False
 
-        # Immediate adjacent chars only (not skipping spaces).
-        left_adj = s[i - 1] if i > 0 and s[i - 1] not in "\r\n" else ""
-        right_adj = s[i + 1] if i + 1 < len(s) and s[i + 1] not in "\r\n" else ""
-
-        # Ignore contiguous comparison operators.
-        # Normal operators are:
-        #   <=   (the '<' is before '=')
-        #   >=   (the '>' is before '=')
-        # Also ignore odd reversed forms just in case: =< and =>
-        if ch == "<" and (right_adj == "=" or left_adj == "="):
-            continue
-        if ch == ">" and (right_adj == "=" or left_adj == "="):
-            continue
-
-        # Ignore only true numeric comparators like 1 < 2 or 10 > 3.
+        # Ignore true numeric comparators.
         if left_digit and right_digit:
             continue
+
 
         if ch == "<":
             lt += 1
@@ -526,6 +533,7 @@ def count_markup_angle_brackets(s: str) -> Tuple[int, int]:
             gt += 1
 
     return lt, gt
+
 
 def marker_issues(s: str) -> List[str]:
     """

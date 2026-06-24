@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 <!--
     MagicGarbage.csproj
@@ -10,18 +10,24 @@
 		<Configurations>Debug;Release</Configurations>
 		<!-- PDX Mods publish configuration for this mod -->
 		<PublishConfigurationPath>Properties\PublishConfiguration.xml</PublishConfigurationPath>
+        <!-- Path to the PowerShell that syncs PublishConfiguration.xml + mod.json with $(Version). -->
+        <PublishConfigScript>$(MSBuildProjectDirectory)\Scripts\Update-PublishConfig.ps1</PublishConfigScript>
+
+        <!-- Enable nullable reference types project-wide -->
+        <Nullable>enable</Nullable>
 
   <!-- Single source of truth for version number -->
-	  <Version>1.2.9</Version>
-	<AssemblyVersion>$(Version).0</AssemblyVersion>
-	<FileVersion>$(Version).0</FileVersion>  <!-- for file properties -->
+        <GameVersion>1.6.*</GameVersion>
+	    <Version>1.3.0</Version>
+	    <AssemblyVersion>$(Version).0</AssemblyVersion>
+	    <FileVersion>$(Version).0</FileVersion>  <!-- for file properties -->
 
 		<!-- DLL name and default namespace -->
 		<AssemblyName>MagicGarbage</AssemblyName>
 		<RootNamespace>MagicGarbage</RootNamespace>
-
-		<!-- Enable nullable reference types project-wide -->
-		<Nullable>enable</Nullable>
+        <AssemblyTitle>Magic Garbage</AssemblyTitle>
+        <Product>Magic Garbage</Product>
+        <Copyright>Copyright © 2025-26 River-Mochi</Copyright>
 
 
 	</PropertyGroup>
@@ -98,15 +104,13 @@
     </None>
 </ItemGroup>
 
-<!-- AUTO UPDATE on Release and Debug build, PublishConfiguration ModVersion using csproj Version
-     remove BOM, make EOL=CRLF, and left-align text -->
-<Target Name="UpdatePublishConfigVersion" BeforeTargets="Build" Condition="Exists('$(MSBuildProjectDirectory)\Scripts\Update-PublishConfig.ps1') AND Exists('$(MSBuildProjectDirectory)\$(PublishConfigurationPath)')">
+<!-- AUTO UPDATE PublishConfiguration.xml GameVersion + ModVersion + nested mod.json "version" from $(Version). -->
+<Target Name="UpdatePublishConfigVersion" BeforeTargets="PrepareForBuild" Condition="Exists('$(PublishConfigScript)') AND Exists('$(MSBuildProjectDirectory)\$(PublishConfigurationPath)')">
 
-    <Message Text="MagicGarbage PublishConfig: syncing ModVersion + normalizing EOL/BOM + left-align blocks..." Importance="high" />
+    <Message Text="$(AssemblyTitle) PublishConfig: syncing ModVersion/GameVersion + normalizing EOL/BOM + left-aligning blocks..." Importance="high" />
 
-    <Exec Command="&quot;$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\Scripts\Update-PublishConfig.ps1&quot; -Path &quot;$(MSBuildProjectDirectory)\$(PublishConfigurationPath)&quot; -Version &quot;$(Version)&quot; -Eol crlf -LeftAlignBlocks" />
+    <Exec Command="&quot;$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;$(PublishConfigScript)&quot; -Path &quot;$(MSBuildProjectDirectory)\$(PublishConfigurationPath)&quot; -Version &quot;$(Version)&quot; -GameVersion &quot;$(GameVersion)&quot; -Eol lf -LeftAlignBlocks" />
 </Target>
-
 
 </Project>
 
