@@ -87,7 +87,7 @@ namespace MagicGarbage
             "https://mods.paradoxplaza.com/authors/River-mochi/cities_skylines_2?games=cities_skylines_2&orderBy=desc&sortBy=best&time=alltime";
 
         private const string UrlDiscord =
-            "https://discord.gg/HTav7ARPs2";
+            "https://discord.gg/gwXgvtyhjc";
 
         // ---- BACKING FIELDS ----
         private bool m_TotalMagic = true;
