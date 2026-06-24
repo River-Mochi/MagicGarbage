@@ -8,7 +8,7 @@
 
 // File: Systems/GarbageAccumulationRateSystem.cs
 // Power User: scales prefab garbage accumulation source values.
-// Total Magic, Trash Boss OFF, or Power User OFF: reverts to vanilla (100%) once, then sleeps.
+// Total Magic, Trash Boss OFF, or Power User OFF: restores prefab values to vanilla 100% once, then sleeps.
 
 namespace MagicGarbage
 {
@@ -18,19 +18,13 @@ namespace MagicGarbage
     using Game;
     using Game.Prefabs;
     using Unity.Entities;
-    using Unity.Mathematics;
 
     /// <summary>
     /// Scales prefab ConsumptionData.m_GarbageAccumulation for supported prefab sources.
-    /// Uses authoring values when possible, with cached live-prefab fallback if authoring lookup fails.
-    /// This targets prefab source values instead of live building garbage so vanilla systems can continue
-    /// to recalculate accumulation naturally each update.
+    /// Runs only on city load or when settings wake it, then disables itself.
     /// </summary>
     public partial class GarbageAccumulationRateSystem : GameSystemBase
     {
-        private int m_LastMultiplier = 100;
-        private bool m_ForceApply;
-
         // Prefab entity -> baseline garbage accumulation source value.
         private readonly Dictionary<Entity, float> m_Base = new Dictionary<Entity, float>();
 
@@ -50,9 +44,8 @@ namespace MagicGarbage
         {
             base.OnGameLoadingComplete(purpose, mode);
 
+            // Clear per-city/session cache. Next update reapplies from PrefabBase authoring values.
             m_Base.Clear();
-            m_LastMultiplier = 100;
-            m_ForceApply = true;
 
             Enabled = true;
 
@@ -65,6 +58,7 @@ namespace MagicGarbage
         {
             if (!Mod.TryGetSetting(out Setting setting))
             {
+                Enabled = false;
                 return;
             }
 
@@ -72,60 +66,45 @@ namespace MagicGarbage
 
             if (!setting.TotalMagic && setting.TrashBossEnabled && setting.PowerUserOptions)
             {
-                targetMultiplier = math.clamp(
+                targetMultiplier = Unity.Mathematics.math.clamp(
                     setting.GarbageAccumulationRate,
                     Setting.MinGarbageAccumulationRate,
                     Setting.MaxGarbageAccumulationRate);
             }
 
-            if (!m_ForceApply && targetMultiplier == m_LastMultiplier)
-            {
-#if DEBUG
-                LogUtils.Info("[MG] [Power User] GarbageAccumulationRate sleep");
-#endif
-                Enabled = false;
-                return;
-            }
+            float factor = targetMultiplier / 100f;
 
             // Only touch prefab entities here.
             // Live buildings keep using vanilla recalculation from these prefab source values.
-            foreach ((RefRW<ConsumptionData> consumption, Entity entity) in SystemAPI
-                         .Query<RefRW<ConsumptionData>>()
+            foreach ((RefRW<ConsumptionData> consumption, Entity prefabEntity) in
+                     SystemAPI.Query<RefRW<ConsumptionData>>()
                          .WithAll<PrefabData>()
                          .WithEntityAccess())
             {
                 ref ConsumptionData data = ref consumption.ValueRW;
 
-                // Cache baseline once per prefab entity so scaling stays stable and reversible to vanilla.
-                if (!m_Base.TryGetValue(entity, out float baseAccumulation))
+                if (!m_Base.TryGetValue(prefabEntity, out float baseAccumulation))
                 {
-                    if (!TryGetAuthoringBase(entity, out baseAccumulation))
+                    if (!TryGetAuthoringBase(prefabEntity, out baseAccumulation))
                     {
-                        if (m_LastMultiplier == 100)
-                        {
-                            baseAccumulation = data.m_GarbageAccumulation;
-                        }
-                        // Fallback: if authoring lookup fails, undo the last applied multiplier once
-                        // to approximate the original prefab source value before applying new multiplier.
-                        else
-                        {
-                            float lastFactor = m_LastMultiplier / 100f;
-                            baseAccumulation = data.m_GarbageAccumulation / lastFactor;
-                        }
+                        baseAccumulation = data.m_GarbageAccumulation;
                     }
 
-                    m_Base[entity] = baseAccumulation;
+                    m_Base[prefabEntity] = baseAccumulation;
                 }
 
-                data.m_GarbageAccumulation = baseAccumulation * (targetMultiplier / 100f);
+                float targetAccumulation = baseAccumulation * factor;
+
+                if (data.m_GarbageAccumulation != targetAccumulation)
+                {
+                    data.m_GarbageAccumulation = targetAccumulation;
+                }
             }
 
 #if DEBUG
-            LogUtils.Info($"[MG] GarbageAccumulationRate apply: {m_LastMultiplier}% -> {targetMultiplier}%");
+            LogUtils.Info($"[MG] GarbageAccumulationRate apply: target={targetMultiplier}%");
 #endif
 
-            m_LastMultiplier = targetMultiplier;
-            m_ForceApply = false;
             Enabled = false;
         }
 

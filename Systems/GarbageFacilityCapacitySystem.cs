@@ -7,8 +7,8 @@
 // ================= </copyright> ======================
 
 // File: Systems/GarbageFacilityCapacitySystem.cs
-// Trash Boss: scales facility trucks, processing speed, and storage capacity.
-// Total Magic (or Trash Boss OFF): reverts to vanilla (100%) once, then sleeps.
+// Trash Boss: scales garbage facility fleet, processing speed, and storage capacity.
+// Total Magic or Trash Boss OFF: restores prefab values to vanilla 100% once, then sleeps.
 
 namespace MagicGarbage
 {
@@ -21,18 +21,11 @@ namespace MagicGarbage
     using Unity.Mathematics;
 
     /// <summary>
-    /// Adjusts GarbageFacilityData (vehicle count, processing speed, storage)
-    /// according to Trash Boss sliders. When Total Magic is enabled (or Trash Boss disabled),
-    /// it reverts to vanilla (100%) once.
-    /// Uses authoring prefab values as the true baseline, with cache fallback if authoring lookup fails.
+    /// Adjusts GarbageFacilityData from authoring prefab values.
+    /// Runs only on city load or when settings wake it, then disables itself.
     /// </summary>
     public partial class GarbageFacilityCapacitySystem : GameSystemBase
     {
-        private int m_LastVehicleMultiplier = 100;
-        private int m_LastProcessingMultiplier = 100;
-        private int m_LastStorageMultiplier = 100;
-        private bool m_ForceApply;
-
         private readonly Dictionary<Entity, (int VehicleCap, int ProcessingSpeed, int StorageCap)> m_Base =
             new Dictionary<Entity, (int VehicleCap, int ProcessingSpeed, int StorageCap)>();
 
@@ -53,11 +46,8 @@ namespace MagicGarbage
         {
             base.OnGameLoadingComplete(purpose, mode);
 
+            // Clear per-city/session cache. Next update reapplies from PrefabBase authoring values.
             m_Base.Clear();
-            m_LastVehicleMultiplier = 100;
-            m_LastProcessingMultiplier = 100;
-            m_LastStorageMultiplier = 100;
-            m_ForceApply = true;
 
             Enabled = true;
 
@@ -70,6 +60,7 @@ namespace MagicGarbage
         {
             if (!Mod.TryGetSetting(out Setting setting))
             {
+                Enabled = false;
                 return;
             }
 
@@ -84,67 +75,52 @@ namespace MagicGarbage
                 targetVehicle = math.clamp(setting.GarbageFacilityVehicleMultiplier, 100, 400);
             }
 
-            if (!m_ForceApply &&
-                targetVehicle == m_LastVehicleMultiplier &&
-                targetProcessing == m_LastProcessingMultiplier &&
-                targetStorage == m_LastStorageMultiplier)
-            {
-#if DEBUG
-                LogUtils.Info("[MG] [Trash Boss] FacilityCapacity sleep");
-#endif
-                Enabled = false;
-                return;
-            }
+            float vehicleFactor = targetVehicle / 100f;
+            float processingFactor = targetProcessing / 100f;
+            float storageFactor = targetStorage / 100f;
 
-            foreach ((RefRW<GarbageFacilityData> facility, Entity entity) in SystemAPI
-                         .Query<RefRW<GarbageFacilityData>>()
+            foreach ((RefRW<GarbageFacilityData> facility, Entity prefabEntity) in
+                     SystemAPI.Query<RefRW<GarbageFacilityData>>()
                          .WithAll<PrefabData>()
                          .WithEntityAccess())
             {
                 ref GarbageFacilityData data = ref facility.ValueRW;
 
-                if (!m_Base.TryGetValue(entity, out (int VehicleCap, int ProcessingSpeed, int StorageCap) b))
+                if (!m_Base.TryGetValue(prefabEntity, out (int VehicleCap, int ProcessingSpeed, int StorageCap) baseline))
                 {
-                    if (!TryGetAuthoringBase(entity, out b))
+                    if (!TryGetAuthoringBase(prefabEntity, out baseline))
                     {
-                        if (m_LastVehicleMultiplier == 100 &&
-                            m_LastProcessingMultiplier == 100 &&
-                            m_LastStorageMultiplier == 100)
-                        {
-                            b = (data.m_VehicleCapacity, data.m_ProcessingSpeed, data.m_GarbageCapacity);
-                        }
-                        else
-                        {
-                            float v = m_LastVehicleMultiplier / 100f;
-                            float p = m_LastProcessingMultiplier / 100f;
-                            float s = m_LastStorageMultiplier / 100f;
-
-                            b = (
-                                (int)math.round(data.m_VehicleCapacity / v),
-                                (int)math.round(data.m_ProcessingSpeed / p),
-                                (int)math.round(data.m_GarbageCapacity / s));
-                        }
+                        baseline = (data.m_VehicleCapacity, data.m_ProcessingSpeed, data.m_GarbageCapacity);
                     }
 
-                    m_Base[entity] = b;
+                    m_Base[prefabEntity] = baseline;
                 }
 
-                data.m_VehicleCapacity = (int)math.round(b.VehicleCap * (targetVehicle / 100f));
-                data.m_ProcessingSpeed = (int)math.round(b.ProcessingSpeed * (targetProcessing / 100f));
-                data.m_GarbageCapacity = (int)math.round(b.StorageCap * (targetStorage / 100f));
+                int targetVehicleCap = (int)math.round(baseline.VehicleCap * vehicleFactor);
+                int targetProcessingSpeed = (int)math.round(baseline.ProcessingSpeed * processingFactor);
+                int targetStorageCap = (int)math.round(baseline.StorageCap * storageFactor);
+
+                if (data.m_VehicleCapacity != targetVehicleCap)
+                {
+                    data.m_VehicleCapacity = targetVehicleCap;
+                }
+
+                if (data.m_ProcessingSpeed != targetProcessingSpeed)
+                {
+                    data.m_ProcessingSpeed = targetProcessingSpeed;
+                }
+
+                if (data.m_GarbageCapacity != targetStorageCap)
+                {
+                    data.m_GarbageCapacity = targetStorageCap;
+                }
             }
 
 #if DEBUG
             LogUtils.Info(
-                $"[MG] FacilityCapacity apply: veh {m_LastVehicleMultiplier}%->{targetVehicle}%, " +
-                $"proc {m_LastProcessingMultiplier}%->{targetProcessing}%, " +
-                $"stor {m_LastStorageMultiplier}%->{targetStorage}%");
+                $"[MG] FacilityCapacity apply: veh={targetVehicle}%, " +
+                $"proc={targetProcessing}%, stor={targetStorage}%");
 #endif
-
-            m_LastVehicleMultiplier = targetVehicle;
-            m_LastProcessingMultiplier = targetProcessing;
-            m_LastStorageMultiplier = targetStorage;
-            m_ForceApply = false;
 
             Enabled = false;
         }

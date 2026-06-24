@@ -7,8 +7,8 @@
 // ================= </copyright> ======================
 
 // File: Systems/GarbageTruckCapacitySystem.cs
-// Trash Boss: scales truck prefab capacity & unload rate.
-// Total Magic (or Trash Boss OFF): reverts to vanilla (100%) once, then sleeps.
+// Trash Boss: scales garbage truck prefab capacity and unload rate.
+// Total Magic or Trash Boss OFF: restores prefab values to vanilla 100% once, then sleeps.
 
 namespace MagicGarbage
 {
@@ -21,15 +21,11 @@ namespace MagicGarbage
     using Unity.Mathematics;
 
     /// <summary>
-    /// Scales garbage truck capacity and unload rate according to the Trash Boss slider.
-    /// When Total Magic is enabled (or Trash Boss disabled), it reverts to vanilla (100%) once.
-    /// Uses authoring prefab values as the true baseline, with cache fallback if authoring lookup fails.
+    /// Scales garbage truck prefab capacity and unload rate from authoring prefab values.
+    /// Runs only on city load or when settings wake it, then disables itself.
     /// </summary>
     public partial class GarbageTruckCapacitySystem : GameSystemBase
     {
-        private int m_LastMultiplier = 100;
-        private bool m_ForceApply;
-
         private readonly Dictionary<Entity, (int Capacity, int UnloadRate)> m_Base = new();
 
         private PrefabSystem m_PrefabSystem = null!;
@@ -49,9 +45,8 @@ namespace MagicGarbage
         {
             base.OnGameLoadingComplete(purpose, mode);
 
+            // Clear per-city/session cache. Next update reapplies from PrefabBase authoring values.
             m_Base.Clear();
-            m_LastMultiplier = 100;
-            m_ForceApply = true;
 
             Enabled = true;
 
@@ -64,6 +59,7 @@ namespace MagicGarbage
         {
             if (!Mod.TryGetSetting(out Setting setting))
             {
+                Enabled = false;
                 return;
             }
 
@@ -74,52 +70,43 @@ namespace MagicGarbage
                 targetMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500);
             }
 
-            if (!m_ForceApply && targetMult == m_LastMultiplier)
-            {
-#if DEBUG
-                LogUtils.Info("[MG] [Trash Boss] TruckCapacity sleep");
-#endif
-                Enabled = false;
-                return;
-            }
+            float factor = targetMult / 100f;
 
-            foreach ((RefRW<GarbageTruckData> truck, Entity entity) in SystemAPI
-                         .Query<RefRW<GarbageTruckData>>()
+            foreach ((RefRW<GarbageTruckData> truck, Entity prefabEntity) in
+                     SystemAPI.Query<RefRW<GarbageTruckData>>()
                          .WithAll<PrefabData>()
                          .WithEntityAccess())
             {
                 ref GarbageTruckData data = ref truck.ValueRW;
 
-                if (!m_Base.TryGetValue(entity, out (int Capacity, int UnloadRate) b))
+                if (!m_Base.TryGetValue(prefabEntity, out (int Capacity, int UnloadRate) baseline))
                 {
-                    if (!TryGetAuthoringBase(entity, out b))
+                    if (!TryGetAuthoringBase(prefabEntity, out baseline))
                     {
-                        if (m_LastMultiplier == 100)
-                        {
-                            b = (data.m_GarbageCapacity, data.m_UnloadRate);
-                        }
-                        else
-                        {
-                            float lastFactor = m_LastMultiplier / 100f;
-                            b = (
-                                (int)math.round(data.m_GarbageCapacity / lastFactor),
-                                (int)math.round(data.m_UnloadRate / lastFactor));
-                        }
+                        baseline = (data.m_GarbageCapacity, data.m_UnloadRate);
                     }
 
-                    m_Base[entity] = b;
+                    m_Base[prefabEntity] = baseline;
                 }
 
-                data.m_GarbageCapacity = (int)math.round(b.Capacity * (targetMult / 100f));
-                data.m_UnloadRate = (int)math.round(b.UnloadRate * (targetMult / 100f));
+                int targetCapacity = (int)math.round(baseline.Capacity * factor);
+                int targetUnloadRate = (int)math.round(baseline.UnloadRate * factor);
+
+                if (data.m_GarbageCapacity != targetCapacity)
+                {
+                    data.m_GarbageCapacity = targetCapacity;
+                }
+
+                if (data.m_UnloadRate != targetUnloadRate)
+                {
+                    data.m_UnloadRate = targetUnloadRate;
+                }
             }
 
 #if DEBUG
-            LogUtils.Info($"[MG] TruckCapacity apply: {m_LastMultiplier}% -> {targetMult}%");
+            LogUtils.Info($"[MG] TruckCapacity apply: target={targetMult}%");
 #endif
 
-            m_LastMultiplier = targetMult;
-            m_ForceApply = false;
             Enabled = false;
         }
 
