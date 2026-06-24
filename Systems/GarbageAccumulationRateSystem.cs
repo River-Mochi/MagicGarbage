@@ -55,7 +55,7 @@ namespace MagicGarbage
             Enabled = true;
 
 #if DEBUG
-            Mod.Log.Info("[MG] [Power User] GarbageAccumulationRateSystem: OnGameLoadingComplete -> Enabled");
+            LogUtils.Info("[MG] [Power User] GarbageAccumulationRateSystem: OnGameLoadingComplete -> Enabled");
 #endif
         }
 
@@ -79,7 +79,7 @@ namespace MagicGarbage
             if (targetMultiplier == m_LastMultiplier)
             {
 #if DEBUG
-                Mod.Log.Info("[MG] [Power User] GarbageAccumulationRate sleep");
+                LogUtils.Info("[MG] [Power User] GarbageAccumulationRate sleep");
 #endif
                 Enabled = false;
                 return;
@@ -119,7 +119,7 @@ namespace MagicGarbage
             }
 
 #if DEBUG
-            Mod.Log.Info($"[MG] GarbageAccumulationRate apply: {m_LastMultiplier}% -> {targetMultiplier}%");
+            LogUtils.Info($"[MG] GarbageAccumulationRate apply: {m_LastMultiplier}% -> {targetMultiplier}%");
 #endif
 
             m_LastMultiplier = targetMultiplier;

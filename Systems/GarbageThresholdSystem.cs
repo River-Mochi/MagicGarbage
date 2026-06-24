@@ -53,7 +53,7 @@ namespace MagicGarbage
             Enabled = true;
 
 #if DEBUG
-            Mod.Log.Info("[MG] [Trash Boss] GarbageThresholdSystem: OnGameLoadingComplete -> Enabled");
+            LogUtils.Info("[MG] [Trash Boss] GarbageThresholdSystem: OnGameLoadingComplete -> Enabled");
 #endif
         }
 
@@ -119,7 +119,7 @@ namespace MagicGarbage
                 data.m_HappinessEffectStep == targetHappinessStep)
             {
 #if DEBUG
-                Mod.Log.Info("[MG] [Trash Boss] Threshold/Happiness sleep");
+                LogUtils.Info("[MG] [Trash Boss] Threshold/Happiness sleep");
 #endif
                 Enabled = false;
                 return;
@@ -136,7 +136,7 @@ namespace MagicGarbage
             data.m_HappinessEffectStep = targetHappinessStep;
 
 #if DEBUG
-            Mod.Log.Info(
+            LogUtils.Info(
                 $"[MG] Threshold apply: pickup {oldCollect}->{targetCollect}, request {oldRequest}->{targetRequest}, " +
                 $"garbage happiness baseline {oldHappinessBaseline}->{targetHappinessBaseline}, " +
                 $"garbage happiness step {oldHappinessStep}->{targetHappinessStep}");

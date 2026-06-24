@@ -15,6 +15,7 @@ namespace MagicGarbage
     using System;
     using System.IO;
     using Colossal.IO.AssetDatabase;
+    using CS2Shared.RiverMochi;
     using Game.Modding;
     using Game.Settings;
     using Game.UI;
@@ -730,7 +731,7 @@ namespace MagicGarbage
             }
             catch (Exception ex)
             {
-                Mod.Log.Warn($"{Mod.ModTag} OpenLog failed: {ex.GetType().Name}: {ex.Message}");
+                LogUtils.Warn($"{Mod.ModTag} OpenLog failed: {ex.GetType().Name}: {ex.Message}");
             }
         }
 

@@ -101,7 +101,7 @@ namespace MagicGarbage
 
                 if (writeToLog)
                 {
-                    Mod.Log.Info($"{Mod.ModTag} {Mod.L("MG.Status.NoCity")}");
+                    LogUtils.Info($"{Mod.ModTag} {Mod.L("MG.Status.NoCity")}");
                 }
 
                 return;
@@ -113,7 +113,7 @@ namespace MagicGarbage
 
                 if (writeToLog)
                 {
-                    Mod.Log.Info($"{Mod.ModTag} {Mod.L("MG.Status.NoCity")}");
+                    LogUtils.Info($"{Mod.ModTag} {Mod.L("MG.Status.NoCity")}");
                 }
 
                 return;
@@ -128,7 +128,7 @@ namespace MagicGarbage
 
                 if (writeToLog)
                 {
-                    Mod.Log.Info($"{Mod.ModTag} {Mod.L("MG.Status.NoCity")}");
+                    LogUtils.Info($"{Mod.ModTag} {Mod.L("MG.Status.NoCity")}");
                 }
 
                 return;
@@ -142,7 +142,7 @@ namespace MagicGarbage
             if (writeToLog)
             {
                 string logText = BuildLogText(snap, criticalBuildings);
-                Mod.Log.Info($"{Mod.ModTag} {logText}");
+                LogUtils.Info($"{Mod.ModTag} {logText}");
             }
         }
 

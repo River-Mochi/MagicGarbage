@@ -105,7 +105,7 @@ namespace MagicGarbage
                 }
 
 #if DEBUG
-                Mod.Log.Info($"{Mod.ModTag} [DEBUG] GarbageStatusLog clicked");
+                LogUtils.Info($"{Mod.ModTag} [DEBUG] GarbageStatusLog clicked");
 #endif
                 GarbageStatus.RefreshNow(writeToLog: true);
             }

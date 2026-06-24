@@ -12,10 +12,10 @@
 
 namespace MagicGarbage
 {
+    using System.Collections.Generic;
     using Colossal.Serialization.Entities; // Purpose
     using Game;
     using Game.Prefabs;
-    using System.Collections.Generic;
     using Unity.Entities;
     using Unity.Mathematics;
 
@@ -53,7 +53,7 @@ namespace MagicGarbage
             Enabled = true;
 
 #if DEBUG
-            Mod.Log.Info("[MG] [Trash Boss] GarbageTruckCapacitySystem: OnGameLoadingComplete -> Enabled");
+            LogUtils.Info("[MG] [Trash Boss] GarbageTruckCapacitySystem: OnGameLoadingComplete -> Enabled");
 #endif
         }
 
@@ -74,14 +74,17 @@ namespace MagicGarbage
             if (targetMult == m_LastMultiplier)
             {
 #if DEBUG
-                Mod.Log.Info("[MG] [Trash Boss] TruckCapacity sleep");
+                LogUtils.Info("[MG] [Trash Boss] TruckCapacity sleep");
 #endif
                 Enabled = false;
                 return;
             }
 
             foreach ((RefRW<GarbageTruckData> truck, Entity entity) in
-                     SystemAPI.Query<RefRW<GarbageTruckData>>().WithEntityAccess())
+                SystemAPI.Query<RefRW<GarbageTruckData>>()
+                    .WithAll<PrefabData>()
+                    .WithEntityAccess())
+
             {
                 ref GarbageTruckData data = ref truck.ValueRW;
 
@@ -110,7 +113,7 @@ namespace MagicGarbage
             }
 
 #if DEBUG
-            Mod.Log.Info($"[MG] TruckCapacity apply: {m_LastMultiplier}% -> {targetMult}%");
+            LogUtils.Info($"[MG] TruckCapacity apply: {m_LastMultiplier}% -> {targetMult}%");
 #endif
 
             m_LastMultiplier = targetMult;

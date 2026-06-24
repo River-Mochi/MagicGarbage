@@ -71,7 +71,7 @@ namespace MagicGarbage
 
 #if DEBUG
             int intervalTicks = TicksPerDay / UpdatesPerDay;
-            Mod.Log.Info($"{Mod.ModTag} TotalMagicSystem created. UpdatesPerDay={UpdatesPerDay}, IntervalTicks={intervalTicks}.");
+            LogUtils.Info($"{Mod.ModTag} TotalMagicSystem created. UpdatesPerDay={UpdatesPerDay}, IntervalTicks={intervalTicks}.");
 #endif
         }
 
@@ -111,11 +111,11 @@ namespace MagicGarbage
 
             if (Mod.TryGetSetting(out Setting setting))
             {
-                Mod.Log.Info($"{Mod.ModTag} TotalMagicSystem OnGameLoadingComplete: TotalMagic={setting.TotalMagic}, TrashBoss={setting.TrashBossEnabled}.");
+                LogUtils.Info($"{Mod.ModTag} TotalMagicSystem OnGameLoadingComplete: TotalMagic={setting.TotalMagic}, TrashBoss={setting.TrashBossEnabled}.");
             }
             else
             {
-                Mod.Log.Info($"{Mod.ModTag} TotalMagicSystem OnGameLoadingComplete: settings not ready.");
+                LogUtils.Info($"{Mod.ModTag} TotalMagicSystem OnGameLoadingComplete: settings not ready.");
             }
         }
 #endif

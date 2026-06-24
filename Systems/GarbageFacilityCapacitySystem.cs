@@ -60,7 +60,7 @@ namespace MagicGarbage
             Enabled = true;
 
 #if DEBUG
-            Mod.Log.Info("[MG] [Trash Boss] GarbageFacilityCapacitySystem: OnGameLoadingComplete -> Enabled");
+            LogUtils.Info("[MG] [Trash Boss] GarbageFacilityCapacitySystem: OnGameLoadingComplete -> Enabled");
 #endif
         }
 
@@ -87,14 +87,17 @@ namespace MagicGarbage
                 targetStorage == m_LastStorageMultiplier)
             {
 #if DEBUG
-                Mod.Log.Info("[MG] [Trash Boss] FacilityCapacity sleep");
+                LogUtils.Info("[MG] [Trash Boss] FacilityCapacity sleep");
 #endif
                 Enabled = false;
                 return;
             }
 
             foreach ((RefRW<GarbageFacilityData> facility, Entity entity) in
-                     SystemAPI.Query<RefRW<GarbageFacilityData>>().WithEntityAccess())
+                SystemAPI.Query<RefRW<GarbageFacilityData>>()
+                 .WithAll<PrefabData>()
+                 .WithEntityAccess())
+
             {
                 ref GarbageFacilityData data = ref facility.ValueRW;
 
@@ -130,7 +133,7 @@ namespace MagicGarbage
             }
 
 #if DEBUG
-            Mod.Log.Info(
+            LogUtils.Info(
                 $"[MG] FacilityCapacity apply: veh {m_LastVehicleMultiplier}%->{targetVehicle}%, " +
                 $"proc {m_LastProcessingMultiplier}%->{targetProcessing}%, " +
                 $"stor {m_LastStorageMultiplier}%->{targetStorage}%");
