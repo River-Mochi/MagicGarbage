@@ -10,7 +10,7 @@
 	<LongDescription>
 **Magic Garbage + Trash Boss**
 
-Two ways to handle garbage, a Status Report option, and all new POWER Users section for experiments.
+Two ways to handle garbage, a Status report option, and all new POWER Users section.
 ---
 
 ### OPTION 1  AUTO CLEAN
@@ -47,6 +47,7 @@ Two ways to handle garbage, a Status Report option, and all new POWER Users sect
 - Only tweak Power User if the standard Trash Boss controls are not enough.
 
 **Power User controls**
+- Try the Recommended button.
 - Dispatch Request Threshold + Pickup Threshold
 - **Pickup** cannot be higher than **Dispatch Request**.
 - Garbage Happiness Baseline + Garbage Happiness Step
@@ -75,10 +76,9 @@ Power User is useful for experimenting and digging into how the game garbage sys
 - Necko1996 - testing, screenshots
 - gagaxm - truck image
 
-#### 11 languages
-- English, Français French, Deutsch German, Español Spanish, Italiano Italian
-- 日本語 Japanese, 한국어 Korean, Português Brasil, Polski Polish
-- 简体中文 Simplified Chinese, 繁體中文 Traditional Chinese
+#### 11+ Languages
+Hello, Bonjour, Hallo, Hola, Ciao, こんにちは, 안녕하세요, Olá, Cześć, 你好, 你好
+
 
 </LongDescription>
 	<!--Thumbnail-->
@@ -104,10 +104,8 @@ Power User is useful for experimenting and digging into how the game garbage sys
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-* added Priority Assist option (lightweight); reduce traffic and improve service efficiency.
-* added more detailed Status log info to mod Options menu.
-* updated all locale files.
-* update images.
+- updated for game patch 1.6
+- internal cleanup: improved queries, reduced unneeded background work.
 </ChangeLog>
 <!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 <ExternalLink Type="discord" Url="https://discord.gg/HTav7ARPs2" />
