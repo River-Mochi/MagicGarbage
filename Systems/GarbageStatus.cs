@@ -15,10 +15,11 @@
 
 namespace MagicGarbage
 {
-    using Game;
-    using Game.SceneFlow;
     using System;
     using System.Text;
+    using CS2Shared.RiverMochi; // LogUtils
+    using Game;
+    using Game.SceneFlow;
     using Unity.Entities;
     using UnityEngine;
 

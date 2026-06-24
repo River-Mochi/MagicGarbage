@@ -21,6 +21,7 @@ namespace MagicGarbage
     using Game.Prefabs;
     using Game.Simulation;
     using Game.Tools;
+    using CS2Shared.RiverMochi; // LogUtils
 #if DEBUG
     using System.Diagnostics;
 #endif

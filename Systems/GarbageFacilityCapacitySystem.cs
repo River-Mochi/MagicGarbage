@@ -12,10 +12,11 @@
 
 namespace MagicGarbage
 {
+    using System.Collections.Generic;
     using Colossal.Serialization.Entities; // Purpose
+    using CS2Shared.RiverMochi; // LogUtils
     using Game;
     using Game.Prefabs;
-    using System.Collections.Generic;
     using Unity.Entities;
     using Unity.Mathematics;
 

@@ -11,6 +11,7 @@
 
 namespace MagicGarbage
 {
+    using CS2Shared.RiverMochi; // LogUtils
     using Game.Settings;
 
     public sealed partial class Setting
