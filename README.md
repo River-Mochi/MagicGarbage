@@ -25,7 +25,7 @@ There is no in-city UI panel.
 
 ### Standard Trash Boss sliders
 
-- **Truck load capacity** (**100–500%**)
+- **Truck load capacity** (**100–1000%**)
 - **Facility storage** (**100–500%**)
 - **Facility processing speed** (**100–500%**)
 - **Facility fleet** (**100–400%**)
