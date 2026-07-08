@@ -25,8 +25,8 @@
 - Garbage warning icons cleared.
 - Mod does not stop Garbage system; cleanup is just very fast.
 
-**11+ Languages**
-- Hello, Bonjour, Hallo, Hola, Ciao, 안녕하세요, こんにちは, Olá, Cześć, 你好, 你好
+**11+ Languages supported**
+- Hello, Bonjour, Hallo, Hola, Ciao, 안녕하세요, こんにちは, Olá, Cześć, 你好, 你好, Xin chào
 
 ### Optional Power User
 - Allows advanced tuning and experimentation.
@@ -80,7 +80,8 @@
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-- Increased garbage truck capacity to 10x = 200t.
+- Increased garbage truck capacity to 1000%
+- Added Vietnamese translation.
 - Internal cleanup.
 </ChangeLog>
 <!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->

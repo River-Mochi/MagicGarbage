@@ -113,6 +113,7 @@ namespace MagicGarbage
             AddLocaleSource("pt-BR", new LocalePT_BR(setting));
             AddLocaleSource("zh-HANS", new LocaleZH_CN(setting));   // Simplified Chinese
             AddLocaleSource("zh-HANT", new LocaleZH_HANT(setting)); // Traditional Chinese
+            AddLocaleSource("vi-VN", new LocaleVI(setting));
 
             // Load saved settings (file name in [FileLocation])
             AssetDatabase.global.LoadSettings(ModId, setting, new Setting(this));
