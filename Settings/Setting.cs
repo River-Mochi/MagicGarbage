@@ -167,7 +167,7 @@ namespace MagicGarbage
         // TRASH BOSS STANDARD SLIDERS
         // --------------------------------------------------------
 
-        [SettingsUISlider(min = 100, max = 500, step = 10, scalarMultiplier = 1, unit = Unit.kPercentage)]
+        [SettingsUISlider(min = 100, max = 1000, step = 10, scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, TrashBossGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
         [SettingsUISetter(typeof(Setting), nameof(OnTruckSliderChanged))]

@@ -10,56 +10,33 @@
 	<LongDescription>
 **Magic Garbage + Trash Boss**
 
-Two ways to handle garbage, a Status report option, and all new POWER Users section.
----
+### OPTION 1 SELF MANAGE
+- Adjust garbage truck capacities
+- Adjust facility processing speed
+- Change total Garbage trucks.
+- 🚚 Great for players who still want normal game vanilla garbage service and trucks driving around; now with fewer problems.
 
-### OPTION 1  AUTO CLEAN
-- ✅ **Total Magic On**
+### Priority Assist
+- Truck priority dispatch so that buildings with higher garbage don't get ignored.
+- Prioritizes buildings > 7t garbage.
+
+### OPTION 2 AUTO CLEAN
 - Removes all garbage automatically.
 - Garbage warning icons cleared.
 - Mod does not stop Garbage system; cleanup is just very fast.
 
-### OPTION 2  SELF MANAGE
-- ✅ **Trash Boss On**
-- Keep vanilla garbage gameplay, and directly adjust garbage values.
-- Adjust garbage trucks, facilities, etc., to reduce traffic and service strain.
-- 🚚 Great for players who still want to see trucks driving around, with fewer problems.
+**11+ Languages**
+- Hello, Bonjour, Hallo, Hola, Ciao, 안녕하세요, こんにちは, Olá, Cześć, 你好, 你好
 
-**Priority Assist (lightweight)**
-- Watches for buildings over **7t** garbage.
-- Helps badly overloaded buildings get reached sooner.
-
-**Helper buttons**
-- [Game Defaults] = reset all sliders to 100% (pure vanilla).
-- [Recommended]	  = suggested preset values for easy management.
-- Standard Trash Boss buttons do not change Power User section.
-
-
-### STATUS Report
-- Real garbage stats help show what is happening.
-- Lean: status does not run in-city per frame; runs in Options menu for best performance to not affect gameplay.
-- Detailed log button writes even more detailed notes in the Log file for reference.
-
-### OPTIONAL POWER USER
-- Not needed for most players; allows advanced tuning and experimentation.
-- Most cities work well just using **Trash Boss + Priority Assist**.
-- Let the city run about **1 in-game month** before judging results.
-- Only tweak Power User if the standard Trash Boss controls are not enough.
-
-**Power User controls**
-- Try the Recommended button.
-- Dispatch Request Threshold + Pickup Threshold
-- **Pickup** cannot be higher than **Dispatch Request**.
-- Garbage Happiness Baseline + Garbage Happiness Step
-- Garbage Accumulation Rate (not needed for most cities, this is a powerful adjustment, use with caution)
-
-Higher thresholds can reduce truck traffic, but too high can also lead to health and happiness issues from high garbage levels.
-Power User is useful for experimenting and digging into how the game garbage systems behave.
-
+### Optional Power User
+- Allows advanced tuning and experimentation.
+- Most cities work well just using Trash Boss + Priority Assist.
+- Let the city run about 1 in-game month before judging results.
+- Tweak Power User controls if the standard Trash controls are not enough.
 
 #### Support and feedback
 - If the mod helps you, give it a Like, it's free + easy :)
-- Feedback on: Github, Discord, etc., links on this page.
+- Feedback on: Github, Discord, links on the right of this page.
 
 ---
 
@@ -68,6 +45,11 @@ Power User is useful for experimenting and digging into how the game garbage sys
 - Does not use Harmony patch; designed to be lightweight for the best performance.
 
 ---
+### Bonus status report
+- Real stats help show what is happening.
+- Lean: status does not run in-city per frame; runs in Options menu for best performance to not affect gameplay.
+= Detailed log button writes even more detailed notes in the Log file for reference.
+
 
 ### Credits
 - RiverMochi - author
@@ -76,8 +58,6 @@ Power User is useful for experimenting and digging into how the game garbage sys
 - Necko1996 - testing, screenshots
 - gagaxm - truck image
 
-#### 11+ Languages
-Hello, Bonjour, Hallo, Hola, Ciao, こんにちは, 안녕하세요, Olá, Cześć, 你好, 你好
 
 </LongDescription>
 	<!--Thumbnail-->
@@ -96,16 +76,15 @@ Hello, Bonjour, Hallo, Hola, Ciao, こんにちは, 안녕하세요, Olá, Cześ
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.3.1" />
+	<ModVersion Value="1.3.2" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.6.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-- updated for game patch 1.6
-- internal cleanup: improved queries, reduced unneeded background work.
-- fix links
+- Incresed garbage truck capacity to 10x = 200t.
+- Internal cleanup.
 </ChangeLog>
 <!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 <ExternalLink Type="github" Url="https://github.com/River-Mochi/MagicGarbage" />

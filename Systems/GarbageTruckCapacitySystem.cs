@@ -89,7 +89,7 @@ namespace MagicGarbage
             int targetMult = 100;
             if (!setting.TotalMagic && setting.TrashBossEnabled)
             {
-                targetMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 500);
+                targetMult = math.clamp(setting.GarbageTruckCapacityMultiplier, 100, 1000);
             }
 
             foreach ((RefRW<GarbageTruckData> truck, Entity prefabEntity) in SystemAPI
