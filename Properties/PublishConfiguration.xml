@@ -48,7 +48,7 @@
 ### Bonus status report
 - Real stats help show what is happening.
 - Lean: status does not run in-city per frame; runs in Options menu for best performance to not affect gameplay.
-= Detailed log button writes even more detailed notes in the Log file for reference.
+- Detailed log button writes even more detailed notes in the Log file for reference.
 
 
 ### Credits
@@ -63,14 +63,11 @@
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/thumbnail-garbageTruck.jpg" />
 	<!--Screenshot, can be set multiple times-->
-    <Screenshot Value="Properties/20-image-TotalMagic.jpg" />
     <Screenshot Value="Properties/30-image-TrashBoss.jpg" />
+    <Screenshot Value="Properties/35-image-GarbageTrucks.jpg" />
 	<Screenshot Value="Properties/40-image-Status.jpg" />
-    <Screenshot Value="Properties/50-image-PowerUser01.jpg" />
-	<Screenshot Value="Properties/60-image-UsageEN.jpg" />
 	<Screenshot Value="Properties/70-image-Before.jpg" />
-	<Screenshot Value="Properties/80-image-After.jpg" />
-    <Screenshot Value="Properties/90-image-Senryu.jpg" />
+    <Screenshot Value="Properties/85-image-Languages.jpg" />
 	<!--Tag, can be set multiple times-->
 	<Tag Value="Code Mod" />
 	<!--Link to the forum post where the mod can be discussed-->
