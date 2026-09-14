@@ -17,8 +17,9 @@
 - 🚚 Great for players who still want normal game vanilla garbage service and trucks driving around; now with fewer problems.
 
 ### Priority Assist
-- Truck priority dispatch so that buildings with higher garbage don't get ignored.
-- Prioritizes buildings > 7t garbage.
+- Helps trucks reach problem pickup targets before warning icons appear.
+- Uses a safe 8t early-intervention level and checks only active requests.
+- Automatically uses compatible routing help when available.
 
 ### OPTION 2 AUTO CLEAN
 - Removes all garbage automatically.
@@ -28,11 +29,9 @@
 **11+ Languages supported**
 - Hello, Bonjour, Hallo, Hola, Ciao, 안녕하세요, こんにちは, Olá, Cześć, 你好, 你好, Xin chào
 
-### Optional Power User
-- Allows advanced tuning and experimentation.
-- Most cities work well just using Trash Boss + Priority Assist.
-- Let the city run about 1 in-game month before judging results.
-- Tweak Power User controls if the standard Trash controls are not enough.
+### Safe controls
+- Adjust truck load, facility storage, processing, and fleet capacity.
+- Dangerous request, pickup, happiness, and accumulation controls were removed.
 
 #### Support and feedback
 - If the mod helps you, give it a Like, it's free + easy :)
@@ -73,16 +72,18 @@
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.3.2" />
+	<ModVersion Value="1.4.0" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.6.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-- Increased garbage truck capacity to 1000%
-- Added Vietnamese translation.
-- Internal cleanup.
+- Updated for 1.6.2 game patch.
+- Simplified Trash Boss settings and removed Power User controls.
+- Reworked Priority Assist to help trucks reach trouble spots sooner.
+- Added an 8t early-warning Status check for problem buildings.
+- Updated Recommended values for better balance.
 </ChangeLog>
 <!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 <ExternalLink Type="github" Url="https://github.com/River-Mochi/MagicGarbage" />

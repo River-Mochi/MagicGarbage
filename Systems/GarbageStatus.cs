@@ -134,13 +134,13 @@ namespace MagicGarbage
                 return;
             }
 
-            GarbageStatusSystem.CriticalBuildingEntry[] criticalBuildings = sys.GetCriticalBuildings();
-            ApplySnapshotToUi(snap, criticalBuildings.Length);
+            ApplySnapshotToUi(snap);
 
             s_LastRefreshUtcTicks = DateTime.UtcNow.Ticks;
 
             if (writeToLog)
             {
+                GarbageStatusSystem.CriticalBuildingEntry[] criticalBuildings = sys.GetCriticalBuildings();
                 string logText = BuildLogText(snap, criticalBuildings);
                 LogUtils.Info($"{Mod.ModTag} {logText}");
             }
@@ -181,7 +181,7 @@ namespace MagicGarbage
             return string.IsNullOrEmpty(s_UiCriticalBuildings) ? "-" : s_UiCriticalBuildings;
         }
 
-        private static void ApplySnapshotToUi(GarbageStatusSystem.Snapshot snap, int criticalBuildings)
+        private static void ApplySnapshotToUi(GarbageStatusSystem.Snapshot snap)
         {
             string updatedAt = DateTime.Now.ToString("HH:mm:ss");
 
@@ -208,7 +208,9 @@ namespace MagicGarbage
 
             s_UiCriticalBuildings = Mod.LF(
                 "MG.Status.Row.CriticalBuildings",
-                criticalBuildings);
+                snap.CriticalBuildingCount,
+                snap.CriticalGarbageThreshold,
+                ToTons(snap.CriticalGarbageThreshold));
 
             s_UiFacilities = BuildFacilitiesSummary(snap);
 
@@ -300,6 +302,13 @@ namespace MagicGarbage
                     snap.CollectLimit,
                     snap.WarningLimit,
                     snap.MaxAccumulation));
+
+                if (snap.AdaptiveMarginSupported)
+                {
+                    log.AppendLine(Mod.LF(
+                        "MG.Status.Log.AdaptiveMargin",
+                        snap.AdaptiveMargin * 100f));
+                }
             }
             else
             {
@@ -434,6 +443,11 @@ namespace MagicGarbage
 
         private static void AppendPriorityAssistBlock(StringBuilder log)
         {
+            if (!GarbageAdaptiveCollection.IsSupported)
+            {
+                return;
+            }
+
             if (!TryGetWorld(out World world))
             {
                 return;
@@ -451,8 +465,10 @@ namespace MagicGarbage
                 "MG.Status.Log.PriorityState",
                 sys.IsPriorityAssistLive,
                 GarbagePriorityAssistSystem.UpdateIntervalFrames,
-                sys.LastScannedBuildings,
-                sys.LastCriticalBuildings));
+                sys.LastScannedRequests,
+                sys.LastCriticalBuildings,
+                sys.NormalAdaptiveMargin * 100f,
+                sys.EffectiveAdaptiveMargin * 100f));
 
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.PriorityPasses",
@@ -627,20 +643,14 @@ namespace MagicGarbage
                 setting.GarbageFacilityProcessingMultiplier,
                 setting.GarbageFacilityVehicleMultiplier));
 
-            log.AppendLine(Mod.LF(
-                "MG.Status.Log.SettingsPowerUser",
-                setting.PowerUserOptions,
-                setting.GarbageDispatchRequestThreshold,
-                setting.GarbagePickupThreshold,
-                setting.GarbageHappinessBaseline,
-                setting.GarbageHappinessStep,
-                setting.GarbageAccumulationRate));
-
-            log.AppendLine(Mod.LF(
-                "MG.Status.Log.SettingsPriority",
-                setting.PriorityAssistEnabled,
-                Setting.PriorityCriticalGarbage,
-                ToTons(Setting.PriorityCriticalGarbage)));
+            if (GarbageAdaptiveCollection.IsSupported)
+            {
+                log.AppendLine(Mod.LF(
+                    "MG.Status.Log.SettingsPriority",
+                    setting.PriorityAssistEnabled,
+                    setting.AdaptiveReservationMargin,
+                    Setting.PriorityAdaptiveReservationMargin));
+            }
 
             log.AppendLine();
         }

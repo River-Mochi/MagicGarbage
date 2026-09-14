@@ -7,10 +7,9 @@
 // ================= </copyright> ======================
 
 // File: Systems/GarbagePriorityAssistSystem.cs
-// Trash Boss optional assist.
-// When any garbage-producing building is critically overloaded,
-// temporarily raise pickup threshold to the live request threshold.
-// Goal: reduce extra side pickups and help badly overloaded buildings get reached sooner.
+// Adds a lightweight early-intervention assist when the installed game exposes
+// target-capacity reservation. The optional field is accessed through a
+// compatibility bridge so one Magic Garbage binary remains safe across 1.6.x.
 
 namespace MagicGarbage
 {
@@ -21,7 +20,6 @@ namespace MagicGarbage
     using Game.Prefabs;
     using Game.Simulation;
     using Game.Tools;
-    using CS2Shared.RiverMochi; // LogUtils
 #if DEBUG
     using System.Diagnostics;
 #endif
@@ -31,20 +29,25 @@ namespace MagicGarbage
     public sealed partial class GarbagePriorityAssistSystem : GameSystemBase
     {
         public const int UpdateIntervalFrames = 128;
+        public const int EarlyInterventionGarbage = 8000;
 
         private bool m_HaveBase;
-        private int m_BaseCollectLimit;
+        private float m_BaseAdaptiveMargin;
 
         private int m_RaisedPassCount;
         private int m_NormalPassCount;
 
-        private int m_LastScannedBuildings;
+        private int m_LastScannedRequests;
         private int m_LastCriticalBuildings;
+        private int m_CriticalGarbageThreshold;
         private int m_HighestCriticalBuildingGarbage;
         private Entity m_HighestCriticalBuildingEntity;
         private bool m_HighestCriticalBuildingHasRequest;
         private bool m_HighestCriticalBuildingDispatched;
         private bool m_IsPriorityAssistLive;
+        private float m_NormalAdaptiveMargin;
+        private float m_EffectiveAdaptiveMargin;
+        private ComponentLookup<GarbageProducer> m_GarbageProducerLookup;
 
 #if DEBUG
         private double m_LastElapsedMs;
@@ -53,8 +56,9 @@ namespace MagicGarbage
         public int RaisedPassCount => m_RaisedPassCount;
         public int NormalPassCount => m_NormalPassCount;
 
-        public int LastScannedBuildings => m_LastScannedBuildings;
+        public int LastScannedRequests => m_LastScannedRequests;
         public int LastCriticalBuildings => m_LastCriticalBuildings;
+        public int CriticalGarbageThreshold => m_CriticalGarbageThreshold;
 
         public int HighestCriticalBuildingGarbage => m_HighestCriticalBuildingGarbage;
         public Entity HighestCriticalBuildingEntity => m_HighestCriticalBuildingEntity;
@@ -62,6 +66,9 @@ namespace MagicGarbage
         public bool HighestCriticalBuildingDispatched => m_HighestCriticalBuildingDispatched;
 
         public bool IsPriorityAssistLive => m_IsPriorityAssistLive;
+        public bool AdaptiveCollectionSupported => GarbageAdaptiveCollection.IsSupported;
+        public float NormalAdaptiveMargin => m_NormalAdaptiveMargin;
+        public float EffectiveAdaptiveMargin => m_EffectiveAdaptiveMargin;
 
 #if DEBUG
         public double LastElapsedMs => m_LastElapsedMs;
@@ -72,10 +79,30 @@ namespace MagicGarbage
             return UpdateIntervalFrames;
         }
 
+        public static int CalculateCriticalThreshold(in GarbageParameterData data)
+        {
+            int threshold = EarlyInterventionGarbage;
+
+            // Keep the assist proactive even if a game mode or later update uses
+            // a warning or hard cap below Magic Garbage's normal 8t target.
+            if (data.m_WarningGarbageLimit > 0)
+            {
+                threshold = math.min(threshold, data.m_WarningGarbageLimit);
+            }
+
+            if (data.m_MaxGarbageAccumulation > 0)
+            {
+                threshold = math.min(threshold, data.m_MaxGarbageAccumulation);
+            }
+
+            return math.max(1, threshold);
+        }
+
         protected override void OnCreate()
         {
             base.OnCreate();
 
+            m_GarbageProducerLookup = GetComponentLookup<GarbageProducer>(true);
             RequireForUpdate<GarbageParameterData>();
             Enabled = false;
         }
@@ -85,19 +112,22 @@ namespace MagicGarbage
             base.OnGameLoadingComplete(purpose, mode);
 
             m_HaveBase = false;
-            m_BaseCollectLimit = 0;
+            m_BaseAdaptiveMargin = 0f;
 
             m_RaisedPassCount = 0;
             m_NormalPassCount = 0;
 
-            m_LastScannedBuildings = 0;
+            m_LastScannedRequests = 0;
             m_LastCriticalBuildings = 0;
+            m_CriticalGarbageThreshold = 0;
 
             m_HighestCriticalBuildingGarbage = 0;
             m_HighestCriticalBuildingEntity = Entity.Null;
             m_HighestCriticalBuildingHasRequest = false;
             m_HighestCriticalBuildingDispatched = false;
             m_IsPriorityAssistLive = false;
+            m_NormalAdaptiveMargin = 0f;
+            m_EffectiveAdaptiveMargin = 0f;
 
 #if DEBUG
             m_LastElapsedMs = 0.0;
@@ -106,9 +136,9 @@ namespace MagicGarbage
             if (Mod.TryGetSetting(out Setting setting))
             {
                 Enabled =
+                    GarbageAdaptiveCollection.IsSupported &&
                     !setting.TotalMagic &&
-                    setting.TrashBossEnabled &&
-                    setting.PriorityAssistEnabled;
+                    setting.TrashBossEnabled;
             }
             else
             {
@@ -122,96 +152,55 @@ namespace MagicGarbage
             Stopwatch sw = Stopwatch.StartNew();
 #endif
 
-            if (!Mod.TryGetSetting(out Setting setting))
+            if (!Mod.TryGetSetting(out Setting setting) ||
+                !SystemAPI.TryGetSingletonRW<GarbageParameterData>(out RefRW<GarbageParameterData> parameters))
             {
-#if DEBUG
-                sw.Stop();
-                m_LastElapsedMs = sw.Elapsed.TotalMilliseconds;
-#endif
-                return;
-            }
-
-            if (!SystemAPI.TryGetSingletonRW<GarbageParameterData>(out RefRW<GarbageParameterData> parameters))
-            {
-#if DEBUG
-                sw.Stop();
-                m_LastElapsedMs = sw.Elapsed.TotalMilliseconds;
-#endif
+                FinishTiming();
                 return;
             }
 
             ref GarbageParameterData data = ref parameters.ValueRW;
 
+            if (!GarbageAdaptiveCollection.TryGet(in data, out float currentMargin))
+            {
+                m_IsPriorityAssistLive = false;
+                Enabled = false;
+                FinishTiming();
+                return;
+            }
+
             if (!m_HaveBase)
             {
-                m_BaseCollectLimit = math.max(1, data.m_CollectionGarbageLimit);
+                m_BaseAdaptiveMargin = math.clamp(currentMargin, 0f, 1f);
                 m_HaveBase = true;
             }
 
-            int normalCollect = Setting.VanillaPickupThreshold;
+            bool trashBossActive = !setting.TotalMagic && setting.TrashBossEnabled;
+            float normalMargin = m_BaseAdaptiveMargin;
 
-            if (!setting.TotalMagic && setting.TrashBossEnabled && setting.PowerUserOptions)
+            if (trashBossActive)
             {
-                int requestLimit = math.clamp(
-                    setting.GarbageDispatchRequestThreshold,
-                    Setting.VanillaDispatchRequestThreshold,
-                    Setting.MaxDispatchRequestThreshold);
+                int marginPercent = math.clamp(
+                    setting.AdaptiveReservationMargin,
+                    Setting.MinAdaptiveReservationMargin,
+                    Setting.MaxAdaptiveReservationMargin);
 
-                normalCollect = math.clamp(
-                    setting.GarbagePickupThreshold,
-                    Setting.VanillaPickupThreshold,
-                    Setting.MaxPickupThreshold);
-
-                if (normalCollect > requestLimit)
-                {
-                    normalCollect = requestLimit;
-                }
-            }
-            else if (!setting.TotalMagic && !setting.TrashBossEnabled)
-            {
-                normalCollect = math.max(Setting.VanillaPickupThreshold, m_BaseCollectLimit);
+                normalMargin = marginPercent / 100f;
             }
 
-            bool assistAllowed =
-                !setting.TotalMagic &&
-                setting.TrashBossEnabled &&
-                setting.PriorityAssistEnabled;
+            bool assistAllowed = trashBossActive && setting.PriorityAssistEnabled;
+            int criticalThreshold = CalculateCriticalThreshold(in data);
 
-            int scannedBuildings = 0;
+            int scannedRequests = 0;
             int criticalBuildings = 0;
             int highestCriticalGarbage = 0;
             Entity highestCriticalEntity = Entity.Null;
+            bool highestDispatched = false;
 
             if (assistAllowed)
             {
-                foreach ((RefRO<GarbageProducer> producer, Entity buildingEntity) in SystemAPI
-                             .Query<RefRO<GarbageProducer>>()
-                             .WithEntityAccess()
-                             .WithNone<Deleted, Destroyed, Temp>())
-                {
-                    scannedBuildings++;
+                m_GarbageProducerLookup.Update(this);
 
-                    int garbage = producer.ValueRO.m_Garbage;
-                    if (garbage < Setting.PriorityCriticalGarbage)
-                    {
-                        continue;
-                    }
-
-                    criticalBuildings++;
-
-                    if (garbage > highestCriticalGarbage)
-                    {
-                        highestCriticalGarbage = garbage;
-                        highestCriticalEntity = buildingEntity;
-                    }
-                }
-            }
-
-            bool highestHasRequest = false;
-            bool highestDispatched = false;
-
-            if (assistAllowed && highestCriticalEntity != Entity.Null)
-            {
                 foreach ((RefRO<GarbageCollectionRequest> request, RefRO<ServiceRequest> serviceRequest, Entity requestEntity) in SystemAPI
                              .Query<RefRO<GarbageCollectionRequest>, RefRO<ServiceRequest>>()
                              .WithEntityAccess()
@@ -222,27 +211,37 @@ namespace MagicGarbage
                         continue;
                     }
 
-                    if (request.ValueRO.m_Target != highestCriticalEntity)
+                    scannedRequests++;
+
+                    Entity target = request.ValueRO.m_Target;
+                    if (!m_GarbageProducerLookup.TryGetComponent(target, out GarbageProducer producer) ||
+                        producer.m_Garbage < criticalThreshold)
                     {
                         continue;
                     }
 
-                    highestHasRequest = true;
+                    criticalBuildings++;
 
-                    if (SystemAPI.HasComponent<Dispatched>(requestEntity) || SystemAPI.HasComponent<Game.Pathfind.PathInformation>(requestEntity))
+                    if (producer.m_Garbage <= highestCriticalGarbage)
                     {
-                        highestDispatched = true;
-                        break;
+                        continue;
                     }
+
+                    highestCriticalGarbage = producer.m_Garbage;
+                    highestCriticalEntity = target;
+                    highestDispatched =
+                        SystemAPI.HasComponent<Dispatched>(requestEntity) ||
+                        SystemAPI.HasComponent<Game.Pathfind.PathInformation>(requestEntity);
                 }
             }
 
             bool assistLive = assistAllowed && criticalBuildings > 0;
-            int targetCollect = normalCollect;
+            float targetMargin = assistLive
+                ? math.max(normalMargin, Setting.PriorityAdaptiveReservationMargin / 100f)
+                : normalMargin;
 
             if (assistLive)
             {
-                targetCollect = math.max(normalCollect, data.m_RequestGarbageLimit);
                 m_RaisedPassCount++;
             }
             else
@@ -250,30 +249,43 @@ namespace MagicGarbage
                 m_NormalPassCount++;
             }
 
-            m_LastScannedBuildings = scannedBuildings;
+            m_LastScannedRequests = scannedRequests;
             m_LastCriticalBuildings = criticalBuildings;
+            m_CriticalGarbageThreshold = criticalThreshold;
 
             m_HighestCriticalBuildingGarbage = highestCriticalGarbage;
             m_HighestCriticalBuildingEntity = highestCriticalEntity;
-            m_HighestCriticalBuildingHasRequest = highestHasRequest;
+            m_HighestCriticalBuildingHasRequest = highestCriticalEntity != Entity.Null;
             m_HighestCriticalBuildingDispatched = highestDispatched;
 
             m_IsPriorityAssistLive = assistLive;
+            m_NormalAdaptiveMargin = normalMargin;
+            m_EffectiveAdaptiveMargin = targetMargin;
 
-            if (data.m_CollectionGarbageLimit != targetCollect)
+            if (math.abs(currentMargin - targetMargin) > 0.0001f &&
+                !GarbageAdaptiveCollection.TrySet(ref data, targetMargin))
             {
-                data.m_CollectionGarbageLimit = targetCollect;
+                m_IsPriorityAssistLive = false;
+                Enabled = false;
+                FinishTiming();
+                return;
             }
 
-            if (!assistAllowed && data.m_CollectionGarbageLimit == normalCollect)
+            // Keep polling only while the adaptive boost may need to switch on or off.
+            if (!assistAllowed)
             {
                 Enabled = false;
             }
 
+            FinishTiming();
+
+            void FinishTiming()
+            {
 #if DEBUG
-            sw.Stop();
-            m_LastElapsedMs = sw.Elapsed.TotalMilliseconds;
+                sw.Stop();
+                m_LastElapsedMs = sw.Elapsed.TotalMilliseconds;
 #endif
+            }
         }
     }
 }

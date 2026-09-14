@@ -73,11 +73,9 @@ namespace MagicGarbage
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "優先アシスト" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
-                    "ひどく過負荷になったゴミ対象（建物）を補助します。\n" +
-                    "**ON** のとき、アクティブなリクエスト対象が **7000+**（**7t**）のゴミに達しているか確認します。\n" +
-                    "目的: 必要に応じて余分な寄り道回収を減らし、トラックが問題の大きい対象へ早く向かえるようにします。\n" +
-                    "これは軽い後押しであり、バニラの経路ロジックを強く完全上書きするものではありません。\n" +
-                    "軽量で、Harmony パッチはありません。"
+                    "対応している場合、収集先を考慮するゴミ収集車ルートと連携します。\n" +
+                    "アクティブな収集先が **8000**（**8t**）に達すると、予約容量を一時的に **25%** へ引き上げます。\n" +
+                    "警告値が低い場合はさらに早く作動します。128シミュレーションフレームごとに確認し、Harmonyは使用しません。"
                 },
 
                 // Sliders
@@ -106,20 +104,24 @@ namespace MagicGarbage
                     ""
                 },
 
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "収集先用の容量予約" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
+                    "**トラックが指定された収集先のために容量を確保し始めるタイミングを調整します。**\n" +
+                    "ゲームの既定値は**10%**です。Magic Garbageでは安全な10～30%に制限します。"
+                },
+
                 // Trash Boss Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "おすすめ" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "標準の Trash Boss **おすすめ** 値を適用します。\n" +
-                    "Power User 設定（別枠）は変更しません。"
+                    "バランスのよい設定: トラック **200%**、予約 **15%**、優先アシスト **ON**。"
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "ゲーム既定値" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Trash Boss スライダーを **vanilla 値** に戻します。\n" +
-                    "Power User 設定は<変更しません>。\n" +
+                    "Trash Bossを**vanilla動作**に戻します。\n" +
                     "**Vanilla:**\n" +
                     "- パーセントスライダーは **100%** に戻ります。\n" +
-                    "- Dispatch Request Threshold は **100 units** に戻ります。\n" +
-                    "- Pickup Threshold は **20 units** に戻ります。\n" +
+                    "- 収集先用の容量予約は **10%** に戻ります。\n" +
+                    "- 優先アシストは **OFF** になります。\n" +
                     ""
                 },
 
@@ -249,10 +251,10 @@ namespace MagicGarbage
                     "**Garbage Accumulation Rate**: 対応建物がゴミを出す速さを変えます。バランスが大事なので注意。ほとんどのプレイヤーは調整不要です。\n" +
                     "<Update time = 最終更新時刻。>"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "7t+ 建物" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "危険建物" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "**7t / 7000** 以上のゴミを持つゴミ発生建物の数です。\n" +
-                    "これらはひどく過負荷の建物です。[x] Priority Assist を有効にすると優先しやすくなります。\n" +
+                    "ゴミが **8000 / 8t** に達した建物数です。警告値が低い場合はさらに早く対象になります。\n" +
+                    "優先アシストは、これらのアクティブな収集先のために一時的に容量予約を増やします。\n" +
                     "Entity ID 番号を調べたい場合は Status to log ボタンを使ってください。"
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "ゴミ/月" },
@@ -308,7 +310,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "少し調整が必要 ({0:N0}) | 更新 {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "少し臭い ({0:N0}) | 更新 {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "ゴミ問題 ({0:N0}) | 更新 {1}" },
-                { "MG.Status.Row.CriticalBuildings", "{0:N0} が 7t 超え" },
+                { "MG.Status.Row.CriticalBuildings", "{1:N0}以上（{2:N1}t）の危険建物 {0:N0}" },
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Processed" },
                 { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} has garbage | {2:N0} above request threshold" },
@@ -351,6 +353,7 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.Thresholds", "ゲーム Thresholds (internal garbage units): pickup={1:N0}, request={0:N0}, warning icon={2:N0}, hard cap={3:N0}" },
                 { "MG.Status.Log.ThresholdsMissing", "Thresholds: <GarbageParameterData not available>" },
+                { "MG.Status.Log.AdaptiveMargin", "収集先用の適応型容量予約: {0:N0}%" },
                 { "MG.Status.Log.GarbageProcessing", "ゴミ: {0:N0} t/月 | 処理: {1:N0} t/月" },
                 { "MG.Status.Log.GarbageServiceRating", "ゴミサービス評価: {0} | raw={1:N2} | rounded={2:N0}" },
                 { "MG.Status.Log.Requests", "回収リクエスト: pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
@@ -375,7 +378,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.RequestsHeader", "リクエスト" },
                 { "MG.Status.Log.BuildingsHeader", "建物" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "7t 超えの危険建物" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "危険建物" },
                 { "MG.Status.Log.LocalTransferProbeHeader", "ローカルゴミ転送プローブ" },
                 { "MG.Status.Log.LocalTransferProbeNone", "ローカルゴミ施設が見つかりません。" },
                 { "MG.Status.Log.OutsideTransferProbeHeader", "外部接続ゴミ転送プローブ" },
@@ -388,9 +391,9 @@ namespace MagicGarbage
                 },
 
                 { "MG.Status.Log.TrucksHeader", "トラック" },
-                { "MG.Status.Log.SettingsPriority", "優先システム (保存値): enabled={0} | trigger={1:N0} ({2:N1}t)" },
+                { "MG.Status.Log.SettingsPriority", "適応型ルート (保存値): アシスト={0} | 通常予約={1:N0}% | 緊急予約={2:N0}%" },
 
-                { "MG.Status.Log.PriorityState", "優先アシスト live={0} | interval={1:N0} frames | last scanned buildings={2:N0} | critical buildings={3:N0}" },
+                { "MG.Status.Log.PriorityState", "優先アシスト={0} | 間隔={1:N0} | 確認リクエスト={2:N0} | 危険対象={3:N0} | 予約={4:N0}% -> {5:N0}%" },
                 { "MG.Status.Log.PriorityPeak", "最大危険建物: {0:N0} ({1:N1}t) | {2} | request={3}" },
 
                 { "MG.Status.Log.PriorityHeader", "優先アシスト" },

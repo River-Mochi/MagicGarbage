@@ -85,11 +85,9 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "Hỗ trợ ưu tiên" },
 
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
-                    "Hỗ trợ cho các mục tiêu rác (tòa nhà) bị quá tải nặng.\n" +
-                    "Khi **BẬT**, kiểm tra xem có mục tiêu yêu cầu đang hoạt động nào đạt **7000+** (**7t**) rác hay không.\n" +
-                    "Mục tiêu: giảm các lượt ghé thu gom phụ khi cần, để xe tải tới các mục tiêu nghiêm trọng sớm hơn.\n" +
-                    "Đây là một cú nhắc nhẹ, không phải ghi đè cứng và toàn bộ logic tuyến đường vanilla.\n" +
-                    "Nhẹ, không dùng Harmony patch."
+                    "Hoạt động cùng định tuyến xe rác theo điểm đến khi tính năng này khả dụng.\n" +
+                    "Khi điểm thu gom đang hoạt động đạt **8000** (**8t**), mức dự trữ tạm tăng lên **25%**.\n" +
+                    "Magic Garbage can thiệp sớm hơn nếu giới hạn cảnh báo thấp hơn. Kiểm tra mỗi 128 khung mô phỏng, không dùng Harmony."
                 },
 
                 // Sliders
@@ -125,23 +123,27 @@ namespace MagicGarbage
                     ""
                 },
 
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "Dung tích dự trữ cho điểm đến" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
+                    "**Điều chỉnh thời điểm xe bắt đầu dành chỗ cho điểm thu gom được chỉ định.**\n" +
+                    "Mặc định của game = **10%**. Magic Garbage giới hạn phạm vi an toàn ở 10–30%."
+                },
+
                 // Trash Boss Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Khuyến nghị" },
 
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "Áp dụng các giá trị Trash Boss chuẩn **khuyến nghị**.\n" +
-                    "Không thay đổi thiết lập Người dùng nâng cao (riêng biệt)."
+                    "Giá trị cân bằng: xe **200%**, dự trữ **15%**, Hỗ trợ ưu tiên **BẬT**."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Mặc định game" },
 
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Đưa các thanh trượt Trash Boss về **giá trị vanilla**.\n" +
-                    "<Không> thay đổi thiết lập Người dùng nâng cao.\n" +
+                    "Đưa Trash Boss về **hoạt động vanilla**.\n" +
                     "**Vanilla:**\n" +
                     "- Các thanh trượt phần trăm trở về **100%**.\n" +
-                    "- Ngưỡng yêu cầu điều xe trở về **100 đơn vị**.\n" +
-                    "- Ngưỡng thu gom trở về **20 đơn vị**.\n" +
+                    "- Dự trữ cho điểm đến trở về **10%**.\n" +
+                    "- Hỗ trợ ưu tiên chuyển **TẮT**.\n" +
                     ""
                 },
 
@@ -294,11 +296,11 @@ namespace MagicGarbage
                     "<Thời gian cập nhật = lần làm mới gần nhất.>"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Tòa nhà 7t+" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Tòa nhà nguy cấp" },
 
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "Số tòa nhà tạo rác đang ở mức hoặc trên **7t / 7000** rác.\n" +
-                    "Đây là các tòa nhà quá tải nặng, hãy bật [x] Hỗ trợ ưu tiên để ưu tiên chúng tốt hơn.\n" +
+                    "Số tòa nhà có **8000 / 8t** rác, hoặc sớm hơn nếu giới hạn cảnh báo thấp hơn.\n" +
+                    "Hỗ trợ ưu tiên tạm thời tăng dung tích dự trữ cho các mục tiêu đang hoạt động này.\n" +
                     "Dùng nút ghi Trạng thái vào log nếu bạn muốn số Entity ID để kiểm tra."
                 },
 
@@ -373,7 +375,7 @@ namespace MagicGarbage
 
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Vấn đề rác ({0:N0}) | cập nhật {1}" },
 
-                { "MG.Status.Row.CriticalBuildings", "{0:N0} trên 7t" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} nguy cấp từ {1:N0} ({2:N1}t)" },
 
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t tạo ra | {1:N0} t xử lý" },
 
@@ -424,6 +426,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.Thresholds", "Ngưỡng game (đơn vị rác nội bộ): thu gom={1:N0}, yêu cầu={0:N0}, biểu tượng cảnh báo={2:N0}, giới hạn cứng={3:N0}" },
 
                 { "MG.Status.Log.ThresholdsMissing", "Ngưỡng: <Không có GarbageParameterData>" },
+                { "MG.Status.Log.AdaptiveMargin", "Dung tích dự trữ thích ứng cho điểm đến: {0:N0}%" },
 
                 { "MG.Status.Log.GarbageProcessing", "Rác: {0:N0} t/tháng | Xử lý: {1:N0} t/tháng" },
 
@@ -463,7 +466,7 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.BuildingsHeader", "Tòa nhà" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "Tòa nhà nghiêm trọng trên 7t" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "Tòa nhà nguy cấp" },
 
                 { "MG.Status.Log.LocalTransferProbeHeader", "Kiểm tra chuyển rác cục bộ" },
 
@@ -481,9 +484,9 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.TrucksHeader", "Xe tải" },
 
-                { "MG.Status.Log.SettingsPriority", "Hệ thống ưu tiên (đã lưu): bật={0} | kích hoạt={1:N0} ({2:N1}t)" },
+                { "MG.Status.Log.SettingsPriority", "Định tuyến thích ứng (đã lưu): hỗ trợ={0} | dự trữ thường={1:N0}% | khẩn cấp={2:N0}%" },
 
-                { "MG.Status.Log.PriorityState", "Hỗ trợ ưu tiên đang chạy={0} | khoảng cách={1:N0} frame | tòa nhà quét lần cuối={2:N0} | tòa nhà nghiêm trọng={3:N0}" },
+                { "MG.Status.Log.PriorityState", "Hỗ trợ đang chạy={0} | chu kỳ={1:N0} | yêu cầu đã kiểm tra={2:N0} | mục tiêu nguy cấp={3:N0} | dự trữ={4:N0}% -> {5:N0}%" },
 
                 { "MG.Status.Log.PriorityPeak", "Tòa nhà nghiêm trọng cao nhất: {0:N0} ({1:N1}t) | {2} | yêu cầu={3}" },
 

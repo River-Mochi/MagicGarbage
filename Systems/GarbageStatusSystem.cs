@@ -92,6 +92,10 @@ namespace MagicGarbage
             public readonly int MaxAccumulation;
             public readonly int HappinessBaseline;
             public readonly int HappinessStep;
+            public readonly bool AdaptiveMarginSupported;
+            public readonly float AdaptiveMargin;
+            public readonly int CriticalGarbageThreshold;
+            public readonly int CriticalBuildingCount;
 
             public readonly long GarbageTonsPerMonth;
             public readonly long ProcessingTonsPerMonth;
@@ -141,6 +145,10 @@ namespace MagicGarbage
                 int maxAccumulation,
                 int happinessBaseline,
                 int happinessStep,
+                bool adaptiveMarginSupported,
+                float adaptiveMargin,
+                int criticalGarbageThreshold,
+                int criticalBuildingCount,
                 long garbageTonsPerMonth,
                 long processingTonsPerMonth,
                 double garbageServiceRatingRaw,
@@ -184,6 +192,10 @@ namespace MagicGarbage
                 MaxAccumulation = maxAccumulation;
                 HappinessBaseline = happinessBaseline;
                 HappinessStep = happinessStep;
+                AdaptiveMarginSupported = adaptiveMarginSupported;
+                AdaptiveMargin = adaptiveMargin;
+                CriticalGarbageThreshold = criticalGarbageThreshold;
+                CriticalBuildingCount = criticalBuildingCount;
 
                 GarbageTonsPerMonth = garbageTonsPerMonth;
                 ProcessingTonsPerMonth = processingTonsPerMonth;
@@ -321,6 +333,9 @@ namespace MagicGarbage
             int maxAccumulation = 0;
             int happinessBaseline = 0;
             int happinessStep = 0;
+            bool adaptiveMarginSupported = false;
+            float adaptiveMargin = 0f;
+            int criticalGarbageThreshold = 0;
 
             if (haveParams)
             {
@@ -330,6 +345,8 @@ namespace MagicGarbage
                 maxAccumulation = gp.m_MaxGarbageAccumulation;
                 happinessBaseline = gp.m_HappinessEffectBaseline;
                 happinessStep = gp.m_HappinessEffectStep;
+                adaptiveMarginSupported = GarbageAdaptiveCollection.TryGet(in gp, out adaptiveMargin);
+                criticalGarbageThreshold = GarbagePriorityAssistSystem.CalculateCriticalThreshold(in gp);
             }
 
             // Early empty snapshot when no city is loaded.
@@ -347,6 +364,10 @@ namespace MagicGarbage
                     maxAccumulation: maxAccumulation,
                     happinessBaseline: happinessBaseline,
                     happinessStep: happinessStep,
+                    adaptiveMarginSupported: adaptiveMarginSupported,
+                    adaptiveMargin: adaptiveMargin,
+                    criticalGarbageThreshold: criticalGarbageThreshold,
+                    criticalBuildingCount: 0,
                     garbageTonsPerMonth: 0,
                     processingTonsPerMonth: 0,
                     garbageServiceRatingRaw: 0.0,
@@ -421,6 +442,7 @@ namespace MagicGarbage
             int producerMedianGarbage = 0;
             int producerMaxGarbage = 0;
             Entity producerMaxGarbageEntity = Entity.Null;
+            int criticalBuildingCount = 0;
 
             int nearWarning75Limit = 0;
             if (haveParams && warningLimit > 0)
@@ -465,6 +487,11 @@ namespace MagicGarbage
                 if (haveParams && nearWarning75Limit > 0 && garbage >= nearWarning75Limit)
                 {
                     producerNearWarning75++;
+                }
+
+                if (haveParams && garbage >= criticalGarbageThreshold)
+                {
+                    criticalBuildingCount++;
                 }
             }
 
@@ -697,6 +724,10 @@ namespace MagicGarbage
                 maxAccumulation: maxAccumulation,
                 happinessBaseline: happinessBaseline,
                 happinessStep: happinessStep,
+                adaptiveMarginSupported: adaptiveMarginSupported,
+                adaptiveMargin: adaptiveMargin,
+                criticalGarbageThreshold: criticalGarbageThreshold,
+                criticalBuildingCount: criticalBuildingCount,
                 garbageTonsPerMonth: garbageTonsPerMonth,
                 processingTonsPerMonth: processingTonsPerMonth,
                 garbageServiceRatingRaw: garbageServiceRatingRaw,
@@ -780,13 +811,20 @@ namespace MagicGarbage
         {
             List<CriticalBuildingEntry> entries = new List<CriticalBuildingEntry>(16);
 
+            if (!SystemAPI.TryGetSingleton(out GarbageParameterData parameters))
+            {
+                return entries.ToArray();
+            }
+
+            int criticalThreshold = GarbagePriorityAssistSystem.CalculateCriticalThreshold(in parameters);
+
             foreach ((RefRO<GarbageProducer> producer, Entity buildingEntity) in SystemAPI
                          .Query<RefRO<GarbageProducer>>()
                          .WithEntityAccess()
                          .WithNone<Deleted, Destroyed, Temp>())
             {
                 int garbage = producer.ValueRO.m_Garbage;
-                if (garbage < Setting.PriorityCriticalGarbage)
+                if (garbage < criticalThreshold)
                 {
                     continue;
                 }

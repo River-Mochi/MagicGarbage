@@ -73,11 +73,9 @@ namespace MagicGarbage
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "Prioritätsassistenz" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
-                    "Assistenz für stark überlastete Müllziele (Gebäude).\n" +
-                    "Wenn **AN**, wird geprüft, ob ein aktives Anfrageziel **7000+** (**7t**) Müll erreicht.\n" +
-                    "Ziel: reduziert bei Bedarf zusätzliche Neben-Abholungen, damit Lkw schlechte Ziele schneller erreichen.\n" +
-                    "Das ist ein Anschub, keine harte vollständige Überschreibung der Vanilla-Routenlogik.\n" +
-                    "Leichtgewichtig, ohne Harmony-Patch."
+                    "Arbeitet mit zielbewusster Müllwagen-Routenlogik, wenn diese verfügbar ist.\n" +
+                    "Ab **8000** (**8t**) Müll am aktiven Sammelziel steigt die Reserve vorübergehend auf **25%**.\n" +
+                    "Bei einem niedrigeren Warnwert greift Magic Garbage früher ein. Prüfung alle 128 Simulationsframes, ohne Harmony-Patch."
                 },
 
                 // Sliders
@@ -102,20 +100,24 @@ namespace MagicGarbage
                     "**100% = Vanilla**-Anzahl an Lkw.\n"
                 },
 
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "Zielkapazitätsreserve" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
+                    "**Legt fest, wie früh LKW Platz für ihr zugewiesenes Sammelziel reservieren.**\n" +
+                    "Spielstandard = **10%**. Magic Garbage begrenzt den sicheren Bereich auf 10–30%."
+                },
+
                 // Trash Boss Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Empfohlen" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "**Empfohlene** Standardwerte für Trash Boss werden angewendet.\n" +
-                    "Ändert keine Power-User-Einstellungen (separat)."
+                    "Ausgewogene Werte: Lkw **200%**, Zielreserve **15%**, Prioritätsassistenz **AN**."
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Spielstandard" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Setzt Trash-Boss-Schieberegler auf **Vanilla-Werte** zurück.\n" +
-                    "Ändert Power-User-Einstellungen <nicht>.\n" +
+                    "Setzt Trash Boss auf **Vanilla-Verhalten** zurück.\n" +
                     "**Vanilla:**\n" +
                     "- Prozent-Schieberegler kehren auf **100%** zurück.\n" +
-                    "- Dispatch-Request-Schwelle kehrt auf **100 Einheiten** zurück.\n" +
-                    "- Abholschwelle kehrt auf **20 Einheiten** zurück.\n"
+                    "- Zielreserve kehrt auf **10%** zurück.\n" +
+                    "- Prioritätsassistenz wird **AUS** geschaltet.\n"
                 },
 
                 // Power User Options
@@ -242,10 +244,10 @@ namespace MagicGarbage
                     "**Müllansammlungsrate**: ändert, wie schnell unterstützte Gebäude Müll produzieren. Mit Vorsicht verwenden, da Balance wichtig ist. Die meisten Spieler müssen das nie anpassen.\n" +
                     "<Aktualisierungszeit = zuletzt aktualisiert.>"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "7t+-Gebäude" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Kritische Gebäude" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "Anzahl der müllproduzierenden Gebäude bei oder über **7t / 7000** Müll.\n" +
-                    "Das sind stark überlastete Gebäude; aktiviere [x] Prioritätsassistenz, um sie besser zu priorisieren.\n" +
+                    "Anzahl der Gebäude ab **8000 / 8t** Müll oder früher, wenn der Warnwert niedriger ist.\n" +
+                    "Die Prioritätsassistenz reserviert vorübergehend mehr Lkw-Kapazität für diese aktiven Ziele.\n" +
                     "Nutze den Status-zu-Log-Button, wenn du Entity-ID-Nummern zum Prüfen möchtest."
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Müll/Monat" },
@@ -300,7 +302,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "Kleine Anpassung sinnvoll ({0:N0}) | aktualisiert {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "Etwas stinkig ({0:N0}) | aktualisiert {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Müllproblem ({0:N0}) | aktualisiert {1}" },
-                { "MG.Status.Row.CriticalBuildings", "{0:N0} über 7t" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} kritisch ab {1:N0} ({2:N1}t)" },
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t produziert | {1:N0} t verarbeitet" },
                 { "MG.Status.Row.Requests", "{1:N0} ausstehend | {2:N0} entsandt | {0:N0} gesamt" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} hat Müll | {2:N0} über Anfrageschwelle" },
@@ -342,6 +344,7 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.Thresholds", "Spielschwellen (interne Mülleinheiten): Abholung={1:N0}, Anfrage={0:N0}, Warnsymbol={2:N0}, hartes Limit={3:N0}" },
                 { "MG.Status.Log.ThresholdsMissing", "Schwellen: <GarbageParameterData nicht verfügbar>" },
+                { "MG.Status.Log.AdaptiveMargin", "Adaptive Zielkapazitätsreserve: {0:N0}%" },
                 { "MG.Status.Log.GarbageProcessing", "Müll: {0:N0} t/Monat | Verarbeitung: {1:N0} t/Monat" },
                 { "MG.Status.Log.GarbageServiceRating", "Müllservice-Wertung: {0} | roh={1:N2} | gerundet={2:N0}" },
                 { "MG.Status.Log.Requests", "Abholanfragen: ausstehend={1:N0}, entsandt={2:N0}, gesamt={0:N0}" },
@@ -366,7 +369,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.RequestsHeader", "Anfragen" },
                 { "MG.Status.Log.BuildingsHeader", "Gebäude" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "Kritische Gebäude über 7t" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "Kritische Gebäude" },
                 { "MG.Status.Log.LocalTransferProbeHeader", "Lokale Mülltransfer-Prüfung" },
                 { "MG.Status.Log.LocalTransferProbeNone", "Keine lokalen Müllanlagen gefunden." },
                 { "MG.Status.Log.OutsideTransferProbeHeader", "Mülltransfer-Prüfung für Außenverbindung" },
@@ -379,9 +382,9 @@ namespace MagicGarbage
                 },
 
                 { "MG.Status.Log.TrucksHeader", "Lkw" },
-                { "MG.Status.Log.SettingsPriority", "Prioritätssystem (gespeichert): aktiviert={0} | Auslöser={1:N0} ({2:N1}t)" },
+                { "MG.Status.Log.SettingsPriority", "Adaptive Routen (gespeichert): Assistenz={0} | normale Reserve={1:N0}% | Notfallreserve={2:N0}%" },
 
-                { "MG.Status.Log.PriorityState", "Prioritätsassistenz aktiv={0} | Intervall={1:N0} Frames | zuletzt gescannte Gebäude={2:N0} | kritische Gebäude={3:N0}" },
+                { "MG.Status.Log.PriorityState", "Prioritätsassistenz aktiv={0} | Intervall={1:N0} Frames | geprüfte Anfragen={2:N0} | kritische Ziele={3:N0} | Reserve={4:N0}% -> {5:N0}%" },
                 { "MG.Status.Log.PriorityPeak", "Höchstes kritisches Gebäude: {0:N0} ({1:N1}t) | {2} | Anfrage={3}" },
 
                 { "MG.Status.Log.PriorityHeader", "Prioritätsassistenz" },

@@ -33,86 +33,30 @@ There is no in-city UI panel.
 ### Standard preset buttons
 
 **Recommended**
-- Truck load capacity: **250%**
+- Truck load capacity: **200%**
 - Facility storage: **150%**
 - Facility processing speed: **250%**
 - Facility fleet: **100%**
+- Uses safe routing defaults when available
 
 **Game Defaults**
 - Returns the standard Trash Boss sliders to vanilla values.
-
-> Standard Trash Boss buttons do **not** change Power User settings.
+- Returns optional routing help to game defaults.
 
 ---
 
 ## Priority System (lightweight)
 
-When **Trash Boss** is enabled, **Priority Assist** is also available.
+When supported by the installed game, **Priority Assist** helps trucks reach overloaded pickup targets sooner.
 
-- Watches for buildings over **7t** garbage
-- Temporarily raises **Pickup Threshold** to the current **Dispatch Request Threshold**
-- Helps reduce extra side pickups so badly overloaded buildings get reached sooner
+- Checks active collection requests every **128 simulation frames**
+- Intervenes at **8t**, or sooner if the game's live warning limit is lower
+- Scans requests rather than every garbage-producing building
 
-This is a **lightweight assist**, not a hard route override.
+It automatically uses the safest compatible routing help available in the installed game. It is not a Harmony patch or route override.
 
 For most cities, **Trash Boss + Priority Assist** is enough.  
 Let the city run for about **1 in-game month** before deciding whether more tuning is needed.
-
----
-
-## Optional – Power User
-
-Power User is a separate advanced section inside **Trash Boss**.
-
-When **Power User** is enabled, these extra sliders appear:
-
-- **Dispatch Request Threshold** (**100–2000**)
-- **Pickup Threshold** (**20–1000**)
-- **Garbage Happiness Baseline** (**100–2000**)
-- **Garbage Happiness Step** (**65–1000**)
-- **Garbage Accumulation Rate** (**20–200%**)
-
-### Power User rules
-
-- **Pickup** cannot be higher than **Dispatch Request**
-- Power User values stay saved even when **Power User** is turned off
-- Standard Trash Boss buttons do not overwrite Power User values
-
-### Power User preset buttons
-
-**Recommended**
-- Turns **Power User ON**
-- Dispatch Request Threshold: **500**
-- Pickup Threshold: **300**
-- Garbage Happiness Baseline: **550**
-- Garbage Happiness Step: **150**
-- Garbage Accumulation Rate: **100%**
-
-**Game Defaults**
-- Returns Power User values to vanilla
-- Turns **Power User OFF**
-
-### Should most players use Power User?
-
-Usually, **no**.
-
-Most cities work well with:
-- **Trash Boss**
-- **Priority Assist**
-- standard slider tuning only
-
-Power User is best for:
-- advanced tuning
-- experiments
-- learning how the garbage systems behave
-
-Let the city run for about **1 in-game month** before judging results.  
-Changing Power User too aggressively can make garbage behavior/traffic worse instead of better.
-
-rough conversion:
-- **1,000 garbage units = 1t**
-
----
 
 ## Status-only option
 
@@ -130,7 +74,7 @@ The **Status** section in Options shows a live garbage snapshot while the menu i
 - citywide garbage produced vs processed
 - active collect requests
 - buildings with garbage
-- critical buildings over **7t**
+- buildings at the 8t early-intervention level
 - garbage facilities
 - garbage trucks and dump trucks
 - max workers
@@ -149,7 +93,7 @@ This includes:
 - garbage service rating
 - pending vs dispatched requests
 - building garbage stats
-- critical buildings over **7t**
+- buildings at the 8t early-intervention level
 - priority assist summary
 - truck summary
 - per-facility summary
@@ -166,6 +110,7 @@ This includes:
 - Works with new and existing saves
 - Safe to disable or remove
 - **No Harmony**
+- One binary automatically enables optional routing controls when the installed game supports them
 - Designed to be lightweight
 - Status refresh happens in the **Options** menu instead of a constant in-city panel
 

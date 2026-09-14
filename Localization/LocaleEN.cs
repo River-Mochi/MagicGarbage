@@ -73,11 +73,10 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "Priority Assist" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
-                    "Assist for badly overloaded garbage targets (buildings).\n" +
-                    "When **ON**, checks if any active request target reaches **7000+** (**7t**) garbage.\n" +
-                    "Goal: reduces extra side-pickup jobs as needed so trucks reach bad targets sooner.\n" +
-                    "This is a nudge, not a hard, full override of vanilla route logic.\n" +
-                    "Lightweight, no Harmony patch."
+                    "Works with target-aware garbage-truck routing when available.\n" +
+                    "When an active collection target reaches **8000** (**8t**), the reserve temporarily rises to **25%** so trucks protect more room for that target.\n" +
+                    "Magic Garbage intervenes sooner if the game's live warning limit is lower.\n" +
+                    "Checks active collection requests every 128 simulation frames. No Harmony patch."
                 },
 
                 // Sliders
@@ -105,22 +104,29 @@ namespace MagicGarbage
                     "**100% = vanilla** number of trucks.\n"
                 },
 
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "Target capacity reserve" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
+                    "**How early trucks reserve space for their assigned collection target.**\n" +
+                    "Game default = **10%** of truck capacity.\n" +
+                    "For a normal 20t truck, that adds 2,000 units (2t) to the adaptive formula. It is a head-start, not a hard 2t cargo reserve.\n" +
+                    "Magic Garbage limits this setting to 10–30% to keep routing safe."
+                },
+
 
                 // Trash Boss Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Recommended" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "**Recommended** standard Trash Boss values applied.\n" +
-                    "Does not change Power User settings (separate)."
+                    "Applies balanced values for capable garbage service.\n" +
+                    "Truck load = **200%**, target reserve = **15%**, and Priority Assist = **ON**."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Game Defaults" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Set Trash Boss sliders back to **vanilla values**.\n" +
-                    "Does <not> change Power User settings.\n" +
+                    "Sets Trash Boss back to **vanilla behavior**.\n" +
                     "**Vanilla:**\n" +
                     "- Percent sliders return to **100%**.\n" +
-                    "- Dispatch Request Threshold returns to **100 units**.\n" +
-                    "- Pickup Threshold returns to **20 units**.\n"
+                    "- Target capacity reserve returns to **10%**.\n" +
+                    "- Priority Assist turns **OFF**.\n"
                 },
 
                 // Power User Options
@@ -252,10 +258,10 @@ namespace MagicGarbage
                     "<Update time = last refreshed.>"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "7t+ Buildings" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Critical buildings" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "Count of garbage-producing buildings at or above **7t / 7000** garbage.\n" +
-                    "These are badly overloaded buildings, enable [x] Priority Assist to prioritize these better.\n" +
+                    "Count of buildings at the **8000 / 8t** early-intervention level, or sooner if the game's warning limit is lower.\n" +
+                    "Priority Assist temporarily protects more truck capacity for these active targets.\n" +
                     "Use Status to log button if you want the Entity ID numbers to inspect."
                 },
 
@@ -319,7 +325,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "Needs minor tweak ({0:N0}) | updated {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "Slightly stinky ({0:N0}) | updated {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Garbage problem ({0:N0}) | updated {1}" },
-                { "MG.Status.Row.CriticalBuildings", "{0:N0} over 7t" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} critical at {1:N0}+ ({2:N1}t)" },
 
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Processed" },
                 { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
@@ -351,9 +357,9 @@ namespace MagicGarbage
                     "  - -1 = Needs minor tweak, or ignore\n" +
                     "  - -2 to -4 = Slightly stinky\n" +
                     "  - -5 to -10 = Garbage problem\n" +
-                    "Threshold sliders:\n" +
-                    "  - Pickup threshold = minimum garbage before a truck will collect from a building.\n" +
-                    "  - Request threshold = minimum garbage before the game creates or keeps a collect request.\n" +
+                    "Routing values:\n" +
+                    "  - Pickup threshold is the vanilla minimum; target-aware routing can raise it per truck to protect capacity for its destination.\n" +
+                    "  - Request threshold is the minimum garbage before the game creates or keeps a collect request.\n" +
                     "- Warning icon = garbage amount that causes a warning icon to appear above a building.\n" +
                     "- Hard cap = maximum garbage a building can accumulate.\n" +
                     "- Pending = active requests not currently assigned to a truck or path.\n" +
@@ -366,6 +372,7 @@ namespace MagicGarbage
                 },
 
                 { "MG.Status.Log.ThresholdsMissing", "Thresholds: <GarbageParameterData not available>" },
+                { "MG.Status.Log.AdaptiveMargin", "Target capacity reserve: {0:N0}%" },
                 { "MG.Status.Log.GarbageProcessing", "Garbage: {0:N0} t/mo | Processing: {1:N0} t/mo" },
                 { "MG.Status.Log.GarbageServiceRating", "Garbage Service Rating: {0} | raw={1:N2} | rounded={2:N0}" },
                 { "MG.Status.Log.Requests", "Collect Requests: pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
@@ -388,7 +395,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.RequestsHeader", "Requests" },
                 { "MG.Status.Log.BuildingsHeader", "Buildings" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "Critical Buildings over 7t" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "Early-warning Buildings" },
                 { "MG.Status.Log.LocalTransferProbeHeader", "Local Garbage Transfer Probe" },
                 { "MG.Status.Log.LocalTransferProbeNone", "No local garbage facilities found." },
                 { "MG.Status.Log.OutsideTransferProbeHeader", "Outside Connection Garbage Transfer Probe" },
@@ -404,20 +411,20 @@ namespace MagicGarbage
                 { "MG.Status.Log.TrucksHeader", "Trucks" },
 
                 { "MG.Status.Log.SettingsPriority",
-                    "Priority System (saved): enabled={0} | trigger={1:N0} ({2:N1}t)"
+                    "Routing assist (saved): Priority Assist={0} | normal reserve={1:N0}% | emergency reserve={2:N0}%"
                 },
 
                 { "MG.Status.Log.PriorityState",
-                    "Priority assist live={0} | interval={1:N0} frames | last scanned buildings={2:N0} | critical buildings={3:N0}"
+                    "Priority Assist live={0} | interval={1:N0} frames | active requests checked={2:N0} | critical targets={3:N0} | reserve={4:N0}% -> {5:N0}%"
                 },
                 { "MG.Status.Log.PriorityPeak",
                     "Highest critical building: {0:N0} ({1:N1}t) | {2} | request={3}"
                 },
 
-                { "MG.Status.Log.PriorityHeader", "Priority Assist" },
+                { "MG.Status.Log.PriorityHeader", "Routing Assist" },
 
                 { "MG.Status.Log.PriorityPasses",
-                    "Priority passes: raised={0:N0} | normal={1:N0}"
+                    "Routing checks: boosted={0:N0} | normal={1:N0}"
                 },
                 { "MG.Status.Log.PriorityPeakNone", "Highest active critical building: none" },
 

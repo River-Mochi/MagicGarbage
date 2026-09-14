@@ -73,11 +73,9 @@ namespace MagicGarbage
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "우선순위 지원" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
-                    "심하게 과부하된 쓰레기 대상(건물)을 지원합니다.\n" +
-                    "**ON** 이면 활성 요청 대상이 **7000+** (**7t**) 쓰레기에 도달했는지 확인합니다.\n" +
-                    "목표: 필요 시 부가 수거 작업을 줄여 트럭이 심각한 대상에 더 빨리 도달하도록 합니다.\n" +
-                    "이것은 약한 보조일 뿐이며, 바닐라 경로 로직을 강하게 완전히 덮어쓰는 기능이 아닙니다.\n" +
-                    "가볍고 Harmony 패치가 없습니다."
+                    "지원되는 경우 목표를 고려하는 쓰레기차 경로와 함께 작동합니다.\n" +
+                    "활성 수거 목표가 **8000**(**8t**)에 도달하면 예약 용량을 일시적으로 **25%**로 높입니다.\n" +
+                    "경고 한도가 더 낮으면 더 일찍 작동합니다. 128 시뮬레이션 프레임마다 확인하며 Harmony를 사용하지 않습니다."
                 },
 
                 // Sliders
@@ -106,20 +104,24 @@ namespace MagicGarbage
                     ""
                 },
 
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "목표 용량 예약" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
+                    "**트럭이 지정된 수거 목표를 위해 공간을 확보하기 시작하는 시점을 조정합니다.**\n" +
+                    "게임 기본값은 **10%**입니다. Magic Garbage는 안전한 10–30% 범위로 제한합니다."
+                },
+
                 // Trash Boss Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "권장" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "표준 Trash Boss **권장** 값을 적용합니다.\n" +
-                    "Power User 설정(별도)은 변경하지 않습니다."
+                    "균형 잡힌 값: 트럭 **200%**, 예약 **15%**, 우선순위 지원 **ON**."
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "게임 기본값" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Trash Boss 슬라이더를 **vanilla 값** 으로 되돌립니다.\n" +
-                    "Power User 설정은 <변경하지 않습니다>.\n" +
+                    "Trash Boss를 **vanilla 동작**으로 되돌립니다.\n" +
                     "**Vanilla:**\n" +
                     "- 퍼센트 슬라이더는 **100%** 로 돌아갑니다.\n" +
-                    "- Dispatch Request Threshold는 **100 units** 로 돌아갑니다.\n" +
-                    "- Pickup Threshold는 **20 units** 로 돌아갑니다.\n" +
+                    "- 목표 용량 예약은 **10%** 로 돌아갑니다.\n" +
+                    "- 우선순위 지원은 **OFF** 가 됩니다.\n" +
                     ""
                 },
 
@@ -249,10 +251,10 @@ namespace MagicGarbage
                     "**Garbage Accumulation Rate**: 지원 건물이 쓰레기를 생성하는 속도를 바꿉니다. 균형이 중요하므로 주의하세요. 대부분의 플레이어는 조정할 필요가 없습니다.\n" +
                     "<Update time = 마지막 새로고침 시간.>"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "7t+ 건물" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "위험 건물" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "**7t / 7000** 이상의 쓰레기를 가진 쓰레기 생성 건물 수입니다.\n" +
-                    "이 건물들은 심하게 과부하된 건물입니다. [x] Priority Assist 를 켜면 더 잘 우선 처리됩니다.\n" +
+                    "쓰레기가 **8000 / 8t**에 도달한 건물 수입니다. 경고 한도가 더 낮으면 더 일찍 포함됩니다.\n" +
+                    "우선순위 지원은 이 활성 목표를 위해 예약 용량을 일시적으로 높입니다.\n" +
                     "Entity ID 번호를 확인하려면 Status to log 버튼을 사용하세요."
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "쓰레기/월" },
@@ -308,7 +310,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "약간 조정 필요 ({0:N0}) | 갱신 {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "약간 냄새남 ({0:N0}) | 갱신 {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "쓰레기 문제 ({0:N0}) | 갱신 {1}" },
-                { "MG.Status.Row.CriticalBuildings", "{0:N0}개가 7t 초과" },
+                { "MG.Status.Row.CriticalBuildings", "{1:N0} 이상({2:N1}t) 위험 건물 {0:N0}개" },
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Processed" },
                 { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} has garbage | {2:N0} above request threshold" },
@@ -351,6 +353,7 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.Thresholds", "게임 Thresholds (internal garbage units): pickup={1:N0}, request={0:N0}, warning icon={2:N0}, hard cap={3:N0}" },
                 { "MG.Status.Log.ThresholdsMissing", "Thresholds: <GarbageParameterData not available>" },
+                { "MG.Status.Log.AdaptiveMargin", "적응형 목표 용량 예약: {0:N0}%" },
                 { "MG.Status.Log.GarbageProcessing", "쓰레기: {0:N0} t/월 | 처리: {1:N0} t/월" },
                 { "MG.Status.Log.GarbageServiceRating", "쓰레기 서비스 평가: {0} | raw={1:N2} | rounded={2:N0}" },
                 { "MG.Status.Log.Requests", "수거 요청: pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
@@ -375,7 +378,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.RequestsHeader", "요청" },
                 { "MG.Status.Log.BuildingsHeader", "건물" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "7t 초과 위험 건물" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "위험 건물" },
                 { "MG.Status.Log.LocalTransferProbeHeader", "로컬 쓰레기 이동 프로브" },
                 { "MG.Status.Log.LocalTransferProbeNone", "로컬 쓰레기 시설을 찾을 수 없습니다." },
                 { "MG.Status.Log.OutsideTransferProbeHeader", "외부 연결 쓰레기 이동 프로브" },
@@ -388,9 +391,9 @@ namespace MagicGarbage
                 },
 
                 { "MG.Status.Log.TrucksHeader", "트럭" },
-                { "MG.Status.Log.SettingsPriority", "우선순위 시스템(저장됨): enabled={0} | trigger={1:N0} ({2:N1}t)" },
+                { "MG.Status.Log.SettingsPriority", "적응형 경로(저장됨): 지원={0} | 기본 예약={1:N0}% | 긴급 예약={2:N0}%" },
 
-                { "MG.Status.Log.PriorityState", "우선순위 지원 live={0} | interval={1:N0} frames | last scanned buildings={2:N0} | critical buildings={3:N0}" },
+                { "MG.Status.Log.PriorityState", "우선순위 지원={0} | 간격={1:N0} | 확인 요청={2:N0} | 위험 목표={3:N0} | 예약={4:N0}% -> {5:N0}%" },
                 { "MG.Status.Log.PriorityPeak", "가장 높은 위험 건물: {0:N0} ({1:N1}t) | {2} | request={3}" },
 
                 { "MG.Status.Log.PriorityHeader", "우선순위 지원" },

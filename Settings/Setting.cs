@@ -26,10 +26,10 @@ namespace MagicGarbage
     [FileLocation("ModsSettings/MagicGarbage/MagicGarbage")]
     [SettingsUITabOrder(ActionsTab, AboutTab)]
     [SettingsUIGroupOrder(
-        TotalMagicGrp, TrashBossGrp, PowerUserGrp, StatusGrp,
+        TotalMagicGrp, TrashBossGrp, StatusGrp,
         AboutInfoGrp, AboutLinksGrp, AboutUsageGrp)]
     [SettingsUIShowGroupName(
-        TotalMagicGrp, TrashBossGrp, PowerUserGrp, StatusGrp,
+        TotalMagicGrp, TrashBossGrp, StatusGrp,
         AboutLinksGrp, AboutUsageGrp)]
     public sealed partial class Setting : ModSetting
     {
@@ -65,18 +65,22 @@ namespace MagicGarbage
         internal const int MinGarbageHappinessStep = 65;
         internal const int MaxGarbageHappinessStep = 1000;
 
-        internal const int PriorityCriticalGarbage = 7000;
+        internal const int VanillaAdaptiveReservationMargin = 10;
+        internal const int MinAdaptiveReservationMargin = 10;
+        internal const int MaxAdaptiveReservationMargin = 30;
+        internal const int RecommendedAdaptiveReservationMargin = 15;
+        internal const int PriorityAdaptiveReservationMargin = 25;
 
         // ---- RECOMMENDED VALUES ----
-        internal const int RecommendedTruckCapacityMultiplier = 250;
+        internal const int RecommendedTruckCapacityMultiplier = 200;
         internal const int RecommendedFacilityStorageMultiplier = 150;
         internal const int RecommendedFacilityProcessingMultiplier = 250;
         internal const int RecommendedFacilityVehicleMultiplier = 100;
 
-        internal const int RecommendedDispatchRequestThreshold = 500;
-        internal const int RecommendedPickupThreshold = 300;
-        internal const int RecommendedGarbageHappinessBaseline = 550;
-        internal const int RecommendedGarbageHappinessStep = 150;
+        internal const int RecommendedDispatchRequestThreshold = VanillaDispatchRequestThreshold;
+        internal const int RecommendedPickupThreshold = VanillaPickupThreshold;
+        internal const int RecommendedGarbageHappinessBaseline = VanillaGarbageHappinessBaseline;
+        internal const int RecommendedGarbageHappinessStep = VanillaGarbageHappinessStep;
 
         internal const int VanillaGarbageAccumulationRate = 100;
         internal const int MinGarbageAccumulationRate = 20;
@@ -98,13 +102,18 @@ namespace MagicGarbage
         private int m_GarbageHappinessBaseline = VanillaGarbageHappinessBaseline;
         private int m_GarbageHappinessStep = VanillaGarbageHappinessStep;
         private int m_GarbageAccumulationRate = VanillaGarbageAccumulationRate;
+        private int m_AdaptiveReservationMargin = VanillaAdaptiveReservationMargin;
 
         // Saved ON by default so Trash Boss has Priority Assist ready when later enabled.
         // Runtime remains inactive while Total Magic is ON or Trash Boss is OFF.
         private bool m_PriorityAssistEnabled = true;
 
-        // Power User sliders only show when both Trash Boss and Power User are enabled.
+        // Legacy Power User members stay serializable so old settings files remain readable,
+        // but the section is intentionally hidden and no longer drives runtime systems.
         private bool ShowPowerUsers => m_TrashBossEnabled && m_PowerUserOptions;
+
+        // Hide optional routing controls when the installed game lacks support.
+        private bool ShowAdaptiveReservation => m_TrashBossEnabled && GarbageAdaptiveCollection.IsSupported;
 
         public Setting(IMod mod) : base(mod)
         {
@@ -191,8 +200,29 @@ namespace MagicGarbage
         [SettingsUISetter(typeof(Setting), nameof(OnFacilitySliderChanged))]
         public int GarbageFacilityVehicleMultiplier { get; set; } = 100;
 
+        [SettingsUISlider(
+            min = MinAdaptiveReservationMargin,
+            max = MaxAdaptiveReservationMargin,
+            step = 1,
+            scalarMultiplier = 1,
+            unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, TrashBossGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowAdaptiveReservation), true)]
+        [SettingsUISetter(typeof(Setting), nameof(OnAdaptiveReservationChanged))]
+        public int AdaptiveReservationMargin
+        {
+            get => m_AdaptiveReservationMargin;
+            set
+            {
+                m_AdaptiveReservationMargin = math.clamp(
+                    value,
+                    MinAdaptiveReservationMargin,
+                    MaxAdaptiveReservationMargin);
+            }
+        }
+
+        [SettingsUISection(ActionsTab, TrashBossGrp)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowAdaptiveReservation), true)]
         [SettingsUISetter(typeof(Setting), nameof(OnPriorityAssistChanged))]
         public bool PriorityAssistEnabled
         {
@@ -230,6 +260,8 @@ namespace MagicGarbage
                 GarbageFacilityStorageMultiplier = RecommendedFacilityStorageMultiplier;
                 GarbageFacilityProcessingMultiplier = RecommendedFacilityProcessingMultiplier;
                 GarbageFacilityVehicleMultiplier = RecommendedFacilityVehicleMultiplier;
+                AdaptiveReservationMargin = RecommendedAdaptiveReservationMargin;
+                PriorityAssistEnabled = true;
 
                 EnableTuningSystemsOnce();
                 Apply();
@@ -253,6 +285,8 @@ namespace MagicGarbage
                 GarbageFacilityVehicleMultiplier = 100;
                 GarbageFacilityProcessingMultiplier = 100;
                 GarbageFacilityStorageMultiplier = 100;
+                AdaptiveReservationMargin = VanillaAdaptiveReservationMargin;
+                PriorityAssistEnabled = false;
 
                 EnableTuningSystemsOnce();
                 Apply();
@@ -263,6 +297,7 @@ namespace MagicGarbage
         // POWER USER
         // --------------------------------------------------------
 
+        [SettingsUIHidden]
         [SettingsUISection(ActionsTab, PowerUserGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
         [SettingsUISetter(typeof(Setting), nameof(OnThresholdOptionsChanged))]
@@ -281,6 +316,7 @@ namespace MagicGarbage
             }
         }
 
+        [SettingsUIHidden]
         [SettingsUISlider(min = VanillaDispatchRequestThreshold, max = MaxDispatchRequestThreshold, step = 100, scalarMultiplier = 1)]
         [SettingsUISection(ActionsTab, PowerUserGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUsers), true)]
@@ -301,6 +337,7 @@ namespace MagicGarbage
             }
         }
 
+        [SettingsUIHidden]
         [SettingsUISlider(min = VanillaPickupThreshold, max = MaxPickupThreshold, step = 20, scalarMultiplier = 1)]
         [SettingsUISection(ActionsTab, PowerUserGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUsers), true)]
@@ -322,6 +359,7 @@ namespace MagicGarbage
             }
         }
 
+        [SettingsUIHidden]
         [SettingsUISlider(min = MinGarbageHappinessBaseline, max = MaxGarbageHappinessBaseline, step = 50, scalarMultiplier = 1)]
         [SettingsUISection(ActionsTab, PowerUserGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUsers), true)]
@@ -338,6 +376,7 @@ namespace MagicGarbage
             }
         }
 
+        [SettingsUIHidden]
         [SettingsUISlider(min = MinGarbageHappinessStep, max = MaxGarbageHappinessStep, step = 5, scalarMultiplier = 1)]
         [SettingsUISection(ActionsTab, PowerUserGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUsers), true)]
@@ -354,6 +393,7 @@ namespace MagicGarbage
             }
         }
 
+        [SettingsUIHidden]
         [SettingsUISlider(min = MinGarbageAccumulationRate, max = MaxGarbageAccumulationRate, step = 10, scalarMultiplier = 1, unit = Unit.kPercentage)]
         [SettingsUISection(ActionsTab, PowerUserGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPowerUsers), true)]
@@ -374,6 +414,7 @@ namespace MagicGarbage
         // POWER USER PRESET BUTTONS
         // -----------------------------------------
 
+        [SettingsUIHidden]
         [SettingsUIButton]
         [SettingsUIButtonGroup(PowerUserButtonsRow)]
         [SettingsUISection(ActionsTab, PowerUserGrp)]
@@ -399,6 +440,7 @@ namespace MagicGarbage
             }
         }
 
+        [SettingsUIHidden]
         [SettingsUIButton]
         [SettingsUIButtonGroup(PowerUserButtonsRow)]
         [SettingsUISection(ActionsTab, PowerUserGrp)]
@@ -502,6 +544,7 @@ namespace MagicGarbage
             GarbageHappinessBaseline = VanillaGarbageHappinessBaseline;
             GarbageHappinessStep = VanillaGarbageHappinessStep;
             GarbageAccumulationRate = VanillaGarbageAccumulationRate;
+            AdaptiveReservationMargin = VanillaAdaptiveReservationMargin;
 
             GarbageStatus.ResetUi();
         }
@@ -530,22 +573,10 @@ namespace MagicGarbage
                 truckSys.Enabled = true;
             }
 
-            GarbageThresholdSystem thresholdSys = world.GetExistingSystemManaged<GarbageThresholdSystem>();
-            if (thresholdSys != null)
-            {
-                thresholdSys.Enabled = true;
-            }
-
             GarbageFacilityCapacitySystem facSys = world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
             if (facSys != null)
             {
                 facSys.Enabled = true;
-            }
-
-            GarbageAccumulationRateSystem accumulationSys = world.GetExistingSystemManaged<GarbageAccumulationRateSystem>();
-            if (accumulationSys != null)
-            {
-                accumulationSys.Enabled = true;
             }
 
             GarbagePriorityAssistSystem prioritySys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
@@ -664,6 +695,20 @@ namespace MagicGarbage
             }
         }
 
+        private void OnAdaptiveReservationChanged(int _)
+        {
+            if (!TryGetWorld(out World world))
+            {
+                return;
+            }
+
+            GarbagePriorityAssistSystem sys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
+            if (sys != null)
+            {
+                sys.Enabled = true;
+            }
+        }
+
         // ----------------------
         // Helpers
         // ----------------------
@@ -682,22 +727,10 @@ namespace MagicGarbage
                 truckSys.Enabled = true;
             }
 
-            GarbageThresholdSystem thresholdSys = world.GetExistingSystemManaged<GarbageThresholdSystem>();
-            if (thresholdSys != null)
-            {
-                thresholdSys.Enabled = true;
-            }
-
             GarbageFacilityCapacitySystem facSys = world.GetExistingSystemManaged<GarbageFacilityCapacitySystem>();
             if (facSys != null)
             {
                 facSys.Enabled = true;
-            }
-
-            GarbageAccumulationRateSystem accumulationSys = world.GetExistingSystemManaged<GarbageAccumulationRateSystem>();
-            if (accumulationSys != null)
-            {
-                accumulationSys.Enabled = true;
             }
 
             GarbagePriorityAssistSystem prioritySys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
