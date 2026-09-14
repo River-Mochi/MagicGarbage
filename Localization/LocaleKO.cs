@@ -71,13 +71,6 @@ namespace MagicGarbage
                     "- Total Magic + Trash Boss를 둘 다 **OFF** 로 두면 바닐라 설정으로 사용할 수 있으며,\n" +
                     "  **상태 보고서** 는 계속 볼 수 있습니다. 이 보고서는 Options 메뉴에 들어갈 때만 갱신됩니다(가벼움)."
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "우선순위 지원" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
-                    "지원되는 경우 목표를 고려하는 쓰레기차 경로와 함께 작동합니다.\n" +
-                    "활성 수거 목표가 **8000**(**8t**)에 도달하면 예약 용량을 일시적으로 **25%**로 높입니다.\n" +
-                    "경고 한도가 더 낮으면 더 일찍 작동합니다. 128 시뮬레이션 프레임마다 확인하며 Harmony를 사용하지 않습니다."
-                },
-
                 // Sliders
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "트럭 적재 용량" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
@@ -106,22 +99,21 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "목표 용량 예약" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
-                    "**트럭이 지정된 수거 목표를 위해 공간을 확보하기 시작하는 시점을 조정합니다.**\n" +
-                    "게임 기본값은 **10%**입니다. Magic Garbage는 안전한 10–30% 범위로 제한합니다."
+                    "**트럭이 지정된 목표로 가는 동안 선택적 수거를 줄이기 시작하는 시점을 조정합니다.**\n" +
+                    "부드러운 보호값이며 빈 적재 공간을 보장하지 않습니다. 기본값은 **10%**, 안전 범위는 10–25%입니다."
                 },
 
                 // Trash Boss Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "권장" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "균형 잡힌 값: 트럭 **200%**, 예약 **15%**, 우선순위 지원 **ON**."
+                    "균형 잡힌 값: 트럭 **200%**, 목표 보호 **15%**."
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "게임 기본값" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
                     "Trash Boss를 **vanilla 동작**으로 되돌립니다.\n" +
                     "**Vanilla:**\n" +
                     "- 퍼센트 슬라이더는 **100%** 로 돌아갑니다.\n" +
-                    "- 목표 용량 예약은 **10%** 로 돌아갑니다.\n" +
-                    "- 우선순위 지원은 **OFF** 가 됩니다.\n" +
+                    "- 목표 보호는 **10%** 로 돌아갑니다.\n" +
                     ""
                 },
 
@@ -251,17 +243,17 @@ namespace MagicGarbage
                     "**Garbage Accumulation Rate**: 지원 건물이 쓰레기를 생성하는 속도를 바꿉니다. 균형이 중요하므로 주의하세요. 대부분의 플레이어는 조정할 필요가 없습니다.\n" +
                     "<Update time = 마지막 새로고침 시간.>"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "위험 건물" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "8t 이상 건물" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "쓰레기가 **8000 / 8t**에 도달한 건물 수입니다. 경고 한도가 더 낮으면 더 일찍 포함됩니다.\n" +
-                    "우선순위 지원은 이 활성 목표를 위해 예약 용량을 일시적으로 높입니다.\n" +
-                    "Entity ID 번호를 확인하려면 Status to log 버튼을 사용하세요."
+                    "쓰레기가 **8000 / 8t** 이상인 건물 수입니다.\n" +
+                    "경고 아이콘이 나타나기 전에 서비스를 늘릴지 판단하는 고정 조기 지표입니다.\n" +
+                    "상세 로그에는 Entity ID가 표시됩니다."
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "쓰레기/월" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
-                    "현재 도시 전체 쓰레기 양과 총 쓰레기 처리율을 표시합니다.\n" +
-                    "월간 생성 쓰레기가 훨씬 높으면 처리량을 늘리세요.\n" +
-                    "**Produced** 와 **Processed** 는 tons per month 를 사용합니다."
+                    "도시 전체 쓰레기 생성량과 사용 가능한 처리 용량을 표시합니다.\n" +
+                    "월간 생성량이 처리 용량보다 높으면 처리 용량을 늘리세요.\n" +
+                    "두 값 모두 월간 톤 단위입니다."
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "수거 요청" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
@@ -277,8 +269,7 @@ namespace MagicGarbage
                     "**Has garbage** = 현재 쓰레기를 보유한 건물.\n" +
                     "**Total** = 도시의 모든 쓰레기 생성 건물.\n" +
                     "**Above request threshold** = 수거 요청을 만들 만큼 쓰레기가 있는 **buildings** 의 현재 수.\n" +
-                    "Vanilla 에서 request threshold 는 **100** internal garbage units 입니다.\n" +
-                    "Power User Options 는 request 와 pickup thresholds 를 덮어쓸 수 있습니다.\n" +
+                    "상세 로그에는 게임의 현재 요청 임계값이 표시됩니다.\n" +
                     ""
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "시설" },
@@ -302,7 +293,7 @@ namespace MagicGarbage
                     "정리된 도시 쓰레기 통계를 포함합니다"
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "로그 열기" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)), "게임 Logs/.. 폴더를 엽니다." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)), "**MagicGarbage.log** 를 엽니다. 아직 없으면 Logs 폴더를 엽니다." },
 
                 // Runtime status strings
                 { "MG.Status.NoCity", "아직 도시가 로드되지 않았습니다." },
@@ -310,8 +301,8 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "약간 조정 필요 ({0:N0}) | 갱신 {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "약간 냄새남 ({0:N0}) | 갱신 {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "쓰레기 문제 ({0:N0}) | 갱신 {1}" },
-                { "MG.Status.Row.CriticalBuildings", "{1:N0} 이상({2:N1}t) 위험 건물 {0:N0}개" },
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Processed" },
+                { "MG.Status.Row.CriticalBuildings", "8t 이상 건물 {0:N0}개" },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t 생성 | {1:N0} t 처리 용량" },
                 { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} has garbage | {2:N0} above request threshold" },
                 { "MG.Status.Row.FacilitiesSummary", "{0:N0} facilities | {1:N0}/{2:N0} garbage/dump trucks | {3:N0} workers" },
@@ -353,8 +344,8 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.Thresholds", "게임 Thresholds (internal garbage units): pickup={1:N0}, request={0:N0}, warning icon={2:N0}, hard cap={3:N0}" },
                 { "MG.Status.Log.ThresholdsMissing", "Thresholds: <GarbageParameterData not available>" },
-                { "MG.Status.Log.AdaptiveMargin", "적응형 목표 용량 예약: {0:N0}%" },
-                { "MG.Status.Log.GarbageProcessing", "쓰레기: {0:N0} t/월 | 처리: {1:N0} t/월" },
+                { "MG.Status.Log.AdaptiveMargin", "목표 보호: {0:N0}%" },
+                { "MG.Status.Log.GarbageProcessing", "쓰레기 생성: {0:N0} t/월 | 처리 용량: {1:N0} t/월" },
                 { "MG.Status.Log.GarbageServiceRating", "쓰레기 서비스 평가: {0} | raw={1:N2} | rounded={2:N0}" },
                 { "MG.Status.Log.Requests", "수거 요청: pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
                 { "MG.Status.Log.PendingPeak", "가장 높은 pending 대상 쓰레기: {0:N0} ({1:N1}t) at {2}" },
@@ -378,7 +369,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.RequestsHeader", "요청" },
                 { "MG.Status.Log.BuildingsHeader", "건물" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "위험 건물" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "8t 이상 건물" },
                 { "MG.Status.Log.LocalTransferProbeHeader", "로컬 쓰레기 이동 프로브" },
                 { "MG.Status.Log.LocalTransferProbeNone", "로컬 쓰레기 시설을 찾을 수 없습니다." },
                 { "MG.Status.Log.OutsideTransferProbeHeader", "외부 연결 쓰레기 이동 프로브" },

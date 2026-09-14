@@ -13,7 +13,6 @@
 namespace MagicGarbage
 {
     using System;
-    using System.IO;
     using Colossal.IO.AssetDatabase;
     using CS2Shared.RiverMochi;
     using Game.Modding;
@@ -53,8 +52,9 @@ namespace MagicGarbage
         private const string AboutLinksRow = "AboutLinksRow";
 
         // ---- TUNING LIMITS (source of truth for UI + runtime) ----
-        internal const int VanillaDispatchRequestThreshold = 100;
-        internal const int VanillaPickupThreshold = 20;
+        // Live 1.6.2 values. These legacy hidden controls do not drive runtime systems.
+        internal const int VanillaDispatchRequestThreshold = 400;
+        internal const int VanillaPickupThreshold = 50;
         internal const int MaxDispatchRequestThreshold = 2000;
         internal const int MaxPickupThreshold = 1000;
 
@@ -67,9 +67,8 @@ namespace MagicGarbage
 
         internal const int VanillaAdaptiveReservationMargin = 10;
         internal const int MinAdaptiveReservationMargin = 10;
-        internal const int MaxAdaptiveReservationMargin = 30;
+        internal const int MaxAdaptiveReservationMargin = 25;
         internal const int RecommendedAdaptiveReservationMargin = 15;
-        internal const int PriorityAdaptiveReservationMargin = 25;
 
         // ---- RECOMMENDED VALUES ----
         internal const int RecommendedTruckCapacityMultiplier = 200;
@@ -104,16 +103,11 @@ namespace MagicGarbage
         private int m_GarbageAccumulationRate = VanillaGarbageAccumulationRate;
         private int m_AdaptiveReservationMargin = VanillaAdaptiveReservationMargin;
 
-        // Saved ON by default so Trash Boss has Priority Assist ready when later enabled.
-        // Runtime remains inactive while Total Magic is ON or Trash Boss is OFF.
-        private bool m_PriorityAssistEnabled = true;
-
         // Legacy Power User members stay serializable so old settings files remain readable,
         // but the section is intentionally hidden and no longer drives runtime systems.
         private bool ShowPowerUsers => m_TrashBossEnabled && m_PowerUserOptions;
 
-        // Hide optional routing controls when the installed game lacks support.
-        private bool ShowAdaptiveReservation => m_TrashBossEnabled && GarbageAdaptiveCollection.IsSupported;
+        private bool ShowAdaptiveReservation => m_TrashBossEnabled;
 
         public Setting(IMod mod) : base(mod)
         {
@@ -221,24 +215,6 @@ namespace MagicGarbage
             }
         }
 
-        [SettingsUISection(ActionsTab, TrashBossGrp)]
-        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowAdaptiveReservation), true)]
-        [SettingsUISetter(typeof(Setting), nameof(OnPriorityAssistChanged))]
-        public bool PriorityAssistEnabled
-        {
-            get => m_PriorityAssistEnabled;
-            set
-            {
-                if (m_PriorityAssistEnabled == value)
-                {
-                    return;
-                }
-
-                m_PriorityAssistEnabled = value;
-                Apply();
-            }
-        }
-
         // -----------------------------------------
         // TRASH BOSS STANDARD PRESET BUTTONS
         // -----------------------------------------
@@ -261,7 +237,6 @@ namespace MagicGarbage
                 GarbageFacilityProcessingMultiplier = RecommendedFacilityProcessingMultiplier;
                 GarbageFacilityVehicleMultiplier = RecommendedFacilityVehicleMultiplier;
                 AdaptiveReservationMargin = RecommendedAdaptiveReservationMargin;
-                PriorityAssistEnabled = true;
 
                 EnableTuningSystemsOnce();
                 Apply();
@@ -286,7 +261,6 @@ namespace MagicGarbage
                 GarbageFacilityProcessingMultiplier = 100;
                 GarbageFacilityStorageMultiplier = 100;
                 AdaptiveReservationMargin = VanillaAdaptiveReservationMargin;
-                PriorityAssistEnabled = false;
 
                 EnableTuningSystemsOnce();
                 Apply();
@@ -532,7 +506,6 @@ namespace MagicGarbage
         {
             m_TotalMagic = true;
             m_TrashBossEnabled = false;
-            m_PriorityAssistEnabled = true;
             m_PowerUserOptions = false;
 
             GarbageTruckCapacityMultiplier = 100;
@@ -579,10 +552,10 @@ namespace MagicGarbage
                 facSys.Enabled = true;
             }
 
-            GarbagePriorityAssistSystem prioritySys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
-            if (prioritySys != null)
+            GarbageRoutingSystem routingSys = world.GetExistingSystemManaged<GarbageRoutingSystem>();
+            if (routingSys != null)
             {
-                prioritySys.Enabled = true;
+                routingSys.Enabled = true;
             }
         }
 
@@ -620,11 +593,6 @@ namespace MagicGarbage
                 accumulationSys.Enabled = true;
             }
 
-            GarbagePriorityAssistSystem prioritySys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
-            if (prioritySys != null)
-            {
-                prioritySys.Enabled = true;
-            }
         }
 
         private void OnThresholdSliderChanged(int _)
@@ -640,11 +608,6 @@ namespace MagicGarbage
                 sys.Enabled = true;
             }
 
-            GarbagePriorityAssistSystem prioritySys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
-            if (prioritySys != null)
-            {
-                prioritySys.Enabled = true;
-            }
         }
 
         private void OnAccumulationSliderChanged(int _)
@@ -660,11 +623,6 @@ namespace MagicGarbage
                 sys.Enabled = true;
             }
 
-            GarbagePriorityAssistSystem prioritySys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
-            if (prioritySys != null)
-            {
-                prioritySys.Enabled = true;
-            }
         }
 
         private void OnFacilitySliderChanged(int _)
@@ -681,20 +639,6 @@ namespace MagicGarbage
             }
         }
 
-        private void OnPriorityAssistChanged(bool _)
-        {
-            if (!TryGetWorld(out World world))
-            {
-                return;
-            }
-
-            GarbagePriorityAssistSystem sys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
-            if (sys != null)
-            {
-                sys.Enabled = true;
-            }
-        }
-
         private void OnAdaptiveReservationChanged(int _)
         {
             if (!TryGetWorld(out World world))
@@ -702,7 +646,7 @@ namespace MagicGarbage
                 return;
             }
 
-            GarbagePriorityAssistSystem sys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
+            GarbageRoutingSystem sys = world.GetExistingSystemManaged<GarbageRoutingSystem>();
             if (sys != null)
             {
                 sys.Enabled = true;
@@ -733,39 +677,16 @@ namespace MagicGarbage
                 facSys.Enabled = true;
             }
 
-            GarbagePriorityAssistSystem prioritySys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
-            if (prioritySys != null)
+            GarbageRoutingSystem routingSys = world.GetExistingSystemManaged<GarbageRoutingSystem>();
+            if (routingSys != null)
             {
-                prioritySys.Enabled = true;
+                routingSys.Enabled = true;
             }
         }
 
-        private static void OpenLogFolder()
+        private static void OpenModLog()
         {
-            try
-            {
-                string consoleLogPath = Application.consoleLogPath;
-                if (string.IsNullOrEmpty(consoleLogPath))
-                {
-                    return;
-                }
-
-                string rootFolder = Path.GetDirectoryName(consoleLogPath);
-                if (string.IsNullOrEmpty(rootFolder))
-                {
-                    return;
-                }
-
-                string logsFolder = Path.Combine(rootFolder, "Logs");
-                string targetFolder = Directory.Exists(logsFolder) ? logsFolder : rootFolder;
-
-                string targetUri = new Uri(targetFolder + Path.DirectorySeparatorChar).AbsoluteUri;
-                Application.OpenURL(targetUri);
-            }
-            catch (Exception ex)
-            {
-                LogUtils.Warn($"{Mod.ModTag} OpenLog failed: {ex.GetType().Name}: {ex.Message}");
-            }
+            ShellOpen.OpenModLogOrLogsFolder();
         }
 
         private static bool TryGetWorld(out World world)

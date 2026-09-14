@@ -71,13 +71,6 @@ namespace MagicGarbage
                     "- Total Magic + Trash Boss pueden estar **desactivados** para obtener ajustes vanilla,\n" +
                     "  y aun así puedes ver el **informe de estado**, que se actualiza solo al entrar al menú Opciones (ligero)."
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "Asistencia de prioridad" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
-                    "Funciona con el enrutamiento de camiones orientado al destino cuando está disponible.\n" +
-                    "Cuando un objetivo activo alcanza **8000** (**8t**), la reserva sube temporalmente al **25%**.\n" +
-                    "Magic Garbage interviene antes si el límite de aviso es menor. Revisa cada 128 fotogramas de simulación, sin Harmony."
-                },
-
                 // Sliders
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "Capacidad de carga del camión" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
@@ -102,22 +95,21 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "Reserva de capacidad para el destino" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
-                    "**Controla cuándo los camiones reservan espacio para el destino asignado.**\n" +
-                    "Valor predeterminado del juego = **10%**. Magic Garbage limita el intervalo seguro a 10–30%."
+                    "**Controla cuándo los camiones se vuelven más selectivos con recogidas opcionales camino al destino asignado.**\n" +
+                    "Es una protección flexible, no espacio de carga garantizado. Predeterminado = **10%**; intervalo seguro = 10–25%."
                 },
 
                 // Trash Boss Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Recomendado" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "Valores equilibrados: camión **200%**, reserva **15%** y Asistencia **activada**."
+                    "Valores equilibrados: camión **200%** y protección del destino **15%**."
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Valores del juego" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
                     "Devuelve Trash Boss al **comportamiento vanilla**.\n" +
                     "**Vanilla:**\n" +
                     "- Los deslizadores de porcentaje vuelven a **100%**.\n" +
-                    "- La reserva para el destino vuelve al **10%**.\n" +
-                    "- La Asistencia de prioridad se **desactiva**.\n"
+                    "- La protección del destino vuelve al **10%**.\n"
                 },
 
                 // Power User Options
@@ -244,17 +236,17 @@ namespace MagicGarbage
                     "**Tasa de acumulación de basura**: cambia qué tan rápido los edificios compatibles producen basura. Úsalo con cuidado porque el equilibrio importa. La mayoría de jugadores nunca necesita tocar esto.\n" +
                     "<Hora de actualización = último refresco.>"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Edificios críticos" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Edificios con 8t+" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "Cantidad de edificios con **8000 / 8t** de basura, o antes si el límite de aviso es menor.\n" +
-                    "La Asistencia de prioridad reserva temporalmente más capacidad para estos objetivos activos.\n" +
-                    "Usa el botón de estado al log si quieres los números de ID de entidad para inspeccionar."
+                    "Cantidad de edificios productores de basura con **8000 / 8t** o más.\n" +
+                    "Este indicador fijo ayuda a planificar el servicio antes de que aparezcan iconos de aviso.\n" +
+                    "El estado detallado del log muestra los ID de entidad."
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Basura/mes" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
-                    "Muestra la cantidad actual de basura de la ciudad y la tasa total de procesamiento de basura.\n" +
-                    "Aumenta el procesamiento si la basura mensual producida es mucho mayor.\n" +
-                    "**Producida** y **Procesada** usan toneladas por mes."
+                    "Muestra la producción de basura de la ciudad y la capacidad de procesamiento disponible.\n" +
+                    "Aumenta el procesamiento si la producción mensual supera la capacidad.\n" +
+                    "Ambos valores usan toneladas por mes."
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Solicitudes de recogida" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
@@ -270,8 +262,7 @@ namespace MagicGarbage
                     "**Tiene basura** = edificios que actualmente contienen basura.\n" +
                     "**Total** = todos los edificios productores de basura de la ciudad.\n" +
                     "**Por encima del umbral de solicitud** = cantidad actual de **edificios** con suficiente basura para crear una solicitud de recogida.\n" +
-                    "En vanilla, el umbral de solicitud es **100** unidades internas de basura.\n" +
-                    "Las opciones Power User pueden sobrescribir los umbrales de solicitud y recogida.\n"
+                    "El estado detallado del log muestra el umbral de solicitud actual del juego.\n"
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "Instalaciones" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacilities)),
@@ -294,7 +285,7 @@ namespace MagicGarbage
                     "Incluye estadísticas organizadas de basura de la ciudad"
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Abrir log" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)), "Abre la carpeta Logs/.. del juego." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)), "Abre **MagicGarbage.log**; si aún no existe, abre la carpeta Logs." },
 
                 // Runtime status strings
                 { "MG.Status.NoCity", "Aún no hay ciudad cargada." },
@@ -302,8 +293,8 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "Necesita pequeño ajuste ({0:N0}) | actualizado {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "Algo apestoso ({0:N0}) | actualizado {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Problema de basura ({0:N0}) | actualizado {1}" },
-                { "MG.Status.Row.CriticalBuildings", "{0:N0} críticos desde {1:N0} ({2:N1}t)" },
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t producidas | {1:N0} t procesadas" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} edificios con 8t+" },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t producidas | {1:N0} t capacidad" },
                 { "MG.Status.Row.Requests", "{1:N0} pendientes | {2:N0} despachadas | {0:N0} total" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} tiene basura | {2:N0} sobre el umbral de solicitud" },
                 { "MG.Status.Row.FacilitiesSummary", "{0:N0} instalaciones | {1:N0}/{2:N0} camiones basura/dump trucks | {3:N0} trabajadores" },
@@ -346,8 +337,8 @@ namespace MagicGarbage
                     "Umbrales del juego (unidades internas de basura): recogida={1:N0}, solicitud={0:N0}, icono de advertencia={2:N0}, límite duro={3:N0}"
                 },
                 { "MG.Status.Log.ThresholdsMissing", "Umbrales: <GarbageParameterData no disponible>" },
-                { "MG.Status.Log.AdaptiveMargin", "Reserva adaptativa para el destino: {0:N0}%" },
-                { "MG.Status.Log.GarbageProcessing", "Basura: {0:N0} t/mes | Procesamiento: {1:N0} t/mes" },
+                { "MG.Status.Log.AdaptiveMargin", "Protección del destino: {0:N0}%" },
+                { "MG.Status.Log.GarbageProcessing", "Producción de basura: {0:N0} t/mes | Capacidad de procesamiento: {1:N0} t/mes" },
                 { "MG.Status.Log.GarbageServiceRating", "Calificación del servicio de basura: {0} | bruto={1:N2} | redondeado={2:N0}" },
                 { "MG.Status.Log.Requests", "Solicitudes de recogida: pendientes={1:N0}, despachadas={2:N0}, total={0:N0}" },
                 { "MG.Status.Log.PendingPeak", "Objetivo pendiente más alto: {0:N0} ({1:N1}t) en {2}" },
@@ -371,7 +362,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.RequestsHeader", "Solicitudes" },
                 { "MG.Status.Log.BuildingsHeader", "Edificios" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "Edificios críticos" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "Edificios con 8t+" },
                 { "MG.Status.Log.LocalTransferProbeHeader", "Sonda local de transferencia de basura" },
                 { "MG.Status.Log.LocalTransferProbeNone", "No se encontraron instalaciones locales de basura." },
                 { "MG.Status.Log.OutsideTransferProbeHeader", "Sonda de transferencia de basura de conexión exterior" },

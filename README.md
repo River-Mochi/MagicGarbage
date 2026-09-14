@@ -37,26 +37,25 @@ There is no in-city UI panel.
 - Facility storage: **150%**
 - Facility processing speed: **250%**
 - Facility fleet: **100%**
-- Uses safe routing defaults when available
+- Assigned-target protection: **15%**
 
 **Game Defaults**
 - Returns the standard Trash Boss sliders to vanilla values.
-- Returns optional routing help to game defaults.
+- Returns assigned-target protection to the game default.
 
 ---
 
-## Priority System (lightweight)
+## Assigned-target protection
 
-When supported by the installed game, **Priority Assist** helps trucks reach overloaded pickup targets sooner.
+Game 1.6.2 adds target-aware garbage-truck routing. Magic Garbage provides a safe control for that built-in behavior.
 
-- Checks active collection requests every **128 simulation frames**
-- Intervenes at **8t**, or sooner if the game's live warning limit is lower
-- Scans requests rather than every garbage-producing building
+- **10%** is the game default
+- **15%** is the Magic Garbage Recommended value
+- The slider is limited to **10–25%**
+- It makes trucks more selective about optional pickups before reaching the assigned building
+- It is a soft protection margin, not guaranteed empty cargo space
 
-It automatically uses the safest compatible routing help available in the installed game. It is not a Harmony patch or route override.
-
-For most cities, **Trash Boss + Priority Assist** is enough.  
-Let the city run for about **1 in-game month** before deciding whether more tuning is needed.
+Magic Garbage applies the value once after city load or a settings change, then stays idle. There is no Priority Assist scan and no Harmony patch.
 
 ## Status-only option
 
@@ -71,7 +70,7 @@ This is useful for checking garbage behavior without changing the simulation.
 The **Status** section in Options shows a live garbage snapshot while the menu is open, including:
 
 - **Garbage Service Rating**
-- citywide garbage produced vs processed
+- citywide garbage production vs processing capacity
 - active collect requests
 - buildings with garbage
 - buildings at the 8t early-intervention level
@@ -94,14 +93,14 @@ This includes:
 - pending vs dispatched requests
 - building garbage stats
 - buildings at the 8t early-intervention level
-- priority assist summary
+- assigned-target protection value
 - truck summary
 - per-facility summary
 - garbage transfer probe info
 
 ### Open Log
 
-- **Open Log** opens the game log folder.
+- **Open Log** opens `MagicGarbage.log` directly. If the file does not exist yet, it opens the Logs folder.
 
 ---
 
@@ -110,7 +109,7 @@ This includes:
 - Works with new and existing saves
 - Safe to disable or remove
 - **No Harmony**
-- One binary automatically enables optional routing controls when the installed game supports them
+- Targets the game 1.6.2 garbage-service behavior
 - Designed to be lightweight
 - Status refresh happens in the **Options** menu instead of a constant in-city panel
 

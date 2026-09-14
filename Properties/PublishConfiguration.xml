@@ -16,10 +16,10 @@
 - Change total Garbage trucks.
 - 🚚 Great for players who still want normal game vanilla garbage service and trucks driving around; now with fewer problems.
 
-### Priority Assist
-- Helps trucks reach problem pickup targets before warning icons appear.
-- Uses a safe 8t early-intervention level and checks only active requests.
-- Automatically uses compatible routing help when available.
+### Assigned-target protection
+- Works with the game's improved garbage-truck routing.
+- Safely adjusts how selective trucks are with optional pickups before reaching their assigned building.
+- Applies settings once, then stays idle during normal gameplay.
 
 ### OPTION 2 AUTO CLEAN
 - Removes all garbage automatically.
@@ -79,11 +79,10 @@
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-- Updated for 1.6.2 game patch.
-- Simplified Trash Boss settings and removed Power User controls.
-- Reworked Priority Assist to help trucks reach trouble spots sooner.
-- Added an 8t early-warning Status check for problem buildings.
-- Updated Recommended values for better balance.
+- Updated for 1.6.2 with lightweight assigned-target protection.
+- Simplified controls, removed Power User, and rebalanced Recommended values.
+- Changed the Status early-warning count from 7t to 8t and improved service reporting.
+- Fixed Open Log to open MagicGarbage.log directly.
 </ChangeLog>
 <!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 <ExternalLink Type="github" Url="https://github.com/River-Mochi/MagicGarbage" />

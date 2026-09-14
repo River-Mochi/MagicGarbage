@@ -347,8 +347,6 @@ namespace MagicGarbage
                     Fmt(snap.PendingMaxTargetEntity)));
             }
 
-            AppendPriorityAssistBlock(log);
-
             AppendSectionHeader(log, Mod.L("MG.Status.Log.BuildingsHeader"));
 
             log.AppendLine(Mod.LF(
@@ -440,71 +438,6 @@ namespace MagicGarbage
         }
 
         // -------- Helpers --------
-
-        private static void AppendPriorityAssistBlock(StringBuilder log)
-        {
-            if (!GarbageAdaptiveCollection.IsSupported)
-            {
-                return;
-            }
-
-            if (!TryGetWorld(out World world))
-            {
-                return;
-            }
-
-            GarbagePriorityAssistSystem sys = world.GetExistingSystemManaged<GarbagePriorityAssistSystem>();
-            if (sys == null)
-            {
-                return;
-            }
-
-            AppendSectionHeader(log, Mod.L("MG.Status.Log.PriorityHeader"));
-
-            log.AppendLine(Mod.LF(
-                "MG.Status.Log.PriorityState",
-                sys.IsPriorityAssistLive,
-                GarbagePriorityAssistSystem.UpdateIntervalFrames,
-                sys.LastScannedRequests,
-                sys.LastCriticalBuildings,
-                sys.NormalAdaptiveMargin * 100f,
-                sys.EffectiveAdaptiveMargin * 100f));
-
-            log.AppendLine(Mod.LF(
-                "MG.Status.Log.PriorityPasses",
-                sys.RaisedPassCount,
-                sys.NormalPassCount));
-
-            if (sys.HighestCriticalBuildingGarbage <= 0 || sys.HighestCriticalBuildingEntity == Entity.Null)
-            {
-                log.AppendLine(Mod.L("MG.Status.Log.PriorityPeakNone"));
-            }
-            else
-            {
-                log.AppendLine(Mod.LF(
-                    "MG.Status.Log.PriorityPeak",
-                    sys.HighestCriticalBuildingGarbage,
-                    ToTons(sys.HighestCriticalBuildingGarbage),
-                    Fmt(sys.HighestCriticalBuildingEntity),
-                    BuildPriorityRequestState(sys.HighestCriticalBuildingHasRequest, sys.HighestCriticalBuildingDispatched)));
-            }
-
-#if DEBUG
-            log.AppendLine(Mod.LF(
-                "MG.Status.Log.PriorityPerf",
-                sys.LastElapsedMs));
-#endif
-        }
-
-        private static string BuildPriorityRequestState(bool hasRequest, bool dispatched)
-        {
-            if (!hasRequest)
-            {
-                return "no request";
-            }
-
-            return dispatched ? "dispatched" : "pending";
-        }
 
         private static void AppendGarbageTransferProbeBlock(StringBuilder log)
         {
@@ -642,15 +575,6 @@ namespace MagicGarbage
                 setting.GarbageFacilityStorageMultiplier,
                 setting.GarbageFacilityProcessingMultiplier,
                 setting.GarbageFacilityVehicleMultiplier));
-
-            if (GarbageAdaptiveCollection.IsSupported)
-            {
-                log.AppendLine(Mod.LF(
-                    "MG.Status.Log.SettingsPriority",
-                    setting.PriorityAssistEnabled,
-                    setting.AdaptiveReservationMargin,
-                    Setting.PriorityAdaptiveReservationMargin));
-            }
 
             log.AppendLine();
         }

@@ -71,13 +71,6 @@ namespace MagicGarbage
                     "- Total Magic + Trash Boss 都可以 **關閉** 以使用 vanilla 設定，\n" +
                     "  同時仍可查看 **狀態報告**；它只在進入選項菜單時更新（輕量）。"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "優先協助" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
-                    "在遊戲支援時與面向目標的垃圾車路線邏輯協同運作。\n" +
-                    "活動收集目標達到 **8000**（**8t**）時，預留容量會暫時提高到 **25%**。\n" +
-                    "如果警告上限更低，Magic Garbage 會更早介入。每 128 個模擬幀檢查一次，不使用 Harmony。"
-                },
-
                 // Sliders
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "卡車載量" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
@@ -106,22 +99,21 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "目標容量預留" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
-                    "**控制卡車何時開始為指定收集目標預留空間。**\n" +
-                    "遊戲預設值為 **10%**。Magic Garbage 將安全範圍限制為 10–30%。"
+                    "**控制卡車何時開始減少前往指定目標途中的可選收集。**\n" +
+                    "這是軟性保護，並不保證空餘載量。預設值為 **10%**，安全範圍為 10–25%。"
                 },
 
                 // Trash Boss Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "推薦" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "均衡值：卡車 **200%**、預留 **15%**、優先協助 **開啟**。"
+                    "均衡值：卡車 **200%**、目標保護 **15%**。"
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "遊戲預設值" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
                     "將 Trash Boss 恢復為 **vanilla 行為**。\n" +
                     "**Vanilla:**\n" +
                     "- 百分比滑桿恢复為 **100%**。\n" +
-                    "- 目標容量預留恢復為 **10%**。\n" +
-                    "- 優先協助設為 **關閉**。\n" +
+                    "- 目標保護恢復為 **10%**。\n" +
                     ""
                 },
 
@@ -251,17 +243,17 @@ namespace MagicGarbage
                     "**Garbage Accumulation Rate**：改變受支持建築產生垃圾的速度。請谨慎使用，因為平衡很重要。多數玩家不需要调整。\n" +
                     "<Update time = 最後刷新時間。>"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "嚴重建築" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "8t+ 建築" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "垃圾達到 **8000 / 8t** 的建築數量；如果警告上限更低則更早計入。\n" +
-                    "優先協助會暫時為這些活動目標預留更多卡車容量。\n" +
-                    "如果想查看 Entity ID 编号，請使用 Status to log 按鈕。"
+                    "垃圾達到 **8000 / 8t** 或以上的產垃圾建築數量。\n" +
+                    "這是固定的提前指標，幫助你在警告圖示出現前規劃服務。\n" +
+                    "詳細記錄會列出 Entity ID。"
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "垃圾/月" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
-                    "顯示目前全城垃圾量和總垃圾處理率。\n" +
-                    "如果每月產生的垃圾高出很多，請提高處理能力。\n" +
-                    "**Produced** 和 **Processed** 使用吨/月。"
+                    "顯示全城垃圾產生量和可用處理能力。\n" +
+                    "如果每月產生量超過處理能力，請提高處理能力。\n" +
+                    "兩個數值均使用噸/月。"
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "收集請求" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
@@ -277,8 +269,7 @@ namespace MagicGarbage
                     "**Has garbage** = 目前持有任何垃圾的建築。\n" +
                     "**Total** = 城市中所有垃圾生產建築。\n" +
                     "**Above request threshold** = 目前有足够垃圾建立收集請求的 **buildings** 數量。\n" +
-                    "Vanilla 中，request threshold 是 **100** internal garbage units。\n" +
-                    "Power User Options 可覆盖 request 和 pickup thresholds。\n" +
+                    "詳細記錄會顯示遊戲目前的請求閾值。\n" +
                     ""
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "設施" },
@@ -302,7 +293,7 @@ namespace MagicGarbage
                     "包括整理好的城市垃圾統計"
                 },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "開啟記錄" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)), "開啟遊戲 Logs/.. 資料夾。" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)), "開啟 **MagicGarbage.log**；若檔案尚不存在，則開啟 Logs 資料夾。" },
 
                 // Runtime status strings
                 { "MG.Status.NoCity", "尚未加載城市。" },
@@ -310,8 +301,8 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "需要小幅调整 ({0:N0}) | 已更新 {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "有点臭 ({0:N0}) | 已更新 {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "垃圾問題 ({0:N0}) | 已更新 {1}" },
-                { "MG.Status.Row.CriticalBuildings", "{0:N0} 個嚴重建築，閾值 {1:N0}（{2:N1}t）" },
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Processed" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} 個 8t+ 建築" },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t 產生 | {1:N0} t 處理能力" },
                 { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} has garbage | {2:N0} above request threshold" },
                 { "MG.Status.Row.FacilitiesSummary", "{0:N0} 設施 | {1:N0}/{2:N0} 垃圾/自卸卡車 | {3:N0} 工人" },
@@ -351,8 +342,8 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.Thresholds", "遊戲 Thresholds (internal garbage units): pickup={1:N0}, request={0:N0}, warning icon={2:N0}, hard cap={3:N0}" },
                 { "MG.Status.Log.ThresholdsMissing", "Thresholds: <GarbageParameterData 不可用>" },
-                { "MG.Status.Log.AdaptiveMargin", "自適應目標容量預留：{0:N0}%" },
-                { "MG.Status.Log.GarbageProcessing", "垃圾：{0:N0} t/月 | 處理：{1:N0} t/月" },
+                { "MG.Status.Log.AdaptiveMargin", "目標保護：{0:N0}%" },
+                { "MG.Status.Log.GarbageProcessing", "垃圾產生：{0:N0} t/月 | 處理能力：{1:N0} t/月" },
                 { "MG.Status.Log.GarbageServiceRating", "垃圾服務評分：{0} | raw={1:N2} | rounded={2:N0}" },
                 { "MG.Status.Log.Requests", "收集請求：pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
                 { "MG.Status.Log.PendingPeak", "最高 pending 目標垃圾：{0:N0} ({1:N1}t) 於 {2}" },
@@ -376,7 +367,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.RequestsHeader", "請求" },
                 { "MG.Status.Log.BuildingsHeader", "建築" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "嚴重建築" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "8t+ 建築" },
                 { "MG.Status.Log.LocalTransferProbeHeader", "本地垃圾轉運探測" },
                 { "MG.Status.Log.LocalTransferProbeNone", "找不到本地垃圾設施。" },
                 { "MG.Status.Log.OutsideTransferProbeHeader", "外部連線垃圾轉運探測" },

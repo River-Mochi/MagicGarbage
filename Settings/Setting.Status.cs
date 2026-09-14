@@ -123,7 +123,7 @@ namespace MagicGarbage
                     return;
                 }
 
-                OpenLogFolder();
+                OpenModLog();
             }
         }
     }

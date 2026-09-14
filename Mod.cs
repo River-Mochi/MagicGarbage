@@ -82,6 +82,7 @@ namespace MagicGarbage
         public void OnLoad(UpdateSystem updateSystem)
         {
             LogUtils.Configure(ModId, Log);
+            ShellOpen.Configure(Log, ModId, ModTag);
 
             // One-time load banner.
             if (!s_BannerLogged)
@@ -124,7 +125,7 @@ namespace MagicGarbage
             // Main simulation phase
             updateSystem.UpdateAfter<GarbageTruckCapacitySystem>(SystemUpdatePhase.GameSimulation);
             updateSystem.UpdateAfter<GarbageFacilityCapacitySystem>(SystemUpdatePhase.GameSimulation);
-            updateSystem.UpdateAfter<GarbagePriorityAssistSystem>(SystemUpdatePhase.GameSimulation);
+            updateSystem.UpdateAfter<GarbageRoutingSystem>(SystemUpdatePhase.GameSimulation);
 
             // On-demand only Status report (disabled by default; button executes)
             updateSystem.UpdateAfter<GarbageStatusSystem>(SystemUpdatePhase.GameSimulation);

@@ -82,14 +82,6 @@ namespace MagicGarbage
                     "  và bạn vẫn có thể xem **báo cáo Trạng thái**, chỉ cập nhật khi bạn mở menu Tùy chọn (nhẹ)."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PriorityAssistEnabled)), "Hỗ trợ ưu tiên" },
-
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PriorityAssistEnabled)),
-                    "Hoạt động cùng định tuyến xe rác theo điểm đến khi tính năng này khả dụng.\n" +
-                    "Khi điểm thu gom đang hoạt động đạt **8000** (**8t**), mức dự trữ tạm tăng lên **25%**.\n" +
-                    "Magic Garbage can thiệp sớm hơn nếu giới hạn cảnh báo thấp hơn. Kiểm tra mỗi 128 khung mô phỏng, không dùng Harmony."
-                },
-
                 // Sliders
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "Sức chứa xe chở rác" },
 
@@ -125,15 +117,15 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "Dung tích dự trữ cho điểm đến" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
-                    "**Điều chỉnh thời điểm xe bắt đầu dành chỗ cho điểm thu gom được chỉ định.**\n" +
-                    "Mặc định của game = **10%**. Magic Garbage giới hạn phạm vi an toàn ở 10–30%."
+                    "**Điều chỉnh thời điểm xe giảm các lượt thu gom tùy chọn trên đường đến điểm được chỉ định.**\n" +
+                    "Đây là bảo vệ mềm, không đảm bảo chỗ trống. Mặc định = **10%**; phạm vi an toàn = 10–25%."
                 },
 
                 // Trash Boss Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Khuyến nghị" },
 
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "Giá trị cân bằng: xe **200%**, dự trữ **15%**, Hỗ trợ ưu tiên **BẬT**."
+                    "Giá trị cân bằng: xe **200%**, bảo vệ điểm đến **15%**."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Mặc định game" },
@@ -142,8 +134,7 @@ namespace MagicGarbage
                     "Đưa Trash Boss về **hoạt động vanilla**.\n" +
                     "**Vanilla:**\n" +
                     "- Các thanh trượt phần trăm trở về **100%**.\n" +
-                    "- Dự trữ cho điểm đến trở về **10%**.\n" +
-                    "- Hỗ trợ ưu tiên chuyển **TẮT**.\n" +
+                    "- Bảo vệ điểm đến trở về **10%**.\n" +
                     ""
                 },
 
@@ -296,20 +287,20 @@ namespace MagicGarbage
                     "<Thời gian cập nhật = lần làm mới gần nhất.>"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Tòa nhà nguy cấp" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Tòa nhà từ 8t" },
 
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "Số tòa nhà có **8000 / 8t** rác, hoặc sớm hơn nếu giới hạn cảnh báo thấp hơn.\n" +
-                    "Hỗ trợ ưu tiên tạm thời tăng dung tích dự trữ cho các mục tiêu đang hoạt động này.\n" +
-                    "Dùng nút ghi Trạng thái vào log nếu bạn muốn số Entity ID để kiểm tra."
+                    "Số tòa nhà tạo rác có ít nhất **8000 / 8t**.\n" +
+                    "Chỉ số cố định này giúp lập kế hoạch dịch vụ trước khi biểu tượng cảnh báo xuất hiện.\n" +
+                    "Trạng thái chi tiết trong log liệt kê Entity ID."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Rác/tháng" },
 
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
-                    "Hiển thị lượng rác toàn thành phố hiện tại và tổng tốc độ xử lý rác.\n" +
-                    "Tăng xử lý nếu rác tạo ra mỗi tháng cao hơn nhiều.\n" +
-                    "**Tạo ra** và **Xử lý** dùng tấn mỗi tháng."
+                    "Hiển thị lượng rác tạo ra toàn thành phố và công suất xử lý hiện có.\n" +
+                    "Tăng xử lý nếu lượng tạo ra hàng tháng vượt công suất.\n" +
+                    "Cả hai giá trị dùng tấn mỗi tháng."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Yêu cầu thu gom" },
@@ -329,8 +320,7 @@ namespace MagicGarbage
                     "**Có rác** = tòa nhà hiện đang chứa bất kỳ lượng rác nào.\n" +
                     "**Tổng** = tất cả tòa nhà tạo rác trong thành phố.\n" +
                     "**Trên ngưỡng yêu cầu** = số **tòa nhà** hiện có đủ rác để tạo yêu cầu thu gom.\n" +
-                    "Trong vanilla, ngưỡng yêu cầu là **100** đơn vị rác nội bộ.\n" +
-                    "Tùy chọn Người dùng nâng cao có thể ghi đè ngưỡng yêu cầu và thu gom.\n" +
+                    "Trạng thái chi tiết trong log hiển thị ngưỡng yêu cầu hiện tại của game.\n" +
                     ""
                 },
 
@@ -362,7 +352,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Mở log" },
 
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)), "Mở thư mục Logs/.. của game." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)), "Mở **MagicGarbage.log**; nếu tệp chưa tồn tại, mở thư mục Logs." },
 
                 // Runtime status strings
                 { "MG.Status.NoCity", "Chưa tải thành phố." },
@@ -375,9 +365,9 @@ namespace MagicGarbage
 
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Vấn đề rác ({0:N0}) | cập nhật {1}" },
 
-                { "MG.Status.Row.CriticalBuildings", "{0:N0} nguy cấp từ {1:N0} ({2:N1}t)" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} tòa nhà từ 8t" },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t tạo ra | {1:N0} t xử lý" },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t tạo ra | {1:N0} t công suất" },
 
                 { "MG.Status.Row.Requests", "{1:N0} đang chờ | {2:N0} đã điều xe | {0:N0} tổng" },
 
@@ -426,9 +416,9 @@ namespace MagicGarbage
                 { "MG.Status.Log.Thresholds", "Ngưỡng game (đơn vị rác nội bộ): thu gom={1:N0}, yêu cầu={0:N0}, biểu tượng cảnh báo={2:N0}, giới hạn cứng={3:N0}" },
 
                 { "MG.Status.Log.ThresholdsMissing", "Ngưỡng: <Không có GarbageParameterData>" },
-                { "MG.Status.Log.AdaptiveMargin", "Dung tích dự trữ thích ứng cho điểm đến: {0:N0}%" },
+                { "MG.Status.Log.AdaptiveMargin", "Bảo vệ điểm đến: {0:N0}%" },
 
-                { "MG.Status.Log.GarbageProcessing", "Rác: {0:N0} t/tháng | Xử lý: {1:N0} t/tháng" },
+                { "MG.Status.Log.GarbageProcessing", "Rác tạo ra: {0:N0} t/tháng | Công suất xử lý: {1:N0} t/tháng" },
 
                 { "MG.Status.Log.GarbageServiceRating", "Đánh giá dịch vụ rác: {0} | thô={1:N2} | làm tròn={2:N0}" },
 
@@ -466,7 +456,7 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.BuildingsHeader", "Tòa nhà" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "Tòa nhà nguy cấp" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "Tòa nhà từ 8t" },
 
                 { "MG.Status.Log.LocalTransferProbeHeader", "Kiểm tra chuyển rác cục bộ" },
 

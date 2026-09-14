@@ -31,6 +31,8 @@ namespace MagicGarbage
 
     public sealed partial class GarbageStatusSystem : GameSystemBase
     {
+        public const int EarlyWarningGarbage = 8000;
+
         // Per-facility summary used by the detailed log.
         public readonly struct FacilityEntry
         {
@@ -241,7 +243,6 @@ namespace MagicGarbage
         private PrefabSystem m_GamePrefabSystem = null!;
 
         private EntityQuery m_ProducerQuery;
-        private EntityQuery m_RequestQuery;
         private EntityQuery m_TruckQuery;
         private EntityQuery m_HappinessFactorParameterQuery;
 
@@ -265,21 +266,6 @@ namespace MagicGarbage
                 {
                     ComponentType.ReadOnly<Deleted>(),
                     ComponentType.ReadOnly<Destroyed>(),
-                    ComponentType.ReadOnly<Temp>(),
-                },
-            });
-
-            // Active garbage collection requests in the current city.
-            m_RequestQuery = GetEntityQuery(new EntityQueryDesc
-            {
-                All = new[]
-                {
-                    ComponentType.ReadOnly<GarbageCollectionRequest>(),
-                    ComponentType.ReadOnly<ServiceRequest>(),
-                },
-                None = new[]
-                {
-                    ComponentType.ReadOnly<Deleted>(),
                     ComponentType.ReadOnly<Temp>(),
                 },
             });
@@ -335,7 +321,7 @@ namespace MagicGarbage
             int happinessStep = 0;
             bool adaptiveMarginSupported = false;
             float adaptiveMargin = 0f;
-            int criticalGarbageThreshold = 0;
+            int criticalGarbageThreshold = EarlyWarningGarbage;
 
             if (haveParams)
             {
@@ -345,8 +331,8 @@ namespace MagicGarbage
                 maxAccumulation = gp.m_MaxGarbageAccumulation;
                 happinessBaseline = gp.m_HappinessEffectBaseline;
                 happinessStep = gp.m_HappinessEffectStep;
-                adaptiveMarginSupported = GarbageAdaptiveCollection.TryGet(in gp, out adaptiveMargin);
-                criticalGarbageThreshold = GarbagePriorityAssistSystem.CalculateCriticalThreshold(in gp);
+                adaptiveMarginSupported = true;
+                adaptiveMargin = gp.m_AdaptiveCollectionMargin;
             }
 
             // Early empty snapshot when no city is loaded.
@@ -401,6 +387,10 @@ namespace MagicGarbage
 
             ComponentLookup<WorkProvider> workProviderLookup = GetComponentLookup<WorkProvider>(true);
             BufferLookup<OwnedVehicle> ownedVehicleLookup = GetBufferLookup<OwnedVehicle>(true);
+            BufferLookup<Efficiency> efficiencyLookup = GetBufferLookup<Efficiency>(true);
+            BufferLookup<InstalledUpgrade> installedUpgradeLookup = GetBufferLookup<InstalledUpgrade>(true);
+            ComponentLookup<PrefabRef> prefabRefLookup = GetComponentLookup<PrefabRef>(true);
+            ComponentLookup<GarbageFacilityData> facilityDataLookup = GetComponentLookup<GarbageFacilityData>(true);
 
             // Citywide production-style number exposed by GarbageAccumulationSystem.
             long garbageRaw = m_GarbageAccumulationSystem != null
@@ -489,7 +479,7 @@ namespace MagicGarbage
                     producerNearWarning75++;
                 }
 
-                if (haveParams && garbage >= criticalGarbageThreshold)
+                if (garbage >= criticalGarbageThreshold)
                 {
                     criticalBuildingCount++;
                 }
@@ -516,22 +506,26 @@ namespace MagicGarbage
                 }
             }
 
-            int requestTotal = m_RequestQuery.CalculateEntityCount();
+            int requestTotal = 0;
             int requestPending = 0;
             int requestDispatched = 0;
             int pendingMaxTargetGarbage = 0;
             Entity pendingMaxTargetEntity = Entity.Null;
 
             // Separate pending requests from already-assigned/dispatched requests.
-            foreach ((RefRO<GarbageCollectionRequest> request, Entity requestEntity) in SystemAPI
-                         .Query<RefRO<GarbageCollectionRequest>>()
+            foreach ((RefRO<GarbageCollectionRequest> request, RefRO<ServiceRequest> serviceRequest, Entity requestEntity) in SystemAPI
+                         .Query<RefRO<GarbageCollectionRequest>, RefRO<ServiceRequest>>()
                          .WithEntityAccess()
                          .WithNone<Deleted, Temp>())
             {
-                if (!SystemAPI.HasComponent<ServiceRequest>(requestEntity))
+                // Reversed requests look for a destination for a facility or truck.
+                // They are not building pickup requests and should not inflate this status row.
+                if ((serviceRequest.ValueRO.m_Flags & ServiceRequestFlags.Reversed) != 0)
                 {
                     continue;
                 }
+
+                requestTotal++;
 
                 bool hasDispatched = SystemAPI.HasComponent<Dispatched>(requestEntity);
                 bool hasPath = SystemAPI.HasComponent<PathInformation>(requestEntity);
@@ -688,7 +682,26 @@ namespace MagicGarbage
                     continue;
                 }
 
-                processingRaw += facility.ValueRO.m_ProcessingRate;
+                // Match the game's garbage overview: available processing capacity,
+                // including building efficiency and installed facility upgrades.
+                if (prefabRefLookup.TryGetComponent(facilityEntity, out PrefabRef facilityPrefabRef) &&
+                    facilityDataLookup.TryGetComponent(facilityPrefabRef.m_Prefab, out GarbageFacilityData facilityData))
+                {
+                    if (installedUpgradeLookup.TryGetBuffer(facilityEntity, out DynamicBuffer<InstalledUpgrade> upgrades))
+                    {
+                        UpgradeUtils.CombineStats(
+                            ref facilityData,
+                            upgrades,
+                            ref prefabRefLookup,
+                            ref facilityDataLookup);
+                    }
+
+                    float efficiency = BuildingUtils.GetEfficiency(facilityEntity, ref efficiencyLookup);
+                    processingRaw += (long)Math.Round(
+                        efficiency * facilityData.m_ProcessingSpeed,
+                        MidpointRounding.AwayFromZero);
+                }
+
                 facilityTotal++;
                 facilityGarbageTruckTotal += garbageTruckTotal;
                 facilityDumpTruckTotal += dumpTruckTotal;
@@ -811,12 +824,7 @@ namespace MagicGarbage
         {
             List<CriticalBuildingEntry> entries = new List<CriticalBuildingEntry>(16);
 
-            if (!SystemAPI.TryGetSingleton(out GarbageParameterData parameters))
-            {
-                return entries.ToArray();
-            }
-
-            int criticalThreshold = GarbagePriorityAssistSystem.CalculateCriticalThreshold(in parameters);
+            int criticalThreshold = EarlyWarningGarbage;
 
             foreach ((RefRO<GarbageProducer> producer, Entity buildingEntity) in SystemAPI
                          .Query<RefRO<GarbageProducer>>()
