@@ -44,7 +44,6 @@ namespace MagicGarbage
                 // Groups
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Automatisch reinigen" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "Selbst verwalten" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.PowerUserGrp), "Profi" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "Status" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "Mod-Info" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Links" },
@@ -112,85 +111,6 @@ namespace MagicGarbage
                     "- Zielschutz kehrt auf **10%** zurück.\n"
                 },
 
-                // Power User Options
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Power-User-Optionen" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
-                    "Optionale erweiterte Einstellungen\n" +
-                    "<Warnung: NICHT nötig> für guten Service; für Spieler gedacht, die experimentieren oder besser lernen wollen, wie die Systeme funktionieren.\n" +
-                    "Wenn **AUS**, verhalten sich Power-User-Elemente wie das normale **Vanilla**-Spiel.\n" +
-                    "Wenn **AN**, erscheinen die erweiterten **Schieberegler**.\n" +
-                    "\n" +
-                    "<--- Zufriedenheitsbeispiele --->\n" +
-                    " - <Vanilla> 100/65 = 1. Malus bei <165>.\n" +
-                    " - Klicke <Empfohlen> für 550/150 = 1. Malus bei <700>.\n" +
-                    " - <Sehr weich> 950/200 = 1. Müllmalus bei <1150>.\n" +
-                    "Praktisch: Die letzten Schiebereglerwerte werden gespeichert, wenn diese Option AUS ist (falls du sie später aktivieren möchtest)."
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Dispatch-Request-Schwelle" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
-                    "**Gebäudemüll, der nötig ist, bevor eine Lkw-Dispatch-Anfrage erstellt oder behalten wird.**\n" +
-                    "Vanilla = **100** Mülleinheiten.\n" +
-                    "**100 Mülleinheiten = 0.1t**\n" +
-                    "**1,000 Mülleinheiten = 1t**\n" +
-                    "Halte dies mindestens auf Höhe der Abholschwelle.\n" +
-                    "Das erhöht normalerweise, wie viele Lkw genutzt werden statt geparkt zu bleiben."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "Abholschwelle" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
-                    "**Mindestmenge an Gebäudemüll, bevor ein Lkw ihn einsammeln kann.**\n" +
-                    "Vanilla = **20** Mülleinheiten.\n" +
-                    "Der Abholregler <kann nicht> höher als Dispatch Request (DR) sein; er wird begrenzt, um Logikprobleme zu vermeiden.\n" +
-                    "Wird ein Lkw zu einem Gebäude geschickt und der Abholwert ist höher als DR, kann der Lkw dort manchmal nichts einsammeln (die Ansammlungsrate wirkt ebenfalls mit).\n"
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "Müll-Zufriedenheitsbasis" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
-                    "**Gebäudemüllstand, bevor Gesundheits- + Zufriedenheitsmalus beginnt.**\n" +
-                    "**Vanilla = 100** Mülleinheiten.\n" +
-                    "Höhere Basis = Gebäude können mehr Müll halten, bevor der Malus beginnt.\n" +
-                    "100 Mülleinheiten = 0.1t\n" +
-                    "Überblick:\n" +
-                    "- <Schwellenwert> = Auslösepunkt für Systemverhalten\n" +
-                    "- <Basis> = Startpunkt der Malusformel\n" +
-                    "- <Schritt> = Inkrementgröße in der Formel, also wie schnell der Malus nach Beginn ansteigt"
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "Müll-Zufriedenheitsschritt" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
-                    "**Zusätzlicher Müll über der Basis, der einen -1-Malus auslöst.**\n" +
-                    "Vanilla = **65** Mülleinheiten.\n" +
-                    "Höherer Schritt = langsameres Anwachsen des Malus.\n" +
-                    "Das Spiel begrenzt den Müllmalus auf **-10**.\n" +
-                    "Der erste Vanilla-Malus <-1> tritt bei **165 Müll** auf (100 Basis + 65 Schritt)\n" +
-                    "Werden Schwellenwerte mit Zufriedenheitsschiebereglern geändert, können stärkere als normale Mali entstehen."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "Ansammlungsrate" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
-                    "**Skaliert unterstützte Müllquellwerte von Gebäuden.**\n" +
-                    "Vorsicht: Das ist ein starker Hebel, und Änderungen an der Rate beeinflussen viele Dinge.\n" +
-                    "Ein gutes System ist auch ohne diese Einstellung möglich.\n" +
-                    "\n" +
-                    "**100% = Vanilla**-Ansammlungsrate.\n" +
-                    "**20%** = viel langsamerer Aufbau.\n" +
-                    "**200%** = doppelte Rate - sehr viel Müll.\n" +
-                    "Bei 20% kompostieren offensichtlich alle Cims, daher eine viel niedrigere Müllansammlungsrate ;)\n" +
-                    "\n" +
-                    "Technischer Hinweis: Das Spiel fügt Müll schrittweise über den Tag hinzu, nicht alles auf einmal."
-                },
-
-                // Power User Presets
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "Empfohlen" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
-                    "Wendet **empfohlene** Power-User-Werte an.\n" +
-                    "Schaltet Power User AN.\n" +
-                    "Der erste Müllmalus beginnt bei **700** Müll (550 Basis + 150 Schritt).\n" +
-                    "Die Müllansammlungsrate bleibt bei **100%** Vanilla, sofern sie nicht manuell geändert wird."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "Spielstandard" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
-                    "Setzt alle Power-User-Werte **auf Vanilla** zurück.\n" +
-                    "Schaltet **Power User AUS**.\n"
-                },
-
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "Anzeigename dieses Mods." },
@@ -236,9 +156,9 @@ namespace MagicGarbage
                     "**Müllansammlungsrate**: ändert, wie schnell unterstützte Gebäude Müll produzieren. Mit Vorsicht verwenden, da Balance wichtig ist. Die meisten Spieler müssen das nie anpassen.\n" +
                     "<Aktualisierungszeit = zuletzt aktualisiert.>"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Gebäude ab 8t" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Gebäude ab 7t" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "Anzahl der müllproduzierenden Gebäude ab **8000 / 8t**.\n" +
+                    "Anzahl der müllproduzierenden Gebäude ab **7000 / 7t**.\n" +
                     "Dieser feste Frühwarnwert hilft bei der Planung, bevor Warnsymbole erscheinen.\n" +
                     "Der detaillierte Status im Log listet die Entity-IDs."
                 },
@@ -293,7 +213,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "Kleine Anpassung sinnvoll ({0:N0}) | aktualisiert {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "Etwas stinkig ({0:N0}) | aktualisiert {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Müllproblem ({0:N0}) | aktualisiert {1}" },
-                { "MG.Status.Row.CriticalBuildings", "{0:N0} Gebäude ab 8t" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} Gebäude ab 7t" },
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t produziert | {1:N0} t Kapazität" },
                 { "MG.Status.Row.Requests", "{1:N0} ausstehend | {2:N0} entsandt | {0:N0} gesamt" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} hat Müll | {2:N0} über Anfrageschwelle" },
@@ -308,9 +228,6 @@ namespace MagicGarbage
                 { "MG.Status.Log.SettingsHeader", "Aktuelle Mod-Einstellungen" },
                 { "MG.Status.Log.SettingsTrashBoss",
                     "Trash-Boss-Schieberegler (gespeichert): Lkw-Ladung={0:N0}% | Anlagenlager={1:N0}% | Anlagenverarbeitung={2:N0}% | Anlagenflotte={3:N0}%"
-                },
-                { "MG.Status.Log.SettingsPowerUser",
-                    "Power User (gespeichert): aktiviert={0} | Anfrage={1:N0} | Abholung={2:N0} | Zufriedenheitsbasis={3:N0} | Zufriedenheitsschritt={4:N0} | Ansammlungsrate={5:N0}%"
                 },
 
                 { "MG.Status.Log.Legend",
@@ -360,7 +277,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.RequestsHeader", "Anfragen" },
                 { "MG.Status.Log.BuildingsHeader", "Gebäude" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "Gebäude ab 8t" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "Gebäude ab 7t" },
                 { "MG.Status.Log.LocalTransferProbeHeader", "Lokale Mülltransfer-Prüfung" },
                 { "MG.Status.Log.LocalTransferProbeNone", "Keine lokalen Müllanlagen gefunden." },
                 { "MG.Status.Log.OutsideTransferProbeHeader", "Mülltransfer-Prüfung für Außenverbindung" },

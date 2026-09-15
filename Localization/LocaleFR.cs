@@ -44,7 +44,6 @@ namespace MagicGarbage
                 // Groups
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Nettoyage auto" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "Gestion manuelle" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.PowerUserGrp), "Utilisateur avancé" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "État" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "Infos du mod" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Liens" },
@@ -112,85 +111,6 @@ namespace MagicGarbage
                     "- La protection de la cible revient à **10%**.\n"
                 },
 
-                // Power User Options
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Options Power User" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
-                    "Paramètres avancés facultatifs\n" +
-                    "<Avertissement : PAS nécessaire> pour un bon service ; fournis pour les joueurs qui veulent expérimenter ou mieux comprendre le fonctionnement des systèmes.\n" +
-                    "Quand **désactivé**, les éléments Power User se comportent comme le jeu **vanilla** normal.\n" +
-                    "Quand **activé**, les **curseurs avancés apparaissent**.\n" +
-                    "\n" +
-                    "<--- Exemples de bonheur --->\n" +
-                    " - <Vanilla> 100/65 = 1ère pénalité à <165>.\n" +
-                    " - Clique sur <Recommandé> pour 550/150 = 1ère pénalité à <700>.\n" +
-                    " - <Très doux> 950/200 = 1ère pénalité de déchets à <1150>.\n" +
-                    "Pratique : les dernières valeurs des curseurs sont sauvegardées quand cette option est désactivée (au cas où tu veux la réactiver plus tard)."
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Seuil de demande d’envoi" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
-                    "**Quantité de déchets du bâtiment nécessaire avant qu’une demande d’envoi de camion soit créée ou conservée.**\n" +
-                    "Vanilla = **100** unités de déchets.\n" +
-                    "**100 unités de déchets = 0.1t**\n" +
-                    "**1,000 unités de déchets = 1t**\n" +
-                    "Garde cette valeur égale ou supérieure au seuil de collecte.\n" +
-                    "Cela augmente généralement le nombre de camions utilisés plutôt que garés."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "Seuil de collecte" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
-                    "**Quantité minimale de déchets du bâtiment avant qu’un camion puisse collecter.**\n" +
-                    "Vanilla = **20** unités de déchets.\n" +
-                    "Le curseur de collecte <ne peut pas> être supérieur à la demande d’envoi (DR) ; il est limité pour éviter un problème de logique.\n" +
-                    "Si un camion est envoyé vers un bâtiment et que la valeur de collecte est supérieure à DR, le camion peut parfois ne pas pouvoir collecter dans ce bâtiment (le taux d’accumulation joue aussi).\n"
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "Base de bonheur des déchets" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
-                    "**Niveau de déchets du bâtiment avant le début de la pénalité de santé + bonheur.**\n" +
-                    "**Vanilla = 100** unités de déchets.\n" +
-                    "Une base plus haute = les bâtiments peuvent contenir plus de déchets avant la pénalité.\n" +
-                    "100 unités de déchets = 0.1t\n" +
-                    "Aperçu :\n" +
-                    "- <Seuil> = point de déclenchement du comportement du système\n" +
-                    "- <Base> = point de départ de la formule de pénalité\n" +
-                    "- <Étape> = taille de l’incrément dans la formule, donc vitesse de montée de la pénalité après son début"
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "Étape de bonheur des déchets" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
-                    "**Déchets supplémentaires au-dessus de la base qui déclenchent le début d’une pénalité de -1.**\n" +
-                    "Vanilla = **65** unités de déchets.\n" +
-                    "Une étape plus haute = croissance plus lente de la pénalité.\n" +
-                    "Le jeu limite la pénalité de déchets à **-10**.\n" +
-                    "La première pénalité vanilla <-1> arrive à **165 déchets** (100 base + 65 étape)\n" +
-                    "Modifier les seuils avec les curseurs de bonheur peut entraîner des pénalités plus fortes que la normale."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "Taux d’accumulation" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
-                    "**Met à l’échelle les valeurs source de déchets des bâtiments pris en charge.**\n" +
-                    "Attention : c’est un levier puissant et le changement du taux affecte beaucoup de choses.\n" +
-                    "Il est possible d’obtenir un bon système sans l’utiliser.\n" +
-                    "\n" +
-                    "**100% = taux d’accumulation vanilla**.\n" +
-                    "**20%** = accumulation beaucoup plus lente.\n" +
-                    "**200%** = taux doublé - énormément de déchets.\n" +
-                    "À 20%, tous les Cims compostent évidemment, donc un taux d’accumulation bien plus bas ;)\n" +
-                    "\n" +
-                    "Note technique : le jeu ajoute les déchets progressivement au fil de la journée, pas tout d’un coup."
-                },
-
-                // Power User Presets
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "Recommandé" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
-                    "Applique les valeurs Power User **recommandées**.\n" +
-                    "Active Power User.\n" +
-                    "La première pénalité de déchets commence à **700** déchets (550 base + 150 étape).\n" +
-                    "Le taux d’accumulation des déchets reste à **100%** vanilla sauf modification manuelle."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "Valeurs du jeu" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
-                    "Remet toutes les valeurs Power User **aux valeurs vanilla**.\n" +
-                    "Désactive **Power User**.\n"
-                },
-
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "Nom d’affichage de ce mod." },
@@ -236,9 +156,9 @@ namespace MagicGarbage
                     "**Taux d’accumulation des déchets** : change la vitesse à laquelle les bâtiments pris en charge produisent des déchets. À utiliser avec prudence, l’équilibre est important. La plupart des joueurs n’ont jamais besoin d’y toucher.\n" +
                     "<Heure de mise à jour = dernier rafraîchissement.>"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Bâtiments à 8t+" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Bâtiments à 7t+" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "Nombre de bâtiments producteurs de déchets à **8000 / 8t** ou plus.\n" +
+                    "Nombre de bâtiments producteurs de déchets à **7000 / 7t** ou plus.\n" +
                     "Cet indicateur fixe aide à planifier le service avant l'apparition des icônes d'avertissement.\n" +
                     "Le statut détaillé dans le log indique les ID d'entité."
                 },
@@ -293,7 +213,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "Petit ajustement utile ({0:N0}) | mis à jour {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "Légèrement nauséabond ({0:N0}) | mis à jour {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Problème de déchets ({0:N0}) | mis à jour {1}" },
-                { "MG.Status.Row.CriticalBuildings", "{0:N0} bâtiments à 8t+" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} bâtiments à 7t+" },
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t produites | {1:N0} t capacité" },
                 { "MG.Status.Row.Requests", "{1:N0} en attente | {2:N0} envoyées | {0:N0} total" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} ont des déchets | {2:N0} au-dessus du seuil de demande" },
@@ -308,9 +228,6 @@ namespace MagicGarbage
                 { "MG.Status.Log.SettingsHeader", "Paramètres actuels du mod" },
                 { "MG.Status.Log.SettingsTrashBoss",
                     "Curseurs Trash Boss (sauvegardés) : charge camion={0:N0}% | stockage installation={1:N0}% | traitement installation={2:N0}% | flotte installation={3:N0}%"
-                },
-                { "MG.Status.Log.SettingsPowerUser",
-                    "Power User (sauvegardé) : activé={0} | demande={1:N0} | collecte={2:N0} | base bonheur={3:N0} | étape bonheur={4:N0} | taux d’accumulation={5:N0}%"
                 },
 
                 { "MG.Status.Log.Legend",
@@ -368,7 +285,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.RequestsHeader", "Demandes" },
                 { "MG.Status.Log.BuildingsHeader", "Bâtiments" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "Bâtiments à 8t+" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "Bâtiments à 7t+" },
                 { "MG.Status.Log.LocalTransferProbeHeader", "Sonde de transfert local des déchets" },
                 { "MG.Status.Log.LocalTransferProbeNone", "Aucune installation locale de déchets trouvée." },
                 { "MG.Status.Log.OutsideTransferProbeHeader", "Sonde de transfert des déchets de connexion extérieure" },

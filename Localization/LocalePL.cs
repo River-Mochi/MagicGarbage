@@ -44,7 +44,6 @@ namespace MagicGarbage
                 // Groups
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Auto czyszczenie" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "Samodzielne zarządzanie" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.PowerUserGrp), "Power User" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "Status" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "Informacje o modzie" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Linki" },
@@ -117,87 +116,6 @@ namespace MagicGarbage
                     ""
                 },
 
-                // Power User Options
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Opcje Power User" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
-                    "Opcjonalne ustawienia zaawansowane\n" +
-                    "<Ostrzeżenie: NIE są potrzebne> do dobrej obsługi; są dla graczy, którzy chcą eksperymentować albo lepiej poznać działanie systemów.\n" +
-                    "Gdy **OFF**, elementy Power User zachowują się jak normalna gra **vanilla**.\n" +
-                    "Gdy **ON**, pojawiają się zaawansowane **suwaki**.\n" +
-                    "\n" +
-                    "<--- Przykłady szczęścia --->\n" +
-                    " - <Vanilla> 100/65 = pierwsza kara przy <165>.\n" +
-                    " - Kliknij <Zalecane> dla 550/150 = pierwsza kara przy <700>.\n" +
-                    " - <Bardzo łagodnie> 950/200 = pierwsza kara za śmieci przy <1150>.\n" +
-                    "Wygoda: ostatnie wartości suwaków są zapisane, gdy ta opcja jest OFF (na wypadek ponownego włączenia później)."
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Dispatch Request Threshold" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
-                    "**Ilość śmieci w budynku potrzebna, zanim zostanie utworzone lub utrzymane zgłoszenie wysłania ciężarówki.**\n" +
-                    "Vanilla = **100** garbage units.\n" +
-                    "**100 garbage units = 0.1t**\n" +
-                    "**1,000 garbage units = 1t**\n" +
-                    "Trzymaj to na poziomie Pickup Threshold albo wyżej.\n" +
-                    "Zwykle zwiększa liczbę używanych ciężarówek względem zaparkowanych."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "Pickup Threshold" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
-                    "**Minimalna ilość śmieci w budynku, zanim ciężarówka może je odebrać.**\n" +
-                    "Vanilla = **20** garbage units.\n" +
-                    "Suwak Pickup <nie może> być wyższy niż Dispatch Request (DR); jest ograniczany, aby zapobiec problemom logiki.\n" +
-                    "Jeśli ciężarówka zostanie wysłana do budynku, a wartość pickup jest wyższa niż DR, czasem może nie być w stanie zebrać śmieci z budynku (accumulation rate też ma wpływ).\n" +
-                    ""
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "Bazowy poziom szczęścia śmieci" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
-                    "**Poziom śmieci w budynku, zanim zacznie powodować karę zdrowia + szczęścia.**\n" +
-                    "**Vanilla = 100** garbage units.\n" +
-                    "Wyższa baza = budynki mogą trzymać więcej śmieci, zanim zacznie się kara.\n" +
-                    "100 garbage units = 0.1t\n" +
-                    "Przegląd:\n" +
-                    "- <Threshold> = punkt wyzwalania zachowania systemu\n" +
-                    "- <Baseline> = punkt startu wzoru kary\n" +
-                    "- <Step> = wielkość przyrostu we wzorze, czyli jak szybko rośnie kara po rozpoczęciu"
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "Krok szczęścia śmieci" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
-                    "**Dodatkowe śmieci ponad bazę, które uruchamiają karę -1.**\n" +
-                    "Vanilla = **65** garbage units.\n" +
-                    "Wyższy krok = wolniejszy wzrost kary.\n" +
-                    "Gra ogranicza karę za śmieci do **-10**.\n" +
-                    "Pierwsza kara vanilla <-1 penalty> pojawia się przy **165 garbage** (100 baseline + 65 step)\n" +
-                    "Zmiana threshold bez dopasowania suwaków szczęścia może powodować cięższe niż normalnie kary."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "Tempo nagromadzania" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
-                    "**Skaluje obsługiwane wartości źródłowe śmieci budynków.**\n" +
-                    "Uwaga: to mocna dźwignia i zmiana tempa wpływa na wiele rzeczy.\n" +
-                    "Dobry system da się uzyskać bez używania tego.\n" +
-                    "\n" +
-                    "**100% = vanilla** accumulation rate.\n" +
-                    "**20%** = dużo wolniejsze narastanie.\n" +
-                    "**200%** = podwójne tempo - bardzo dużo śmieci.\n" +
-                    "Przy 20% wszyscy Cims najwyraźniej kompostują, więc tempo nagromadzania śmieci jest znacznie niższe ;)\n" +
-                    "\n" +
-                    "Notka techniczna: gra dodaje śmieci stopniowo w ciągu dnia, nie wszystko naraz."
-                },
-
-                // Power User Presets
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "Zalecane" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
-                    "Zastosuj **zalecane** wartości Power User.\n" +
-                    "Włącza Power User.\n" +
-                    "Pierwsza kara za śmieci zaczyna się przy **700** garbage (550 baseline + 150 step).\n" +
-                    "Garbage Accumulation Rate zostaje na **100%** vanilla, chyba że zmienisz ręcznie."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "Domyślne gry" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
-                    "Ustawia wszystkie wartości Power User **z powrotem na vanilla**.\n" +
-                    "Wyłącza **Power User**.\n" +
-                    ""
-                },
-
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "Nazwa wyświetlana tego moda." },
@@ -243,9 +161,9 @@ namespace MagicGarbage
                     "**Garbage Accumulation Rate**: zmienia, jak szybko obsługiwane budynki produkują śmieci. Używaj ostrożnie, bo balans jest ważny. Większość graczy nigdy nie musi tego ruszać.\n" +
                     "<Update time = ostatnio odświeżono.>"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Budynki 8t+" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Budynki 7t+" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "Liczba budynków produkujących śmieci z co najmniej **8000 / 8t**.\n" +
+                    "Liczba budynków produkujących śmieci z co najmniej **7000 / 7t**.\n" +
                     "Ten stały wskaźnik pomaga zaplanować usługę przed pojawieniem się ikon ostrzeżenia.\n" +
                     "Szczegółowy status w logu podaje Entity ID."
                 },
@@ -301,7 +219,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "Wymaga drobnego dostrojenia ({0:N0}) | aktualizacja {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "Lekko śmierdzi ({0:N0}) | aktualizacja {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Problem ze śmieciami ({0:N0}) | aktualizacja {1}" },
-                { "MG.Status.Row.CriticalBuildings", "{0:N0} budynków 8t+" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} budynków 7t+" },
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t produkcji | {1:N0} t zdolności" },
                 { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} has garbage | {2:N0} above request threshold" },
@@ -316,9 +234,6 @@ namespace MagicGarbage
                 { "MG.Status.Log.SettingsHeader", "Obecne ustawienia moda" },
                 { "MG.Status.Log.SettingsTrashBoss",
                     "Suwaki Trash Boss (zapisane): truck load={0:N0}% | facility storage={1:N0}% | facility process={2:N0}% | facility fleet={3:N0}%"
-                },
-                { "MG.Status.Log.SettingsPowerUser",
-                    "Power User (zapisane): enabled={0} | request={1:N0} | pickup={2:N0} | happiness baseline={3:N0} | happiness step={4:N0} | accumulation rate={5:N0}%"
                 },
 
                 { "MG.Status.Log.Legend",
@@ -369,7 +284,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.RequestsHeader", "Zgłoszenia" },
                 { "MG.Status.Log.BuildingsHeader", "Budynki" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "Budynki 8t+" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "Budynki 7t+" },
                 { "MG.Status.Log.LocalTransferProbeHeader", "Lokalna sonda transferu śmieci" },
                 { "MG.Status.Log.LocalTransferProbeNone", "Nie znaleziono lokalnych obiektów śmieci." },
                 { "MG.Status.Log.OutsideTransferProbeHeader", "Sonda transferu śmieci połączenia zewnętrznego" },

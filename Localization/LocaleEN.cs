@@ -45,7 +45,6 @@ namespace MagicGarbage
                 // Groups
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Auto Clean" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "Self Manage" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.PowerUserGrp), "Power User" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "Status" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "Mod info" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Links" },
@@ -99,7 +98,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "Assigned-target protection" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
                     "**How early trucks become selective about optional pickups on the way to their assigned building.**\n" +
-                    "Game default = **10%** of truck capacity.\n" +
+                    "Magic Garbage starts this slider at **10%** of truck capacity.\n" +
                     "For a normal 20t truck, 10% shifts the routing calculation by 2t; at 40t it shifts it by 4t.\n" +
                     "This acts like a soft reserve, but it does not guarantee that amount of empty cargo space.\n" +
                     "Magic Garbage limits this setting to 10–25% to keep routing safe."
@@ -113,94 +112,12 @@ namespace MagicGarbage
                     "Truck load = **200%** and assigned-target protection = **15%**."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Game Defaults" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Reset Sliders" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Sets Trash Boss back to **vanilla behavior**.\n" +
-                    "**Vanilla:**\n" +
+                    "Resets the standard Trash Boss sliders.\n" +
                     "- Percent sliders return to **100%**.\n" +
-                    "- Assigned-target protection returns to **10%**.\n"
-                },
-
-                // Power User Options
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Power User Options" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
-                    "Optional Advanced Settings\n" +
-                    "<Warning: NOT needed> for good service; provided for players who want to experiment or learn more how systems work.\n" +
-                    "When **OFF**, Power User items behave like normal **vanilla** game.\n" +
-                    "When **ON**, the advanced **sliders appear**.\n\n" +
-                    "<--- Happiness examples --->\n" +
-                    " - <Vanilla> 100/65 = 1st penalty at <165>.\n" +
-                    " - Click <Recommended> for 550/150 = 1st penalty at <700>.\n" +
-                    " - <Very soft> 950/200 = 1st garbage penalty at <1150>.\n" +
-                    "Convenience: last slider values are saved when this option is OFF (in case you want to enable later)."
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Dispatch Request Threshold" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
-                    "**Building garbage needed before a truck dispatch request is created or kept.**\n" +
-                    "Vanilla = **100** garbage units.\n" +
-                    "**100 garbage units = 0.1t**\n" +
-                    "**1,000 garbage units = 1t**\n" +
-                    "Keep this at or above the Pickup Threshold.\n" +
-                    "This usually increases how many trucks are used vs parked."
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "Pickup Threshold" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
-                    "**Minimum building garbage before a truck can collect from it.**\n" +
-                    "Vanilla = **20** garbage units.\n" +
-                    "Pickup slider <cannot> be higher than Dispatch Request (DR); it's clamped to prevent logic mishap.\n" +
-                    "If a truck is dispatched to a building and the pickup value is higher than DR, the truck may sometimes not be able to collect from the building (accumulation rate also affects this).\n"
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "Garbage Happiness Baseline" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
-                    "**Building garbage level before it starts causing health + happiness penalty.**\n" +
-                    "**Vanilla = 100** garbage units.\n" +
-                    "Higher baseline = buildings can hold more garbage before penalty starts.\n" +
-                    "100 garbage units = 0.1t\n" +
-                    "Overview:\n" +
-                    "- <Threshold> = trigger point for system behavior\n" +
-                    "- <Baseline> = start point for penalty formula\n" +
-                    "- <Step> = increment size in the formula, how fast penalty ramps after it starts"
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "Garbage Happiness Step" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
-                    "**Extra garbage over baseline amount that causes -1 penalty to start.**\n" +
-                    "Vanilla = **65** garbage units.\n" +
-                    "Higher step = slower penalty growth.\n" +
-                    "Game caps garbage penalty at **-10**.\n" +
-                    "Vanilla first <-1 penalty> happens at **165 garbage** (100 baseline + 65 step)\n" +
-                    "Balance threshold changes with happiness sliders or incur heavier than normal penalties."
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "Accumulation Rate" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
-                    "**Scales supported building garbage source values.**\n" +
-                    "Caution: this is a strong lever and changing the rate affects many things.\n" +
-                    "It is possible to get a good system without using this.\n\n" +
-                    "**100% = vanilla** accumulation rate.\n" +
-                    "**20%** = much slower buildup.\n" +
-                    "**200%** = double rate - a whole lot of garbage.\n" +
-                    "At 20%, all Cims are obviously composting, thus a much lower garbage accumulation rate ;)\n\n" +
-                    "Tech note: game adds garbage gradually across the day, not all at once."
-                },
-
-                // Power User Presets
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "Recommended" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
-                    "Apply **recommended** Power User values.\n" +
-                    "Turns Power User ON.\n" +
-                    "First garbage penalty starts at **700** garbage (550 baseline + 150 step).\n" +
-                    "Garbage Accumulation Rate stays at **100%** vanilla unless changed manually."
-                },
-
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "Game Defaults" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
-                    "Sets all Power User values **back to vanilla**.\n" +
-                    "Turns **Power User OFF**.\n"
+                    "- Assigned-target protection returns to **10%**.\n" +
+                    "Detailed Status to Log shows the game's current live routing value."
                 },
 
                 // About
@@ -225,7 +142,6 @@ namespace MagicGarbage
                     "<Self-Manage state>\n" +
                     "  * Trash Boss = **[ ✓ ]**\n" +
                     "  * Set sliders as desired.\n" +
-                    "  * Optional: turn on for advanced sliders (not required).\n" +
                     "  * Same game garbage; better self-managed trucks/facilities.\n" +
                     " <-------------------------------------->\n\n" +
                     "<Status / vanilla state>\n" +
@@ -239,29 +155,26 @@ namespace MagicGarbage
                 // Status
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageServiceRating)), "Garbage Service Rating" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageServiceRating)),
-                    "Simple garbage Happiness rating from the game.\n" +
+                    "The game's garbage happiness rating for your city.\n" +
                     "**0 = Excellent**\n" +
                     "**-1 **= Needs minor tweak. Game goes between 0 to -1 often and could be ignored (number is rounded).\n" +
                     "**-2 to -4** = Slightly stinky\n" +
                     "**-5 to -10** = Garbage problem\n" +
-                    "**Indirect knobs:** Use <trash sliders> to improve this over time by reducing garbage buildup.\n" +
-                    "**Direct knobs:** Garbage Happiness Baseline + Garbage Happiness Step change <what cims tolerate> before they are unhappy.\n" +
-                    "**Garbage Accumulation Rate**: changes how fast supported buildings produce garbage. Use with caution as balance is important. Most players never need to tweak this.\n" +
-                    "<Update time = last refreshed.>"
+                    "Improve service with the truck and facility sliders, then let the city run before checking again."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "8t+ buildings" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "7t+ buildings" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "Count of garbage-producing buildings at or above **8000 / 8t**.\n" +
+                    "Count of garbage-producing buildings at or above **7000 / 7t**.\n" +
                     "This fixed early-warning indicator helps you decide whether to increase service before buildings reach the game's warning-icon level.\n" +
                     "Use Detailed Status to Log to list their Entity IDs."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Garbage/mo." },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
-                    "Shows citywide garbage production and available facility processing capacity.\n" +
+                    "Shows citywide garbage production, current processing, and available facility processing capacity.\n" +
                     "Increase processing if monthly production is higher than capacity.\n" +
-                    "Both values use tons per month."
+                    "All values use tons per month."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Collect requests" },
@@ -306,7 +219,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Open Log" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)),
-                    "Opens **MagicGarbage.log**. If the file does not exist yet, opens the game Logs folder instead."
+                    "Opens **MagicGarbage.log**. If it is missing or cannot be opened, opens the game Logs folder instead."
                 },
 
                 // Runtime status strings
@@ -316,9 +229,9 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "Needs minor tweak ({0:N0}) | updated {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "Slightly stinky ({0:N0}) | updated {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Garbage problem ({0:N0}) | updated {1}" },
-                { "MG.Status.Row.CriticalBuildings", "{0:N0} buildings at 8t+" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} buildings at 7t+" },
 
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {1:N0} t Capacity" },
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t Produced | {2:N0} t Processing | {1:N0} t Capacity" },
                 { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} has garbage | {2:N0} above request threshold" },
                 { "MG.Status.Row.FacilitiesSummary", "{0:N0} facilities | {1:N0}/{2:N0} garbage/dump trucks | {3:N0} workers" },
@@ -334,13 +247,9 @@ namespace MagicGarbage
                     "Trash Boss sliders (saved): truck load={0:N0}% | facility storage={1:N0}% | facility process={2:N0}% | facility fleet={3:N0}%"
                 },
                 
-                { "MG.Status.Log.SettingsPowerUser",
-                    "Power User (saved): enabled={0} | request={1:N0} | pickup={2:N0} | happiness baseline={3:N0} | happiness step={4:N0} | accumulation rate={5:N0}%"
-                },
-
                 { "MG.Status.Log.Legend",
                     "Legend:\n" +
-                    "- Produced/Processed uses tons per month.\n" +
+                    "- Production, current processing, and capacity use tons per month.\n" +
                     "- Threshold values below use internal garbage units, not tons.\n" +
                     "- For player-facing, the game converts 100 units = 0.1t and 1,000 units = 1t.\n" +
                     "- Garbage Service Rating = game city garbage happiness factor.\n" +
@@ -351,7 +260,7 @@ namespace MagicGarbage
                     "Routing values:\n" +
                     "  - Pickup threshold is the vanilla minimum; target-aware routing can raise it per truck to protect capacity for its destination.\n" +
                     "  - Request threshold is the minimum garbage before the game creates or keeps a collect request.\n" +
-                    "- Warning icon = garbage amount that causes a warning icon to appear above a building.\n" +
+                    "- Warning icon appears when building garbage exceeds the live warning level.\n" +
                     "- Hard cap = maximum garbage a building can accumulate.\n" +
                     "- Pending = active requests not currently assigned to a truck or path.\n" +
                     "- Some pending requests will be assigned later; some can also clear later if vanilla revalidation decides the target no longer needs service.\n" +
@@ -364,12 +273,12 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.ThresholdsMissing", "Thresholds: <GarbageParameterData not available>" },
                 { "MG.Status.Log.AdaptiveMargin", "Assigned-target protection: {0:N0}%" },
-                { "MG.Status.Log.GarbageProcessing", "Garbage production: {0:N0} t/mo | Processing capacity: {1:N0} t/mo" },
+                { "MG.Status.Log.GarbageProcessing", "Garbage production: {0:N0} t/mo | Current processing: {2:N0} t/mo | Processing capacity: {1:N0} t/mo" },
                 { "MG.Status.Log.GarbageServiceRating", "Garbage Service Rating: {0} | raw={1:N2} | rounded={2:N0}" },
                 { "MG.Status.Log.Requests", "Collect Requests: pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
                 { "MG.Status.Log.PendingPeak", "Highest pending target garbage: {0:N0} ({1:N1}t) at {2}" },
                 { "MG.Status.Log.PendingPeakNone", "Highest pending target garbage: none" },
-                { "MG.Status.Log.Producers", "Buildings: {0:N0} warning icons | {1:N0} total | {2:N0} has garbage | {3:N0} above request threshold " },
+                { "MG.Status.Log.Producers", "Buildings: {0:N0} above warning level | {1:N0} total | {2:N0} has garbage | {3:N0} above request threshold " },
                 { "MG.Status.Log.ProducerGarbageStats", "Building garbage (non-zero only): avg={0:N0} ({1:N1}t) | median={2:N0} ({3:N1}t) | max={4:N0} ({5:N1}t) at {6}" },
                 { "MG.Status.Log.NearWarning75", "Buildings near warning icon (at least {1:N0} units / {2:N1}t): {0:N0}" },
                 { "MG.Status.Log.FacilitiesSummary", "Facilities: {0:N0} total | {1:N0} garbage trucks | {2:N0} dump trucks ({3:N0} moving) | {4:N0} workers" },
@@ -386,7 +295,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.RequestsHeader", "Requests" },
                 { "MG.Status.Log.BuildingsHeader", "Buildings" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "Buildings at 8t+" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "Buildings at 7t+" },
                 { "MG.Status.Log.LocalTransferProbeHeader", "Local Garbage Transfer Probe" },
                 { "MG.Status.Log.LocalTransferProbeNone", "No local garbage facilities found." },
                 { "MG.Status.Log.OutsideTransferProbeHeader", "Outside Connection Garbage Transfer Probe" },
@@ -400,31 +309,6 @@ namespace MagicGarbage
                 },
 
                 { "MG.Status.Log.TrucksHeader", "Trucks" },
-
-                { "MG.Status.Log.SettingsPriority",
-                    "Routing assist (saved): Priority Assist={0} | normal reserve={1:N0}% | emergency reserve={2:N0}%"
-                },
-
-                { "MG.Status.Log.PriorityState",
-                    "Priority Assist live={0} | interval={1:N0} frames | active requests checked={2:N0} | critical targets={3:N0} | reserve={4:N0}% -> {5:N0}%"
-                },
-                { "MG.Status.Log.PriorityPeak",
-                    "Highest critical building: {0:N0} ({1:N1}t) | {2} | request={3}"
-                },
-
-                { "MG.Status.Log.PriorityHeader", "Routing Assist" },
-
-                { "MG.Status.Log.PriorityPasses",
-                    "Routing checks: boosted={0:N0} | normal={1:N0}"
-                },
-                { "MG.Status.Log.PriorityPeakNone", "Highest active critical building: none" },
-
-                { "MG.Status.Log.PriorityPeakState.Pending", "pending" },
-                { "MG.Status.Log.PriorityPeakState.Dispatched", "dispatched" },
-
-#if DEBUG
-{ "MG.Status.Log.PriorityPerf", "Priority assist last scan time={0:N3} ms" },
-#endif
 
                 { "MG.Status.Log.CriticalBuildingsNone", "none" },
                 { "MG.Status.Log.CriticalBuildingLine", "- {0,-20} | {1,7:N0} ({2,4:N1}t) | {3}" },

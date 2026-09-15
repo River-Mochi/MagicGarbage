@@ -7,7 +7,7 @@
 // ================= </copyright> ======================
 
 // File: Systems/GarbageRoutingSystem.cs
-// Trash Boss: applies the game's assigned-target protection margin once, then sleeps.
+// Trash Boss sets the game's target-protection margin once, then sleeps.
 
 namespace MagicGarbage
 {
@@ -19,10 +19,6 @@ namespace MagicGarbage
     using Unity.Entities;
     using Unity.Mathematics;
 
-    /// <summary>
-    /// One-shot settings system for the built-in garbage-truck target protection.
-    /// It runs on city load or after a relevant Options change and then disables itself.
-    /// </summary>
     public sealed partial class GarbageRoutingSystem : GameSystemBase
     {
         private bool m_HaveBase;
@@ -40,7 +36,6 @@ namespace MagicGarbage
             base.OnGameLoadingComplete(purpose, mode);
 
             m_HaveBase = false;
-            m_BaseAdaptiveMargin = Setting.VanillaAdaptiveReservationMargin / 100f;
 
             Enabled =
                 mode == GameMode.Game &&
@@ -67,6 +62,7 @@ namespace MagicGarbage
 
             if (!m_HaveBase)
             {
+                // Save the live game value so turning Trash Boss off restores it.
                 m_BaseAdaptiveMargin = math.clamp(data.m_AdaptiveCollectionMargin, 0f, 1f);
                 m_HaveBase = true;
             }

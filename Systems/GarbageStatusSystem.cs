@@ -7,11 +7,7 @@
 // ================= </copyright> ======================
 
 // File: Systems/GarbageStatusSystem.cs
-// Purpose: Snapshot builder for GarbageStatus.cs.
-// Design:
-// - No automatic simulation work.
-// - OnUpdate is intentionally empty.
-// - GarbageStatus.cs pulls a snapshot only while Options UI is open.
+// Options-only Status snapshots. No work in OnUpdate.
 
 namespace MagicGarbage
 {
@@ -31,7 +27,7 @@ namespace MagicGarbage
 
     public sealed partial class GarbageStatusSystem : GameSystemBase
     {
-        public const int EarlyWarningGarbage = 8000;
+        public const int EarlyWarningGarbage = 7000;
 
         // Per-facility summary used by the detailed log.
         public readonly struct FacilityEntry
@@ -96,11 +92,11 @@ namespace MagicGarbage
             public readonly int HappinessStep;
             public readonly bool AdaptiveMarginSupported;
             public readonly float AdaptiveMargin;
-            public readonly int CriticalGarbageThreshold;
             public readonly int CriticalBuildingCount;
 
             public readonly long GarbageTonsPerMonth;
             public readonly long ProcessingTonsPerMonth;
+            public readonly long ProcessingCapacityTonsPerMonth;
 
             public readonly double GarbageServiceRatingRaw;
             public readonly int GarbageServiceRatingRounded;
@@ -149,10 +145,10 @@ namespace MagicGarbage
                 int happinessStep,
                 bool adaptiveMarginSupported,
                 float adaptiveMargin,
-                int criticalGarbageThreshold,
                 int criticalBuildingCount,
                 long garbageTonsPerMonth,
                 long processingTonsPerMonth,
+                long processingCapacityTonsPerMonth,
                 double garbageServiceRatingRaw,
                 int garbageServiceRatingRounded,
                 int producerTotal,
@@ -196,11 +192,11 @@ namespace MagicGarbage
                 HappinessStep = happinessStep;
                 AdaptiveMarginSupported = adaptiveMarginSupported;
                 AdaptiveMargin = adaptiveMargin;
-                CriticalGarbageThreshold = criticalGarbageThreshold;
                 CriticalBuildingCount = criticalBuildingCount;
 
                 GarbageTonsPerMonth = garbageTonsPerMonth;
                 ProcessingTonsPerMonth = processingTonsPerMonth;
+                ProcessingCapacityTonsPerMonth = processingCapacityTonsPerMonth;
 
                 GarbageServiceRatingRaw = garbageServiceRatingRaw;
                 GarbageServiceRatingRounded = garbageServiceRatingRounded;
@@ -291,7 +287,6 @@ namespace MagicGarbage
             Enabled = false;
         }
 
-        // Snapshot system only in Options UI, no auto sim work needed on purpose, does not affect city performance.
         protected override void OnUpdate()
         {
         }
@@ -321,8 +316,6 @@ namespace MagicGarbage
             int happinessStep = 0;
             bool adaptiveMarginSupported = false;
             float adaptiveMargin = 0f;
-            int criticalGarbageThreshold = EarlyWarningGarbage;
-
             if (haveParams)
             {
                 requestLimit = gp.m_RequestGarbageLimit;
@@ -352,10 +345,10 @@ namespace MagicGarbage
                     happinessStep: happinessStep,
                     adaptiveMarginSupported: adaptiveMarginSupported,
                     adaptiveMargin: adaptiveMargin,
-                    criticalGarbageThreshold: criticalGarbageThreshold,
                     criticalBuildingCount: 0,
                     garbageTonsPerMonth: 0,
                     processingTonsPerMonth: 0,
+                    processingCapacityTonsPerMonth: 0,
                     garbageServiceRatingRaw: 0.0,
                     garbageServiceRatingRounded: 0,
                     producerTotal: 0,
@@ -443,7 +436,7 @@ namespace MagicGarbage
             long garbageSum = 0L;
             List<int> garbageValues = new List<int>(producerTotal > 0 ? producerTotal : 16);
 
-            // Scan all garbage-producing buildings to build summary stats.
+            // Count 7t buildings here so Options refresh needs only one producer scan.
             foreach ((RefRO<GarbageProducer> producer, Entity producerEntity) in SystemAPI
                          .Query<RefRO<GarbageProducer>>()
                          .WithEntityAccess()
@@ -469,7 +462,7 @@ namespace MagicGarbage
                     producerOverRequest++;
                 }
 
-                if (haveParams && garbage >= warningLimit)
+                if (haveParams && garbage > warningLimit)
                 {
                     producerOverWarning++;
                 }
@@ -479,7 +472,7 @@ namespace MagicGarbage
                     producerNearWarning75++;
                 }
 
-                if (garbage >= criticalGarbageThreshold)
+                if (garbage >= EarlyWarningGarbage)
                 {
                     criticalBuildingCount++;
                 }
@@ -583,6 +576,7 @@ namespace MagicGarbage
             }
 
             long processingRaw = 0L;
+            long processingCapacityRaw = 0L;
             int facilityTotal = 0;
             int facilityGarbageTruckTotal = 0;
             int facilityDumpTruckTotal = 0;
@@ -682,6 +676,8 @@ namespace MagicGarbage
                     continue;
                 }
 
+                processingRaw += facility.ValueRO.m_ProcessingRate;
+
                 // Match the game's garbage overview: available processing capacity,
                 // including building efficiency and installed facility upgrades.
                 if (prefabRefLookup.TryGetComponent(facilityEntity, out PrefabRef facilityPrefabRef) &&
@@ -697,7 +693,7 @@ namespace MagicGarbage
                     }
 
                     float efficiency = BuildingUtils.GetEfficiency(facilityEntity, ref efficiencyLookup);
-                    processingRaw += (long)Math.Round(
+                    processingCapacityRaw += (long)Math.Round(
                         efficiency * facilityData.m_ProcessingSpeed,
                         MidpointRounding.AwayFromZero);
                 }
@@ -724,6 +720,7 @@ namespace MagicGarbage
             int truckMoving = truckTotal - truckParked;
             long garbageTonsPerMonth = ToTonsPerMonth(garbageRaw);
             long processingTonsPerMonth = ToTonsPerMonth(processingRaw);
+            long processingCapacityTonsPerMonth = ToTonsPerMonth(processingCapacityRaw);
 
             return new Snapshot(
                 inGame: true,
@@ -739,10 +736,10 @@ namespace MagicGarbage
                 happinessStep: happinessStep,
                 adaptiveMarginSupported: adaptiveMarginSupported,
                 adaptiveMargin: adaptiveMargin,
-                criticalGarbageThreshold: criticalGarbageThreshold,
                 criticalBuildingCount: criticalBuildingCount,
                 garbageTonsPerMonth: garbageTonsPerMonth,
                 processingTonsPerMonth: processingTonsPerMonth,
+                processingCapacityTonsPerMonth: processingCapacityTonsPerMonth,
                 garbageServiceRatingRaw: garbageServiceRatingRaw,
                 garbageServiceRatingRounded: garbageServiceRatingRounded,
                 producerTotal: producerTotal,

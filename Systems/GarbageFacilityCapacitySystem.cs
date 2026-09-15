@@ -22,7 +22,7 @@ namespace MagicGarbage
 
     /// <summary>
     /// One-shot prefab system that adjusts GarbageFacilityData from PrefabBase
-    /// authoring values. The system is enabled on city load or by settings callbacks,
+    /// authoring values. system is enabled on city load or by settings callbacks,
     /// applies once, then disables itself.
     /// </summary>
     public partial class GarbageFacilityCapacitySystem : GameSystemBase

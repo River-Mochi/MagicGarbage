@@ -48,7 +48,6 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "Tự quản lý" },
 
-                { m_Setting.GetOptionGroupLocaleID(Setting.PowerUserGrp), "Người dùng nâng cao" },
 
                 { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "Trạng thái" },
 
@@ -138,100 +137,6 @@ namespace MagicGarbage
                     ""
                 },
 
-                // Power User Options
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Tùy chọn nâng cao" },
-
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
-                    "Thiết lập nâng cao tùy chọn\n" +
-                    "<Cảnh báo: KHÔNG cần thiết> để có dịch vụ tốt; dành cho người chơi muốn thử nghiệm hoặc hiểu rõ hơn cách các hệ thống hoạt động.\n" +
-                    "Khi **TẮT**, các mục Người dùng nâng cao hoạt động như game **vanilla** bình thường.\n" +
-                    "Khi **BẬT**, các **thanh trượt** nâng cao sẽ xuất hiện.\n" +
-                    "\n" +
-                    "<--- Ví dụ về hạnh phúc --->\n" +
-                    " - <Vanilla> 100/65 = phạt lần đầu ở <165>.\n" +
-                    " - Nhấn <Khuyến nghị> để dùng 550/150 = phạt lần đầu ở <700>.\n" +
-                    " - <Rất nhẹ> 950/200 = phạt rác lần đầu ở <1150>.\n" +
-                    "Tiện lợi: các giá trị thanh trượt cuối cùng được lưu khi tùy chọn này TẮT (phòng khi bạn muốn bật lại sau)."
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Ngưỡng yêu cầu điều xe" },
-
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
-                    "**Lượng rác trong tòa nhà cần có trước khi yêu cầu điều xe tải được tạo hoặc giữ lại.**\n" +
-                    "Vanilla = **100** đơn vị rác.\n" +
-                    "**100 đơn vị rác = 0.1t**\n" +
-                    "**1,000 đơn vị rác = 1t**\n" +
-                    "Giữ giá trị này bằng hoặc cao hơn Ngưỡng thu gom.\n" +
-                    "Điều này thường làm tăng số xe tải được dùng thay vì đỗ lại."
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "Ngưỡng thu gom" },
-
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
-                    "**Lượng rác tối thiểu trong tòa nhà trước khi xe tải có thể thu gom.**\n" +
-                    "Vanilla = **20** đơn vị rác.\n" +
-                    "Thanh trượt thu gom <không thể> cao hơn Yêu cầu điều xe (DR); nó được giới hạn để tránh lỗi logic.\n" +
-                    "Nếu xe tải được điều tới một tòa nhà và giá trị thu gom cao hơn DR, đôi khi xe tải có thể không thu gom được từ tòa nhà đó (tốc độ tích tụ cũng ảnh hưởng đến việc này).\n" +
-                    ""
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "Mốc hạnh phúc do rác" },
-
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
-                    "**Mức rác trong tòa nhà trước khi bắt đầu gây phạt sức khỏe + hạnh phúc.**\n" +
-                    "**Vanilla = 100** đơn vị rác.\n" +
-                    "Mốc cao hơn = tòa nhà có thể chứa nhiều rác hơn trước khi hình phạt bắt đầu.\n" +
-                    "100 đơn vị rác = 0.1t\n" +
-                    "Tổng quan:\n" +
-                    "- <Ngưỡng> = điểm kích hoạt hành vi hệ thống\n" +
-                    "- <Mốc> = điểm bắt đầu của công thức phạt\n" +
-                    "- <Bước> = kích thước tăng trong công thức, tức hình phạt tăng nhanh thế nào sau khi bắt đầu"
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "Bước hạnh phúc do rác" },
-
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
-                    "**Lượng rác thêm vượt mốc khiến hình phạt -1 bắt đầu.**\n" +
-                    "Vanilla = **65** đơn vị rác.\n" +
-                    "Bước cao hơn = hình phạt tăng chậm hơn.\n" +
-                    "Game giới hạn hình phạt do rác ở **-10**.\n" +
-                    "Hình phạt vanilla đầu tiên <-1 penalty> xảy ra ở **165 rác** (100 mốc + 65 bước)\n" +
-                    "Thay đổi ngưỡng phải cân bằng với các thanh trượt hạnh phúc, nếu không hình phạt có thể nặng hơn bình thường."
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "Tốc độ tích tụ" },
-
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
-                    "**Nhân các giá trị nguồn rác của tòa nhà được hỗ trợ.**\n" +
-                    "Cẩn thận: đây là một đòn bẩy mạnh và thay đổi tốc độ này ảnh hưởng tới nhiều thứ.\n" +
-                    "Bạn vẫn có thể có hệ thống tốt mà không cần dùng mục này.\n" +
-                    "\n" +
-                    "**100% = tốc độ tích tụ vanilla**.\n" +
-                    "**20%** = tích tụ chậm hơn nhiều.\n" +
-                    "**200%** = tốc độ gấp đôi - rất nhiều rác.\n" +
-                    "Ở 20%, rõ ràng tất cả Cim đều đang ủ phân, nên tốc độ tích tụ rác thấp hơn rất nhiều ;)\n" +
-                    "\n" +
-                    "Ghi chú kỹ thuật: game thêm rác dần trong ngày, không thêm tất cả cùng lúc."
-                },
-
-                // Power User Presets
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "Khuyến nghị" },
-
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
-                    "Áp dụng các giá trị Người dùng nâng cao **khuyến nghị**.\n" +
-                    "Bật Người dùng nâng cao.\n" +
-                    "Hình phạt rác đầu tiên bắt đầu ở **700** rác (550 mốc + 150 bước).\n" +
-                    "Tốc độ tích tụ rác vẫn ở **100%** vanilla trừ khi bạn đổi thủ công."
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "Mặc định game" },
-
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
-                    "Đưa tất cả giá trị Người dùng nâng cao **trở về vanilla**.\n" +
-                    "Tắt **Người dùng nâng cao**.\n" +
-                    ""
-                },
-
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
 
@@ -287,10 +192,10 @@ namespace MagicGarbage
                     "<Thời gian cập nhật = lần làm mới gần nhất.>"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Tòa nhà từ 8t" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Tòa nhà từ 7t" },
 
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "Số tòa nhà tạo rác có ít nhất **8000 / 8t**.\n" +
+                    "Số tòa nhà tạo rác có ít nhất **7000 / 7t**.\n" +
                     "Chỉ số cố định này giúp lập kế hoạch dịch vụ trước khi biểu tượng cảnh báo xuất hiện.\n" +
                     "Trạng thái chi tiết trong log liệt kê Entity ID."
                 },
@@ -365,7 +270,7 @@ namespace MagicGarbage
 
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Vấn đề rác ({0:N0}) | cập nhật {1}" },
 
-                { "MG.Status.Row.CriticalBuildings", "{0:N0} tòa nhà từ 8t" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} tòa nhà từ 7t" },
 
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t tạo ra | {1:N0} t công suất" },
 
@@ -390,7 +295,6 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.SettingsTrashBoss", "Thanh trượt Trash Boss (đã lưu): tải xe={0:N0}% | sức chứa cơ sở={1:N0}% | xử lý cơ sở={2:N0}% | đội xe cơ sở={3:N0}%" },
 
-                { "MG.Status.Log.SettingsPowerUser", "Người dùng nâng cao (đã lưu): bật={0} | yêu cầu={1:N0} | thu gom={2:N0} | mốc hạnh phúc={3:N0} | bước hạnh phúc={4:N0} | tốc độ tích tụ={5:N0}%" },
 
                 { "MG.Status.Log.Legend",
                     "Chú giải:\n" +
@@ -456,7 +360,7 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.BuildingsHeader", "Tòa nhà" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "Tòa nhà từ 8t" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "Tòa nhà từ 7t" },
 
                 { "MG.Status.Log.LocalTransferProbeHeader", "Kiểm tra chuyển rác cục bộ" },
 

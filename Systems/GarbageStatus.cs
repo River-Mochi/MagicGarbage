@@ -192,6 +192,7 @@ namespace MagicGarbage
             s_UiGarbageProcessing = Mod.LF(
                 "MG.Status.Row.GarbageProcessing",
                 snap.GarbageTonsPerMonth,
+                snap.ProcessingCapacityTonsPerMonth,
                 snap.ProcessingTonsPerMonth);
 
             s_UiRequests = Mod.LF(
@@ -208,9 +209,7 @@ namespace MagicGarbage
 
             s_UiCriticalBuildings = Mod.LF(
                 "MG.Status.Row.CriticalBuildings",
-                snap.CriticalBuildingCount,
-                snap.CriticalGarbageThreshold,
-                ToTons(snap.CriticalGarbageThreshold));
+                snap.CriticalBuildingCount);
 
             s_UiFacilities = BuildFacilitiesSummary(snap);
 
@@ -318,6 +317,7 @@ namespace MagicGarbage
             log.AppendLine(Mod.LF(
                 "MG.Status.Log.GarbageProcessing",
                 snap.GarbageTonsPerMonth,
+                snap.ProcessingCapacityTonsPerMonth,
                 snap.ProcessingTonsPerMonth));
 
             log.AppendLine(Mod.LF(

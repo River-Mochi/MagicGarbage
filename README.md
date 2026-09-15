@@ -39,9 +39,9 @@ There is no in-city UI panel.
 - Facility fleet: **100%**
 - Assigned-target protection: **15%**
 
-**Game Defaults**
-- Returns the standard Trash Boss sliders to vanilla values.
-- Returns assigned-target protection to the game default.
+**Reset Sliders**
+- Returns the standard Trash Boss percentage sliders to 100%.
+- Returns assigned-target protection to 10%.
 
 ---
 
@@ -49,7 +49,7 @@ There is no in-city UI panel.
 
 Game 1.6.2 adds target-aware garbage-truck routing. Magic Garbage provides a safe control for that built-in behavior.
 
-- **10%** is the game default
+- **10%** is Magic Garbage's starting value
 - **15%** is the Magic Garbage Recommended value
 - The slider is limited to **10–25%**
 - It makes trucks more selective about optional pickups before reaching the assigned building
@@ -70,10 +70,10 @@ This is useful for checking garbage behavior without changing the simulation.
 The **Status** section in Options shows a live garbage snapshot while the menu is open, including:
 
 - **Garbage Service Rating**
-- citywide garbage production vs processing capacity
+- citywide garbage production, current processing, and processing capacity
 - active collect requests
 - buildings with garbage
-- buildings at the 8t early-intervention level
+- buildings at the 7t early-warning level
 - garbage facilities
 - garbage trucks and dump trucks
 - max workers
@@ -92,7 +92,7 @@ This includes:
 - garbage service rating
 - pending vs dispatched requests
 - building garbage stats
-- buildings at the 8t early-intervention level
+- buildings at the 7t early-warning level
 - assigned-target protection value
 - truck summary
 - per-facility summary
@@ -100,7 +100,7 @@ This includes:
 
 ### Open Log
 
-- **Open Log** opens `MagicGarbage.log` directly. If the file does not exist yet, it opens the Logs folder.
+- **Open Log** opens `MagicGarbage.log` directly. If the file is missing or cannot be opened, it opens the Logs folder.
 
 ---
 

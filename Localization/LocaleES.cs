@@ -44,7 +44,6 @@ namespace MagicGarbage
                 // Groups
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Limpieza automática" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "Gestión manual" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.PowerUserGrp), "Usuario avanzado" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "Estado" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "Información del mod" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Enlaces" },
@@ -112,85 +111,6 @@ namespace MagicGarbage
                     "- La protección del destino vuelve al **10%**.\n"
                 },
 
-                // Power User Options
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Opciones Power User" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
-                    "Ajustes avanzados opcionales\n" +
-                    "<Advertencia: NO necesario> para un buen servicio; disponible para jugadores que quieran experimentar o aprender mejor cómo funcionan los sistemas.\n" +
-                    "Cuando está **desactivado**, los elementos Power User se comportan como el juego **vanilla** normal.\n" +
-                    "Cuando está **activado**, aparecen los **deslizadores avanzados**.\n" +
-                    "\n" +
-                    "<--- Ejemplos de felicidad --->\n" +
-                    " - <Vanilla> 100/65 = 1ª penalización en <165>.\n" +
-                    " - Pulsa <Recomendado> para 550/150 = 1ª penalización en <700>.\n" +
-                    " - <Muy suave> 950/200 = 1ª penalización de basura en <1150>.\n" +
-                    "Comodidad: los últimos valores de los deslizadores se guardan cuando esta opción está desactivada (por si quieres activarla después)."
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Umbral de solicitud de despacho" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
-                    "**Basura del edificio necesaria antes de que se cree o se mantenga una solicitud de despacho de camión.**\n" +
-                    "Vanilla = **100** unidades de basura.\n" +
-                    "**100 unidades de basura = 0.1t**\n" +
-                    "**1,000 unidades de basura = 1t**\n" +
-                    "Mantén esto igual o por encima del umbral de recogida.\n" +
-                    "Normalmente aumenta cuántos camiones se usan en vez de estar aparcados."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "Umbral de recogida" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
-                    "**Basura mínima del edificio antes de que un camión pueda recogerla.**\n" +
-                    "Vanilla = **20** unidades de basura.\n" +
-                    "El deslizador de recogida <no puede> ser mayor que la solicitud de despacho (DR); se limita para evitar problemas de lógica.\n" +
-                    "Si un camión se despacha a un edificio y el valor de recogida es mayor que DR, a veces el camión puede no poder recoger en ese edificio (la tasa de acumulación también influye).\n"
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "Base de felicidad por basura" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
-                    "**Nivel de basura del edificio antes de que empiece la penalización de salud + felicidad.**\n" +
-                    "**Vanilla = 100** unidades de basura.\n" +
-                    "Una base más alta = los edificios pueden guardar más basura antes de que empiece la penalización.\n" +
-                    "100 unidades de basura = 0.1t\n" +
-                    "Resumen:\n" +
-                    "- <Umbral> = punto de activación del comportamiento del sistema\n" +
-                    "- <Base> = punto inicial de la fórmula de penalización\n" +
-                    "- <Paso> = tamaño del incremento en la fórmula, qué tan rápido sube la penalización después de empezar"
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "Paso de felicidad por basura" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
-                    "**Basura extra sobre la base que hace que empiece una penalización de -1.**\n" +
-                    "Vanilla = **65** unidades de basura.\n" +
-                    "Un paso más alto = crecimiento más lento de la penalización.\n" +
-                    "El juego limita la penalización de basura a **-10**.\n" +
-                    "La primera penalización vanilla <-1> ocurre con **165 de basura** (100 base + 65 paso)\n" +
-                    "Cambiar umbrales con los deslizadores de felicidad puede causar penalizaciones más fuertes de lo normal."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "Tasa de acumulación" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
-                    "**Escala los valores fuente de basura de edificios compatibles.**\n" +
-                    "Cuidado: es una palanca fuerte y cambiar la tasa afecta muchas cosas.\n" +
-                    "Se puede lograr un buen sistema sin usar esto.\n" +
-                    "\n" +
-                    "**100% = tasa de acumulación vanilla**.\n" +
-                    "**20%** = acumulación mucho más lenta.\n" +
-                    "**200%** = tasa doble - muchísima basura.\n" +
-                    "Al 20%, obviamente todos los Cims hacen compost, por eso la tasa de acumulación es mucho menor ;)\n" +
-                    "\n" +
-                    "Nota técnica: el juego añade basura gradualmente durante el día, no toda de golpe."
-                },
-
-                // Power User Presets
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "Recomendado" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
-                    "Aplica los valores Power User **recomendados**.\n" +
-                    "Activa Power User.\n" +
-                    "La primera penalización de basura empieza en **700** de basura (550 base + 150 paso).\n" +
-                    "La tasa de acumulación de basura permanece en **100%** vanilla salvo que se cambie manualmente."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "Valores del juego" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
-                    "Devuelve todos los valores de Power User **a vanilla**.\n" +
-                    "Desactiva **Power User**.\n"
-                },
-
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "Nombre visible de este mod." },
@@ -236,9 +156,9 @@ namespace MagicGarbage
                     "**Tasa de acumulación de basura**: cambia qué tan rápido los edificios compatibles producen basura. Úsalo con cuidado porque el equilibrio importa. La mayoría de jugadores nunca necesita tocar esto.\n" +
                     "<Hora de actualización = último refresco.>"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Edificios con 8t+" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Edificios con 7t+" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "Cantidad de edificios productores de basura con **8000 / 8t** o más.\n" +
+                    "Cantidad de edificios productores de basura con **7000 / 7t** o más.\n" +
                     "Este indicador fijo ayuda a planificar el servicio antes de que aparezcan iconos de aviso.\n" +
                     "El estado detallado del log muestra los ID de entidad."
                 },
@@ -293,7 +213,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "Necesita pequeño ajuste ({0:N0}) | actualizado {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "Algo apestoso ({0:N0}) | actualizado {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Problema de basura ({0:N0}) | actualizado {1}" },
-                { "MG.Status.Row.CriticalBuildings", "{0:N0} edificios con 8t+" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} edificios con 7t+" },
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t producidas | {1:N0} t capacidad" },
                 { "MG.Status.Row.Requests", "{1:N0} pendientes | {2:N0} despachadas | {0:N0} total" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} tiene basura | {2:N0} sobre el umbral de solicitud" },
@@ -308,9 +228,6 @@ namespace MagicGarbage
                 { "MG.Status.Log.SettingsHeader", "Ajustes actuales del mod" },
                 { "MG.Status.Log.SettingsTrashBoss",
                     "Deslizadores Trash Boss (guardados): carga camión={0:N0}% | almacenamiento instalación={1:N0}% | procesamiento instalación={2:N0}% | flota instalación={3:N0}%"
-                },
-                { "MG.Status.Log.SettingsPowerUser",
-                    "Power User (guardado): activado={0} | solicitud={1:N0} | recogida={2:N0} | base felicidad={3:N0} | paso felicidad={4:N0} | tasa acumulación={5:N0}%"
                 },
 
                 { "MG.Status.Log.Legend",
@@ -362,7 +279,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.RequestsHeader", "Solicitudes" },
                 { "MG.Status.Log.BuildingsHeader", "Edificios" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "Edificios con 8t+" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "Edificios con 7t+" },
                 { "MG.Status.Log.LocalTransferProbeHeader", "Sonda local de transferencia de basura" },
                 { "MG.Status.Log.LocalTransferProbeNone", "No se encontraron instalaciones locales de basura." },
                 { "MG.Status.Log.OutsideTransferProbeHeader", "Sonda de transferencia de basura de conexión exterior" },

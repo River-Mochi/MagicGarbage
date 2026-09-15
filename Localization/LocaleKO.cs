@@ -44,7 +44,6 @@ namespace MagicGarbage
                 // Groups
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "자동 청소" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "직접 관리" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.PowerUserGrp), "파워 유저" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "상태" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "모드 정보" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "링크" },
@@ -117,87 +116,6 @@ namespace MagicGarbage
                     ""
                 },
 
-                // Power User Options
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Power User 옵션" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
-                    "선택형 고급 설정\n" +
-                    "<경고: 좋은 서비스에 필요하지 않음> 실험하거나 시스템 작동 방식을 더 알고 싶은 플레이어용입니다.\n" +
-                    "**OFF** 일 때 Power User 항목은 일반 **vanilla** 게임처럼 동작합니다.\n" +
-                    "**ON** 일 때 고급 **슬라이더가 나타납니다**.\n" +
-                    "\n" +
-                    "<--- 행복도 예시 --->\n" +
-                    " - <Vanilla> 100/65 = 첫 페널티 <165>.\n" +
-                    " - <권장> 클릭 시 550/150 = 첫 페널티 <700>.\n" +
-                    " - <매우 완만> 950/200 = 첫 쓰레기 페널티 <1150>.\n" +
-                    "편의: 이 옵션을 OFF 해도 마지막 슬라이더 값은 저장됩니다(나중에 다시 켤 때 사용)."
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Dispatch Request Threshold" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
-                    "**트럭 dispatch request가 생성되거나 유지되기 전에 건물에 필요한 쓰레기 양입니다.**\n" +
-                    "Vanilla = **100** garbage units.\n" +
-                    "**100 garbage units = 0.1t**\n" +
-                    "**1,000 garbage units = 1t**\n" +
-                    "Pickup Threshold 이상으로 유지하세요.\n" +
-                    "보통 주차된 트럭보다 사용 중인 트럭 수가 늘어납니다."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "Pickup Threshold" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
-                    "**트럭이 건물에서 수거할 수 있기 전의 최소 건물 쓰레기 양입니다.**\n" +
-                    "Vanilla = **20** garbage units.\n" +
-                    "Pickup 슬라이더는 Dispatch Request (DR)보다 높을 수 없습니다. 로직 문제를 막기 위해 제한됩니다.\n" +
-                    "트럭이 건물로 출동했는데 pickup 값이 DR보다 높으면, 트럭이 그 건물에서 수거하지 못할 때가 있습니다(accumulation rate도 영향을 줍니다).\n" +
-                    ""
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "쓰레기 행복도 기준선" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
-                    "**건강 + 행복도 페널티가 시작되기 전의 건물 쓰레기 수준입니다.**\n" +
-                    "**Vanilla = 100** garbage units.\n" +
-                    "기준선이 높을수록 페널티 시작 전까지 건물이 더 많은 쓰레기를 가질 수 있습니다.\n" +
-                    "100 garbage units = 0.1t\n" +
-                    "개요:\n" +
-                    "- <Threshold> = 시스템 동작의 발동 지점\n" +
-                    "- <Baseline> = 페널티 공식의 시작점\n" +
-                    "- <Step> = 공식의 증가 크기, 시작 후 페널티가 얼마나 빨리 증가하는지"
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "쓰레기 행복도 단계" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
-                    "**기준선을 초과해 -1 페널티가 시작되는 추가 쓰레기 양입니다.**\n" +
-                    "Vanilla = **65** garbage units.\n" +
-                    "단계가 높을수록 페널티 증가가 느려집니다.\n" +
-                    "게임은 쓰레기 페널티를 **-10** 으로 제한합니다.\n" +
-                    "Vanilla의 첫 <-1 penalty> 는 **165 garbage** 에서 발생합니다(100 baseline + 65 step)\n" +
-                    "행복도 슬라이더와 맞추지 않고 threshold를 변경하면 일반보다 더 큰 페널티가 생길 수 있습니다."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "축적률" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
-                    "**지원되는 건물 쓰레기 생성 값을 조정합니다.**\n" +
-                    "주의: 강력한 조절값이며, 변경하면 많은 요소에 영향을 줍니다.\n" +
-                    "이 값을 쓰지 않아도 좋은 시스템을 만들 수 있습니다.\n" +
-                    "\n" +
-                    "**100% = vanilla** accumulation rate.\n" +
-                    "**20%** = 훨씬 느린 축적.\n" +
-                    "**200%** = 두 배 속도 - 아주 많은 쓰레기.\n" +
-                    "20%에서는 모든 Cims가 분명히 퇴비화를 하고 있으므로 쓰레기 축적률이 훨씬 낮습니다 ;)\n" +
-                    "\n" +
-                    "기술 메모: 게임은 쓰레기를 하루 동안 조금씩 추가하며, 한 번에 모두 추가하지 않습니다."
-                },
-
-                // Power User Presets
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "권장" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
-                    "Power User **권장** 값을 적용합니다.\n" +
-                    "Power User를 ON으로 켭니다.\n" +
-                    "첫 쓰레기 페널티는 **700** garbage (550 baseline + 150 step)에서 시작됩니다.\n" +
-                    "Garbage Accumulation Rate는 수동으로 변경하지 않는 한 **100%** vanilla 상태로 유지됩니다."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "게임 기본값" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
-                    "모든 Power User 값을 **vanilla** 로 되돌립니다.\n" +
-                    "**Power User OFF** 로 전환합니다.\n" +
-                    ""
-                },
-
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "모드" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "이 모드의 표시 이름입니다." },
@@ -243,9 +161,9 @@ namespace MagicGarbage
                     "**Garbage Accumulation Rate**: 지원 건물이 쓰레기를 생성하는 속도를 바꿉니다. 균형이 중요하므로 주의하세요. 대부분의 플레이어는 조정할 필요가 없습니다.\n" +
                     "<Update time = 마지막 새로고침 시간.>"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "8t 이상 건물" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "7t 이상 건물" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "쓰레기가 **8000 / 8t** 이상인 건물 수입니다.\n" +
+                    "쓰레기가 **7000 / 7t** 이상인 건물 수입니다.\n" +
                     "경고 아이콘이 나타나기 전에 서비스를 늘릴지 판단하는 고정 조기 지표입니다.\n" +
                     "상세 로그에는 Entity ID가 표시됩니다."
                 },
@@ -301,7 +219,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "약간 조정 필요 ({0:N0}) | 갱신 {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "약간 냄새남 ({0:N0}) | 갱신 {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "쓰레기 문제 ({0:N0}) | 갱신 {1}" },
-                { "MG.Status.Row.CriticalBuildings", "8t 이상 건물 {0:N0}개" },
+                { "MG.Status.Row.CriticalBuildings", "7t 이상 건물 {0:N0}개" },
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t 생성 | {1:N0} t 처리 용량" },
                 { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} has garbage | {2:N0} above request threshold" },
@@ -316,9 +234,6 @@ namespace MagicGarbage
                 { "MG.Status.Log.SettingsHeader", "현재 모드 설정" },
                 { "MG.Status.Log.SettingsTrashBoss",
                     "Trash Boss 슬라이더(저장됨): truck load={0:N0}% | facility storage={1:N0}% | facility process={2:N0}% | facility fleet={3:N0}%"
-                },
-                { "MG.Status.Log.SettingsPowerUser",
-                    "Power User(저장됨): enabled={0} | request={1:N0} | pickup={2:N0} | happiness baseline={3:N0} | happiness step={4:N0} | accumulation rate={5:N0}%"
                 },
 
                 { "MG.Status.Log.Legend",
@@ -369,7 +284,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.RequestsHeader", "요청" },
                 { "MG.Status.Log.BuildingsHeader", "건물" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "8t 이상 건물" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "7t 이상 건물" },
                 { "MG.Status.Log.LocalTransferProbeHeader", "로컬 쓰레기 이동 프로브" },
                 { "MG.Status.Log.LocalTransferProbeNone", "로컬 쓰레기 시설을 찾을 수 없습니다." },
                 { "MG.Status.Log.OutsideTransferProbeHeader", "외부 연결 쓰레기 이동 프로브" },

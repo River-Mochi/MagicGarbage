@@ -44,7 +44,6 @@ namespace MagicGarbage
                 // Groups
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Pulizia automatica" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "Gestione manuale" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.PowerUserGrp), "Utente avanzato" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "Stato" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "Info mod" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Link" },
@@ -112,85 +111,6 @@ namespace MagicGarbage
                     "- La protezione della destinazione torna al **10%**.\n"
                 },
 
-                // Power User Options
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Opzioni Power User" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
-                    "Impostazioni avanzate facoltative\n" +
-                    "<Avviso: NON necessario> per un buon servizio; disponibile per i giocatori che vogliono sperimentare o capire meglio come funzionano i sistemi.\n" +
-                    "Quando **OFF**, gli elementi Power User si comportano come il normale gioco **vanilla**.\n" +
-                    "Quando **ON**, appaiono gli **slider avanzati**.\n" +
-                    "\n" +
-                    "<--- Esempi di felicità --->\n" +
-                    " - <Vanilla> 100/65 = 1ª penalità a <165>.\n" +
-                    " - Clicca <Consigliato> per 550/150 = 1ª penalità a <700>.\n" +
-                    " - <Molto morbido> 950/200 = 1ª penalità rifiuti a <1150>.\n" +
-                    "Comodità: gli ultimi valori degli slider vengono salvati quando questa opzione è OFF (nel caso tu voglia riattivarla dopo)."
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Soglia richiesta invio" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
-                    "**Rifiuti dell’edificio necessari prima che una richiesta di invio camion venga creata o mantenuta.**\n" +
-                    "Vanilla = **100** unità di rifiuti.\n" +
-                    "**100 unità di rifiuti = 0.1t**\n" +
-                    "**1,000 unità di rifiuti = 1t**\n" +
-                    "Mantieni questo valore uguale o superiore alla soglia di raccolta.\n" +
-                    "Di solito aumenta quanti camion vengono usati invece di restare parcheggiati."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "Soglia di raccolta" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
-                    "**Rifiuti minimi dell’edificio prima che un camion possa raccoglierli.**\n" +
-                    "Vanilla = **20** unità di rifiuti.\n" +
-                    "Lo slider di raccolta <non può> essere più alto della richiesta invio (DR); viene limitato per prevenire problemi di logica.\n" +
-                    "Se un camion viene inviato a un edificio e il valore di raccolta è più alto di DR, a volte il camion potrebbe non riuscire a raccogliere dall’edificio (anche il tasso di accumulo influisce).\n"
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "Base felicità rifiuti" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
-                    "**Livello di rifiuti dell’edificio prima che inizi la penalità a salute + felicità.**\n" +
-                    "**Vanilla = 100** unità di rifiuti.\n" +
-                    "Base più alta = gli edifici possono contenere più rifiuti prima della penalità.\n" +
-                    "100 unità di rifiuti = 0.1t\n" +
-                    "Panoramica:\n" +
-                    "- <Soglia> = punto di attivazione del comportamento del sistema\n" +
-                    "- <Base> = punto di partenza della formula di penalità\n" +
-                    "- <Passo> = dimensione dell’incremento nella formula, cioè quanto velocemente aumenta la penalità dopo l’inizio"
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "Passo felicità rifiuti" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
-                    "**Rifiuti extra oltre la base che fanno iniziare una penalità di -1.**\n" +
-                    "Vanilla = **65** unità di rifiuti.\n" +
-                    "Passo più alto = crescita più lenta della penalità.\n" +
-                    "Il gioco limita la penalità rifiuti a **-10**.\n" +
-                    "La prima penalità vanilla <-1> avviene a **165 rifiuti** (100 base + 65 passo)\n" +
-                    "Cambiare le soglie con gli slider di felicità può causare penalità più pesanti del normale."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "Tasso di accumulo" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
-                    "**Scala i valori sorgente dei rifiuti degli edifici supportati.**\n" +
-                    "Attenzione: è una leva forte e cambiare il tasso influisce su molte cose.\n" +
-                    "È possibile ottenere un buon sistema senza usarlo.\n" +
-                    "\n" +
-                    "**100% = tasso di accumulo vanilla**.\n" +
-                    "**20%** = accumulo molto più lento.\n" +
-                    "**200%** = tasso doppio - tantissimi rifiuti.\n" +
-                    "Al 20%, tutti i Cims stanno ovviamente compostando, quindi il tasso di accumulo è molto più basso ;)\n" +
-                    "\n" +
-                    "Nota tecnica: il gioco aggiunge rifiuti gradualmente durante il giorno, non tutti insieme."
-                },
-
-                // Power User Presets
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "Consigliato" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
-                    "Applica i valori Power User **consigliati**.\n" +
-                    "Attiva Power User.\n" +
-                    "La prima penalità rifiuti inizia a **700** rifiuti (550 base + 150 passo).\n" +
-                    "Il tasso di accumulo rifiuti resta a **100%** vanilla se non viene modificato manualmente."
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "Valori di gioco" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
-                    "Riporta tutti i valori Power User **a vanilla**.\n" +
-                    "Disattiva **Power User**.\n"
-                },
-
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "Nome visualizzato di questa mod." },
@@ -236,9 +156,9 @@ namespace MagicGarbage
                     "**Tasso di accumulo rifiuti**: cambia quanto velocemente gli edifici supportati producono rifiuti. Usa con cautela perché il bilanciamento è importante. La maggior parte dei giocatori non deve mai toccarlo.\n" +
                     "<Ora aggiornamento = ultimo aggiornamento.>"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Edifici con 8t+" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Edifici con 7t+" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "Numero di edifici che producono rifiuti con **8000 / 8t** o più.\n" +
+                    "Numero di edifici che producono rifiuti con **7000 / 7t** o più.\n" +
                     "Questo indicatore fisso aiuta a pianificare il servizio prima delle icone di avviso.\n" +
                     "Lo stato dettagliato nel log elenca gli ID Entity."
                 },
@@ -293,7 +213,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "Serve piccolo aggiustamento ({0:N0}) | aggiornato {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "Un po’ puzzolente ({0:N0}) | aggiornato {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Problema rifiuti ({0:N0}) | aggiornato {1}" },
-                { "MG.Status.Row.CriticalBuildings", "{0:N0} edifici con 8t+" },
+                { "MG.Status.Row.CriticalBuildings", "{0:N0} edifici con 7t+" },
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t prodotti | {1:N0} t capacità" },
                 { "MG.Status.Row.Requests", "{1:N0} in attesa | {2:N0} inviate | {0:N0} totale" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} ha rifiuti | {2:N0} sopra soglia richiesta" },
@@ -308,9 +228,6 @@ namespace MagicGarbage
                 { "MG.Status.Log.SettingsHeader", "Impostazioni mod attuali" },
                 { "MG.Status.Log.SettingsTrashBoss",
                     "Slider Trash Boss (salvati): carico camion={0:N0}% | stoccaggio struttura={1:N0}% | trattamento struttura={2:N0}% | flotta struttura={3:N0}%"
-                },
-                { "MG.Status.Log.SettingsPowerUser",
-                    "Power User (salvato): attivo={0} | richiesta={1:N0} | raccolta={2:N0} | base felicità={3:N0} | passo felicità={4:N0} | tasso accumulo={5:N0}%"
                 },
 
                 { "MG.Status.Log.Legend",
@@ -362,7 +279,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.RequestsHeader", "Richieste" },
                 { "MG.Status.Log.BuildingsHeader", "Edifici" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "Edifici con 8t+" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "Edifici con 7t+" },
                 { "MG.Status.Log.LocalTransferProbeHeader", "Sonda trasferimento locale rifiuti" },
                 { "MG.Status.Log.LocalTransferProbeNone", "Nessuna struttura locale rifiuti trovata." },
                 { "MG.Status.Log.OutsideTransferProbeHeader", "Sonda trasferimento rifiuti connessione esterna" },

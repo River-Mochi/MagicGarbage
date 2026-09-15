@@ -44,7 +44,6 @@ namespace MagicGarbage
                 // Groups
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "自動クリーン" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "手動管理" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.PowerUserGrp), "パワーユーザー" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "ステータス" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "Mod 情報" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "リンク" },
@@ -117,87 +116,6 @@ namespace MagicGarbage
                     ""
                 },
 
-                // Power User Options
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserOptions)), "Power User オプション" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserOptions)),
-                    "任意の上級設定\n" +
-                    "<警告: 良いサービスには不要> です。試したい人やシステムの仕組みを学びたい人向けです。\n" +
-                    "**OFF** のとき、Power User 項目は通常の **vanilla** ゲームのように動作します。\n" +
-                    "**ON** のとき、上級 **スライダーが表示** されます。\n" +
-                    "\n" +
-                    "<--- 幸福度の例 --->\n" +
-                    " - <Vanilla> 100/65 = 最初のペナルティは <165>。\n" +
-                    " - <おすすめ> を押すと 550/150 = 最初のペナルティは <700>。\n" +
-                    " - <とても緩い> 950/200 = 最初のゴミペナルティは <1150>。\n" +
-                    "便利機能: このオプションを OFF にしても最後のスライダー値は保存されます（後で再有効化したい場合）。"
-                },
-
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)), "Dispatch Request Threshold" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageDispatchRequestThreshold)),
-                    "**トラックの dispatch request が作成または維持される前に建物に必要なゴミ量です。**\n" +
-                    "Vanilla = **100** garbage units。\n" +
-                    "**100 garbage units = 0.1t**\n" +
-                    "**1,000 garbage units = 1t**\n" +
-                    "Pickup Threshold 以上にしてください。\n" +
-                    "通常、駐車中よりも使用されるトラック数が増えます。"
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbagePickupThreshold)), "Pickup Threshold" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbagePickupThreshold)),
-                    "**トラックが建物から回収できるようになる前の最低ゴミ量です。**\n" +
-                    "Vanilla = **20** garbage units。\n" +
-                    "Pickup スライダーは Dispatch Request (DR) より高くできません。ロジックの問題を防ぐためにクランプされます。\n" +
-                    "トラックが建物へ派遣され、pickup 値が DR より高い場合、その建物から回収できないことがあります（accumulation rate も影響します）。\n" +
-                    ""
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessBaseline)), "ゴミ幸福度ベースライン" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessBaseline)),
-                    "**健康 + 幸福度ペナルティが始まる前の建物ゴミ量です。**\n" +
-                    "**Vanilla = 100** garbage units。\n" +
-                    "ベースラインが高いほど、ペナルティ開始前に建物がより多くのゴミを保持できます。\n" +
-                    "100 garbage units = 0.1t\n" +
-                    "概要:\n" +
-                    "- <Threshold> = システム動作の発動点\n" +
-                    "- <Baseline> = ペナルティ式の開始点\n" +
-                    "- <Step> = 式の増分サイズ。開始後にペナルティがどれだけ早く増えるか"
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageHappinessStep)), "ゴミ幸福度ステップ" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageHappinessStep)),
-                    "**ベースラインを超えて -1 ペナルティが始まる追加ゴミ量です。**\n" +
-                    "Vanilla = **65** garbage units。\n" +
-                    "ステップが高いほど、ペナルティの増加は遅くなります。\n" +
-                    "ゲームはゴミペナルティを **-10** で上限にします。\n" +
-                    "Vanilla の最初の <-1 penalty> は **165 garbage** で発生します (100 baseline + 65 step)\n" +
-                    "幸福度スライダーと合わせずに threshold を変更すると、通常より重いペナルティになることがあります。"
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageAccumulationRate)), "蓄積率" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageAccumulationRate)),
-                    "**対応している建物のゴミ発生源値をスケールします。**\n" +
-                    "注意: これは強力なレバーで、変更すると多くの要素に影響します。\n" +
-                    "これを使わなくても良いシステムにできます。\n" +
-                    "\n" +
-                    "**100% = vanilla** accumulation rate。\n" +
-                    "**20%** = かなり遅い蓄積。\n" +
-                    "**200%** = 2倍、かなり大量のゴミ。\n" +
-                    "20% では全住民が明らかに堆肥化しているので、ゴミ蓄積率がとても低くなります ;)\n" +
-                    "\n" +
-                    "技術メモ: ゲームはゴミを一度にではなく、1日を通して少しずつ追加します。"
-                },
-
-                // Power User Presets
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserRecommended)), "おすすめ" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserRecommended)),
-                    "Power User の **おすすめ** 値を適用します。\n" +
-                    "Power User を ON にします。\n" +
-                    "最初のゴミペナルティは **700** garbage (550 baseline + 150 step) で始まります。\n" +
-                    "Garbage Accumulation Rate は手動で変更しない限り **100%** vanilla のままです。"
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.PowerUserDefaults)), "ゲーム既定値" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.PowerUserDefaults)),
-                    "すべての Power User 値を **vanilla** に戻します。\n" +
-                    "**Power User を OFF** にします。\n" +
-                    ""
-                },
-
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "この mod の表示名。" },
@@ -243,9 +161,9 @@ namespace MagicGarbage
                     "**Garbage Accumulation Rate**: 対応建物がゴミを出す速さを変えます。バランスが大事なので注意。ほとんどのプレイヤーは調整不要です。\n" +
                     "<Update time = 最終更新時刻。>"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "8t以上の建物" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "7t以上の建物" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "ゴミが **8000 / 8t** 以上ある建物数です。\n" +
+                    "ゴミが **7000 / 7t** 以上ある建物数です。\n" +
                     "警告アイコンが出る前にサービス増強を判断するための固定早期指標です。\n" +
                     "詳細ログには Entity ID が表示されます。"
                 },
@@ -301,7 +219,7 @@ namespace MagicGarbage
                 { "MG.Status.Row.GarbageServiceRating.Minor", "少し調整が必要 ({0:N0}) | 更新 {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "少し臭い ({0:N0}) | 更新 {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "ゴミ問題 ({0:N0}) | 更新 {1}" },
-                { "MG.Status.Row.CriticalBuildings", "8t以上の建物 {0:N0}" },
+                { "MG.Status.Row.CriticalBuildings", "7t以上の建物 {0:N0}" },
                 { "MG.Status.Row.GarbageProcessing", "{0:N0} t 発生 | {1:N0} t 処理能力" },
                 { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
                 { "MG.Status.Row.Producers", "{0:N0} / {1:N0} has garbage | {2:N0} above request threshold" },
@@ -316,9 +234,6 @@ namespace MagicGarbage
                 { "MG.Status.Log.SettingsHeader", "現在の mod 設定" },
                 { "MG.Status.Log.SettingsTrashBoss",
                     "Trash Boss スライダー (保存値): truck load={0:N0}% | facility storage={1:N0}% | facility process={2:N0}% | facility fleet={3:N0}%"
-                },
-                { "MG.Status.Log.SettingsPowerUser",
-                    "Power User (保存値): enabled={0} | request={1:N0} | pickup={2:N0} | happiness baseline={3:N0} | happiness step={4:N0} | accumulation rate={5:N0}%"
                 },
 
                 { "MG.Status.Log.Legend",
@@ -369,7 +284,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.RequestsHeader", "リクエスト" },
                 { "MG.Status.Log.BuildingsHeader", "建物" },
 
-                { "MG.Status.Log.CriticalBuildingsHeader", "8t以上の建物" },
+                { "MG.Status.Log.CriticalBuildingsHeader", "7t以上の建物" },
                 { "MG.Status.Log.LocalTransferProbeHeader", "ローカルゴミ転送プローブ" },
                 { "MG.Status.Log.LocalTransferProbeNone", "ローカルゴミ施設が見つかりません。" },
                 { "MG.Status.Log.OutsideTransferProbeHeader", "外部接続ゴミ転送プローブ" },
