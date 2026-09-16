@@ -97,7 +97,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "Target reserve" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
-                    "**How early trucks become selective about optional pickups on the way to their assigned building.**\n" +
+                    "**How early trucks become selective about pickups on the way to their assigned building.**\n" +
                     "**10% is the vanilla 1.6.2 value.**\n" +
                     "For a normal 20t truck:\n" +
                     "- 10% starts protecting its assigned stop 2t earlier.\n" +

@@ -35,7 +35,8 @@ namespace MagicGarbage
         {
             base.OnGameLoadingComplete(purpose, mode);
 
-            m_HaveBase = false;
+            // Keep the first live baseline. The shared value can still contain
+            // Trash Boss's setting when another city loads in the same session.
 
             Enabled =
                 mode == GameMode.Game &&

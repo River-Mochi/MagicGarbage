@@ -175,7 +175,9 @@ namespace MagicGarbage
                 return 0;
             }
 
-            return math.max(1, (int)math.round(baseValue * percent / 100f));
+            // Some facilities use huge capacities, so multiply in 64-bit to avoid int overflow.
+            double scaled = math.round((double)baseValue * percent / 100d);
+            return (int)math.clamp(scaled, 1d, int.MaxValue);
         }
     }
 }
