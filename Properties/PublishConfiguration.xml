@@ -19,10 +19,17 @@
 - Applies your settings once, then stays idle - best for performance.
 
 ### NEW Target Reserve
-- Works with the game's improved garbage truck routing in game 1.6.2.
-- Controls how early trucks start skipping small optional pickups before their assigned stop.
-- Reserve vanilla = 10%; Magic Garbage Recommended = 15%.
-- Reserve for 20t trucks means 2t is set aside for the actual target building and not used up before the truck gets there.
+- Game 1.6.2 helps trucks save room for the target building they were sent to.
+- As a truck fills up, it skips more small pickups along the way.
+- Target Reserve controls how early that "skipping" starts: 10% vanilla, 15% MG Recommended.
+- On a normal 20t truck, 10% acts like a 2t safety margin.
+
+### Why Magic Garbage still helps
+- Game's Target Reserve helps trucks reach buildings that actually requested service.
+- It does not increase how much a truck can carry.
+- Truck Load gives every truck more capacity — useful for large cities or fewer depots.
+- Facility controls add more trucks, storage, and processing when your city still cannot keep up.
+- Total Magic remains available for automatic cleanup.
 
 ✅ OPTION 2, AUTO CLEAN - Magic
 - Clears garbage automatically.

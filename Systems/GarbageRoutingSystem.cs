@@ -21,12 +21,14 @@ namespace MagicGarbage
 
     public sealed partial class GarbageRoutingSystem : GameSystemBase
     {
+        private PrefabSystem m_PrefabSystem = null!;
         private bool m_HaveBase;
         private float m_BaseAdaptiveMargin;
 
         protected override void OnCreate()
         {
             base.OnCreate();
+            m_PrefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
             RequireForUpdate<GarbageParameterData>();
             Enabled = false;
         }
@@ -34,9 +36,6 @@ namespace MagicGarbage
         protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
         {
             base.OnGameLoadingComplete(purpose, mode);
-
-            // Keep the first live baseline. The shared value can still contain
-            // Trash Boss's setting when another city loads in the same session.
 
             Enabled =
                 mode == GameMode.Game &&
@@ -60,13 +59,18 @@ namespace MagicGarbage
             }
 
             ref GarbageParameterData data = ref parameters.ValueRW;
+            Entity parameterEntity = SystemAPI.GetSingletonEntity<GarbageParameterData>();
 
-            if (!m_HaveBase)
+            m_HaveBase = false;
+            // The live singleton may still contain another city's MG value.
+            if (!TryGetAuthoringBase(parameterEntity, out m_BaseAdaptiveMargin))
             {
-                // Save the live game value so turning Trash Boss off restores it.
-                m_BaseAdaptiveMargin = math.clamp(data.m_AdaptiveCollectionMargin, 0f, 1f);
-                m_HaveBase = true;
+                LogUtils.Warn("[MG] Could not read the vanilla target reserve. No routing change was applied.");
+                Enabled = false;
+                return;
             }
+
+            m_HaveBase = true;
 
             bool trashBossActive = !setting.TotalMagic && setting.TrashBossEnabled;
             float targetMargin = trashBossActive
@@ -88,6 +92,20 @@ namespace MagicGarbage
 #endif
 
             Enabled = false;
+        }
+
+        private bool TryGetAuthoringBase(Entity parameterEntity, out float margin)
+        {
+            margin = 0f;
+
+            if (!m_PrefabSystem.TryGetPrefab(parameterEntity, out PrefabBase prefabBase) ||
+                prefabBase is not GarbagePrefab garbagePrefab)
+            {
+                return false;
+            }
+
+            margin = math.clamp(garbagePrefab.m_AdaptiveCollectionMargin, 0f, 1f);
+            return true;
         }
 
         internal bool TryGetBaseAdaptiveMargin(out float margin)

@@ -51,24 +51,24 @@ namespace MagicGarbage
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "USO" },
 
                 // Total Magic
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Magia para toda la ciudad" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
                     "**Activado [ ✓ ]** mantiene limpia toda la ciudad.\n" +
                     "\n" +
-                    "Mientras **Total Magic** está activado:\n" +
-                    "- Trash Boss se fuerza a desactivado.\n" +
-                    "- Los deslizadores de Trash Boss no se aplican (los valores se guardan para después).\n" +
+                    "Mientras **Magia para toda la ciudad** está activada:\n" +
+                    "- Jefe de residuos se fuerza a desactivado.\n" +
+                    "- Los deslizadores de Jefe de residuos no se aplican (los valores se guardan para después).\n" +
                     "- Algunos camiones aún pueden moverse por el timing de la lógica vanilla de despacho."
                 },
 
                 // Trash Boss
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Jefe de residuos" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
                     "Gestiona directamente los sistemas de basura; deja funcionando la lógica vanilla de basura.\n" +
                     "\n" +
-                    "- Cuando **Trash Boss está activado [ ✓ ]**, Total Magic se fuerza a desactivado.\n" +
-                    "- Los deslizadores solo se aplican cuando Trash Boss está activado.\n" +
-                    "- Total Magic + Trash Boss pueden estar **desactivados** para usar los ajustes vanilla,\n" +
+                    "- Cuando **Jefe de residuos está activado [ ✓ ]**, Magia para toda la ciudad se fuerza a desactivada.\n" +
+                    "- Los deslizadores solo se aplican cuando Jefe de residuos está activado.\n" +
+                    "- Magia para toda la ciudad + Jefe de residuos pueden estar **desactivados** para usar los ajustes vanilla,\n" +
                     "  y aun así puedes ver el **informe de estado**, que se actualiza solo al entrar en el menú Opciones (ligero)."
                 },
 
@@ -119,7 +119,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Restablecer deslizadores" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Restablece los deslizadores estándar de Trash Boss.\n" +
+                    "Restablece los deslizadores estándar de Jefe de residuos.\n" +
                     "- Los deslizadores de porcentaje vuelven a **100%**.\n" +
                     "- La reserva para el destino vuelve al valor **vanilla del 10%**.\n"
                 },
@@ -140,19 +140,19 @@ namespace MagicGarbage
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<Estado Limpieza automática>\n" +
-                    "  * Total Magic activado = **[ ✓ ]**\n" +
+                    "  * Magia para toda la ciudad activada = **[ ✓ ]**\n" +
                     "  * La basura se elimina automáticamente - listo.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<Estado Gestión manual>\n" +
-                    "  * Trash Boss = **[ ✓ ]**\n" +
+                    "  * Jefe de residuos = **[ ✓ ]**\n" +
                     "  * Ajusta los deslizadores como quieras.\n" +
                     "  * La misma basura del juego; camiones/instalaciones mejor gestionados manualmente.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<Estado / vanilla>\n" +
-                    "  * Total Magic = desactivado\n" +
-                    "  * Trash Boss = desactivado\n" +
+                    "  * Magia para toda la ciudad = desactivada\n" +
+                    "  * Jefe de residuos = desactivado\n" +
                     "  * Solo informe de estado.\n" +
                     "  * El juego vanilla de basura queda sin cambios."
                 },
@@ -248,9 +248,9 @@ namespace MagicGarbage
                 // Log strings
                 { "MG.Status.Log.Title", "Estado de basura ({0})" },
                 { "MG.Status.Log.City", "Ciudad: {0}" },
-                { "MG.Status.Log.Mode", "Modo: Total Magic={0}, Trash Boss={1}" },
+                { "MG.Status.Log.Mode", "Modo: Magia para toda la ciudad={0}, Jefe de residuos={1}" },
                 { "MG.Status.Log.SettingsHeader", "Ajustes actuales del mod" },
-                { "MG.Status.Log.SettingsTrashBoss", "Deslizadores de Trash Boss (guardados): carga camión={0:N0}% | almacenamiento instalación={1:N0}% | procesamiento instalación={2:N0}% | flota instalación={3:N0}%" },
+                { "MG.Status.Log.SettingsTrashBoss", "Deslizadores de Jefe de residuos (guardados): carga camión={0:N0}% | almacenamiento instalación={1:N0}% | procesamiento instalación={2:N0}% | flota instalación={3:N0}%" },
                 
                 { "MG.Status.Log.Legend",
                     "Leyenda:\n" +

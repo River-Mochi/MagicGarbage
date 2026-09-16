@@ -51,24 +51,24 @@ namespace MagicGarbage
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "CÁCH DÙNG" },
 
                 // Total Magic
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Phép thuật toàn thành phố" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
                     "**Bật [ ✓ ]** để giữ toàn bộ thành phố sạch sẽ.\n" +
                     "\n" +
-                    "Khi **Total Magic** đang BẬT:\n" +
-                    "- Trash Boss bị buộc TẮT.\n" +
-                    "- Các thanh trượt Trash Boss không được áp dụng (giá trị vẫn được lưu để dùng sau).\n" +
+                    "Khi **Phép thuật toàn thành phố** đang BẬT:\n" +
+                    "- Quản lý rác bị buộc TẮT.\n" +
+                    "- Các thanh trượt Quản lý rác không được áp dụng (giá trị vẫn được lưu để dùng sau).\n" +
                     "- Một số xe vẫn có thể di chuyển do thời điểm hoạt động của logic điều phối vanilla."
                 },
 
                 // Trash Boss
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Quản lý rác" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
                     "Quản lý trực tiếp hệ thống rác trong khi vẫn để logic rác vanilla hoạt động.\n" +
                     "\n" +
-                    "- Khi **Trash Boss BẬT [ ✓ ]**, Total Magic bị buộc TẮT.\n" +
-                    "- Thanh trượt chỉ áp dụng khi Trash Boss được bật.\n" +
-                    "- Có thể TẮT cả Total Magic + Trash Boss để dùng thiết lập vanilla,\n" +
+                    "- Khi **Quản lý rác BẬT [ ✓ ]**, Phép thuật toàn thành phố bị buộc TẮT.\n" +
+                    "- Thanh trượt chỉ áp dụng khi Quản lý rác được bật.\n" +
+                    "- Có thể TẮT cả Phép thuật toàn thành phố + Quản lý rác để dùng thiết lập vanilla,\n" +
                     "  và bạn vẫn có thể xem **báo cáo trạng thái**, chỉ cập nhật khi mở menu Tùy chọn (nhẹ)."
                 },
 
@@ -119,7 +119,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Đặt lại thanh trượt" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Đặt lại các thanh trượt Trash Boss tiêu chuẩn.\n" +
+                    "Đặt lại các thanh trượt Quản lý rác tiêu chuẩn.\n" +
                     "- Thanh trượt phần trăm trở về **100%**.\n" +
                     "- Dung lượng dành cho điểm đến trở về giá trị **vanilla 10%**.\n"
                 },
@@ -140,19 +140,19 @@ namespace MagicGarbage
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<Trạng thái Tự động dọn sạch>\n" +
-                    "  * Total Magic BẬT = **[ ✓ ]**\n" +
+                    "  * Phép thuật toàn thành phố BẬT = **[ ✓ ]**\n" +
                     "  * Rác được tự động xóa - xong.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<Trạng thái Tự quản lý>\n" +
-                    "  * Trash Boss = **[ ✓ ]**\n" +
+                    "  * Quản lý rác = **[ ✓ ]**\n" +
                     "  * Đặt các thanh trượt theo ý muốn.\n" +
                     "  * Vẫn là hệ thống rác của game; xe/cơ sở được tự quản lý tốt hơn.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<Trạng thái / vanilla>\n" +
-                    "  * Total Magic = TẮT\n" +
-                    "  * Trash Boss = TẮT\n" +
+                    "  * Phép thuật toàn thành phố = TẮT\n" +
+                    "  * Quản lý rác = TẮT\n" +
                     "  * Chỉ báo cáo trạng thái.\n" +
                     "  * Hệ thống rác vanilla không thay đổi."
                 },
@@ -248,9 +248,9 @@ namespace MagicGarbage
                 // Log strings
                 { "MG.Status.Log.Title", "Trạng thái rác ({0})" },
                 { "MG.Status.Log.City", "Thành phố: {0}" },
-                { "MG.Status.Log.Mode", "Chế độ: Total Magic={0}, Trash Boss={1}" },
+                { "MG.Status.Log.Mode", "Chế độ: Phép thuật toàn thành phố={0}, Quản lý rác={1}" },
                 { "MG.Status.Log.SettingsHeader", "Thiết lập mod hiện tại" },
-                { "MG.Status.Log.SettingsTrashBoss", "Thanh trượt Trash Boss (đã lưu): tải xe={0:N0}% | lưu trữ cơ sở={1:N0}% | xử lý cơ sở={2:N0}% | đội xe cơ sở={3:N0}%" },
+                { "MG.Status.Log.SettingsTrashBoss", "Thanh trượt Quản lý rác (đã lưu): tải xe={0:N0}% | lưu trữ cơ sở={1:N0}% | xử lý cơ sở={2:N0}% | đội xe cơ sở={3:N0}%" },
                 
                 { "MG.Status.Log.Legend",
                     "Chú giải:\n" +

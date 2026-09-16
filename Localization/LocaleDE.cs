@@ -51,24 +51,24 @@ namespace MagicGarbage
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "NUTZUNG" },
 
                 // Total Magic
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Stadtweite Magie" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
                     "**Aktiviert [ ✓ ]** hält die ganze Stadt sauber.\n" +
                     "\n" +
-                    "Während **Total Magic** AN ist:\n" +
-                    "- Trash Boss wird auf AUS gezwungen.\n" +
-                    "- Trash-Boss-Schieberegler werden nicht angewendet (Werte werden für später gespeichert).\n" +
+                    "Während **Stadtweite Magie** AN ist:\n" +
+                    "- Müllmeister wird auf AUS gezwungen.\n" +
+                    "- Müllmeister-Schieberegler werden nicht angewendet (Werte werden für später gespeichert).\n" +
                     "- Einige Lkw können sich wegen des Timings der Vanilla-Dispatch-Logik trotzdem noch bewegen."
                 },
 
                 // Trash Boss
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Müllmeister" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
                     "Verwaltet die Müllsysteme direkt; die Vanilla-Mülllogik läuft weiter.\n" +
                     "\n" +
-                    "- Wenn **Trash Boss AN [ ✓ ]** ist, wird Total Magic auf AUS gezwungen.\n" +
-                    "- Schieberegler gelten nur, wenn Trash Boss aktiviert ist.\n" +
-                    "- Total Magic + Trash Boss können beide **AUS** sein, um die Vanilla-Einstellungen zu verwenden,\n" +
+                    "- Wenn **Müllmeister AN [ ✓ ]** ist, wird Stadtweite Magie auf AUS gezwungen.\n" +
+                    "- Schieberegler gelten nur, wenn Müllmeister aktiviert ist.\n" +
+                    "- Stadtweite Magie + Müllmeister können beide **AUS** sein, um die Vanilla-Einstellungen zu verwenden,\n" +
                     "  und du kannst weiterhin den **Statusbericht** sehen, der nur beim Öffnen des Optionen-Menüs aktualisiert wird (leichtgewichtig)."
                 },
 
@@ -119,7 +119,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Schieberegler zurücksetzen" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Setzt die normalen Trash-Boss-Schieberegler zurück.\n" +
+                    "Setzt die normalen Müllmeister-Schieberegler zurück.\n" +
                     "- Prozent-Schieberegler kehren auf **100%** zurück.\n" +
                     "- Die Zielreserve kehrt auf den **Vanilla-Wert von 10%** zurück.\n"
                 },
@@ -140,19 +140,19 @@ namespace MagicGarbage
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<Automatisch-reinigen-Status>\n" +
-                    "  * Total Magic AN = **[ ✓ ]**\n" +
+                    "  * Stadtweite Magie AN = **[ ✓ ]**\n" +
                     "  * Müll wird automatisch entfernt - erledigt.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<Selbstverwaltungs-Status>\n" +
-                    "  * Trash Boss = **[ ✓ ]**\n" +
+                    "  * Müllmeister = **[ ✓ ]**\n" +
                     "  * Schieberegler wie gewünscht einstellen.\n" +
                     "  * Gleicher Spielmüll; besser selbst verwaltete Lkw/Anlagen.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<Status-/Vanilla-Status>\n" +
-                    "  * Total Magic = AUS\n" +
-                    "  * Trash Boss = AUS\n" +
+                    "  * Stadtweite Magie = AUS\n" +
+                    "  * Müllmeister = AUS\n" +
                     "  * Nur Statusbericht.\n" +
                     "  * Vanilla-Müllspiel unverändert."
                 },
@@ -248,9 +248,9 @@ namespace MagicGarbage
                 // Log strings
                 { "MG.Status.Log.Title", "Müllstatus ({0})" },
                 { "MG.Status.Log.City", "Stadt: {0}" },
-                { "MG.Status.Log.Mode", "Modus: Total Magic={0}, Trash Boss={1}" },
+                { "MG.Status.Log.Mode", "Modus: Stadtweite Magie={0}, Müllmeister={1}" },
                 { "MG.Status.Log.SettingsHeader", "Aktuelle Mod-Einstellungen" },
-                { "MG.Status.Log.SettingsTrashBoss", "Trash-Boss-Schieberegler (gespeichert): Lkw-Ladung={0:N0}% | Anlagenlager={1:N0}% | Anlagenverarbeitung={2:N0}% | Anlagenflotte={3:N0}%" },
+                { "MG.Status.Log.SettingsTrashBoss", "Müllmeister-Schieberegler (gespeichert): Lkw-Ladung={0:N0}% | Anlagenlager={1:N0}% | Anlagenverarbeitung={2:N0}% | Anlagenflotte={3:N0}%" },
                 
                 { "MG.Status.Log.Legend",
                     "Legende:\n" +

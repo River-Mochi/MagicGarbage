@@ -51,24 +51,24 @@ namespace MagicGarbage
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "USO" },
 
                 // Total Magic
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Magia per tutta la città" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
                     "**Attivo [ ✓ ]** mantiene pulita tutta la città.\n" +
                     "\n" +
-                    "Quando **Total Magic** è ATTIVO:\n" +
-                    "- Trash Boss viene forzato su OFF.\n" +
-                    "- Gli slider di Trash Boss non vengono applicati (i valori restano salvati per dopo).\n" +
+                    "Quando **Magia per tutta la città** è ATTIVA:\n" +
+                    "- Capo dei rifiuti viene forzato su OFF.\n" +
+                    "- Gli slider di Capo dei rifiuti non vengono applicati (i valori restano salvati per dopo).\n" +
                     "- Alcuni camion possono ancora muoversi per il timing della logica di invio vanilla."
                 },
 
                 // Trash Boss
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Capo dei rifiuti" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
                     "Gestisce direttamente i sistemi dei rifiuti; lascia in esecuzione la logica vanilla dei rifiuti.\n" +
                     "\n" +
-                    "- Quando **Trash Boss è ATTIVO [ ✓ ]**, Total Magic viene forzato su OFF.\n" +
-                    "- Gli slider si applicano solo quando Trash Boss è attivo.\n" +
-                    "- Total Magic + Trash Boss possono essere entrambi **OFF** per usare le impostazioni vanilla,\n" +
+                    "- Quando **Capo dei rifiuti è ATTIVO [ ✓ ]**, Magia per tutta la città viene forzata su OFF.\n" +
+                    "- Gli slider si applicano solo quando Capo dei rifiuti è attivo.\n" +
+                    "- Magia per tutta la città + Capo dei rifiuti possono essere entrambi **OFF** per usare le impostazioni vanilla,\n" +
                     "  e puoi comunque vedere il **report di stato**, che si aggiorna solo quando apri il menu Opzioni (leggero)."
                 },
 
@@ -119,7 +119,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Reimposta slider" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Reimposta gli slider standard di Trash Boss.\n" +
+                    "Reimposta gli slider standard di Capo dei rifiuti.\n" +
                     "- Gli slider percentuali tornano a **100%**.\n" +
                     "- La riserva destinazione torna al valore **vanilla del 10%**.\n"
                 },
@@ -140,19 +140,19 @@ namespace MagicGarbage
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<Stato Pulizia automatica>\n" +
-                    "  * Total Magic ON = **[ ✓ ]**\n" +
+                    "  * Magia per tutta la città ON = **[ ✓ ]**\n" +
                     "  * I rifiuti vengono rimossi automaticamente - fatto.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<Stato Gestione manuale>\n" +
-                    "  * Trash Boss = **[ ✓ ]**\n" +
+                    "  * Capo dei rifiuti = **[ ✓ ]**\n" +
                     "  * Imposta gli slider come desideri.\n" +
                     "  * Stesso sistema rifiuti del gioco; camion/strutture meglio gestiti manualmente.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<Stato / vanilla>\n" +
-                    "  * Total Magic = OFF\n" +
-                    "  * Trash Boss = OFF\n" +
+                    "  * Magia per tutta la città = OFF\n" +
+                    "  * Capo dei rifiuti = OFF\n" +
                     "  * Solo report di stato.\n" +
                     "  * Gioco vanilla dei rifiuti invariato."
                 },
@@ -248,9 +248,9 @@ namespace MagicGarbage
                 // Log strings
                 { "MG.Status.Log.Title", "Stato rifiuti ({0})" },
                 { "MG.Status.Log.City", "Città: {0}" },
-                { "MG.Status.Log.Mode", "Modalità: Total Magic={0}, Trash Boss={1}" },
+                { "MG.Status.Log.Mode", "Modalità: Magia per tutta la città={0}, Capo dei rifiuti={1}" },
                 { "MG.Status.Log.SettingsHeader", "Impostazioni attuali della mod" },
-                { "MG.Status.Log.SettingsTrashBoss", "Slider Trash Boss (salvati): carico camion={0:N0}% | stoccaggio struttura={1:N0}% | lavorazione struttura={2:N0}% | flotta struttura={3:N0}%" },
+                { "MG.Status.Log.SettingsTrashBoss", "Slider Capo dei rifiuti (salvati): carico camion={0:N0}% | stoccaggio struttura={1:N0}% | lavorazione struttura={2:N0}% | flotta struttura={3:N0}%" },
                 
                 { "MG.Status.Log.Legend",
                     "Legenda:\n" +

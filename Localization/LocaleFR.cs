@@ -51,24 +51,24 @@ namespace MagicGarbage
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "UTILISATION" },
 
                 // Total Magic
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Magie sur toute la ville" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
                     "**Activé [ ✓ ]** garde toute la ville propre.\n" +
                     "\n" +
-                    "Quand **Total Magic** est activé :\n" +
-                    "- Trash Boss est forcé sur OFF.\n" +
-                    "- Les curseurs de Trash Boss ne sont pas appliqués (les valeurs sont conservées pour plus tard).\n" +
+                    "Quand **Magie sur toute la ville** est activée :\n" +
+                    "- Chef des déchets est forcé sur OFF.\n" +
+                    "- Les curseurs de Chef des déchets ne sont pas appliqués (les valeurs sont conservées pour plus tard).\n" +
                     "- Quelques camions peuvent encore circuler à cause du timing de la logique vanilla d’envoi."
                 },
 
                 // Trash Boss
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Chef des déchets" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
                     "Gère directement les systèmes de déchets tout en laissant fonctionner la logique vanilla des déchets.\n" +
                     "\n" +
-                    "- Quand **Trash Boss est activé [ ✓ ]**, Total Magic est forcé sur OFF.\n" +
-                    "- Les curseurs ne s’appliquent que lorsque Trash Boss est activé.\n" +
-                    "- Total Magic + Trash Boss peuvent tous deux être **OFF** pour retrouver les réglages vanilla,\n" +
+                    "- Quand **Chef des déchets est activé [ ✓ ]**, Magie sur toute la ville est forcée sur OFF.\n" +
+                    "- Les curseurs ne s’appliquent que lorsque Chef des déchets est activé.\n" +
+                    "- Magie sur toute la ville + Chef des déchets peuvent tous deux être **OFF** pour retrouver les réglages vanilla,\n" +
                     "  tout en gardant le **rapport d’état**, qui se met à jour seulement quand tu ouvres le menu Options (léger)."
                 },
 
@@ -119,7 +119,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Réinitialiser les curseurs" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Réinitialise les curseurs standard de Trash Boss.\n" +
+                    "Réinitialise les curseurs standard de Chef des déchets.\n" +
                     "- Les curseurs en pourcentage reviennent à **100%**.\n" +
                     "- La réserve cible revient à la valeur **vanilla de 10%**.\n"
                 },
@@ -140,19 +140,19 @@ namespace MagicGarbage
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<État Nettoyage auto>\n" +
-                    "  * Total Magic activé = **[ ✓ ]**\n" +
+                    "  * Magie sur toute la ville activée = **[ ✓ ]**\n" +
                     "  * Les déchets sont supprimés automatiquement - terminé.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<État Gestion manuelle>\n" +
-                    "  * Trash Boss = **[ ✓ ]**\n" +
+                    "  * Chef des déchets = **[ ✓ ]**\n" +
                     "  * Règle les curseurs comme souhaité.\n" +
                     "  * Même système de déchets du jeu ; camions/installations mieux gérés manuellement.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<État / vanilla>\n" +
-                    "  * Total Magic = OFF\n" +
-                    "  * Trash Boss = OFF\n" +
+                    "  * Magie sur toute la ville = OFF\n" +
+                    "  * Chef des déchets = OFF\n" +
                     "  * Rapport d’état seulement.\n" +
                     "  * Le jeu vanilla des déchets reste inchangé."
                 },
@@ -248,9 +248,9 @@ namespace MagicGarbage
                 // Log strings
                 { "MG.Status.Log.Title", "État des déchets ({0})" },
                 { "MG.Status.Log.City", "Ville : {0}" },
-                { "MG.Status.Log.Mode", "Mode : Total Magic={0}, Trash Boss={1}" },
+                { "MG.Status.Log.Mode", "Mode : Magie sur toute la ville={0}, Chef des déchets={1}" },
                 { "MG.Status.Log.SettingsHeader", "Réglages actuels du mod" },
-                { "MG.Status.Log.SettingsTrashBoss", "Curseurs Trash Boss (enregistrés) : charge camion={0:N0}% | stockage installation={1:N0}% | traitement installation={2:N0}% | flotte installation={3:N0}%" },
+                { "MG.Status.Log.SettingsTrashBoss", "Curseurs Chef des déchets (enregistrés) : charge camion={0:N0}% | stockage installation={1:N0}% | traitement installation={2:N0}% | flotte installation={3:N0}%" },
                 
                 { "MG.Status.Log.Legend",
                     "Légende :\n" +

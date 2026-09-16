@@ -51,24 +51,24 @@ namespace MagicGarbage
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "사용법" },
 
                 // Total Magic
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "도시 전체 마법" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
                     "**활성화 [ ✓ ]**하면 도시 전체를 깨끗하게 유지합니다.\n" +
                     "\n" +
-                    "**Total Magic**이 켜져 있는 동안:\n" +
-                    "- Trash Boss는 강제로 꺼집니다.\n" +
-                    "- Trash Boss 슬라이더는 적용되지 않습니다(값은 나중을 위해 저장됩니다).\n" +
+                    "**도시 전체 마법**이 켜져 있는 동안:\n" +
+                    "- 쓰레기 관리자는 강제로 꺼집니다.\n" +
+                    "- 쓰레기 관리자 슬라이더는 적용되지 않습니다(값은 나중을 위해 저장됩니다).\n" +
                     "- 바닐라 배차 로직의 타이밍 때문에 일부 트럭은 계속 움직일 수 있습니다."
                 },
 
                 // Trash Boss
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "쓰레기 관리자" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
                     "바닐라 쓰레기 로직은 계속 실행하면서 쓰레기 시스템을 직접 관리합니다.\n" +
                     "\n" +
-                    "- **Trash Boss가 켜짐 [ ✓ ]**이면 Total Magic은 강제로 꺼집니다.\n" +
-                    "- 슬라이더는 Trash Boss가 활성화된 경우에만 적용됩니다.\n" +
-                    "- Total Magic과 Trash Boss를 모두 **끔**으로 두면 바닐라 설정을 사용할 수 있으며,\n" +
+                    "- **쓰레기 관리자가 켜짐 [ ✓ ]**이면 도시 전체 마법은 강제로 꺼집니다.\n" +
+                    "- 슬라이더는 쓰레기 관리자가 활성화된 경우에만 적용됩니다.\n" +
+                    "- 도시 전체 마법과 쓰레기 관리자를 모두 **끔**으로 두면 바닐라 설정을 사용할 수 있으며,\n" +
                     "  이 상태에서도 **상태 보고서**를 볼 수 있습니다. 보고서는 옵션 메뉴에 들어갈 때만 갱신됩니다(가벼움)."
                 },
 
@@ -119,7 +119,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "슬라이더 초기화" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "표준 Trash Boss 슬라이더를 초기화합니다.\n" +
+                    "표준 쓰레기 관리자 슬라이더를 초기화합니다.\n" +
                     "- 백분율 슬라이더는 **100%**로 돌아갑니다.\n" +
                     "- 목적지 예약 용량은 **바닐라 10%** 값으로 돌아갑니다.\n"
                 },
@@ -140,19 +140,19 @@ namespace MagicGarbage
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<자동 청소 상태>\n" +
-                    "  * Total Magic 켜짐 = **[ ✓ ]**\n" +
+                    "  * 도시 전체 마법 켜짐 = **[ ✓ ]**\n" +
                     "  * 쓰레기가 자동으로 제거됩니다 - 완료.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<직접 관리 상태>\n" +
-                    "  * Trash Boss = **[ ✓ ]**\n" +
+                    "  * 쓰레기 관리자 = **[ ✓ ]**\n" +
                     "  * 원하는 대로 슬라이더를 설정합니다.\n" +
                     "  * 같은 게임 쓰레기 시스템을 트럭/시설로 더 잘 직접 관리합니다.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<상태 / 바닐라 상태>\n" +
-                    "  * Total Magic = 끔\n" +
-                    "  * Trash Boss = 끔\n" +
+                    "  * 도시 전체 마법 = 끔\n" +
+                    "  * 쓰레기 관리자 = 끔\n" +
                     "  * 상태 보고서만 표시.\n" +
                     "  * 바닐라 쓰레기 게임은 변경되지 않습니다."
                 },
@@ -248,9 +248,9 @@ namespace MagicGarbage
                 // Log strings
                 { "MG.Status.Log.Title", "쓰레기 상태 ({0})" },
                 { "MG.Status.Log.City", "도시: {0}" },
-                { "MG.Status.Log.Mode", "모드: Total Magic={0}, Trash Boss={1}" },
+                { "MG.Status.Log.Mode", "모드: 도시 전체 마법={0}, 쓰레기 관리자={1}" },
                 { "MG.Status.Log.SettingsHeader", "현재 모드 설정" },
-                { "MG.Status.Log.SettingsTrashBoss", "Trash Boss 슬라이더(저장됨): 트럭 적재량={0:N0}% | 시설 저장={1:N0}% | 시설 처리={2:N0}% | 시설 차량 수={3:N0}%" },
+                { "MG.Status.Log.SettingsTrashBoss", "쓰레기 관리자 슬라이더(저장됨): 트럭 적재량={0:N0}% | 시설 저장={1:N0}% | 시설 처리={2:N0}% | 시설 차량 수={3:N0}%" },
                 
                 { "MG.Status.Log.Legend",
                     "범례:\n" +

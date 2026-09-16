@@ -51,24 +51,24 @@ namespace MagicGarbage
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "UŻYCIE" },
 
                 // Total Magic
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Magia całego miasta" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
                     "**Włączone [ ✓ ]** utrzymuje całe miasto w czystości.\n" +
                     "\n" +
-                    "Gdy **Total Magic** jest WŁĄCZONE:\n" +
-                    "- Trash Boss jest wymuszony na WYŁ.\n" +
-                    "- Suwaki Trash Boss nie są stosowane (wartości są zapisywane na później).\n" +
+                    "Gdy **Magia całego miasta** jest WŁĄCZONA:\n" +
+                    "- Szef odpadów jest wymuszony na WYŁ.\n" +
+                    "- Suwaki Szefa odpadów nie są stosowane (wartości są zapisywane na później).\n" +
                     "- Kilka ciężarówek może nadal jeździć z powodu timingu waniliowej logiki wysyłania."
                 },
 
                 // Trash Boss
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Szef odpadów" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
                     "Bezpośrednio zarządza systemami odpadów, pozostawiając włączoną waniliową logikę odpadów.\n" +
                     "\n" +
-                    "- Gdy **Trash Boss jest WŁĄCZONY [ ✓ ]**, Total Magic jest wymuszony na WYŁ.\n" +
-                    "- Suwaki działają tylko wtedy, gdy Trash Boss jest włączony.\n" +
-                    "- Total Magic i Trash Boss mogą być jednocześnie **WYŁĄCZONE**, aby korzystać z ustawień waniliowych,\n" +
+                    "- Gdy **Szef odpadów jest WŁĄCZONY [ ✓ ]**, Magia całego miasta jest wymuszona na WYŁ.\n" +
+                    "- Suwaki działają tylko wtedy, gdy Szef odpadów jest włączony.\n" +
+                    "- Magia całego miasta i Szef odpadów mogą być jednocześnie **WYŁĄCZONE**, aby korzystać z ustawień waniliowych,\n" +
                     "  a nadal możesz oglądać **raport stanu**, który aktualizuje się tylko po wejściu do menu Opcje (lekki)."
                 },
 
@@ -119,7 +119,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Resetuj suwaki" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Resetuje standardowe suwaki Trash Boss.\n" +
+                    "Resetuje standardowe suwaki Szefa odpadów.\n" +
                     "- Suwaki procentowe wracają do **100%**.\n" +
                     "- Rezerwa dla celu wraca do **waniliowych 10%**.\n"
                 },
@@ -140,19 +140,19 @@ namespace MagicGarbage
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<Stan Auto sprzątanie>\n" +
-                    "  * Total Magic WŁ. = **[ ✓ ]**\n" +
+                    "  * Magia całego miasta WŁ. = **[ ✓ ]**\n" +
                     "  * Odpady są usuwane automatycznie - gotowe.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<Stan Zarządzaj samodzielnie>\n" +
-                    "  * Trash Boss = **[ ✓ ]**\n" +
+                    "  * Szef odpadów = **[ ✓ ]**\n" +
                     "  * Ustaw suwaki według potrzeb.\n" +
                     "  * Te same odpady w grze; lepiej samodzielnie zarządzane ciężarówki/obiekty.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<Stan Status / wanilia>\n" +
-                    "  * Total Magic = WYŁ.\n" +
-                    "  * Trash Boss = WYŁ.\n" +
+                    "  * Magia całego miasta = WYŁ.\n" +
+                    "  * Szef odpadów = WYŁ.\n" +
                     "  * Tylko raport stanu.\n" +
                     "  * Waniliowy system odpadów pozostaje bez zmian."
                 },
@@ -248,9 +248,9 @@ namespace MagicGarbage
                 // Log strings
                 { "MG.Status.Log.Title", "Stan odpadów ({0})" },
                 { "MG.Status.Log.City", "Miasto: {0}" },
-                { "MG.Status.Log.Mode", "Tryb: Total Magic={0}, Trash Boss={1}" },
+                { "MG.Status.Log.Mode", "Tryb: Magia całego miasta={0}, Szef odpadów={1}" },
                 { "MG.Status.Log.SettingsHeader", "Bieżące ustawienia moda" },
-                { "MG.Status.Log.SettingsTrashBoss", "Suwaki Trash Boss (zapisane): ładunek ciężarówki={0:N0}% | magazyn obiektu={1:N0}% | przetwarzanie obiektu={2:N0}% | flota obiektu={3:N0}%" },
+                { "MG.Status.Log.SettingsTrashBoss", "Suwaki Szefa odpadów (zapisane): ładunek ciężarówki={0:N0}% | magazyn obiektu={1:N0}% | przetwarzanie obiektu={2:N0}% | flota obiektu={3:N0}%" },
                 
                 { "MG.Status.Log.Legend",
                     "Legenda:\n" +

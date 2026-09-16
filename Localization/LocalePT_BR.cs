@@ -51,24 +51,24 @@ namespace MagicGarbage
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "USO" },
 
                 // Total Magic
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Magia na cidade inteira" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
                     "**Ativado [ ✓ ]** mantém a cidade inteira limpa.\n" +
                     "\n" +
-                    "Enquanto o **Total Magic** estiver LIGADO:\n" +
-                    "- Trash Boss é forçado a DESLIGADO.\n" +
-                    "- Os controles do Trash Boss não são aplicados (os valores ficam salvos para depois).\n" +
+                    "Enquanto a **Magia na cidade inteira** estiver LIGADA:\n" +
+                    "- Chefe do lixo é forçado a DESLIGADO.\n" +
+                    "- Os controles do Chefe do lixo não são aplicados (os valores ficam salvos para depois).\n" +
                     "- Alguns caminhões ainda podem se mover por causa do tempo da lógica vanilla de despacho."
                 },
 
                 // Trash Boss
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Chefe do lixo" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
                     "Gerencia diretamente os sistemas de lixo; mantém a lógica vanilla de lixo funcionando.\n" +
                     "\n" +
-                    "- Quando o **Trash Boss está LIGADO [ ✓ ]**, Total Magic é forçado a DESLIGADO.\n" +
-                    "- Os controles só se aplicam quando o Trash Boss está ativado.\n" +
-                    "- Total Magic + Trash Boss podem ficar ambos **DESLIGADOS** para usar as configurações vanilla,\n" +
+                    "- Quando o **Chefe do lixo está LIGADO [ ✓ ]**, Magia na cidade inteira é forçada a DESLIGADA.\n" +
+                    "- Os controles só se aplicam quando o Chefe do lixo está ativado.\n" +
+                    "- Magia na cidade inteira + Chefe do lixo podem ficar ambos **DESLIGADOS** para usar as configurações vanilla,\n" +
                     "  e você ainda pode ver o **relatório de status**, que só atualiza ao entrar no menu Opções (leve)."
                 },
 
@@ -119,7 +119,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Redefinir controles" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Redefine os controles padrão do Trash Boss.\n" +
+                    "Redefine os controles padrão do Chefe do lixo.\n" +
                     "- Os controles percentuais voltam para **100%**.\n" +
                     "- A reserva para o destino volta ao valor **vanilla de 10%**.\n"
                 },
@@ -140,19 +140,19 @@ namespace MagicGarbage
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<Estado Limpeza automática>\n" +
-                    "  * Total Magic LIGADO = **[ ✓ ]**\n" +
+                    "  * Magia na cidade inteira LIGADA = **[ ✓ ]**\n" +
                     "  * O lixo é removido automaticamente - pronto.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<Estado Gerenciar manualmente>\n" +
-                    "  * Trash Boss = **[ ✓ ]**\n" +
+                    "  * Chefe do lixo = **[ ✓ ]**\n" +
                     "  * Ajuste os controles como quiser.\n" +
                     "  * O mesmo lixo do jogo; caminhões/instalações melhor gerenciados manualmente.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<Estado / vanilla>\n" +
-                    "  * Total Magic = DESLIGADO\n" +
-                    "  * Trash Boss = DESLIGADO\n" +
+                    "  * Magia na cidade inteira = DESLIGADA\n" +
+                    "  * Chefe do lixo = DESLIGADO\n" +
                     "  * Apenas relatório de status.\n" +
                     "  * O sistema vanilla de lixo permanece inalterado."
                 },
@@ -248,9 +248,9 @@ namespace MagicGarbage
                 // Log strings
                 { "MG.Status.Log.Title", "Status do lixo ({0})" },
                 { "MG.Status.Log.City", "Cidade: {0}" },
-                { "MG.Status.Log.Mode", "Modo: Total Magic={0}, Trash Boss={1}" },
+                { "MG.Status.Log.Mode", "Modo: Magia na cidade inteira={0}, Chefe do lixo={1}" },
                 { "MG.Status.Log.SettingsHeader", "Configurações atuais do mod" },
-                { "MG.Status.Log.SettingsTrashBoss", "Controles do Trash Boss (salvos): carga caminhão={0:N0}% | armazenamento instalação={1:N0}% | processamento instalação={2:N0}% | frota instalação={3:N0}%" },
+                { "MG.Status.Log.SettingsTrashBoss", "Controles do Chefe do lixo (salvos): carga caminhão={0:N0}% | armazenamento instalação={1:N0}% | processamento instalação={2:N0}% | frota instalação={3:N0}%" },
                 
                 { "MG.Status.Log.Legend",
                     "Legenda:\n" +

@@ -51,24 +51,24 @@ namespace MagicGarbage
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "使い方" },
 
                 // Total Magic
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "街全体の魔法" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
                     "**有効 [ ✓ ]** にすると街全体をきれいに保ちます。\n" +
                     "\n" +
-                    "**Total Magic** が ON の間:\n" +
-                    "- Trash Boss は強制的に OFF になります。\n" +
-                    "- Trash Boss のスライダーは適用されません（値は後で使うため保存されます）。\n" +
+                    "**街全体の魔法** が ON の間:\n" +
+                    "- ごみ管理者は強制的に OFF になります。\n" +
+                    "- ごみ管理者のスライダーは適用されません（値は後で使うため保存されます）。\n" +
                     "- バニラの配車ロジックのタイミングにより、少数のトラックがまだ動くことがあります。"
                 },
 
                 // Trash Boss
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "ごみ管理者" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
                     "バニラのゴミ処理ロジックを動かしたまま、ゴミシステムを直接管理します。\n" +
                     "\n" +
-                    "- **Trash Boss が ON [ ✓ ]** のとき、Total Magic は強制的に OFF になります。\n" +
-                    "- スライダーは Trash Boss が有効なときだけ適用されます。\n" +
-                    "- Total Magic と Trash Boss の両方を **OFF** にするとバニラ設定に戻せます。\n" +
+                    "- **ごみ管理者が ON [ ✓ ]** のとき、街全体の魔法は強制的に OFF になります。\n" +
+                    "- スライダーはごみ管理者が有効なときだけ適用されます。\n" +
+                    "- 街全体の魔法とごみ管理者の両方を **OFF** にするとバニラ設定に戻せます。\n" +
                     "  その状態でも **ステータスレポート** は表示でき、Options メニューを開いたときだけ更新されます（軽量）。"
                 },
 
@@ -119,7 +119,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "スライダーをリセット" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "標準の Trash Boss スライダーをリセットします。\n" +
+                    "標準のごみ管理者スライダーをリセットします。\n" +
                     "- パーセントスライダーは **100%** に戻ります。\n" +
                     "- 目的地用予約容量は **バニラの 10%** に戻ります。\n"
                 },
@@ -140,19 +140,19 @@ namespace MagicGarbage
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<自動クリーン状態>\n" +
-                    "  * Total Magic ON = **[ ✓ ]**\n" +
+                    "  * 街全体の魔法 ON = **[ ✓ ]**\n" +
                     "  * ゴミは自動で削除されます - 完了。\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<手動管理状態>\n" +
-                    "  * Trash Boss = **[ ✓ ]**\n" +
+                    "  * ごみ管理者 = **[ ✓ ]**\n" +
                     "  * 好きなようにスライダーを設定します。\n" +
                     "  * 同じゲームのゴミ処理を、トラック/施設でよりよく手動管理します。\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<ステータス / バニラ状態>\n" +
-                    "  * Total Magic = OFF\n" +
-                    "  * Trash Boss = OFF\n" +
+                    "  * 街全体の魔法 = OFF\n" +
+                    "  * ごみ管理者 = OFF\n" +
                     "  * ステータスレポートのみ。\n" +
                     "  * バニラのゴミ処理は変更されません。"
                 },
@@ -248,9 +248,9 @@ namespace MagicGarbage
                 // Log strings
                 { "MG.Status.Log.Title", "ゴミステータス ({0})" },
                 { "MG.Status.Log.City", "都市: {0}" },
-                { "MG.Status.Log.Mode", "モード: Total Magic={0}, Trash Boss={1}" },
+                { "MG.Status.Log.Mode", "モード: 街全体の魔法={0}, ごみ管理者={1}" },
                 { "MG.Status.Log.SettingsHeader", "現在の Mod 設定" },
-                { "MG.Status.Log.SettingsTrashBoss", "Trash Boss スライダー（保存値）: トラック積載量={0:N0}% | 施設保管量={1:N0}% | 施設処理={2:N0}% | 施設車両数={3:N0}%" },
+                { "MG.Status.Log.SettingsTrashBoss", "ごみ管理者スライダー（保存値）: トラック積載量={0:N0}% | 施設保管量={1:N0}% | 施設処理={2:N0}% | 施設車両数={3:N0}%" },
                 
                 { "MG.Status.Log.Legend",
                     "凡例:\n" +
