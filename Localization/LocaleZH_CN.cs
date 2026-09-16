@@ -11,8 +11,8 @@
 
 namespace MagicGarbage
 {
-    using Colossal;
     using System.Collections.Generic;
+    using Colossal;
 
     public sealed class LocaleZH_CN : IDictionarySource
     {
@@ -41,277 +41,279 @@ namespace MagicGarbage
                 // Tabs
                 { m_Setting.GetOptionTabLocaleID(Setting.ActionsTab), "操作" },
                 { m_Setting.GetOptionTabLocaleID(Setting.AboutTab), "关于" },
+
                 // Groups
                 { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "自动清理" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "自行管理" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "状态" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "模组信息" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "链接" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "用法" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "使用说明" },
 
                 // Total Magic
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
-                    "**启用 [ ✓ ]** 会保持整座城市干净。\n" +
+                    "**启用 [ ✓ ]**后会保持整座城市清洁。\n" +
                     "\n" +
                     "当 **Total Magic** 开启时：\n" +
                     "- Trash Boss 会被强制关闭。\n" +
-                    "- Trash Boss 滑块不会应用（数值会保存以便之后使用）。\n" +
-                    "- 由于 vanilla 调度逻辑的时机，少量卡车仍可能移动。"
+                    "- Trash Boss 滑块不会应用（数值会保存供以后使用）。\n" +
+                    "- 由于原版调度逻辑的时序，少量车辆仍可能继续移动。"
                 },
 
                 // Trash Boss
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
-                    "直接管理垃圾系统；vanilla 垃圾逻辑仍会运行。\n" +
+                    "直接管理垃圾系统，同时保留原版垃圾逻辑运行。\n" +
                     "\n" +
-                    "- 当 **Trash Boss 开启 [ ✓ ]** 时，Total Magic 会被强制关闭。\n" +
-                    "- 滑块只在 Trash Boss 启用时生效。\n" +
-                    "- Total Magic + Trash Boss 都可以 **关闭** 以使用 vanilla 设置，\n" +
-                    "  同时仍可查看 **状态报告**；它只在进入选项菜单时更新（轻量）。"
+                    "- 当 **Trash Boss 开启 [ ✓ ]**时，Total Magic 会被强制关闭。\n" +
+                    "- 只有启用 Trash Boss 时滑块才会应用。\n" +
+                    "- Total Magic 和 Trash Boss 都可以**关闭**以使用原版设置，\n" +
+                    "  同时仍可查看**状态报告**；它只会在你进入“选项”菜单时更新（开销很低）。"
                 },
+
                 // Sliders
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "卡车载量" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "垃圾车载量" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "**每辆卡车能运多少垃圾。**\n" +
-                    "**100% = 正常** 游戏默认值 (20t)。\n" +
-                    ""
+                    "**每辆垃圾车可装载的垃圾量。**\n" +
+                    "**100% = 原版**垃圾车容量（20t）。\n"
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)), "设施存储量" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
-                    "**设施可存放多少垃圾。**\n" +
-                    "**100% = vanilla** 存储量。\n" +
-                    ""
+                    "**设施可存储的垃圾量。**\n" +
+                    "**100% = 原版**存储量。\n"
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)), "设施处理速度" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
                     "**设施处理进入垃圾的速度。**\n" +
-                    "**100% = vanilla** 处理速度。\n" +
-                    ""
-                },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)), "设施车队" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
-                    "**每个设施可派出多少辆卡车。**\n" +
-                    "**100% = vanilla** 卡车数量。\n" +
-                    ""
+                    "**100% = 原版**处理速度。\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "目标容量预留" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
-                    "**控制卡车何时开始减少前往指定目标途中的可选收集。**\n" +
-                    "这是软性保护，并不保证空余载量。默认值为 **10%**，安全范围为 10–25%。"
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)), "设施车队" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
+                    "**每个设施可派出的车辆数量。**\n" +
+                    "**100% = 原版**车辆数量。\n"
                 },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "目标预留" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
+                    "**控制垃圾车在前往已分配建筑途中，多早开始对可选收集点进行筛选。**\n" +
+                    "**10% 是 1.6.2 版本的原版数值。**\n" +
+                    "以普通 20t 垃圾车为例：\n" +
+                    "- 10% 会提前 2t 开始为分配目标保留空间。\n" +
+                    "- 15% 会提前 3t。\n" +
+                    "- 25% 会提前 5t。\n" +
+                    "数值越高，安全余量越大。垃圾车会更早跳过小额收集，从而为已分配建筑留下更多空间。"
+                },
+
 
                 // Trash Boss Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "推荐" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "均衡值：卡车 **200%**、目标保护 **15%**。"
+                    "为繁忙城市应用较均衡的数值。\n" +
+                    "垃圾车载量 **200%** | 存储 **150%** | 处理 **250%**\n" +
+                    "车队 **100%** | 目标预留 **15%**。"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "游戏默认值" },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "重置滑块" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "将 Trash Boss 恢复为 **vanilla 行为**。\n" +
-                    "**Vanilla:**\n" +
+                    "重置标准 Trash Boss 滑块。\n" +
                     "- 百分比滑块恢复为 **100%**。\n" +
-                    "- 目标保护恢复为 **10%**。\n" +
-                    ""
+                    "- 目标预留恢复为**原版 10%**。\n"
                 },
 
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "模组" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "此模组的显示名称。" },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)), "版本" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)), "当前模组版本。" },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenParadoxPage)), "Paradox Mods" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenParadoxPage)), "打开 Paradox Mods 页面。" },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenDiscord)), "Discord" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)), "在浏览器中打开 Discord 邀请。" },
 
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<自动清理状态>\n" +
-                    "  * Total Magic ON = **[ ✓ ]**\n" +
-                    "  * 垃圾会自动移除 - 完成。\n" +
+                    "  * Total Magic 开启 = **[ ✓ ]**\n" +
+                    "  * 垃圾会自动清除 - 完成。\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<自行管理状态>\n" +
                     "  * Trash Boss = **[ ✓ ]**\n" +
-                    "  * 按需要设置滑块。\n" +
-                    "  * 可选：开启高级滑块（非必需）。\n" +
-                    "  * 同样的游戏垃圾系统；更好地自行管理卡车/设施。\n" +
+                    "  * 按需要调整滑块。\n" +
+                    "  * 仍使用游戏原有垃圾系统，但更好地自行管理车辆/设施。\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
-                    "<状态 / vanilla 状态>\n" +
-                    "  * Total Magic = OFF\n" +
-                    "  * Trash Boss = OFF\n" +
+                    "<状态 / 原版状态>\n" +
+                    "  * Total Magic = 关闭\n" +
+                    "  * Trash Boss = 关闭\n" +
                     "  * 仅显示状态报告。\n" +
-                    "  * Vanilla 垃圾游戏不变。"
+                    "  * 原版垃圾系统保持不变。"
                 },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), "用法" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), "使用说明" },
 
                 // Status
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageServiceRating)), "垃圾服务评分" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageServiceRating)),
-                    "来自游戏的简单垃圾幸福度评分。\n" +
-                    "**0 = Excellent**\n" +
-                    "**-1 **= 需要小幅调整。游戏经常在 0 到 -1 之间，可以忽略（数值已四舍五入）。\n" +
-                    "**-2 to -4** = 有点臭\n" +
-                    "**-5 to -10** = 垃圾问题\n" +
-                    "**间接调节：** 使用 <trash sliders> 随时间减少垃圾累积来改善。\n" +
-                    "**直接调节：** Garbage Happiness Baseline + Garbage Happiness Step 会改变 Cims 不开心前<能容忍的量>。\n" +
-                    "**Garbage Accumulation Rate**：改变受支持建筑产生垃圾的速度。请谨慎使用，因为平衡很重要。多数玩家不需要调整。\n" +
-                    "<Update time = 最后刷新时间。>"
+                    "游戏计算的全市平均垃圾幸福度影响。\n" +
+                    "整体评分良好时仍可能有少数问题建筑，因此也请检查 **7t+ 建筑**。\n" +
+                    "**0 = 整体优秀**\n" +
+                    "**-1 = 需要小幅调整**\n" +
+                    "**-2 到 -4 = 略有异味**\n" +
+                    "**-5 或更低 = 垃圾问题**\n" +
+                    "\n" +
+                    "使用垃圾车和设施滑块改善服务，然后让城市运行一段时间再重新检查。"
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "7t+ 建筑" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "垃圾达到 **7000 / 7t** 或以上的产垃圾建筑数量。\n" +
-                    "这是固定的提前指标，帮助你在警告图标出现前规划服务。\n" +
-                    "详细日志会列出 Entity ID。"
+                    "垃圾量达到或超过 **7000 / 7t** 的垃圾产出建筑数量。\n" +
+                    "这个固定的早期预警指标可帮助你在建筑达到游戏警告图标级别之前判断是否需要提高服务能力。\n" +
+                    "使用“详细状态写入日志”可列出这些建筑的 Entity ID。"
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "垃圾/月" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
-                    "显示全城垃圾产生量和可用处理能力。\n" +
-                    "如果每月产生量超过处理能力，请提高处理能力。\n" +
-                    "两个数值均使用吨/月。"
+                    "显示全市垃圾产量、当前处理量以及设施可用处理能力。\n" +
+                    "如果月度产量高于处理能力，请提高处理速度。\n" +
+                    "所有数值均以吨/月为单位。"
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "收集请求" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
-                    "**Pending** = 尚未分配给卡车或路径的活动收集请求。\n" +
-                    "**Dispatched** = 已分配的活动收集请求。\n" +
-                    "**Total** = 当前垃圾流程中的 **active** request entity 数量。\n" +
+                    "**待处理** = 当前尚未分配给垃圾车或路径的有效收集请求。\n" +
+                    "**已调度** = 已经完成分配的有效收集请求。\n" +
+                    "**总计** = 垃圾处理流程中当前所有**有效**请求。\n" +
                     "\n" +
-                    "技术说明：这不同于 <Above request threshold>。这里统计 <requests>，不是建筑。\n" +
-                    "一些 pending requests 稍后会被分配；如果 vanilla 重新验证认为目标不再需要服务，也可能稍后清除。"
+                    "这与**高于请求阈值**不同，后者统计的是建筑而不是请求。\n" +
+                    "部分待处理请求稍后会被分配；如果原版重新验证后认为目标不再需要服务，部分请求也可能随后被清除。"
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusProducers)), "建筑" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusProducers)),
-                    "**Has garbage** = 当前持有任何垃圾的建筑。\n" +
-                    "**Total** = 城市中所有垃圾生产建筑。\n" +
-                    "**Above request threshold** = 当前有足够垃圾创建收集请求的 **buildings** 数量。\n" +
-                    "详细日志会显示游戏当前的请求阈值。\n" +
-                    ""
+                    "**有垃圾** = 当前存有任意垃圾的建筑。\n" +
+                    "**总计** = 城市中所有会产生垃圾的建筑。\n" +
+                    "**高于请求阈值** = 当前垃圾量足以创建收集请求的**建筑**数量。\n" +
+                    "详细状态日志会显示游戏当前实时请求阈值。\n"
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "设施" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacilities)),
                     "已统计垃圾设施的摘要。\n" +
-                    "**Facilities** = 统计到的垃圾建筑。\n" +
-                    "**Garbage trucks** = 普通收集卡车。在 Industrial Waste 设施中，它们收集工业废物而不是垃圾。\n" +
-                    "**Dump trucks** = 设施之间的垃圾转运。\n" +
-                    "**Max workers** = 这些相同设施的总工人容量。"
+                    "**设施** = 已统计的垃圾建筑。\n" +
+                    "**垃圾车** = 普通收集车辆。在工业废物设施中，它们收集的是工业废物而不是普通垃圾。\n" +
+                    "**自卸卡车** = 用于设施之间的垃圾转运。\n" +
+                    "**最大工人数** = 这些设施的工人容量总和。"
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "垃圾卡车" },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "垃圾车" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusTrucks)),
-                    "**Moving** = 当前在城市中行驶的卡车。\n" +
-                    "**Returning** = moving trucks 中被标记返回设施的子集。\n" +
-                    "**Parked** = 停在设施的卡车。\n" +
-                    "**Total** = 所有垃圾卡车数量。"
+                    "**行驶中** = 当前正在城市中运行的车辆。\n" +
+                    "**返回中** = 行驶中且被标记返回所属设施的车辆子集。\n" +
+                    "**已停放** = 停放在设施中的车辆。\n" +
+                    "**总计** = 所有垃圾车数量。"
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "详细状态写入日志" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageStatusLog)),
                     "将更详细的垃圾报告写入 **Logs/MagicGarbage.log**。\n" +
-                    "包括整理好的城市垃圾统计"
+                    "包含整理后的城市垃圾统计数据。"
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "打开日志" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)), "打开 **MagicGarbage.log**；若文件尚不存在，则打开 Logs 文件夹。" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)), "打开 **MagicGarbage.log**。如果文件不存在或无法打开，则改为打开游戏的 Logs 文件夹。" },
 
                 // Runtime status strings
                 { "MG.Status.NoCity", "尚未加载城市。" },
-                { "MG.Status.Row.GarbageServiceRating.Excellent", "Excellent ({0:N0}) | 已更新 {1}" },
-                { "MG.Status.Row.GarbageServiceRating.Minor", "需要小幅调整 ({0:N0}) | 已更新 {1}" },
-                { "MG.Status.Row.GarbageServiceRating.Stinky", "有点臭 ({0:N0}) | 已更新 {1}" },
-                { "MG.Status.Row.GarbageServiceRating.Problem", "垃圾问题 ({0:N0}) | 已更新 {1}" },
+
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "整体优秀 ({0:N0}) | 更新于 {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "需要小幅调整 ({0:N0}) | 更新于 {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "略有异味 ({0:N0}) | 更新于 {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Problem", "垃圾问题 ({0:N0}) | 更新于 {1}" },
                 { "MG.Status.Row.CriticalBuildings", "{0:N0} 个 7t+ 建筑" },
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t 产生 | {1:N0} t 处理能力" },
-                { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
-                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} has garbage | {2:N0} above request threshold" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} 设施 | {1:N0}/{2:N0} 垃圾/自卸卡车 | {3:N0} 工人" },
-                { "MG.Status.Row.Trucks", "{1:N0} moving ({3:N0} returning) | {2:N0} parked | {0:N0} total" },
-                { "MG.Status.Row.FacilitiesNone", "暂无设施数据。" },
+
+                { "MG.Status.Row.GarbageProcessing", "产生 {0:N0} t | 当前处理 {2:N0} t | 处理能力 {1:N0} t" },
+                { "MG.Status.Row.Requests", "待处理 {1:N0} | 已调度 {2:N0} | 总计 {0:N0}" },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} 有垃圾 | {2:N0} 高于请求阈值" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} 个设施 | {1:N0}/{2:N0} 垃圾车/自卸卡车 | {3:N0} 名工人" },
+                { "MG.Status.Row.Trucks", "行驶中 {1:N0}（返回中 {3:N0}）| 已停放 {2:N0} | 总计 {0:N0}" },
+                { "MG.Status.Row.FacilitiesNone", "尚无设施数据。" },
 
                 // Log strings
                 { "MG.Status.Log.Title", "垃圾状态 ({0})" },
                 { "MG.Status.Log.City", "城市：{0}" },
                 { "MG.Status.Log.Mode", "模式：Total Magic={0}, Trash Boss={1}" },
                 { "MG.Status.Log.SettingsHeader", "当前模组设置" },
-                { "MG.Status.Log.SettingsTrashBoss", "Trash Boss 滑块（已保存）：truck load={0:N0}% | facility storage={1:N0}% | facility process={2:N0}% | facility fleet={3:N0}%" },
-
+                { "MG.Status.Log.SettingsTrashBoss", "Trash Boss 滑块（已保存）：垃圾车载量={0:N0}% | 设施存储={1:N0}% | 设施处理={2:N0}% | 设施车队={3:N0}%" },
+                
                 { "MG.Status.Log.Legend",
                     "图例：\n" +
-                    "- Produced/Processed 使用吨/月。\n" +
-                    "- 下面的 threshold 值使用 internal garbage units，不是吨。\n" +
-                    "- 面向玩家显示时，游戏会把 100 units = 0.1t，1,000 units = 1t。\n" +
-                    "- Garbage Service Rating = 游戏城市垃圾幸福度系数。\n" +
-                    "  - 0 = Excellent\n" +
-                    "  - -1 = 需要小幅调整，或可忽略\n" +
-                    "  - -2 to -4 = 有点臭\n" +
-                    "  - -5 to -10 = 垃圾问题\n" +
-                    "Threshold sliders:\n" +
-                    "  - Pickup threshold = 卡车从建筑收集前所需的最低垃圾量。\n" +
-                    "  - Request threshold = 游戏创建或保留收集请求前所需的最低垃圾量。\n" +
-                    "- Warning icon = 会在建筑上方出现警告图标的垃圾量。\n" +
-                    "- Hard cap = 建筑可累积的最大垃圾量。\n" +
-                    "- Pending = 尚未分配给卡车或路径的活动请求。\n" +
-                    "- 一些 pending requests 稍后会被分配；如果 vanilla 重新验证认为目标不再需要服务，也可能清除。\n" +
-                    "-----------------------------------------------------------------------------\n" +
-                    ""
+                    "- 垃圾产量、当前处理量和处理能力均以吨/月为单位。\n" +
+                    "- 以下阈值使用内部垃圾单位，而不是吨。\n" +
+                    "- 面向玩家显示时，游戏换算为 100 单位 = 0.1t，1,000 单位 = 1t。\n" +
+                    "- 垃圾服务评分 = 游戏中的城市垃圾幸福度系数。\n" +
+                    "  - 0 = 整体优秀\n" +
+                    "  - -1 = 需要小幅调整\n" +
+                    "  - -2 到 -4 = 略有异味\n" +
+                    "  - -5 到 -10 = 垃圾问题\n" +
+                    "路径数值：\n" +
+                    "  - 收集阈值是原版最低值；考虑目标的路径逻辑可以按每辆车提高该阈值，以保护前往目标所需的容量。\n" +
+                    "  - 请求阈值是游戏创建或保留收集请求前所需的最低垃圾量。\n" +
+                    "- 当建筑垃圾超过当前警告级别时会出现警告图标。\n" +
+                    "- 硬上限 = 建筑可累积的最大垃圾量。\n" +
+                    "- 待处理 = 当前尚未分配给垃圾车或路径的有效请求。\n" +
+                    "- 部分待处理请求稍后会被分配；如果原版重新验证后认为目标不再需要服务，部分请求也可能随后被清除。\n" +
+                    "-----------------------------------------------------------------------------\n"
                 },
 
-                { "MG.Status.Log.Thresholds", "游戏 Thresholds (internal garbage units): pickup={1:N0}, request={0:N0}, warning icon={2:N0}, hard cap={3:N0}" },
-                { "MG.Status.Log.ThresholdsMissing", "Thresholds: <GarbageParameterData 不可用>" },
-                { "MG.Status.Log.AdaptiveMargin", "目标保护：{0:N0}%" },
-                { "MG.Status.Log.GarbageProcessing", "垃圾产生：{0:N0} t/月 | 处理能力：{1:N0} t/月" },
-                { "MG.Status.Log.GarbageServiceRating", "垃圾服务评分：{0} | raw={1:N2} | rounded={2:N0}" },
-                { "MG.Status.Log.Requests", "收集请求：pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
-                { "MG.Status.Log.PendingPeak", "最高 pending 目标垃圾：{0:N0} ({1:N1}t) 于 {2}" },
-                { "MG.Status.Log.PendingPeakNone", "最高 pending 目标垃圾：无" },
-                { "MG.Status.Log.Producers", "建筑：{0:N0} warning icons | {1:N0} total | {2:N0} has garbage | {3:N0} above request threshold " },
-                { "MG.Status.Log.ProducerGarbageStats", "建筑垃圾（仅非零）：avg={0:N0} ({1:N1}t) | median={2:N0} ({3:N1}t) | max={4:N0} ({5:N1}t) 于 {6}" },
-                { "MG.Status.Log.NearWarning75", "接近 warning icon 的建筑（至少 {1:N0} units / {2:N1}t）：{0:N0}" },
-                { "MG.Status.Log.FacilitiesSummary", "设施：{0:N0} total | {1:N0} garbage trucks | {2:N0} dump trucks ({3:N0} moving) | {4:N0} workers" },
-                { "MG.Status.Log.Trucks", "垃圾卡车：{2:N0} moving ({3:N0} returning) | {1:N0} parked | {4:N0} disabled | {0:N0} total" },
+                { "MG.Status.Log.Thresholds", "游戏阈值（内部垃圾单位）：收集={1:N0}, 请求={0:N0}, 警告图标={2:N0}, 硬上限={3:N0}" },
+
+                { "MG.Status.Log.ThresholdsMissing", "阈值：<GarbageParameterData 不可用>" },
+                { "MG.Status.Log.AdaptiveMargin", "目标预留：{0:N0}%" },
+                { "MG.Status.Log.GarbageProcessing", "垃圾产量：{0:N0} t/月 | 当前处理：{2:N0} t/月 | 处理能力：{1:N0} t/月" },
+                { "MG.Status.Log.GarbageServiceRating", "垃圾服务评分：{0} | 原始值={1:N2} | 舍入值={2:N0}" },
+                { "MG.Status.Log.Requests", "收集请求：待处理={1:N0}, 已调度={2:N0}, 总计={0:N0}" },
+                { "MG.Status.Log.PendingPeak", "待处理目标中的最高垃圾量：{0:N0} ({1:N1}t)，位置 {2}" },
+                { "MG.Status.Log.PendingPeakNone", "待处理目标中的最高垃圾量：无" },
+                { "MG.Status.Log.Producers", "建筑：高于警告级别 {0:N0} | 总计 {1:N0} | 有垃圾 {2:N0} | 高于请求阈值 {3:N0}" },
+                { "MG.Status.Log.ProducerGarbageStats", "建筑垃圾（仅非零）：平均={0:N0} ({1:N1}t) | 中位数={2:N0} ({3:N1}t) | 最大={4:N0} ({5:N1}t)，位置 {6}" },
+                { "MG.Status.Log.NearWarning75", "接近警告图标的建筑（至少 {1:N0} 单位 / {2:N1}t）：{0:N0}" },
+                { "MG.Status.Log.FacilitiesSummary", "设施：总计 {0:N0} | 垃圾车 {1:N0} | 自卸卡车 {2:N0}（行驶中 {3:N0}）| 工人 {4:N0}" },
+                { "MG.Status.Log.Trucks", "垃圾车：行驶中 {2:N0}（返回中 {3:N0}）| 已停放 {1:N0} | 已禁用 {4:N0} | 总计 {0:N0}" },
                 { "MG.Status.Log.FacilitiesHeader", "设施摘要" },
-                { "MG.Status.Log.FacilityLine",
-                    "- 设施 {0}: garbage trucks={1:N0} ({2:N0} moving, {3:N0} parked) | dump trucks={4:N0} ({5:N0} moving) | max workers={6:N0}"
-                },
+                { "MG.Status.Log.FacilityLine", "- 设施 {0}：垃圾车={1:N0}（行驶中 {2:N0}, 已停放 {3:N0}）| 自卸卡车={4:N0}（行驶中 {5:N0}）| 最大工人数={6:N0}" },
 
-                { "MG.Status.Log.GarbageServiceRating.Excellent", "Excellent" },
+                { "MG.Status.Log.GarbageServiceRating.Excellent", "整体优秀" },
                 { "MG.Status.Log.GarbageServiceRating.Minor", "需要小幅调整" },
-                { "MG.Status.Log.GarbageServiceRating.Stinky", "有点臭" },
+                { "MG.Status.Log.GarbageServiceRating.Stinky", "略有异味" },
                 { "MG.Status.Log.GarbageServiceRating.Problem", "垃圾问题" },
 
-                { "MG.Status.Log.ThresholdsHeader", "Thresholds + 服务" },
+                { "MG.Status.Log.ThresholdsHeader", "阈值 + 服务" },
                 { "MG.Status.Log.RequestsHeader", "请求" },
                 { "MG.Status.Log.BuildingsHeader", "建筑" },
 
                 { "MG.Status.Log.CriticalBuildingsHeader", "7t+ 建筑" },
-                { "MG.Status.Log.LocalTransferProbeHeader", "本地垃圾转运探测" },
+                { "MG.Status.Log.LocalTransferProbeHeader", "本地垃圾转运探针" },
                 { "MG.Status.Log.LocalTransferProbeNone", "未找到本地垃圾设施。" },
-                { "MG.Status.Log.OutsideTransferProbeHeader", "外部连接垃圾转运探测" },
+                { "MG.Status.Log.OutsideTransferProbeHeader", "外部连接垃圾转运探针" },
                 { "MG.Status.Log.OutsideTransferProbeNone", "未找到外部连接垃圾设施。" },
 
-                { "MG.Status.Log.TransferProbeHeader", "垃圾转运探测" },
+                { "MG.Status.Log.TransferProbeHeader", "垃圾转运探针" },
                 { "MG.Status.Log.TransferProbeNone", "未找到垃圾存储-转运设施。" },
-                { "MG.Status.Log.TransferProbeLine",
-                    "- {0,-20} | stored={1,7:N0} ({2,4:N1}t) / cap={3,7:N0} ({4,4:N1}t) | accept={5:N2} | send={6:N2} | inReq={7} | outReq={8} | {9}"
-                },
 
-                { "MG.Status.Log.TrucksHeader", "卡车" },
-                { "MG.Status.Log.SettingsPriority", "自适应路线（已保存）：协助={0} | 普通预留={1:N0}% | 紧急预留={2:N0}%" },
+                { "MG.Status.Log.TransferProbeLine", "- {0,-20} | 已存={1,7:N0} ({2,4:N1}t) / 容量={3,7:N0} ({4,4:N1}t) | 接收={5:N2} | 发送={6:N2} | inReq={7} | outReq={8} | {9}" },
 
-                { "MG.Status.Log.PriorityState", "优先协助={0} | 间隔={1:N0} | 已检查请求={2:N0} | 严重目标={3:N0} | 预留={4:N0}% -> {5:N0}%" },
-                { "MG.Status.Log.PriorityPeak", "最高严重建筑：{0:N0} ({1:N1}t) | {2} | request={3}" },
+                { "MG.Status.Log.TrucksHeader", "车辆" },
 
-                { "MG.Status.Log.PriorityHeader", "优先协助" },
-                { "MG.Status.Log.PriorityPasses", "优先轮次：raised={0:N0} | normal={1:N0}" },
-
-                { "MG.Status.Log.PriorityPeakNone", "最高活动严重建筑：无" },
-                { "MG.Status.Log.PriorityPeakState.Pending", "pending" },
-                { "MG.Status.Log.PriorityPeakState.Dispatched", "dispatched" },
-
-#if DEBUG
-                { "MG.Status.Log.PriorityPerf", "优先协助上次扫描时间={0:N3} ms" },
-#endif
                 { "MG.Status.Log.CriticalBuildingsNone", "无" },
                 { "MG.Status.Log.CriticalBuildingLine", "- {0,-20} | {1,7:N0} ({2,4:N1}t) | {3}" },
+
 
             };
         }

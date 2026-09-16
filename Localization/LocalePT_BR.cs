@@ -11,8 +11,8 @@
 
 namespace MagicGarbage
 {
-    using Colossal;
     using System.Collections.Generic;
+    using Colossal;
 
     public sealed class LocalePT_BR : IDictionarySource
     {
@@ -41,247 +41,261 @@ namespace MagicGarbage
                 // Tabs
                 { m_Setting.GetOptionTabLocaleID(Setting.ActionsTab), "Ações" },
                 { m_Setting.GetOptionTabLocaleID(Setting.AboutTab), "Sobre" },
+
                 // Groups
-                { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Limpeza auto" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.TotalMagicGrp), "Limpeza automática" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.TrashBossGrp), "Gerenciar manualmente" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.StatusGrp), "Status" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "Info do mod" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.AboutInfoGrp), "Informações do mod" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutLinksGrp), "Links" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "USO" },
 
                 // Total Magic
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Magia total" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
                     "**Ativado [ ✓ ]** mantém a cidade inteira limpa.\n" +
                     "\n" +
-                    "Enquanto **Magia total** estiver ON:\n" +
-                    "- Trash Boss fica forçado para OFF.\n" +
-                    "- Os sliders do Trash Boss não são aplicados (os valores ficam salvos para depois).\n" +
-                    "- Alguns caminhões ainda podem se mover por causa do timing da lógica vanilla de despacho."
+                    "Enquanto o **Total Magic** estiver LIGADO:\n" +
+                    "- Trash Boss é forçado a DESLIGADO.\n" +
+                    "- Os controles do Trash Boss não são aplicados (os valores ficam salvos para depois).\n" +
+                    "- Alguns caminhões ainda podem se mover por causa do tempo da lógica vanilla de despacho."
                 },
 
                 // Trash Boss
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
-                    "Gerencia diretamente os sistemas de lixo; a lógica vanilla de lixo continua rodando.\n" +
+                    "Gerencia diretamente os sistemas de lixo; mantém a lógica vanilla de lixo funcionando.\n" +
                     "\n" +
-                    "- Quando **Trash Boss está ON [ ✓ ]**, Magia total fica forçada para OFF.\n" +
-                    "- Os sliders só se aplicam quando Trash Boss está ativado.\n" +
-                    "- Magia total + Trash Boss podem ficar **OFF** para usar configurações vanilla,\n" +
-                    "  e você ainda pode ver o **relatório de Status**, que só atualiza ao entrar no menu de Opções (leve)."
+                    "- Quando o **Trash Boss está LIGADO [ ✓ ]**, Total Magic é forçado a DESLIGADO.\n" +
+                    "- Os controles só se aplicam quando o Trash Boss está ativado.\n" +
+                    "- Total Magic + Trash Boss podem ficar ambos **DESLIGADOS** para usar as configurações vanilla,\n" +
+                    "  e você ainda pode ver o **relatório de status**, que só atualiza ao entrar no menu Opções (leve)."
                 },
+
                 // Sliders
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "Capacidade de carga do caminhão" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
-                    "**Quanto lixo cada caminhão pode carregar.**\n" +
-                    "**100% = normal** padrão do jogo (20t).\n" +
-                    ""
+                    "**Quanto lixo cada caminhão pode transportar.**\n" +
+                    "**100% = capacidade vanilla** do caminhão (20t).\n"
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)), "Armazenamento da instalação" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)),
                     "**Quanto lixo uma instalação pode armazenar.**\n" +
-                    "**100% = armazenamento vanilla**.\n" +
-                    ""
+                    "**100% = armazenamento vanilla**.\n"
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)), "Velocidade de processamento da instalação" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
                     "**Quão rápido as instalações processam o lixo recebido.**\n" +
-                    "**100% = velocidade de processamento vanilla**.\n" +
-                    ""
+                    "**100% = velocidade de processamento vanilla**.\n"
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)), "Frota da instalação" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
                     "**Quantos caminhões cada instalação pode despachar.**\n" +
-                    "**100% = número vanilla** de caminhões.\n" +
-                    ""
+                    "**100% = quantidade vanilla** de caminhões.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "Reserva de capacidade para o destino" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "Reserva para o destino" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
-                    "**Controla quando os caminhões ficam mais seletivos com coletas opcionais antes do destino atribuído.**\n" +
-                    "É uma proteção flexível, não espaço garantido. Padrão = **10%**; intervalo seguro = 10–25%."
+                    "**Define com que antecedência os caminhões ficam seletivos com coletas opcionais no caminho para o prédio atribuído.**\n" +
+                    "**10% é o valor vanilla da versão 1.6.2.**\n" +
+                    "Para um caminhão normal de 20t:\n" +
+                    "- 10% começa a proteger a parada atribuída 2t antes.\n" +
+                    "- 15% começa 3t antes.\n" +
+                    "- 25% começa 5t antes.\n" +
+                    "Valores maiores dão uma margem de segurança maior. Os caminhões ignoram coletas pequenas mais cedo, ajudando a deixar mais espaço para o prédio atribuído."
                 },
+
 
                 // Trash Boss Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Recomendado" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "Valores equilibrados: caminhão **200%** e proteção do destino **15%**."
+                    "Aplica valores equilibrados para cidades movimentadas.\n" +
+                    "Carga do caminhão **200%** | armazenamento **150%** | processamento **250%**\n" +
+                    "Frota **100%** | reserva para o destino **15%**."
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Padrões do jogo" },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Redefinir controles" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "Retorna o Trash Boss ao **comportamento vanilla**.\n" +
-                    "**Vanilla:**\n" +
-                    "- Os sliders de porcentagem voltam para **100%**.\n" +
-                    "- A proteção do destino volta para **10%**.\n" +
-                    ""
+                    "Redefine os controles padrão do Trash Boss.\n" +
+                    "- Os controles percentuais voltam para **100%**.\n" +
+                    "- A reserva para o destino volta ao valor **vanilla de 10%**.\n"
                 },
 
                 // About
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutName)), "Mod" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "Nome exibido deste mod." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutName)), "Nome de exibição deste mod." },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AboutVersion)), "Versão" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AboutVersion)), "Versão atual do mod." },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenParadoxPage)), "Paradox Mods" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenParadoxPage)), "Abre a página do Paradox Mods." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenParadoxPage)), "Abrir a página do Paradox Mods." },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenDiscord)), "Discord" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)), "Abre o convite do Discord no navegador." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenDiscord)), "Abrir o convite do Discord no navegador." },
 
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
-                    "<Estado de Limpeza auto>\n" +
-                    "  * Magia total ON = **[ ✓ ]**\n" +
+                    "<Estado Limpeza automática>\n" +
+                    "  * Total Magic LIGADO = **[ ✓ ]**\n" +
                     "  * O lixo é removido automaticamente - pronto.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
-                    "<Estado de Gerenciar manualmente>\n" +
+                    "<Estado Gerenciar manualmente>\n" +
                     "  * Trash Boss = **[ ✓ ]**\n" +
-                    "  * Ajuste os sliders como desejar.\n" +
-                    "  * Opcional: ative para sliders avançados (não obrigatório).\n" +
-                    "  * Mesmo lixo do jogo; caminhões/instalações melhor gerenciados.\n" +
+                    "  * Ajuste os controles como quiser.\n" +
+                    "  * O mesmo lixo do jogo; caminhões/instalações melhor gerenciados manualmente.\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
-                    "<Estado Status / vanilla>\n" +
-                    "  * Magia total = OFF\n" +
-                    "  * Trash Boss = OFF\n" +
+                    "<Estado / vanilla>\n" +
+                    "  * Total Magic = DESLIGADO\n" +
+                    "  * Trash Boss = DESLIGADO\n" +
                     "  * Apenas relatório de status.\n" +
-                    "  * Jogo vanilla de lixo sem mudanças."
+                    "  * O sistema vanilla de lixo permanece inalterado."
                 },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.UsageNotes)), "Uso" },
 
                 // Status
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageServiceRating)), "Avaliação do serviço de lixo" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageServiceRating)),
-                    "Avaliação simples de felicidade do lixo vinda do jogo.\n" +
-                    "**0 = Excelente**\n" +
-                    "**-1 **= Precisa de pequeno ajuste. O jogo costuma ficar entre 0 e -1 e isso pode ser ignorado (número arredondado).\n" +
-                    "**-2 to -4** = Levemente fedido\n" +
-                    "**-5 to -10** = Problema de lixo\n" +
-                    "**Ajustes indiretos:** Use <trash sliders> para melhorar isso com o tempo reduzindo o acúmulo de lixo.\n" +
-                    "**Ajustes diretos:** Garbage Happiness Baseline + Garbage Happiness Step mudam <o que os cims toleram> antes de ficarem infelizes.\n" +
-                    "**Garbage Accumulation Rate**: muda a velocidade com que prédios compatíveis produzem lixo. Use com cuidado porque o equilíbrio é importante. A maioria dos jogadores nunca precisa mexer nisso.\n" +
-                    "<Update time = última atualização.>"
+                    "O efeito médio de felicidade relacionado ao lixo em toda a cidade, conforme o jogo.\n" +
+                    "Uma boa avaliação geral ainda pode incluir alguns prédios problemáticos, então confira também os **prédios com 7t+**.\n" +
+                    "**0 = Excelente no geral**\n" +
+                    "**-1 = Precisa de um pequeno ajuste**\n" +
+                    "**-2 a -4 = Um pouco fedido**\n" +
+                    "**-5 ou menos = Problema de lixo**\n" +
+                    "\n" +
+                    "Melhore o serviço com os controles de caminhões e instalações e deixe a cidade rodar antes de verificar novamente."
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusCriticalBuildings)), "Prédios com 7t+" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusCriticalBuildings)),
-                    "Contagem de prédios produtores de lixo com **7000 / 7t** ou mais.\n" +
-                    "Este indicador fixo ajuda a planejar o serviço antes dos ícones de aviso.\n" +
-                    "O status detalhado no log lista os Entity IDs."
+                    "Quantidade de prédios que produzem lixo com **7000 / 7t** ou mais.\n" +
+                    "Esse indicador fixo de alerta antecipado ajuda a decidir se é preciso aumentar o serviço antes que os prédios atinjam o nível do ícone de aviso do jogo.\n" +
+                    "Use Status detalhado no log para listar os Entity IDs."
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageProcessing)), "Lixo/mês" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageProcessing)),
-                    "Mostra a produção de lixo da cidade e a capacidade de processamento disponível.\n" +
-                    "Aumente o processamento se a produção mensal superar a capacidade.\n" +
-                    "Os dois valores usam toneladas por mês."
+                    "Mostra a produção de lixo da cidade, o processamento atual e a capacidade de processamento disponível das instalações.\n" +
+                    "Aumente o processamento se a produção mensal for maior que a capacidade.\n" +
+                    "Todos os valores usam toneladas por mês."
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Pedidos de coleta" },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusRequests)), "Solicitações de coleta" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
-                    "**Pending** = pedidos de coleta ativos ainda não atribuídos a um caminhão ou caminho.\n" +
-                    "**Dispatched** = pedidos de coleta ativos já atribuídos.\n" +
-                    "**Total** = conta a entidade de pedido **active** atual (no pipeline de lixo).\n" +
+                    "**Pendentes** = solicitações de coleta ativas que não estão atualmente atribuídas a um caminhão ou caminho.\n" +
+                    "**Despachadas** = solicitações de coleta ativas já atribuídas.\n" +
+                    "**Total** = todas as solicitações **ativas** atuais no fluxo de lixo.\n" +
                     "\n" +
-                    "Nota técnica: isto é diferente de <Above request threshold>. Isto conta <requests>, não prédios.\n" +
-                    "Alguns pedidos pending serão atribuídos depois; alguns também podem desaparecer se a revalidação vanilla decidir que o alvo não precisa mais de serviço."
+                    "Isso é diferente de **Acima do limite de solicitação**, que conta prédios em vez de solicitações.\n" +
+                    "Algumas solicitações pendentes serão atribuídas depois; outras também podem desaparecer se a revalidação vanilla decidir que o alvo não precisa mais de serviço."
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusProducers)), "Prédios" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusProducers)),
-                    "**Has garbage** = prédios que atualmente têm algum lixo.\n" +
-                    "**Total** = todos os prédios produtores de lixo na cidade.\n" +
-                    "**Above request threshold** = contagem atual de **buildings** com lixo suficiente para criar um pedido de coleta.\n" +
-                    "O status detalhado no log mostra o limite atual de solicitação do jogo.\n" +
-                    ""
+                    "**Tem lixo** = prédios que atualmente contêm algum lixo.\n" +
+                    "**Total** = todos os prédios que produzem lixo na cidade.\n" +
+                    "**Acima do limite de solicitação** = quantidade atual de **prédios** com lixo suficiente para criar uma solicitação de coleta.\n" +
+                    "O Status detalhado no log mostra o limite de solicitação ativo atual do jogo.\n"
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusFacilities)), "Instalações" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusFacilities)),
-                    "Resumo das instalações de lixo contadas.\n" +
-                    "**Facilities** = prédios de lixo contados.\n" +
-                    "**Garbage trucks** = caminhões normais de coleta. Em instalações de Industrial Waste, eles coletam resíduo industrial em vez de lixo.\n" +
-                    "**Dump trucks** = transferências de lixo entre instalações.\n" +
-                    "**Max workers** = capacidade total de trabalhadores nessas mesmas instalações."
+                    "Resumo das instalações de lixo contabilizadas.\n" +
+                    "**Instalações** = prédios de lixo contabilizados.\n" +
+                    "**Caminhões de lixo** = caminhões normais de coleta. Em instalações de Resíduos Industriais, eles coletam resíduos industriais em vez de lixo comum.\n" +
+                    "**Caminhões basculantes** = transferências de lixo entre instalações.\n" +
+                    "**Máx. de trabalhadores** = capacidade total de trabalhadores nessas mesmas instalações."
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "Caminhões de lixo" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusTrucks)),
-                    "**Moving** = caminhões atualmente fora na cidade.\n" +
-                    "**Returning** = subconjunto de moving trucks marcado para voltar à instalação.\n" +
-                    "**Parked** = caminhões estacionados em uma instalação.\n" +
-                    "**Total** = contagem de todos os caminhões de lixo."
+                    "**Em movimento** = caminhões atualmente circulando pela cidade.\n" +
+                    "**Retornando** = subconjunto dos caminhões em movimento marcados para voltar à instalação.\n" +
+                    "**Estacionados** = caminhões estacionados em uma instalação.\n" +
+                    "**Total** = quantidade de todos os caminhões de lixo."
                 },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Status detalhado para log" },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Status detalhado no log" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageStatusLog)),
                     "Envia um relatório de lixo mais detalhado para **Logs/MagicGarbage.log**.\n" +
-                    "Inclui estatísticas organizadas do lixo da cidade"
+                    "Inclui estatísticas organizadas do lixo da cidade."
                 },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Abrir log" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)), "Abre **MagicGarbage.log**; se o arquivo ainda não existir, abre a pasta Logs." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.OpenLog)), "Abre **MagicGarbage.log**. Se o arquivo estiver ausente ou não puder ser aberto, abre a pasta Logs do jogo." },
 
                 // Runtime status strings
                 { "MG.Status.NoCity", "Nenhuma cidade carregada ainda." },
-                { "MG.Status.Row.GarbageServiceRating.Excellent", "Excelente ({0:N0}) | atualizado {1}" },
-                { "MG.Status.Row.GarbageServiceRating.Minor", "Precisa de pequeno ajuste ({0:N0}) | atualizado {1}" },
-                { "MG.Status.Row.GarbageServiceRating.Stinky", "Levemente fedido ({0:N0}) | atualizado {1}" },
+
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "Excelente no geral ({0:N0}) | atualizado {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "Precisa de um pequeno ajuste ({0:N0}) | atualizado {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Stinky", "Um pouco fedido ({0:N0}) | atualizado {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Problema de lixo ({0:N0}) | atualizado {1}" },
                 { "MG.Status.Row.CriticalBuildings", "{0:N0} prédios com 7t+" },
-                { "MG.Status.Row.GarbageProcessing", "{0:N0} t produzido | {1:N0} t capacidade" },
-                { "MG.Status.Row.Requests", "{1:N0} pending | {2:N0} dispatched | {0:N0} total" },
-                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} has garbage | {2:N0} above request threshold" },
-                { "MG.Status.Row.FacilitiesSummary", "{0:N0} instalações | {1:N0}/{2:N0} caminhões lixo/dump | {3:N0} trabalhadores" },
+
+                { "MG.Status.Row.GarbageProcessing", "{0:N0} t produzidas | {2:N0} t processadas | {1:N0} t de capacidade" },
+                { "MG.Status.Row.Requests", "{1:N0} pendentes | {2:N0} despachadas | {0:N0} total" },
+                { "MG.Status.Row.Producers", "{0:N0} / {1:N0} tem lixo | {2:N0} acima do limite de solicitação" },
+                { "MG.Status.Row.FacilitiesSummary", "{0:N0} instalações | {1:N0}/{2:N0} caminhões de lixo/basculantes | {3:N0} trabalhadores" },
                 { "MG.Status.Row.Trucks", "{1:N0} em movimento ({3:N0} retornando) | {2:N0} estacionados | {0:N0} total" },
-                { "MG.Status.Row.FacilitiesNone", "Sem dados de instalação ainda." },
+                { "MG.Status.Row.FacilitiesNone", "Ainda não há dados das instalações." },
 
                 // Log strings
                 { "MG.Status.Log.Title", "Status do lixo ({0})" },
                 { "MG.Status.Log.City", "Cidade: {0}" },
-                { "MG.Status.Log.Mode", "Modo: Magia total={0}, Trash Boss={1}" },
+                { "MG.Status.Log.Mode", "Modo: Total Magic={0}, Trash Boss={1}" },
                 { "MG.Status.Log.SettingsHeader", "Configurações atuais do mod" },
-                { "MG.Status.Log.SettingsTrashBoss",
-                    "Sliders do Trash Boss (salvos): truck load={0:N0}% | facility storage={1:N0}% | facility process={2:N0}% | facility fleet={3:N0}%"
-                },
-
+                { "MG.Status.Log.SettingsTrashBoss", "Controles do Trash Boss (salvos): carga caminhão={0:N0}% | armazenamento instalação={1:N0}% | processamento instalação={2:N0}% | frota instalação={3:N0}%" },
+                
                 { "MG.Status.Log.Legend",
                     "Legenda:\n" +
-                    "- Produced/Processed usa toneladas por mês.\n" +
-                    "- Os valores de threshold abaixo usam internal garbage units, não toneladas.\n" +
-                    "- Para exibição ao jogador, o jogo converte 100 units = 0.1t e 1,000 units = 1t.\n" +
-                    "- Garbage Service Rating = fator de felicidade de lixo da cidade.\n" +
-                    "  - 0 = Excelente\n" +
-                    "  - -1 = precisa de pequeno ajuste, ou ignore\n" +
-                    "  - -2 to -4 = levemente fedido\n" +
-                    "  - -5 to -10 = problema de lixo\n" +
-                    "Threshold sliders:\n" +
-                    "  - Pickup threshold = lixo mínimo antes de um caminhão coletar de um prédio.\n" +
-                    "  - Request threshold = lixo mínimo antes de o jogo criar ou manter um pedido de coleta.\n" +
-                    "- Warning icon = quantidade de lixo que faz aparecer um ícone de aviso acima de um prédio.\n" +
-                    "- Hard cap = quantidade máxima de lixo que um prédio pode acumular.\n" +
-                    "- Pending = pedidos ativos ainda não atribuídos a caminhão ou caminho.\n" +
-                    "- Alguns pedidos pending serão atribuídos depois; alguns também podem desaparecer se a revalidação vanilla decidir que o alvo não precisa mais de serviço.\n" +
-                    "-----------------------------------------------------------------------------\n" +
-                    ""
+                    "- Produção, processamento atual e capacidade usam toneladas por mês.\n" +
+                    "- Os valores de limite abaixo usam unidades internas de lixo, não toneladas.\n" +
+                    "- Para exibição ao jogador, o jogo converte 100 unidades = 0.1t e 1,000 unidades = 1t.\n" +
+                    "- Avaliação do serviço de lixo = fator de felicidade da cidade relacionado ao lixo no jogo.\n" +
+                    "  - 0 = Excelente no geral\n" +
+                    "  - -1 = Precisa de um pequeno ajuste\n" +
+                    "  - -2 a -4 = Um pouco fedido\n" +
+                    "  - -5 a -10 = Problema de lixo\n" +
+                    "Valores de roteamento:\n" +
+                    "  - O limite de coleta é o mínimo vanilla; o roteamento que considera o destino pode aumentá-lo por caminhão para proteger capacidade para o destino.\n" +
+                    "  - O limite de solicitação é a quantidade mínima de lixo antes de o jogo criar ou manter uma solicitação de coleta.\n" +
+                    "- O ícone de aviso aparece quando o lixo do prédio ultrapassa o nível de aviso ativo.\n" +
+                    "- Limite máximo = quantidade máxima de lixo que um prédio pode acumular.\n" +
+                    "- Pendente = solicitações ativas que não estão atualmente atribuídas a um caminhão ou caminho.\n" +
+                    "- Algumas solicitações pendentes serão atribuídas depois; outras também podem desaparecer se a revalidação vanilla decidir que o alvo não precisa mais de serviço.\n" +
+                    "-----------------------------------------------------------------------------\n"
                 },
 
-                { "MG.Status.Log.Thresholds", "Thresholds do jogo (internal garbage units): pickup={1:N0}, request={0:N0}, warning icon={2:N0}, hard cap={3:N0}" },
-                { "MG.Status.Log.ThresholdsMissing", "Thresholds: <GarbageParameterData não disponível>" },
-                { "MG.Status.Log.AdaptiveMargin", "Proteção do destino: {0:N0}%" },
-                { "MG.Status.Log.GarbageProcessing", "Produção de lixo: {0:N0} t/mês | Capacidade de processamento: {1:N0} t/mês" },
-                { "MG.Status.Log.GarbageServiceRating", "Avaliação do serviço de lixo: {0} | raw={1:N2} | rounded={2:N0}" },
-                { "MG.Status.Log.Requests", "Pedidos de coleta: pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
-                { "MG.Status.Log.PendingPeak", "Maior alvo pending de lixo: {0:N0} ({1:N1}t) em {2}" },
-                { "MG.Status.Log.PendingPeakNone", "Maior alvo pending de lixo: nenhum" },
-                { "MG.Status.Log.Producers", "Prédios: {0:N0} warning icons | {1:N0} total | {2:N0} has garbage | {3:N0} above request threshold " },
-                { "MG.Status.Log.ProducerGarbageStats", "Lixo dos prédios (apenas não-zero): avg={0:N0} ({1:N1}t) | median={2:N0} ({3:N1}t) | max={4:N0} ({5:N1}t) em {6}" },
-                { "MG.Status.Log.NearWarning75", "Prédios perto do warning icon (pelo menos {1:N0} units / {2:N1}t): {0:N0}" },
-                { "MG.Status.Log.FacilitiesSummary", "Instalações: {0:N0} total | {1:N0} garbage trucks | {2:N0} dump trucks ({3:N0} moving) | {4:N0} workers" },
-                { "MG.Status.Log.Trucks", "Caminhões de lixo: {2:N0} moving ({3:N0} returning) | {1:N0} parked | {4:N0} disabled | {0:N0} total" },
+                { "MG.Status.Log.Thresholds", "Limites do jogo (unidades internas de lixo): coleta={1:N0}, solicitação={0:N0}, ícone de aviso={2:N0}, limite máximo={3:N0}" },
+
+                { "MG.Status.Log.ThresholdsMissing", "Limites: <GarbageParameterData indisponível>" },
+                { "MG.Status.Log.AdaptiveMargin", "Reserva para o destino: {0:N0}%" },
+                { "MG.Status.Log.GarbageProcessing", "Produção de lixo: {0:N0} t/mês | Processamento atual: {2:N0} t/mês | Capacidade de processamento: {1:N0} t/mês" },
+                { "MG.Status.Log.GarbageServiceRating", "Avaliação do serviço de lixo: {0} | bruto={1:N2} | arredondado={2:N0}" },
+                { "MG.Status.Log.Requests", "Solicitações de coleta: pendentes={1:N0}, despachadas={2:N0}, total={0:N0}" },
+                { "MG.Status.Log.PendingPeak", "Maior quantidade de lixo em alvo pendente: {0:N0} ({1:N1}t) em {2}" },
+                { "MG.Status.Log.PendingPeakNone", "Maior quantidade de lixo em alvo pendente: nenhuma" },
+                { "MG.Status.Log.Producers", "Prédios: {0:N0} acima do nível de aviso | {1:N0} total | {2:N0} tem lixo | {3:N0} acima do limite de solicitação" },
+                { "MG.Status.Log.ProducerGarbageStats", "Lixo dos prédios (somente valores acima de zero): média={0:N0} ({1:N1}t) | mediana={2:N0} ({3:N1}t) | máx={4:N0} ({5:N1}t) em {6}" },
+                { "MG.Status.Log.NearWarning75", "Prédios perto do ícone de aviso (pelo menos {1:N0} unidades / {2:N1}t): {0:N0}" },
+                { "MG.Status.Log.FacilitiesSummary", "Instalações: {0:N0} total | {1:N0} caminhões de lixo | {2:N0} caminhões basculantes ({3:N0} em movimento) | {4:N0} trabalhadores" },
+                { "MG.Status.Log.Trucks", "Caminhões de lixo: {2:N0} em movimento ({3:N0} retornando) | {1:N0} estacionados | {4:N0} desativados | {0:N0} total" },
                 { "MG.Status.Log.FacilitiesHeader", "Resumo das instalações" },
-                { "MG.Status.Log.FacilityLine",
-                    "- Instalação {0}: garbage trucks={1:N0} ({2:N0} moving, {3:N0} parked) | dump trucks={4:N0} ({5:N0} moving) | max workers={6:N0}"
-                },
+                { "MG.Status.Log.FacilityLine", "- Instalação {0}: caminhões de lixo={1:N0} ({2:N0} em movimento, {3:N0} estacionados) | caminhões basculantes={4:N0} ({5:N0} em movimento) | máx. trabalhadores={6:N0}" },
 
-                { "MG.Status.Log.GarbageServiceRating.Excellent", "Excelente" },
-                { "MG.Status.Log.GarbageServiceRating.Minor", "Precisa de pequeno ajuste" },
-                { "MG.Status.Log.GarbageServiceRating.Stinky", "Levemente fedido" },
+                { "MG.Status.Log.GarbageServiceRating.Excellent", "Excelente no geral" },
+                { "MG.Status.Log.GarbageServiceRating.Minor", "Precisa de um pequeno ajuste" },
+                { "MG.Status.Log.GarbageServiceRating.Stinky", "Um pouco fedido" },
                 { "MG.Status.Log.GarbageServiceRating.Problem", "Problema de lixo" },
 
-                { "MG.Status.Log.ThresholdsHeader", "Thresholds + Serviço" },
-                { "MG.Status.Log.RequestsHeader", "Pedidos" },
+                { "MG.Status.Log.ThresholdsHeader", "Limites + serviço" },
+                { "MG.Status.Log.RequestsHeader", "Solicitações" },
                 { "MG.Status.Log.BuildingsHeader", "Prédios" },
 
                 { "MG.Status.Log.CriticalBuildingsHeader", "Prédios com 7t+" },
@@ -292,30 +306,14 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.TransferProbeHeader", "Sonda de transferência de lixo" },
                 { "MG.Status.Log.TransferProbeNone", "Nenhuma instalação de armazenamento-transferência de lixo encontrada." },
-                { "MG.Status.Log.TransferProbeLine",
-                    "- {0,-20} | stored={1,7:N0} ({2,4:N1}t) / cap={3,7:N0} ({4,4:N1}t) | accept={5:N2} | send={6:N2} | inReq={7} | outReq={8} | {9}"
-                },
+
+                { "MG.Status.Log.TransferProbeLine", "- {0,-20} | armazenado={1,7:N0} ({2,4:N1}t) / cap={3,7:N0} ({4,4:N1}t) | aceita={5:N2} | envia={6:N2} | inReq={7} | outReq={8} | {9}" },
 
                 { "MG.Status.Log.TrucksHeader", "Caminhões" },
-                { "MG.Status.Log.SettingsPriority", "Rotas adaptativas (salvas): assistência={0} | reserva normal={1:N0}% | emergência={2:N0}%" },
 
-                { "MG.Status.Log.PriorityState",
-                    "Assistência ativa={0} | intervalo={1:N0} quadros | pedidos verificados={2:N0} | destinos críticos={3:N0} | reserva={4:N0}% -> {5:N0}%"
-                },
-                { "MG.Status.Log.PriorityPeak", "Prédio crítico mais alto: {0:N0} ({1:N1}t) | {2} | request={3}" },
-
-                { "MG.Status.Log.PriorityHeader", "Assistência de prioridade" },
-                { "MG.Status.Log.PriorityPasses", "Passes de prioridade: raised={0:N0} | normal={1:N0}" },
-
-                { "MG.Status.Log.PriorityPeakNone", "Maior prédio crítico ativo: nenhum" },
-                { "MG.Status.Log.PriorityPeakState.Pending", "pending" },
-                { "MG.Status.Log.PriorityPeakState.Dispatched", "dispatched" },
-
-#if DEBUG
-                { "MG.Status.Log.PriorityPerf", "Último tempo de varredura da assistência de prioridade={0:N3} ms" },
-#endif
                 { "MG.Status.Log.CriticalBuildingsNone", "nenhum" },
                 { "MG.Status.Log.CriticalBuildingLine", "- {0,-20} | {1,7:N0} ({2,4:N1}t) | {3}" },
+
 
             };
         }
