@@ -11,17 +11,18 @@
 **Magic Garbage + Trash Boss**
 
 ✅ OPTION 1, SELF MANAGE - Trash Boss
-- Bigger loads for garbage trucks.
-- More storage, faster processing, and more trucks per facility.
-- Extra protection for pickups at assigned buildings.
-- Less need for extra garbage facilities in large cities.
-- Applies your settings once, then stays idle.
-- 🚚 Keep normal garbage service and trucks driving around, with more control.
 
-### Assigned-target protection
-- Works with the game's improved garbage truck routing.
-- Makes trucks more selective about optional pickups before their assigned stop.
-- Adjustable for extra help in busy cities.
+- 🚚 Keep normal garbage service and trucks driving around, with more control.
+- Adjust Truck load capacity - useful for bigger cities.
+- Adjust storage, processing rate, and total trucks per facility.
+- Extra protection for pickups at the target assigned buildings.
+- Applies your settings once, then stays idle - best for performance.
+
+### NEW Target Reserve
+- Works with the game's improved garbage truck routing in game 1.6.2.
+- Controls how early trucks start skipping small optional pickups before their assigned stop.
+- Reserve vanilla = 10%; Magic Garbage Recommended = 15%.
+- Reserve for 20t trucks means 2t is set aside for the actual target building and not used up before the truck gets there.
 
 ✅ OPTION 2, AUTO CLEAN - Magic
 - Clears garbage automatically.
@@ -80,7 +81,7 @@
 <!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
 - Updated for game 1.6.2's improved garbage truck routing.
-- Replaced Priority Assist with lightweight assigned-target protection.
+- Replaced Priority Assist with the lightweight Target reserve slider.
 - Removed Power User and simplified Trash Boss controls.
 - Rebalanced Recommended settings and improved Status details.
 </ChangeLog>

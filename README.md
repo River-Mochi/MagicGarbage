@@ -127,12 +127,11 @@ This includes:
 
 ## Languages
 
-English, Français, Deutsch, Español, Italiano, 日本語, 한국어, Português do Brasil, Polski, 简体中文, 繁體中文
+English, Français, Deutsch, Español, Italiano, 日本語, 한국어, Português do Brasil, Polski, 简体中文, 繁體中文, Tiếng Việt
 
 ---
 
 ## Links
 
-Discord: https://discord.gg/HTav7ARPs2  
+Discord: https://discord.gg/gwXgvtyhjc 
 Github: https://github.com/River-Mochi/MagicGarbage  
-Forum: https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/
