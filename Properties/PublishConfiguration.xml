@@ -1,85 +1,88 @@
 <Publish>
-	<!--Id must be set in order to update existed mod. it is not required for publishing mod for the first time-->
-	<ModId Value="124159" />
-	<!--Name of the mod to display to players-->
-	<DisplayName Value="Magic Garbage + Trash Boss" />
-	<!--Short description of the mod-->
-	<ShortDescription Value="Auto-Clean garbage OR use Trash Boss = Self manage trucks + facilities" />
-	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
-	<!--LongDescription Value="This is a long description" /-->
-	<LongDescription>
+<!--Id must be set in order to update existed mod. it is not required for publishing mod for the first time-->
+<ModId Value="124159" />
+<!--Name of the mod to display to players-->
+<DisplayName Value="Magic Garbage + Trash Boss" />
+<!--Short description of the mod-->
+<ShortDescription Value="Auto-Clean garbage OR use Trash Boss = Self manage trucks + facilities" />
+<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
+<!--LongDescription Value="This is a long description" /-->
+<LongDescription>
 **Magic Garbage + Trash Boss**
 
 ✅ OPTION 1, SELF MANAGE - Trash Boss
-- Change the load size of Garbage Trucks.
-- Adjsut storage, processing rate, and more trucks per facility.
-- Trucks can skip more side pickups on the way to their assigned stop.
-- Helps them arrive with room left.
+- Bigger loads for garbage trucks.
+- More storage, faster processing, and more trucks per facility.
+- Extra protection for pickups at assigned buildings.
 - Less need for extra garbage facilities in large cities.
-- 🚚 Great for players who still want normal game vanilla garbage service and trucks driving around; now with fewer problems.
+- Applies your settings once, then stays idle.
+- 🚚 Keep normal garbage service and trucks driving around, with more control.
 
 ### Assigned-target protection
-- Works with the game's improved garbage-truck routing.
-- Safely adjusts how selective trucks are with optional pickups before reaching their assigned building.
-- Applies settings once, then stays idle during normal gameplay.
+- Works with the game's improved garbage truck routing.
+- Makes trucks more selective about optional pickups before their assigned stop.
+- Adjustable for extra help in busy cities.
 
 ✅ OPTION 2, AUTO CLEAN - Magic
 - Clears garbage automatically.
 - Keeps garbage warning icons away.
-- Mod does not stop Garbage system; cleanup is just very fast.
-
-**11+ Languages supported**
-- Hello, Bonjour, Hallo, Hola, Ciao, 안녕하세요, こんにちは, Olá, Cześć, 你好, 你好, Xin chào
+- Garbage service stays active; cleanup is just very fast.
 
 ### Support and feedback
-- Enjoy! Best way to support is give it a Like (top right) it's free + easy.
-- Feedback on: Github, Discord, links on the right of this page.
+- Enjoy! The best way to support the mod is to give it a Like.
+- Feedback links for GitHub and Discord are on the right of this page.
 
 ---
 
 ### Compatibility
 - Safe to remove any time.
-- Does not use Harmony patch; designed to be lightweight for the best performance.
+- Does not use Harmony.
+- Designed to stay lightweight during normal gameplay.
 
 ---
-### Bonus status report
-- Real stats help show what is happening.
-- Lean: status does not run in-city per frame; runs only in Options menu for best performance to not affect gameplay.
-- Compare garbage made, processed, and facility capacity.
-- Detailed Status writes extra info to MagicGarbage.log.
 
-### Credits
+### Bonus status report
+- Check how your garbage service is doing from Options.
+- Spot buildings at 7t before garbage warning icons appear.
+- Compare garbage made, processing capacity, requests, trucks, and facilities.
+- Status runs only while Options is open.
+- Detailed Status writes extra information to MagicGarbage.log.
+
+**11+ Languages supported**
+- Hello, Bonjour, Hallo, Hola, Ciao, 안녕하세요, こんにちは, Olá, Cześć, 你好, 你好, Xin chào
+
+
+### Credits and Thanks
 - RiverMochi - author
-- Thanks to Wayz for inspiration on the original Magical Garbage mod
+- Thanks to Wayz for inspiration on the original Magical Garbage mod (obsolete)
 - yenyang - code review, tech advice
 - Gagaxm, Necko1996 - testing
 - Gagaxm - truck thumbnail image
 
 </LongDescription>
-	<!--Thumbnail-->
-	<Thumbnail Value="Properties/thumbnail-garbageTruck.jpg" />
-	<!--Screenshot, can be set multiple times-->
-    <Screenshot Value="Properties/30-image-TrashBoss.jpg" />
-    <Screenshot Value="Properties/35-image-GarbageTrucks.jpg" />
-	<Screenshot Value="Properties/40-image-Status.jpg" />
-	<Screenshot Value="Properties/70-image-Before.jpg" />
-    <Screenshot Value="Properties/85-image-Languages.jpg" />
-	<!--Tag, can be set multiple times-->
-	<Tag Value="Code Mod" />
-	<!--Link to the forum post where the mod can be discussed-->
-	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
-	<!--Version of the mod-->
-	<ModVersion Value="1.4.0" />
-	<!--Recommended version of the base game to use the mod-->
-	<GameVersion Value="1.6.*" />
-	<!--Dependency for the mod, can be set multiple times-->
-	<Dependency Id="" />
-	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
+<!--Thumbnail-->
+<Thumbnail Value="Properties/thumbnail-garbageTruck.jpg" />
+<!--Screenshot, can be set multiple times-->
+<Screenshot Value="Properties/30-image-TrashBoss.jpg" />
+<Screenshot Value="Properties/38-image-GarbageTrucks.jpg" />
+<Screenshot Value="Properties/40-image-Status.jpg" />
+<Screenshot Value="Properties/70-image-Before.jpg" />
+<!--Tag, can be set multiple times-->
+<Tag Value="Code Mod" />
+<!--Link to the forum post where the mod can be discussed-->
+<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/magic-garbage-truck.1867844/" />
+<!--Version of the mod-->
+<ModVersion Value="1.4.0" />
+<!--Recommended version of the base game to use the mod-->
+<GameVersion Value="1.6.*" />
+<!--Dependency for the mod, can be set multiple times-->
+<Dependency Id="" />
+<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-- Updated for game 1.6.2
-- improved assigned-target protection and its garbage pickups based on new 1.6.2 updates.
-- Simplified controls, removed Power User, and rebalanced Recommended values.
-- Improved Status with clearer service capacity and request reporting.
+- Updated for game 1.6.2's improved garbage truck routing.
+- Replaced Priority Assist with lightweight assigned-target protection.
+- Removed Power User and simplified Trash Boss controls.
+- Rebalanced Recommended settings and improved Status details.
 </ChangeLog>
 <!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 <ExternalLink Type="discord" Url="https://discord.gg/gwXgvtyhjc" />

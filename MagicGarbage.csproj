@@ -17,18 +17,17 @@
         <Nullable>enable</Nullable>
 
   <!-- Single source of truth for version number -->
-        <GameVersion>1.6.*</GameVersion>
 	    <Version>1.4.0</Version>
 	    <AssemblyVersion>$(Version).0</AssemblyVersion>
 	    <FileVersion>$(Version).0</FileVersion>  <!-- for file properties -->
 
-		<!-- DLL name and default namespace -->
+        <GameVersion>1.6.*</GameVersion>
+        <!-- DLL name and default namespace -->
 		<AssemblyName>MagicGarbage</AssemblyName>
 		<RootNamespace>MagicGarbage</RootNamespace>
         <AssemblyTitle>Magic Garbage</AssemblyTitle>
         <Product>Magic Garbage</Product>
         <Copyright>Copyright © 2025-26 River-Mochi</Copyright>
-
 
 	</PropertyGroup>
 
