@@ -74,7 +74,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)), "Truck load capacity" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageTruckCapacityMultiplier)),
                     "**How much garbage each truck can carry.**\n" +
-                    "**100% = normal** game default (20t).\n"
+                    "**100% = vanilla** truck capacity (20t).\n"
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityStorageMultiplier)), "Facility storage" },
@@ -95,7 +95,7 @@ namespace MagicGarbage
                     "**100% = vanilla** number of trucks.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "Assigned-target protection" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "Target reserve" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
                     "**How early trucks become selective about optional pickups on the way to their assigned building.**\n" +
                     "**10% is the vanilla 1.6.2 value.**\n" +
@@ -112,14 +112,14 @@ namespace MagicGarbage
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
                     "Applies balanced values for busy cities.\n" +
                     "Truck load **200%** | storage **150%** | processing **250%**\n" +
-                    "Fleet **100%** | assigned-target protection **15%**."
+                    "Fleet **100%** | target reserve **15%**."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Reset Sliders" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
                     "Resets the standard Trash Boss sliders.\n" +
                     "- Percent sliders return to **100%**.\n" +
-                    "- Assigned-target protection returns to the **10% vanilla** value.\n"
+                    "- Target reserve returns to the **10% vanilla** value.\n"
                 },
 
                 // About
@@ -184,8 +184,8 @@ namespace MagicGarbage
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusRequests)),
                     "**Pending** = active collection requests not currently assigned to a truck or path.\n" +
                     "**Dispatched** = active collection requests already assigned.\n" +
-                    "**Total** = counts current **active** request entity (in the garbage pipeline).\n\n" +
-                    "Tech note: This is different from <Above request threshold>. This counts <requests>, not buildings.\n" +
+                    "**Total** = all current **active** requests in the garbage pipeline.\n\n" +
+                    "This differs from **Above request threshold**, which counts buildings instead of requests.\n" +
                     "Some pending requests will be assigned later; some can also clear later if vanilla revalidation decides the target no longer needs service."
                 },
 
@@ -217,7 +217,7 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageStatusLog)), "Detailed Status to Log" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageStatusLog)),
                     "Send a more detailed garbage report into **Logs/MagicGarbage.log**.\n" +
-                    "Includes organized city garbage statistics"
+                    "Includes organized city garbage statistics."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OpenLog)), "Open Log" },
@@ -229,7 +229,7 @@ namespace MagicGarbage
                 { "MG.Status.NoCity", "No city loaded yet." },
 
                 { "MG.Status.Row.GarbageServiceRating.Excellent", "Excellent overall ({0:N0}) | updated {1}" },
-                { "MG.Status.Row.GarbageServiceRating.Minor", "Needs minor tweak ({0:N0}) | updated {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Minor", "Needs a minor tweak ({0:N0}) | updated {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "Slightly stinky ({0:N0}) | updated {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Garbage problem ({0:N0}) | updated {1}" },
                 { "MG.Status.Row.CriticalBuildings", "{0:N0} buildings at 7t+" },
@@ -257,7 +257,7 @@ namespace MagicGarbage
                     "- For player-facing, the game converts 100 units = 0.1t and 1,000 units = 1t.\n" +
                     "- Garbage Service Rating = game city garbage happiness factor.\n" +
                     "  - 0 = Excellent overall\n" +
-                    "  - -1 = Needs minor tweak, or ignore\n" +
+                    "  - -1 = Needs a minor tweak\n" +
                     "  - -2 to -4 = Slightly stinky\n" +
                     "  - -5 to -10 = Garbage problem\n" +
                     "Routing values:\n" +
@@ -275,13 +275,13 @@ namespace MagicGarbage
                 },
 
                 { "MG.Status.Log.ThresholdsMissing", "Thresholds: <GarbageParameterData not available>" },
-                { "MG.Status.Log.AdaptiveMargin", "Assigned-target protection: {0:N0}%" },
+                { "MG.Status.Log.AdaptiveMargin", "Target reserve: {0:N0}%" },
                 { "MG.Status.Log.GarbageProcessing", "Garbage production: {0:N0} t/mo | Current processing: {2:N0} t/mo | Processing capacity: {1:N0} t/mo" },
                 { "MG.Status.Log.GarbageServiceRating", "Garbage Service Rating: {0} | raw={1:N2} | rounded={2:N0}" },
                 { "MG.Status.Log.Requests", "Collect Requests: pending={1:N0}, dispatched={2:N0}, total={0:N0}" },
                 { "MG.Status.Log.PendingPeak", "Highest pending target garbage: {0:N0} ({1:N1}t) at {2}" },
                 { "MG.Status.Log.PendingPeakNone", "Highest pending target garbage: none" },
-                { "MG.Status.Log.Producers", "Buildings: {0:N0} above warning level | {1:N0} total | {2:N0} has garbage | {3:N0} above request threshold " },
+                { "MG.Status.Log.Producers", "Buildings: {0:N0} above warning level | {1:N0} total | {2:N0} has garbage | {3:N0} above request threshold" },
                 { "MG.Status.Log.ProducerGarbageStats", "Building garbage (non-zero only): avg={0:N0} ({1:N1}t) | median={2:N0} ({3:N1}t) | max={4:N0} ({5:N1}t) at {6}" },
                 { "MG.Status.Log.NearWarning75", "Buildings near warning icon (at least {1:N0} units / {2:N1}t): {0:N0}" },
                 { "MG.Status.Log.FacilitiesSummary", "Facilities: {0:N0} total | {1:N0} garbage trucks | {2:N0} dump trucks ({3:N0} moving) | {4:N0} workers" },
@@ -290,7 +290,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.FacilityLine", "- Facility {0}: garbage trucks={1:N0} ({2:N0} moving, {3:N0} parked) | dump trucks={4:N0} ({5:N0} moving) | max workers={6:N0}" },
 
                 { "MG.Status.Log.GarbageServiceRating.Excellent", "Excellent overall" },
-                { "MG.Status.Log.GarbageServiceRating.Minor", "Needs minor tweak" },
+                { "MG.Status.Log.GarbageServiceRating.Minor", "Needs a minor tweak" },
                 { "MG.Status.Log.GarbageServiceRating.Stinky", "Slightly stinky" },
                 { "MG.Status.Log.GarbageServiceRating.Problem", "Garbage problem" },
 
