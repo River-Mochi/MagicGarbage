@@ -71,8 +71,8 @@ namespace MagicGarbage
             float targetMargin = trashBossActive
                 ? math.clamp(
                     setting.AdaptiveReservationMargin,
-                    Setting.MinAdaptiveReservationMargin,
-                    Setting.MaxAdaptiveReservationMargin) / 100f
+                    Setting.kMinAdaptiveReservationMargin,
+                    Setting.kMaxAdaptiveReservationMargin) / 100f
                 : m_BaseAdaptiveMargin;
 
             if (math.abs(data.m_AdaptiveCollectionMargin - targetMargin) > 0.0001f)

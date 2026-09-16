@@ -21,7 +21,7 @@ namespace MagicGarbage
     using Game;                           // UpdateSystem, SystemUpdatePhase
     using Game.Modding;                   // IMod
     using Game.SceneFlow;                 // GameManager
-    using Game.Simulation;
+
 
 
     public sealed class Mod : IMod
@@ -99,7 +99,7 @@ namespace MagicGarbage
             }
 
             // Settings first
-            Setting setting = new Setting(this);
+            Setting setting = new(this);
             Setting = setting;
 
             // Register locales via helper

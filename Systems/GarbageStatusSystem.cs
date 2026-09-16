@@ -11,6 +11,8 @@
 
 namespace MagicGarbage
 {
+    using System;
+    using System.Collections.Generic;
     using Game;
     using Game.Buildings;
     using Game.Common;
@@ -20,8 +22,6 @@ namespace MagicGarbage
     using Game.Simulation;
     using Game.Tools;
     using Game.Vehicles;
-    using System;
-    using System.Collections.Generic;
     using Unity.Entities;
     using UnityEngine;
 
@@ -434,7 +434,7 @@ namespace MagicGarbage
             }
 
             long garbageSum = 0L;
-            List<int> garbageValues = new List<int>(producerTotal > 0 ? producerTotal : 16);
+            List<int> garbageValues = new(producerTotal > 0 ? producerTotal : 16);
 
             // Count 7t buildings here so Options refresh needs only one producer scan.
             foreach ((RefRO<GarbageProducer> producer, Entity producerEntity) in SystemAPI
@@ -583,7 +583,7 @@ namespace MagicGarbage
             int facilityDumpTruckMoving = 0;
             int facilityMaxWorkers = 0;
 
-            List<FacilityEntry> facilityEntries = new List<FacilityEntry>(16);
+            List<FacilityEntry> facilityEntries = new(16);
 
             // Build per-facility summaries by scanning each facility's owned vehicles.
             foreach ((RefRO<Game.Buildings.GarbageFacility> facility, Entity facilityEntity) in SystemAPI
@@ -819,7 +819,7 @@ namespace MagicGarbage
 
         public CriticalBuildingEntry[] GetCriticalBuildings()
         {
-            List<CriticalBuildingEntry> entries = new List<CriticalBuildingEntry>(16);
+            List<CriticalBuildingEntry> entries = new(16);
 
             int criticalThreshold = EarlyWarningGarbage;
 

@@ -47,33 +47,33 @@ namespace MagicGarbage
         public const string AboutUsageGrp = "AboutUsage";
 
         // ---- ROW GROUPS (button rows) ----
-        private const string TrashBossButtonsRow = "TrashBossButtonsRow";
-        private const string StatusButtonsRow = "StatusButtonsRow";
-        private const string AboutLinksRow = "AboutLinksRow";
+        private const string kTrashBossButtonsRow = "kTrashBossButtonsRow";
+        private const string kStatusButtonsRow = "kStatusButtonsRow";
+        private const string kAboutLinksRow = "kAboutLinksRow";
 
         // ---- TUNING LIMITS (source of truth for UI + runtime) ----
-        internal const int StartingAdaptiveReservationMargin = 10;
-        internal const int MinAdaptiveReservationMargin = 10;
-        internal const int MaxAdaptiveReservationMargin = 25;
-        internal const int RecommendedAdaptiveReservationMargin = 15;
+        internal const int kStartingAdaptiveReservationMargin = 10;
+        internal const int kMinAdaptiveReservationMargin = 10;
+        internal const int kMaxAdaptiveReservationMargin = 25;
+        internal const int kRecommendedAdaptiveReservationMargin = 15;
 
         // ---- RECOMMENDED VALUES ----
-        internal const int RecommendedTruckCapacityMultiplier = 200;
-        internal const int RecommendedFacilityStorageMultiplier = 150;
-        internal const int RecommendedFacilityProcessingMultiplier = 250;
-        internal const int RecommendedFacilityVehicleMultiplier = 100;
+        internal const int kRecTruckCapMultiplier = 200;
+        internal const int kRecFacilityStoreMultiplier = 150;
+        internal const int kRecFacilityProcessingMultiplier = 250;
+        internal const int kRecFacilityVehMultiplier = 100;
 
         // ---- EXTERNAL LINKS ----
-        private const string UrlParadox =
+        private const string kUrlParadox =
             "https://mods.paradoxplaza.com/authors/River-mochi/cities_skylines_2?games=cities_skylines_2&orderBy=desc&sortBy=best&time=alltime";
 
-        private const string UrlDiscord =
+        private const string kUrlDiscord =
             "https://discord.gg/gwXgvtyhjc";
 
         // ---- BACKING FIELDS ----
         private bool m_TotalMagic = true;
         private bool m_TrashBossEnabled;
-        private int m_AdaptiveReservationMargin = StartingAdaptiveReservationMargin;
+        private int m_AdaptiveReservationMargin = kStartingAdaptiveReservationMargin;
 
         private bool ShowAdaptiveReservation => m_TrashBossEnabled;
 
@@ -163,8 +163,8 @@ namespace MagicGarbage
         public int GarbageFacilityVehicleMultiplier { get; set; } = 100;
 
         [SettingsUISlider(
-            min = MinAdaptiveReservationMargin,
-            max = MaxAdaptiveReservationMargin,
+            min = kMinAdaptiveReservationMargin,
+            max = kMaxAdaptiveReservationMargin,
             step = 1,
             scalarMultiplier = 1,
             unit = Unit.kPercentage)]
@@ -178,8 +178,8 @@ namespace MagicGarbage
             {
                 m_AdaptiveReservationMargin = math.clamp(
                     value,
-                    MinAdaptiveReservationMargin,
-                    MaxAdaptiveReservationMargin);
+                    kMinAdaptiveReservationMargin,
+                    kMaxAdaptiveReservationMargin);
             }
         }
 
@@ -188,7 +188,7 @@ namespace MagicGarbage
         // -----------------------------------------
 
         [SettingsUIButton]
-        [SettingsUIButtonGroup(TrashBossButtonsRow)]
+        [SettingsUIButtonGroup(kTrashBossButtonsRow)]
         [SettingsUISection(ActionsTab, TrashBossGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
         public bool TrashBossRecommended
@@ -200,11 +200,11 @@ namespace MagicGarbage
                     return;
                 }
 
-                GarbageTruckCapacityMultiplier = RecommendedTruckCapacityMultiplier;
-                GarbageFacilityStorageMultiplier = RecommendedFacilityStorageMultiplier;
-                GarbageFacilityProcessingMultiplier = RecommendedFacilityProcessingMultiplier;
-                GarbageFacilityVehicleMultiplier = RecommendedFacilityVehicleMultiplier;
-                AdaptiveReservationMargin = RecommendedAdaptiveReservationMargin;
+                GarbageTruckCapacityMultiplier = kRecTruckCapMultiplier;
+                GarbageFacilityStorageMultiplier = kRecFacilityStoreMultiplier;
+                GarbageFacilityProcessingMultiplier = kRecFacilityProcessingMultiplier;
+                GarbageFacilityVehicleMultiplier = kRecFacilityVehMultiplier;
+                AdaptiveReservationMargin = kRecommendedAdaptiveReservationMargin;
 
                 EnableTuningSystemsOnce();
                 Apply();
@@ -212,7 +212,7 @@ namespace MagicGarbage
         }
 
         [SettingsUIButton]
-        [SettingsUIButtonGroup(TrashBossButtonsRow)]
+        [SettingsUIButtonGroup(kTrashBossButtonsRow)]
         [SettingsUISection(ActionsTab, TrashBossGrp)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(TrashBossEnabled), true)]
         public bool TrashBossDefaults
@@ -228,7 +228,7 @@ namespace MagicGarbage
                 GarbageFacilityVehicleMultiplier = 100;
                 GarbageFacilityProcessingMultiplier = 100;
                 GarbageFacilityStorageMultiplier = 100;
-                AdaptiveReservationMargin = StartingAdaptiveReservationMargin;
+                AdaptiveReservationMargin = kStartingAdaptiveReservationMargin;
 
                 EnableTuningSystemsOnce();
                 Apply();
@@ -246,7 +246,7 @@ namespace MagicGarbage
         public string AboutVersion => Mod.ModVersion;
 
         [SettingsUIButton]
-        [SettingsUIButtonGroup(AboutLinksRow)]
+        [SettingsUIButtonGroup(kAboutLinksRow)]
         [SettingsUISection(AboutTab, AboutLinksGrp)]
         public bool OpenParadoxPage
         {
@@ -259,7 +259,7 @@ namespace MagicGarbage
 
                 try
                 {
-                    Application.OpenURL(UrlParadox);
+                    Application.OpenURL(kUrlParadox);
                 }
                 catch (Exception)
                 {
@@ -268,7 +268,7 @@ namespace MagicGarbage
         }
 
         [SettingsUIButton]
-        [SettingsUIButtonGroup(AboutLinksRow)]
+        [SettingsUIButtonGroup(kAboutLinksRow)]
         [SettingsUISection(AboutTab, AboutLinksGrp)]
         public bool OpenDiscord
         {
@@ -281,7 +281,7 @@ namespace MagicGarbage
 
                 try
                 {
-                    Application.OpenURL(UrlDiscord);
+                    Application.OpenURL(kUrlDiscord);
                 }
                 catch (Exception)
                 {
@@ -306,7 +306,7 @@ namespace MagicGarbage
             GarbageFacilityVehicleMultiplier = 100;
             GarbageFacilityProcessingMultiplier = 100;
             GarbageFacilityStorageMultiplier = 100;
-            AdaptiveReservationMargin = StartingAdaptiveReservationMargin;
+            AdaptiveReservationMargin = kStartingAdaptiveReservationMargin;
 
             GarbageStatus.ResetUi();
         }

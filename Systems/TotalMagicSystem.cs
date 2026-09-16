@@ -32,7 +32,7 @@ namespace MagicGarbage
     {
         // Tune cadence here. 262144 / 64 = 4096 ticks between sweeps, ~22.5 in-game minutes.
         public static readonly int UpdatesPerDay = 64; // raise (128, 256...) if warn garbage icons appear
-        private const int TicksPerDay = 262144;
+        private const int kTicksPerDay = 262144;
 
         private IconCommandSystem m_IconCommandSystem = null!;
         private EntityQuery m_GarbageProducerQuery;
@@ -40,7 +40,7 @@ namespace MagicGarbage
 
         public override int GetUpdateInterval(SystemUpdatePhase phase)
         {
-            return TicksPerDay / UpdatesPerDay;
+            return kTicksPerDay / UpdatesPerDay;
         }
 
         protected override void OnCreate()
@@ -71,7 +71,7 @@ namespace MagicGarbage
             Enabled = true;
 
 #if DEBUG
-            int intervalTicks = TicksPerDay / UpdatesPerDay;
+            int intervalTicks = kTicksPerDay / UpdatesPerDay;
             LogUtils.Info($"{Mod.ModTag} TotalMagicSystem created. UpdatesPerDay={UpdatesPerDay}, IntervalTicks={intervalTicks}.");
 #endif
         }

@@ -25,7 +25,7 @@ namespace MagicGarbage
 
     internal static class GarbageStatus
     {
-        private const int AutoRefreshSeconds = 10;
+        private const int kAutoRefreshSeconds = 10;
 
         private static int s_LastUiFrame = -1;
         private static long s_LastRefreshUtcTicks;
@@ -83,7 +83,7 @@ namespace MagicGarbage
             if (s_LastRefreshUtcTicks > 0)
             {
                 long ageTicks = nowUtc - s_LastRefreshUtcTicks;
-                long minTicks = AutoRefreshSeconds * TimeSpan.TicksPerSecond;
+                long minTicks = kAutoRefreshSeconds * TimeSpan.TicksPerSecond;
                 if (ageTicks < minTicks)
                 {
                     return;
@@ -282,7 +282,7 @@ namespace MagicGarbage
         {
             string nowText = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            StringBuilder log = new StringBuilder(9000);
+            StringBuilder log = new(9000);
 
             log.AppendLine(Mod.LF("MG.Status.Log.Title", nowText));
             log.AppendLine(Mod.LF("MG.Status.Log.City", Fmt(snap.City)));

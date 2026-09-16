@@ -93,7 +93,7 @@ namespace MagicGarbage
         }
 
         [SettingsUIButton]
-        [SettingsUIButtonGroup(StatusButtonsRow)]
+        [SettingsUIButtonGroup(kStatusButtonsRow)]
         [SettingsUISection(ActionsTab, StatusGrp)]
         public bool GarbageStatusLog
         {
@@ -112,7 +112,7 @@ namespace MagicGarbage
         }
 
         [SettingsUIButton]
-        [SettingsUIButtonGroup(StatusButtonsRow)]
+        [SettingsUIButtonGroup(kStatusButtonsRow)]
         [SettingsUISection(ActionsTab, StatusGrp)]
         public bool OpenLog
         {

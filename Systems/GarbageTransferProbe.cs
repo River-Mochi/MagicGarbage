@@ -108,7 +108,7 @@ namespace MagicGarbage
 
         public GarbageTransferProbeEntry[] GetGarbageTransferProbeEntries()
         {
-            List<GarbageTransferProbeEntry> entries = new List<GarbageTransferProbeEntry>(16);
+            List<GarbageTransferProbeEntry> entries = new(16);
 
             ComponentLookup<Game.Objects.OutsideConnection> outsideConnectionLookup =
                 GetComponentLookup<Game.Objects.OutsideConnection>(true);

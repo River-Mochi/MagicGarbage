@@ -10,10 +10,12 @@
 	<LongDescription>
 **Magic Garbage + Trash Boss**
 
-### OPTION 1 SELF MANAGE
-- Adjust garbage truck capacities
-- Adjust facility processing speed
-- Change total Garbage trucks.
+✅ OPTION 1, SELF MANAGE - Trash Boss
+- Change the load size of Garbage Trucks.
+- Adjsut storage, processing rate, and more trucks per facility.
+- Trucks can skip more side pickups on the way to their assigned stop.
+- Helps them arrive with room left.
+- Less need for extra garbage facilities in large cities.
 - 🚚 Great for players who still want normal game vanilla garbage service and trucks driving around; now with fewer problems.
 
 ### Assigned-target protection
@@ -21,20 +23,16 @@
 - Safely adjusts how selective trucks are with optional pickups before reaching their assigned building.
 - Applies settings once, then stays idle during normal gameplay.
 
-### OPTION 2 AUTO CLEAN
-- Removes all garbage automatically.
-- Garbage warning icons cleared.
+✅ OPTION 2, AUTO CLEAN - Magic
+- Clears garbage automatically.
+- Keeps garbage warning icons away.
 - Mod does not stop Garbage system; cleanup is just very fast.
 
 **11+ Languages supported**
 - Hello, Bonjour, Hallo, Hola, Ciao, 안녕하세요, こんにちは, Olá, Cześć, 你好, 你好, Xin chào
 
-### Safe controls
-- Adjust truck load, facility storage, processing, and fleet capacity.
-- Dangerous request, pickup, happiness, and accumulation controls were removed.
-
-#### Support and feedback
-- If the mod helps you, give it a Like, it's free + easy :)
+### Support and feedback
+- Enjoy! Best way to support is give it a Like (top right) it's free + easy.
 - Feedback on: Github, Discord, links on the right of this page.
 
 ---
@@ -46,17 +44,16 @@
 ---
 ### Bonus status report
 - Real stats help show what is happening.
-- Lean: status does not run in-city per frame; runs in Options menu for best performance to not affect gameplay.
-- Detailed log button writes even more detailed notes in the Log file for reference.
-
+- Lean: status does not run in-city per frame; runs only in Options menu for best performance to not affect gameplay.
+- Compare garbage made, processed, and facility capacity.
+- Detailed Status writes extra info to MagicGarbage.log.
 
 ### Credits
 - RiverMochi - author
 - Thanks to Wayz for inspiration on the original Magical Garbage mod
 - yenyang - code review, tech advice
-- Necko1996 - testing, screenshots
-- gagaxm - truck image
-
+- Gagaxm, Necko1996 - testing
+- Gagaxm - truck thumbnail image
 
 </LongDescription>
 	<!--Thumbnail-->
@@ -79,13 +76,14 @@
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 <ChangeLog>
-- Updated for 1.6.2 with lightweight assigned-target protection.
+- Updated for game 1.6.2
+- improved assigned-target protection and its garbage pickups based on new 1.6.2 updates.
 - Simplified controls, removed Power User, and rebalanced Recommended values.
 - Improved Status with clearer service capacity and request reporting.
-- Fixed Open Log to open MagicGarbage.log directly.
 </ChangeLog>
 <!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
-<ExternalLink Type="github" Url="https://github.com/River-Mochi/MagicGarbage" />
 <ExternalLink Type="discord" Url="https://discord.gg/gwXgvtyhjc" />
+<ExternalLink Type="github" Url="https://github.com/River-Mochi/MagicGarbage" />
+
 
 </Publish>
