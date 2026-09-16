@@ -11,8 +11,8 @@
 
 namespace MagicGarbage
 {
-    using Colossal;
     using System.Collections.Generic;
+    using Colossal;
 
     public sealed class LocaleEN : IDictionarySource
     {
@@ -83,13 +83,13 @@ namespace MagicGarbage
                     "**100% = vanilla** storage.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)), "Facility Processing speed" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)), "Facility processing speed" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
                     "**How fast facilities process incoming garbage.**\n" +
                     "**100% = vanilla** processing speed.\n"
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)), "Facility Fleet" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)), "Facility fleet" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityVehicleMultiplier)),
                     "**How many trucks each facility can dispatch.**\n" +
                     "**100% = vanilla** number of trucks.\n"
@@ -98,26 +98,28 @@ namespace MagicGarbage
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AdaptiveReservationMargin)), "Assigned-target protection" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.AdaptiveReservationMargin)),
                     "**How early trucks become selective about optional pickups on the way to their assigned building.**\n" +
-                    "Magic Garbage starts this slider at **10%** of truck capacity.\n" +
-                    "For a normal 20t truck, 10% shifts the routing calculation by 2t; at 40t it shifts it by 4t.\n" +
-                    "This acts like a soft reserve, but it does not guarantee that amount of empty cargo space.\n" +
-                    "Magic Garbage limits this setting to 10–25% to keep routing safe."
+                    "**10% is the vanilla 1.6.2 value.**\n" +
+                    "For a normal 20t truck:\n" +
+                    "- 10% starts protecting its assigned stop 2t earlier.\n" +
+                    "- 15% starts 3t earlier.\n" +
+                    "- 25% starts 5t earlier.\n" +
+                    "Higher values give a bigger safety margin. Trucks skip small pickups sooner, helping leave more room for the assigned building."
                 },
 
 
                 // Trash Boss Presets
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossRecommended)), "Recommended" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossRecommended)),
-                    "Applies balanced values for capable garbage service.\n" +
-                    "Truck load = **200%** and assigned-target protection = **15%**."
+                    "Applies balanced values for busy cities.\n" +
+                    "Truck load **200%** | storage **150%** | processing **250%**\n" +
+                    "Fleet **100%** | assigned-target protection **15%**."
                 },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "Reset Sliders" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
                     "Resets the standard Trash Boss sliders.\n" +
                     "- Percent sliders return to **100%**.\n" +
-                    "- Assigned-target protection returns to **10%**.\n" +
-                    "Detailed Status to Log shows the game's current live routing value."
+                    "- Assigned-target protection returns to the **10% vanilla** value.\n"
                 },
 
                 // About
@@ -155,11 +157,12 @@ namespace MagicGarbage
                 // Status
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusGarbageServiceRating)), "Garbage Service Rating" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusGarbageServiceRating)),
-                    "The game's garbage happiness rating for your city.\n" +
-                    "**0 = Excellent**\n" +
-                    "**-1 **= Needs minor tweak. Game goes between 0 to -1 often and could be ignored (number is rounded).\n" +
-                    "**-2 to -4** = Slightly stinky\n" +
-                    "**-5 to -10** = Garbage problem\n" +
+                    "The game's citywide average garbage happiness effect.\n" +
+                    "A good overall rating can still include a few problem buildings, so check **7t+ buildings** too.\n" +
+                    "**0 = Excellent overall**\n" +
+                    "**-1 = Needs a minor tweak**\n" +
+                    "**-2 to -4 = Slightly stinky**\n" +
+                    "**-5 or lower = Garbage problem**\n\n" +
                     "Improve service with the truck and facility sliders, then let the city run before checking again."
                 },
 
@@ -203,7 +206,7 @@ namespace MagicGarbage
                     "**Max workers** = total worker capacity across those same facilities."
                 },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "Garbage Trucks" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StatusTrucks)), "Garbage trucks" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.StatusTrucks)),
                     "**Moving** = trucks currently out in the city.\n" +
                     "**Returning** = subset of moving trucks flagged to go back to their facility.\n" +
@@ -225,7 +228,7 @@ namespace MagicGarbage
                 // Runtime status strings
                 { "MG.Status.NoCity", "No city loaded yet." },
 
-                { "MG.Status.Row.GarbageServiceRating.Excellent", "Excellent ({0:N0}) | updated {1}" },
+                { "MG.Status.Row.GarbageServiceRating.Excellent", "Excellent overall ({0:N0}) | updated {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Minor", "Needs minor tweak ({0:N0}) | updated {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Stinky", "Slightly stinky ({0:N0}) | updated {1}" },
                 { "MG.Status.Row.GarbageServiceRating.Problem", "Garbage problem ({0:N0}) | updated {1}" },
@@ -253,7 +256,7 @@ namespace MagicGarbage
                     "- Threshold values below use internal garbage units, not tons.\n" +
                     "- For player-facing, the game converts 100 units = 0.1t and 1,000 units = 1t.\n" +
                     "- Garbage Service Rating = game city garbage happiness factor.\n" +
-                    "  - 0 = Excellent\n" +
+                    "  - 0 = Excellent overall\n" +
                     "  - -1 = Needs minor tweak, or ignore\n" +
                     "  - -2 to -4 = Slightly stinky\n" +
                     "  - -5 to -10 = Garbage problem\n" +
@@ -286,7 +289,7 @@ namespace MagicGarbage
                 { "MG.Status.Log.FacilitiesHeader", "Facility Summary" },
                 { "MG.Status.Log.FacilityLine", "- Facility {0}: garbage trucks={1:N0} ({2:N0} moving, {3:N0} parked) | dump trucks={4:N0} ({5:N0} moving) | max workers={6:N0}" },
 
-                { "MG.Status.Log.GarbageServiceRating.Excellent", "Excellent" },
+                { "MG.Status.Log.GarbageServiceRating.Excellent", "Excellent overall" },
                 { "MG.Status.Log.GarbageServiceRating.Minor", "Needs minor tweak" },
                 { "MG.Status.Log.GarbageServiceRating.Stinky", "Slightly stinky" },
                 { "MG.Status.Log.GarbageServiceRating.Problem", "Garbage problem" },
