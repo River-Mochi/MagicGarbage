@@ -276,6 +276,7 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.ThresholdsMissing", "Ngưỡng: <GarbageParameterData không khả dụng>" },
                 { "MG.Status.Log.AdaptiveMargin", "Dung lượng dành cho điểm đến: {0:N0}%" },
+                { "MG.Status.Log.AdaptiveMarginWithBaseline", "Dung lượng dành cho điểm đến: hiện tại={0:N0}% | giá trị gốc của trò chơi khi tải={1:N0}%" },
                 { "MG.Status.Log.GarbageProcessing", "Rác phát sinh: {0:N0} t/tháng | Xử lý hiện tại: {2:N0} t/tháng | Công suất xử lý: {1:N0} t/tháng" },
                 { "MG.Status.Log.GarbageServiceRating", "Đánh giá dịch vụ rác: {0} | thô={1:N2} | làm tròn={2:N0}" },
                 { "MG.Status.Log.Requests", "Yêu cầu thu gom: đang chờ={1:N0}, đã điều xe={2:N0}, tổng={0:N0}" },

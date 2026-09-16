@@ -88,5 +88,11 @@ namespace MagicGarbage
 
             Enabled = false;
         }
+
+        internal bool TryGetBaseAdaptiveMargin(out float margin)
+        {
+            margin = m_BaseAdaptiveMargin;
+            return m_HaveBase;
+        }
     }
 }

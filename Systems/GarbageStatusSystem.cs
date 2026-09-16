@@ -92,6 +92,8 @@ namespace MagicGarbage
             public readonly int HappinessStep;
             public readonly bool AdaptiveMarginSupported;
             public readonly float AdaptiveMargin;
+            public readonly bool BaseAdaptiveMarginSupported;
+            public readonly float BaseAdaptiveMargin;
             public readonly int CriticalBuildingCount;
 
             public readonly long GarbageTonsPerMonth;
@@ -145,6 +147,8 @@ namespace MagicGarbage
                 int happinessStep,
                 bool adaptiveMarginSupported,
                 float adaptiveMargin,
+                bool baseAdaptiveMarginSupported,
+                float baseAdaptiveMargin,
                 int criticalBuildingCount,
                 long garbageTonsPerMonth,
                 long processingTonsPerMonth,
@@ -192,6 +196,8 @@ namespace MagicGarbage
                 HappinessStep = happinessStep;
                 AdaptiveMarginSupported = adaptiveMarginSupported;
                 AdaptiveMargin = adaptiveMargin;
+                BaseAdaptiveMarginSupported = baseAdaptiveMarginSupported;
+                BaseAdaptiveMargin = baseAdaptiveMargin;
                 CriticalBuildingCount = criticalBuildingCount;
 
                 GarbageTonsPerMonth = garbageTonsPerMonth;
@@ -237,6 +243,7 @@ namespace MagicGarbage
         private GarbageAccumulationSystem m_GarbageAccumulationSystem = null!;
         private CitizenHappinessSystem m_CitizenHappinessSystem = null!;
         private PrefabSystem m_GamePrefabSystem = null!;
+        private GarbageRoutingSystem m_GarbageRoutingSystem = null!;
 
         private EntityQuery m_ProducerQuery;
         private EntityQuery m_TruckQuery;
@@ -250,6 +257,7 @@ namespace MagicGarbage
             m_GarbageAccumulationSystem = World.GetOrCreateSystemManaged<GarbageAccumulationSystem>();
             m_CitizenHappinessSystem = World.GetOrCreateSystemManaged<CitizenHappinessSystem>();
             m_GamePrefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
+            m_GarbageRoutingSystem = World.GetOrCreateSystemManaged<GarbageRoutingSystem>();
 
             // Buildings that currently hold garbage.
             m_ProducerQuery = GetEntityQuery(new EntityQueryDesc
@@ -316,6 +324,8 @@ namespace MagicGarbage
             int happinessStep = 0;
             bool adaptiveMarginSupported = false;
             float adaptiveMargin = 0f;
+            bool baseAdaptiveMarginSupported = false;
+            float baseAdaptiveMargin = 0f;
             if (haveParams)
             {
                 requestLimit = gp.m_RequestGarbageLimit;
@@ -326,6 +336,13 @@ namespace MagicGarbage
                 happinessStep = gp.m_HappinessEffectStep;
                 adaptiveMarginSupported = true;
                 adaptiveMargin = gp.m_AdaptiveCollectionMargin;
+            }
+
+            if (m_GarbageRoutingSystem != null)
+            {
+                // Captured before Trash Boss changes the live value.
+                baseAdaptiveMarginSupported =
+                    m_GarbageRoutingSystem.TryGetBaseAdaptiveMargin(out baseAdaptiveMargin);
             }
 
             // Early empty snapshot when no city is loaded.
@@ -345,6 +362,8 @@ namespace MagicGarbage
                     happinessStep: happinessStep,
                     adaptiveMarginSupported: adaptiveMarginSupported,
                     adaptiveMargin: adaptiveMargin,
+                    baseAdaptiveMarginSupported: baseAdaptiveMarginSupported,
+                    baseAdaptiveMargin: baseAdaptiveMargin,
                     criticalBuildingCount: 0,
                     garbageTonsPerMonth: 0,
                     processingTonsPerMonth: 0,
@@ -736,6 +755,8 @@ namespace MagicGarbage
                 happinessStep: happinessStep,
                 adaptiveMarginSupported: adaptiveMarginSupported,
                 adaptiveMargin: adaptiveMargin,
+                baseAdaptiveMarginSupported: baseAdaptiveMarginSupported,
+                baseAdaptiveMargin: baseAdaptiveMargin,
                 criticalBuildingCount: criticalBuildingCount,
                 garbageTonsPerMonth: garbageTonsPerMonth,
                 processingTonsPerMonth: processingTonsPerMonth,

@@ -304,9 +304,19 @@ namespace MagicGarbage
 
                 if (snap.AdaptiveMarginSupported)
                 {
-                    log.AppendLine(Mod.LF(
-                        "MG.Status.Log.AdaptiveMargin",
-                        snap.AdaptiveMargin * 100f));
+                    if (snap.BaseAdaptiveMarginSupported)
+                    {
+                        log.AppendLine(Mod.LF(
+                            "MG.Status.Log.AdaptiveMarginWithBaseline",
+                            snap.AdaptiveMargin * 100f,
+                            snap.BaseAdaptiveMargin * 100f));
+                    }
+                    else
+                    {
+                        log.AppendLine(Mod.LF(
+                            "MG.Status.Log.AdaptiveMargin",
+                            snap.AdaptiveMargin * 100f));
+                    }
                 }
             }
             else

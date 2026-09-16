@@ -276,6 +276,7 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.ThresholdsMissing", "Progi: <GarbageParameterData niedostępne>" },
                 { "MG.Status.Log.AdaptiveMargin", "Rezerwa dla celu: {0:N0}%" },
+                { "MG.Status.Log.AdaptiveMarginWithBaseline", "Rezerwa dla celu: bieżąca={0:N0}% | wartość bazowa gry przy wczytaniu={1:N0}%" },
                 { "MG.Status.Log.GarbageProcessing", "Produkcja odpadów: {0:N0} t/mies. | Bieżące przetwarzanie: {2:N0} t/mies. | Zdolność przetwarzania: {1:N0} t/mies." },
                 { "MG.Status.Log.GarbageServiceRating", "Ocena usług odbioru odpadów: {0} | surowa={1:N2} | zaokrąglona={2:N0}" },
                 { "MG.Status.Log.Requests", "Żądania odbioru: oczekujące={1:N0}, wysłane={2:N0}, łącznie={0:N0}" },

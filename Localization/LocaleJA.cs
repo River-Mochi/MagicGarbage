@@ -276,6 +276,7 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.ThresholdsMissing", "しきい値: <GarbageParameterData を利用できません>" },
                 { "MG.Status.Log.AdaptiveMargin", "目的地用予約容量: {0:N0}%" },
+                { "MG.Status.Log.AdaptiveMarginWithBaseline", "目的地用予約容量: 現在={0:N0}% | 読み込み時のゲーム基準値={1:N0}%" },
                 { "MG.Status.Log.GarbageProcessing", "ゴミ発生量: {0:N0} t/月 | 現在の処理量: {2:N0} t/月 | 処理能力: {1:N0} t/月" },
                 { "MG.Status.Log.GarbageServiceRating", "ゴミサービス評価: {0} | 生値={1:N2} | 丸め={2:N0}" },
                 { "MG.Status.Log.Requests", "回収リクエスト: 保留中={1:N0}, 配車済み={2:N0}, 合計={0:N0}" },

@@ -51,24 +51,24 @@ namespace MagicGarbage
                 { m_Setting.GetOptionGroupLocaleID(Setting.AboutUsageGrp), "使用说明" },
 
                 // Total Magic
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "Total Magic" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TotalMagic)), "全城魔法" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TotalMagic)),
                     "**启用 [ ✓ ]**后会保持整座城市清洁。\n" +
                     "\n" +
-                    "当 **Total Magic** 开启时：\n" +
-                    "- Trash Boss 会被强制关闭。\n" +
-                    "- Trash Boss 滑块不会应用（数值会保存供以后使用）。\n" +
+                    "当**全城魔法**开启时：\n" +
+                    "- 垃圾主管会被强制关闭。\n" +
+                    "- 垃圾主管滑块不会应用（数值会保存供以后使用）。\n" +
                     "- 由于原版调度逻辑的时序，少量车辆仍可能继续移动。"
                 },
 
                 // Trash Boss
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "Trash Boss" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossEnabled)), "垃圾主管" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossEnabled)),
                     "直接管理垃圾系统，同时保留原版垃圾逻辑运行。\n" +
                     "\n" +
-                    "- 当 **Trash Boss 开启 [ ✓ ]**时，Total Magic 会被强制关闭。\n" +
-                    "- 只有启用 Trash Boss 时滑块才会应用。\n" +
-                    "- Total Magic 和 Trash Boss 都可以**关闭**以使用原版设置，\n" +
+                    "- 当**垃圾主管开启 [ ✓ ]**时，全城魔法会被强制关闭。\n" +
+                    "- 只有启用垃圾主管时滑块才会应用。\n" +
+                    "- 全城魔法和垃圾主管都可以**关闭**以使用原版设置，\n" +
                     "  同时仍可查看**状态报告**；它只会在你进入“选项”菜单时更新（开销很低）。"
                 },
 
@@ -87,7 +87,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)), "设施处理速度" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.GarbageFacilityProcessingMultiplier)),
-                    "**设施处理进入垃圾的速度。**\n" +
+                    "**设施处理垃圾的速度。**\n" +
                     "**100% = 原版**处理速度。\n"
                 },
 
@@ -119,7 +119,7 @@ namespace MagicGarbage
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.TrashBossDefaults)), "重置滑块" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.TrashBossDefaults)),
-                    "重置标准 Trash Boss 滑块。\n" +
+                    "重置标准垃圾主管滑块。\n" +
                     "- 百分比滑块恢复为 **100%**。\n" +
                     "- 目标预留恢复为**原版 10%**。\n"
                 },
@@ -140,19 +140,19 @@ namespace MagicGarbage
                 // Usage block
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.UsageNotes)),
                     "<自动清理状态>\n" +
-                    "  * Total Magic 开启 = **[ ✓ ]**\n" +
+                    "  * 全城魔法开启 = **[ ✓ ]**\n" +
                     "  * 垃圾会自动清除 - 完成。\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<自行管理状态>\n" +
-                    "  * Trash Boss = **[ ✓ ]**\n" +
+                    "  * 垃圾主管 = **[ ✓ ]**\n" +
                     "  * 按需要调整滑块。\n" +
                     "  * 仍使用游戏原有垃圾系统，但更好地自行管理车辆/设施。\n" +
                     " <-------------------------------------->\n" +
                     "\n" +
                     "<状态 / 原版状态>\n" +
-                    "  * Total Magic = 关闭\n" +
-                    "  * Trash Boss = 关闭\n" +
+                    "  * 全城魔法 = 关闭\n" +
+                    "  * 垃圾主管 = 关闭\n" +
                     "  * 仅显示状态报告。\n" +
                     "  * 原版垃圾系统保持不变。"
                 },
@@ -248,9 +248,9 @@ namespace MagicGarbage
                 // Log strings
                 { "MG.Status.Log.Title", "垃圾状态 ({0})" },
                 { "MG.Status.Log.City", "城市：{0}" },
-                { "MG.Status.Log.Mode", "模式：Total Magic={0}, Trash Boss={1}" },
+                { "MG.Status.Log.Mode", "模式：全城魔法={0}, 垃圾主管={1}" },
                 { "MG.Status.Log.SettingsHeader", "当前模组设置" },
-                { "MG.Status.Log.SettingsTrashBoss", "Trash Boss 滑块（已保存）：垃圾车载量={0:N0}% | 设施存储={1:N0}% | 设施处理={2:N0}% | 设施车队={3:N0}%" },
+                { "MG.Status.Log.SettingsTrashBoss", "垃圾主管滑块（已保存）：垃圾车载量={0:N0}% | 设施存储={1:N0}% | 设施处理={2:N0}% | 设施车队={3:N0}%" },
                 
                 { "MG.Status.Log.Legend",
                     "图例：\n" +
@@ -276,6 +276,7 @@ namespace MagicGarbage
 
                 { "MG.Status.Log.ThresholdsMissing", "阈值：<GarbageParameterData 不可用>" },
                 { "MG.Status.Log.AdaptiveMargin", "目标预留：{0:N0}%" },
+                { "MG.Status.Log.AdaptiveMarginWithBaseline", "目标预留：当前={0:N0}% | 游戏载入时基准值={1:N0}%" },
                 { "MG.Status.Log.GarbageProcessing", "垃圾产量：{0:N0} t/月 | 当前处理：{2:N0} t/月 | 处理能力：{1:N0} t/月" },
                 { "MG.Status.Log.GarbageServiceRating", "垃圾服务评分：{0} | 原始值={1:N2} | 舍入值={2:N0}" },
                 { "MG.Status.Log.Requests", "收集请求：待处理={1:N0}, 已调度={2:N0}, 总计={0:N0}" },
