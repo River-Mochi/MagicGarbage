@@ -15,21 +15,24 @@
 - 🚚 Keep normal garbage service and trucks driving around, with more control.
 - Adjust Truck load capacity - useful for bigger cities.
 - Adjust storage, processing rate, and total trucks per facility.
-- Extra protection for pickups at the target assigned buildings.
 - Applies your settings once, then stays idle - best for performance.
 
-### NEW Target Reserve
-- Game 1.6.2 helps trucks save room for the target building they were sent to.
-- As a truck fills up, it skips more small pickups along the way.
-- Target Reserve controls how early that "skipping" starts: 10% vanilla, 15% MG Recommended.
-- On a normal 20t truck, 10% acts like a 2t safety margin.
+### Game's new 1.6.2 smarter adaptive pickups
 
-### Why Magic Garbage still helps
-- Game's Target Reserve helps trucks reach buildings that actually requested service.
-- It does not increase how much a truck can carry.
-- Truck Load gives every truck more capacity — useful for large cities or fewer depots.
-- Facility controls add more trucks, storage, and processing when your city still cannot keep up.
-- Total Magic remains available for automatic cleanup.
+- Buildings request a garbage truck after accumulating ~0.4t.
+- Truck also collects side jobs with more than 0.05t along the way to the target building.
+- As the truck fills, the game raises that 0.05t minimum and skips more small side jobs.
+- A side jobs that still qualifies can use all remaining truck space.
+- Trucks are *more likely* to reach their assigned building.
+
+### NEW MG Target Reserve
+
+- Controls how soon the side pickup minimum starts rising so that small amounts can be skipped.
+- Vanilla reserve is 10%; MG Recommended is 15%; adjustable from 10–25%.
+- Target Reserve changes pickup choices — it does not fix truck capacity.
+- Increasing Target reserve decreases how often a truck stops for houses with only tiny amounts.
+- Truck Load adds real capacity so each truck can collect more before returning.
+- Adjustable: total trucks, storage, and processing when your city still cannot keep up.
 
 ✅ OPTION 2, AUTO CLEAN - Magic
 - Clears garbage automatically.
