@@ -102,8 +102,11 @@ namespace MagicGarbage
                     "For a normal 20t truck:\n" +
                     "- 10% starts protecting its assigned stop 2t earlier.\n" +
                     "- 15% starts 3t earlier.\n" +
-                    "- 25% starts 5t earlier.\n" +
-                    "Higher values give a bigger safety margin. Trucks skip small pickups sooner, helping leave more room for the assigned building."
+                    "- 25% starts 5t earlier. Higher gives a bigger safety margin.\n" +
+                    "Total amount increases if you also increase the Truck capacity slider.\n" +
+                    "Reserve means trucks skips small pickups sooner, helping leave some room for the assigned building.\n" +
+                    "Game does not lock in this reserve amount for the target building.\n" +
+                    "As the truck approaches the safety margin, it gets pickier and only does higher side jobs. This makes it more likely the dispatch building will be reached."
                 },
 
 
